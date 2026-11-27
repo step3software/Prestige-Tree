@@ -1,0 +1,506 @@
+{
+  "date": "2026-11-27",
+  "orcha": {
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "sha256": {
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/agent-workflows/documentation-consolidation.md": "a6094f17c33bbf92a42d4e7aae52194589b8a90faaf8c94bda153f1450d06524",
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/feature.md": "52279cc4869aa56c9a40efe7c2e136177feb807053783039c3c4e7dfa95170b3",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e"
+    }
+  },
+  "project": {
+    "repository": "step3software/Prestige-Tree",
+    "source_branch": "main",
+    "revision": "d7d260fa66b270aae228dec2183f4df9da508b5f",
+    "source_resolution": "Registry and manifest master returns GitHub permanent redirect to main; effective AGENTS names main.",
+    "sha256": {
+      "AGENTS.md": "23688aa3af3b8f578e35957f8cedb43d2b0de0fe7372770dc140fc137daeec09",
+      ".orcha/repository.json": "4c633941f9ea9884c348d33da64fd9431a96a48415a5050465fc0dfc50d7c54a",
+      "README.md": "6d9718ce9d17f6a0ea15a064bb2ed66651c0273aa23cfa07b6b91615853e6bfd",
+      "docs/developer-guide.md": "87327e190ad38a8368097d21469615b31ddd374fada88dae9f109285946c22d3",
+      "docs/!general-info.md": "2bbee7a21068c50822a058000e703d75ed89e15c1a4b67f5b8adb08e600f3dd8",
+      "docs/balance-testing.md": "0e2cdb4ebbe746cbb28e484b1f44512496b6a8983dde9fc9706932d777e1c2a0"
+    }
+  },
+  "scope": {
+    "requested": "Read the supplied books and establish an index and reference guide in the project, including local and repository addresses.",
+    "delivered_paths": [
+      "README.md",
+      "docs/!general-info.md",
+      "docs/research"
+    ],
+    "excluded": "Game rules, save data, existing development checkout, library files, source branch/manifest repair, merging and deployment."
+  },
+  "reading": {
+    "method": "Complete EPUB spine extraction and heading inventory; chapter-wide survey plus close reading of the specific passages cited in the two source notes. No cover-to-cover close-reading claim.",
+    "scope": "All seven numbered chapters in each book and Scott introduction surveyed. Notes, bibliographies, indexes, figures and tables inventoried; not independently verified or comprehensively read.",
+    "source_dates": "2017 copyright editions; numerical claims about present-day energy are historical to those editions.",
+    "published_content": "Original paraphrases, headings, metadata and locators only. No complete book text, images, or EPUBs."
+  },
+  "prototype_observation": {
+    "path": "C:\\Users\\PhillipCurry\\projects\\codex\\games\\civ-prestige-tree\\js\\civilization.js",
+    "sha256": "78647249a8afb686e4ba2dfde448e2545936d9fbb5b4209e60df0acdacbe40da",
+    "state": "Uncommitted working-tree prototype, observed read-only; not the published game at the documentation source revision."
+  },
+  "library_observation": {
+    "repository": "step3software/books",
+    "branch": "main",
+    "revision": "8893e4e75744f12fd3f52cc1b9f5347a11e97453",
+    "git_blob_sha": {
+      "smil": "512311341c99dc317b8d949bde0be8c16aac8092",
+      "scott": "2b92f42e70350bfd4290058e9cb7afbaba23785d"
+    },
+    "local_bytes_match_published_blobs": true,
+    "reconciliation": "Local sources briefly disappeared during library publication, then returned with identical SHA-256; the earlier untracked observation is superseded."
+  },
+  "validation": {
+    "checks": [
+      {
+        "check": "Both editions and 15 chapter/intro locators present",
+        "result": "passed"
+      },
+      {
+        "check": "Reader compiles without writing bytecode",
+        "result": "passed"
+      },
+      {
+        "check": "Both source hashes, chapter hashes, paragraph counts and all headings match",
+        "result": "passed"
+      },
+      {
+        "check": "Smil cited range resolves to intensification and three paragraphs",
+        "result": "passed"
+      },
+      {
+        "check": "Scott cited range resolves to grain argument and ten paragraphs",
+        "result": "passed"
+      },
+      {
+        "check": "Search is case-insensitive and bounded",
+        "result": "passed"
+      },
+      {
+        "check": "No match is explicit",
+        "result": "passed"
+      },
+      {
+        "check": "Out-of-range citation fails",
+        "result": "passed"
+      },
+      {
+        "check": "Unknown chapter fails",
+        "result": "passed"
+      },
+      {
+        "check": "Reversed range fails",
+        "result": "passed"
+      },
+      {
+        "check": "Invalid search limit fails",
+        "result": "passed"
+      },
+      {
+        "check": "Missing source fails with recovery instruction",
+        "result": "passed"
+      },
+      {
+        "check": "Changed edition fails before reading passages",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> sources.json",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#population-and-subsistence",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-02-land-output-and-labor-output",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-04-population-and-welfare",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#craft-and-shared-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-03-surplus-and-specialization",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-06-prime-movers-have-running-costs",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#food-water-and-reserves",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-04-storage-and-edible-surplus",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-07-water-and-nutrients",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-05-grain-and-legibility",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#organization-and-exchange",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-10-controls-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-06-administration-and-power",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#time-education-and-culture",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-05-processing-and-household-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-13-services-and-welfare",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#progression-without-a-universal-ladder",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-02-land-output-and-labor-output",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-01-settlement-is-not-a-fixed-sequence",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#prestige-and-rebuilding",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-08-collapse-and-survival",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-09-transitions-and-complementary-systems",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#stress-and-recovery",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-12-efficiency-and-rebound",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-07-concentration-and-fragility",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#later-eras",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-08-craft-needs-materials-and-fuel",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#organization-and-exchange",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-09-trade-and-nonstate-neighbors",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> reference-guide.md#time-education-and-culture",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> smil.md#smi-11-energy-constrains-without-determining-culture",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> scott.md#sct-03-mixed-subsistence-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link README.md -> evidence.json",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> ../balance-testing.md#add-balance-coverage-with-content",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> README.md#addresses",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> sources.json",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> evidence.json",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-03-surplus-and-specialization",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-04-population-and-welfare",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-04-storage-and-edible-surplus",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-05-grain-and-legibility",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-07-water-and-nutrients",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-01-useful-energy-and-conversion",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-01-settlement-is-not-a-fixed-sequence",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-05-processing-and-household-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-08-craft-needs-materials-and-fuel",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-10-controls-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-06-administration-and-power",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-09-trade-and-nonstate-neighbors",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-05-processing-and-household-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-13-services-and-welfare",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-10-controls-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-11-energy-constrains-without-determining-culture",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-03-mixed-subsistence-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-08-collapse-and-survival",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-02-land-output-and-labor-output",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-03-surplus-and-specialization",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-04-population-and-welfare",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-04-storage-and-edible-surplus",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-05-processing-and-household-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-07-water-and-nutrients",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-05-grain-and-legibility",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-01-useful-energy-and-conversion",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-05-processing-and-household-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-06-prime-movers-have-running-costs",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-08-craft-needs-materials-and-fuel",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-10-controls-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-06-administration-and-power",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-09-trade-and-nonstate-neighbors",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-03-surplus-and-specialization",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-05-processing-and-household-work",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-10-controls-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-11-energy-constrains-without-determining-culture",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-03-mixed-subsistence-and-knowledge",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-08-collapse-and-survival",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-09-transitions-and-complementary-systems",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-07-concentration-and-fragility",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-12-efficiency-and-rebound",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-01-settlement-is-not-a-fixed-sequence",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-09-trade-and-nonstate-neighbors",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> smil.md#smi-11-energy-constrains-without-determining-culture",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> scott.md#sct-06-administration-and-power",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> sources.json",
+        "result": "passed"
+      },
+      {
+        "check": "Link reference-guide.md -> ../balance-testing.md#add-balance-coverage-with-content",
+        "result": "passed"
+      },
+      {
+        "check": "Link scott.md -> sources.json",
+        "result": "passed"
+      },
+      {
+        "check": "Link smil.md -> sources.json",
+        "result": "passed"
+      },
+      {
+        "check": "smil complete chapter hashes and paragraph indexes",
+        "result": "passed"
+      },
+      {
+        "check": "smil source path preserved",
+        "result": "passed"
+      },
+      {
+        "check": "scott complete chapter hashes and paragraph indexes",
+        "result": "passed"
+      },
+      {
+        "check": "scott source path preserved",
+        "result": "passed"
+      }
+    ],
+    "relative_links_checked": 92,
+    "application_tests": "Not run: no game code, formulas, saves, runtime or UI changed.",
+    "reading_limit": "Targeted chapter survey and close reading of cited passages; not a cover-to-cover close-reading claim."
+  }
+}
