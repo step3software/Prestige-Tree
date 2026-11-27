@@ -27,7 +27,7 @@ function getResetGain(layer, useType = null) {
 		if (derivedState.tmp[layer].baseAmount.lt(derivedState.tmp[layer].requires)) return new Decimal(0)
 		let gain = derivedState.tmp[layer].baseAmount.div(derivedState.tmp[layer].requires).pow(derivedState.tmp[layer].exponent).times(derivedState.tmp[layer].gainMult).pow(derivedState.tmp[layer].gainExp)
 		gain = softcapRules.softcap("normal_layers_2", softcapRules.softcap("normal_layers", gain));
-		if (layer=="e") gain = softcapRules.softcap("epGain", gain);
+
 		return gain.floor().max(0);
 	} else if (type=="custom"){
 		return layerRegistry.layers[layer].getResetGain()
@@ -83,26 +83,7 @@ function shouldNotify(layer){
 		if (!isNaN(id)){
 			if (derivedState.tmp[layer].buyables[id].autoed) continue;
 			if (derivedState.tmp[layer].buyables[id].unlocked && derivedState.tmp[layer].buyables[id].canAfford){
-				if (layer=="s") {
-					if (saveState.player.spaceGlow=="never") continue;
-					if (saveState.player.spaceGlow!="normal") {
-						let str = saveState.player.spaceGlow
-						if (str.includes("+")) str = str.split("+")[0];
-						str = Number(str);
-						let trueId = id-10;
-						if (str>trueId) continue;
-					}
-				} else if (layer=="o") {
-					if (saveState.player.solGlow=="never") continue;
-					if (saveState.player.solGlow!="normal") {
-						let buyableData = { "solar cores onward": 11, "tachoclinal plasma onward": 12, "convectional energy": 13, "convectional energy onward": 13, "coronal waves": 21 }
-						let str = buyableData[saveState.player.solGlow]
-						if (str>id) continue;
-					}
-				} else if (layer=="m") {
-					if (saveState.player.majGlow=="never" || (saveState.player.m.auto && gameHelpers.hasMilestone("hn", 2))) continue;
-					if (saveState.player.majGlow=="uncasted") if (Object.values(saveState.player.m.spellTimes).some(x => Decimal.eq(x, 0))) continue;
-				} else if (layer=="mc" && id==11 && !saveState.player.shellGlow) continue;
+
 				return true
 			}
 		}

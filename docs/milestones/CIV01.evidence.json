@@ -1,0 +1,146 @@
+{
+  "source_revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+  "source_branch": "main",
+  "source_authority": "Explicit owner answer: Use current main (recommended)",
+  "implementation_branch": "codex/civ-resource-opening",
+  "standards_revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+  "standards_verification": "standards_resolver selected and hash-verified plan, prepare and implement topic contexts",
+  "documents": [
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "AGENTS.md",
+      "blob_sha": "3e42b2956fb0ad7618e5fbdb19e5146ad64e401c",
+      "sha256": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/agent-workflows/intent-routing.md",
+      "blob_sha": "8ae0f29d9a92424be17eb5750947f9695deead93",
+      "sha256": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "config/repositories.json",
+      "blob_sha": "d2f7596ced7c4777dde9e2452d6696b9870ae3e5",
+      "sha256": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "README.md",
+      "blob_sha": "5c8cc53a1177c625f5a9b236ea33ce37eb44fc7d",
+      "sha256": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "standards/catalog.json",
+      "blob_sha": "84f26ad5165dc2f10b4b116cdc5cef8a862a8b65",
+      "sha256": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/agent-workflows/plan.md",
+      "blob_sha": "8c9ad2736ecff74ac715cbd33eb14910e6f75ac8",
+      "sha256": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/documentation-first-planning.md",
+      "blob_sha": "c9da986549b97943718d9c71e160394269ff1bc1",
+      "sha256": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/delivery-principles.md",
+      "blob_sha": "831cfb5a8ce7674be324bd3bb44274d2e99516ac",
+      "sha256": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/agent-workflows/documentation-review.md",
+      "blob_sha": "3756f9fbcee909f71a660dcaf66c8142fa59ce32",
+      "sha256": "bfbab8f774464a6e9a0e134ad49064193b4ccd611212ff7d9e10b14aa53d8cd9"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/standards/readable-code.md",
+      "blob_sha": "00768466fbe5a66ae6ba43e7c29b281185a86900",
+      "sha256": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/standards/no-legacy-modes.md",
+      "blob_sha": "804dd7bc48aa67899aeb8f18a136910b9badd870",
+      "sha256": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/agent-workflows/implement.md",
+      "blob_sha": "9f880076f12c93a751a54b26673620d35c0ede00",
+      "sha256": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/agent-workflows/prepare.md",
+      "blob_sha": "70212c5879db2f239c1e6bdd30f010c361dfef2f",
+      "sha256": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/pr-development-coordination.md",
+      "blob_sha": "3812ea0c9cba46cf338ddf2b661e314fe14b0975",
+      "sha256": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e"
+    },
+    {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+      "path": "docs/development-workflow.md",
+      "blob_sha": "c4ec6d15a75cb19aa5801520487ad80f1c71d6fd",
+      "sha256": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6"
+    },
+    {
+      "repository": "step3software/Prestige-Tree",
+      "revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+      "path": "AGENTS.md",
+      "blob_sha": "bc1331477d12bea3ddabac766afc9550348a6b0b",
+      "sha256": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9"
+    },
+    {
+      "repository": "step3software/Prestige-Tree",
+      "revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+      "path": ".orcha/repository.json",
+      "blob_sha": "039cae6a2b9b0596c20394d2278246c7ca96d7cb",
+      "sha256": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585"
+    },
+    {
+      "repository": "step3software/Prestige-Tree",
+      "revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+      "path": "docs/developer-guide.md",
+      "blob_sha": "850cade35f40df1179e4c4ad6689cd70c72a0fc7",
+      "sha256": "92d019fd3f7c8eaf2bda802b5324677a2ba1e06ea8c294c87efc53e15b68934d"
+    },
+    {
+      "repository": "step3software/Prestige-Tree",
+      "revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+      "path": "docs/!general-info.md",
+      "blob_sha": "caea6bc5ebc707b28ad943e141f0ac960548ed70",
+      "sha256": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    }
+  ],
+  "plan_sha256": "0653d157c1fe5bd65c5cb2e542c21371c8eb1dcc88028d97c7d8170fce75a45b",
+  "preparation_sha256": "87c8d7fa62f675d02769b0161810e91f5ad78908c1d62e4252ab5aceb8d7ed62",
+  "native_lifecycle": "No enrollment, acceptance or transition performed."
+}

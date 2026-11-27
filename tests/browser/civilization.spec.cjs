@@ -1,0 +1,93 @@
+const {test,expect}=require('@playwright/test');
+async function open(page){
+    const errors=[];page.on('pageerror',error=>errors.push(error.message));
+    await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
+    await page.goto('/');await expect(page.getByRole('heading',{name:'Population',exact:false})).toBeVisible();
+    await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());
+    return errors;
+}
+const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
+test('fresh game renders the resource tree, shared labor and current growth constraint',async({page})=>{
+    const errors=await open(page);
+    await expect(page.getByTestId('population')).toHaveText('5');
+    await expect(page.getByRole('button',{name:/^Money, locked/})).toBeVisible();
+    await node(page,'Water').click();
+    await expect(page.locator('#resource-title')).toHaveText('Water');
+    await expect(page.getByText('Population upkeep',{exact:true})).toBeVisible();
+    await page.evaluate(()=>gameUI.session.advance(60));
+    await expect(page.getByTestId('population')).toHaveText('8');
+    await expect(page.getByText('Growth paused',{exact:true})).toBeVisible();
+    await page.getByRole('button',{name:'Shelter',exact:true}).click();
+    await expect(page.locator('#resource-title')).toHaveText('Shelter');
+    expect(errors).toEqual([]);
+});
+test('real construction controls recover the foundation and improve capacity',async({page})=>{
+    const errors=await open(page);
+    await page.getByRole('button',{name:/Expand gathering grounds/}).click();
+    await expect(page.getByRole('button',{name:/Weave food baskets/})).toBeDisabled();
+    await page.evaluate(()=>gameUI.session.advance(60));
+    await expect(page.getByText('Supply capacity: 13 / min.',{exact:false})).toBeVisible();
+    await node(page,'Water').click();await page.getByRole('button',{name:/Improve water collection/}).click();
+    await page.evaluate(()=>gameUI.session.advance(60));
+    await node(page,'Shelter').click();await page.getByRole('button',{name:/Build a new hut/}).click();
+    await page.evaluate(()=>gameUI.session.advance(90));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.points.toNumber())).toBe(12);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBeGreaterThan(8);
+    expect(errors).toEqual([]);
+});
+test('prestige preview, cancellation and confirmation match retained game state',async({page})=>{
+    const errors=await open(page);
+    // Synthetic prepared economy isolates the destructive-action UI contract.
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await node(page,'Craft').click();
+    await expect(page.getByText('Population, housing, infrastructure, construction and every other resource',{exact:true})).toBeVisible();
+    page.once('dialog',dialog=>dialog.dismiss());
+    await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(50);
+    page.once('dialog',async dialog=>{expect(dialog.message()).toContain('Keep Population');await dialog.accept();});
+    await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBe(8);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(0);
+    await expect(page.getByRole('button',{name:'Develop Craft',exact:true})).toBeDisabled();
+    expect(errors).toEqual([]);
+});
+test('save, reload, native save dialog and denied import preserve progress',async({page})=>{
+    const errors=await open(page);
+    await page.evaluate(()=>{gameUI.session.advance(30);localStorage.setItem('ptr','keep-original');});
+    await page.getByRole('button',{name:'Save',exact:true}).click();
+    await expect(page.locator('#save-status')).toContainText('Saved');
+    const population=await page.getByTestId('population').textContent();
+    await page.reload();await expect(page.getByTestId('population')).toHaveText(population);
+    expect(await page.evaluate(()=>localStorage.getItem('ptr'))).toBe('keep-original');
+    await page.getByRole('button',{name:'Settlements',exact:true}).click();
+    const dialog=page.getByRole('dialog',{name:'Your settlements'});await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();
+    await expect(page.getByRole('button',{name:'Settlements',exact:true})).toBeFocused();
+    await page.getByRole('button',{name:'Settings',exact:true}).click();
+    page.once('dialog',dialog=>dialog.accept('invalid-save'));
+    page.on('dialog',dialog=>{if(dialog.type()==='alert')dialog.accept();});
+    await page.getByRole('button',{name:'Import save',exact:true}).click();
+    await expect(page.getByTestId('population')).toHaveText(population);
+    expect(errors).toEqual([]);
+});
+test('keyboard navigation and narrow reflow retain named, usable controls',async({page})=>{
+    const errors=await open(page);
+    for(const width of [1280,768,375,320]){
+        await page.setViewportSize({width,height:900});
+        await node(page,'Water').focus();await page.keyboard.press('Enter');
+        await expect(page.locator('#resource-title')).toHaveText('Water');
+        await expect(page.getByRole('button',{name:/Improve water collection/})).toBeVisible();
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth+1)).toBe(true);
+    }
+    await page.selectOption('#priority','water');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.priority)).toBe('water');
+    await page.emulateMedia({reducedMotion:'reduce'});
+    await expect(page.getByRole('button',{name:/Improve water collection/})).toBeVisible();
+    expect(errors).toEqual([]);
+});
+test('corrupt Civ storage shows recovery while preserving original bytes',async({page})=>{
+    await page.addInitScript(()=>localStorage.setItem('civ-prestige-tree','damaged-civ-save'));
+    await page.goto('/');await expect(page.getByRole('heading',{name:'Recover your settlement'})).toBeVisible();
+    expect(await page.evaluate(()=>localStorage.getItem('civ-prestige-tree'))).toBe('damaged-civ-save');
+    await expect(page.locator('#save-original')).toHaveValue('damaged-civ-save');
+});

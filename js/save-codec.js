@@ -9,7 +9,7 @@ function optionalPlayerFields() {
 // Pure ingress/egress boundary. Configuration/defaults (including time) are
 // supplied by the caller. No storage, active player, clock, UI or timer effects.
 /** @returns {SaveCodec} */
-function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
+function createSaveCodec({ defaults, layerDefinitions, version, modId, validatePlayer = () => {} }) {
 	const playerDefaults = Object.assign({}, defaults, { version: String(version.num) });
 	const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 	const record = value => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -100,10 +100,7 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 				if (!own(definition.microtabs[group], data.subtabs[id][group])) data.subtabs[id][group] = Object.keys(definition.microtabs[group])[0];
 			}
 		}
-		if (data.ma) {
-			check(data.ma.mastered.every(id => own(layerDefinitions, id)), "Unknown mastered layer.");
-			check(data.ma.current === null || (typeof data.ma.current === "string" && own(layerDefinitions, data.ma.current)), "Unknown mastery selection.");
-		}
+
 		for (let key of Object.keys(data.notify)) {
 			check(knownTab(key) && [false, true, 0, 1].includes(data.notify[key]), "Invalid notification.");
 		}
@@ -128,6 +125,7 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 	function playerCandidate(raw) {
 		check(record(raw) && own(raw, "points"), "Invalid player save.");
 		let data = copy(raw);
+		check(data.versionType === modId, "This save belongs to a different game. Original Prestige Tree saves cannot be imported into Civ.");
 		for (let key of Object.keys(data)) {
 			check(own(defaults, key) || own(optionalFields, key), "Unsupported player field: " + key);
 		}
@@ -137,9 +135,7 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 		if (data.version !== undefined) {
 			check(typeof data.version === "string" && /^\d+(?:\.\d+)?$/.test(data.version) && Number(data.version) <= Number(version.num), "Unsupported save version.");
 		}
-		if (record(data.ge) && record(data.ge.clickables)) {
-			for (let id of [11, 12, 13]) if (data.ge.clickables[id] === "") data.ge.clickables[id] = "0";
-		}
+
 		const addedLayerFields = { activeChallenge: null, unlockOrder: 0, timePlayed: 0, best: new Decimal(0), total: new Decimal(0) };
 		for (let id of Object.keys(layerDefinitions)) {
 			if (!record(data[id])) continue; // hydrate rejects malformed present records.
@@ -160,6 +156,7 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 			check(record(data.offTime) && Number.isFinite(data.offTime.remain) && data.offTime.remain >= 0, "Invalid offline time.");
 		}
 		checkReferences(data);
+		validatePlayer(data);
 		if (data.versionType === modId && oldVersion !== undefined && Number(oldVersion) < Number(version.num)) data.keepGoing = false;
 		data.version = String(version.num);
 		data.beta = version.beta;

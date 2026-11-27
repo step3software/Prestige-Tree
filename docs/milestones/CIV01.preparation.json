@@ -1,0 +1,788 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#CIV01",
+  "plan_sha256": "0653d157c1fe5bd65c5cb2e542c21371c8eb1dcc88028d97c7d8170fce75a45b",
+  "base_revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+  "implementation_branch": "codex/civ-resource-opening",
+  "validation_commands": [
+    "npm run build",
+    "npm run test:static",
+    "npm test"
+  ],
+  "handoff_instructions": [
+    "Use only this dedicated branch and writer claim.",
+    "Keep the existing session, runtime and storage owners.",
+    "Remove old content from the shipped graph and validate the exact new graph.",
+    "Do not touch ptr storage or publish/merge main."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "js/layers/achievements.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/artificial-intelligence.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/autobuyers.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/balance.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/blank.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/boosters.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/civilizations.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/energy.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/enhance.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/gears.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/generators.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/hindrance.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/honour.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/hyperspace.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/ideas.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/imperium.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/info-tab.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/machines.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/magic.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/mastery.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/nebula.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/neurons.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/options-tab.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/phantom-souls.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/prestige.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/quirks.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/robots.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/softcaps.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/solarity.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/space.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/subspace.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/super-boosters.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/super-generators.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/time.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/tree-tab.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/clock.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/layer-content.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/progression.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/runtime-lifecycle.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/save-boundary.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/save-safety.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/session-ownership.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/startup-reentry.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/vue-interface.test.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/browser/game.spec.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/browser/runtime-lifecycle.spec.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/browser/save-recovery.spec.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/browser/session-ownership.spec.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/browser/vue-interface.spec.cjs",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/technical/systemComponents.js",
+      "operation": "delete",
+      "implementation": "Remove replaced Prestige Tree content and content-specific regressions; cover retained safety contracts in the Civ suites.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/mod.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/tree.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/sc.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/help.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/manifest.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/game.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/utils.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/components.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/game-session.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/save-codec.js",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "scripts/build.cjs",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "scripts/check-package.cjs",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "scripts/check-static-sensitivity.cjs",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "scripts/verify-regressions.cjs",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "jsconfig.json",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "README.md",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "package.json",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "operation": "modify",
+      "implementation": "Wire the Civ resource economy and interface into the existing session/save/runtime owners; remove old-content dependencies, update graph/package checks and focused documentation.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "civ.css",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/civilization.js",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/layers/resources.js",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/civilization.test.cjs",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/civ-saves.test.cjs",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/rules/civ-runtime.test.cjs",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "tests/browser/civilization.spec.cjs",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/civilization.md",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/milestones/CIV01.md",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/milestones/CIV01.plan.json",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/milestones/CIV01.preparation.json",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/milestones/CIV01.verification.md",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "docs/milestones/CIV01.evidence.json",
+      "operation": "create",
+      "implementation": "Implement the Civ resource design, exact source/preparation evidence, and deterministic plus browser verification.",
+      "verification": [
+        "npm test",
+        "Review current game graph and packaged bytes"
+      ]
+    },
+    {
+      "path": "js/saves.js",
+      "operation": "modify",
+      "implementation": "Pass the content-specific validation hook through the existing saveCodec configuration; retain all atomic persistence and recovery behavior.",
+      "verification": [
+        "node --test tests/rules/civ-saves.test.cjs",
+        "npm test"
+      ]
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "modify",
+      "implementation": "Run retained read-only CI checks on main and the Civ branch; remove the obsolete old-formula baseline fetch. Gameplay sensitivity mutates actual Civ prestige in memory.",
+      "verification": [
+        "Inspect retained action pins and contents:read permissions",
+        "npm test"
+      ]
+    }
+  ],
+  "source_branch_owner_answer": "Use current main (recommended)",
+  "authority": "Direct implementation request in this chat; no native lifecycle transition or approval is manufactured.",
+  "reconciliation_note": "Preparation refined to name the existing saveCommands codec-construction call site required by the planned content validation hook. No new behavior or external authority."
+}

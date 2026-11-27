@@ -1,42 +1,32 @@
-# Prestige Tree development fork
+# Civ Prestige Tree
 
-This is `step3software/Prestige-Tree`, forked from
-[Jacorb90/Prestige-Tree](https://github.com/Jacorb90/Prestige-Tree).
-Build balance tests alongside new or replaced content. The
-[balance testing guide](docs/balance-testing.md#add-balance-coverage-with-content)
-explains checkpoints, play policies, focused tests and timing evidence.
-`npm run balance` provides rough estimates and fixed-step comparisons for active
-and five-minute regular play; current coverage is a foundation for the new content.
-For development, start with [AGENTS.md](AGENTS.md), the
-[Orcha manifest](.orcha/repository.json) and the
-[development guide](docs/developer-guide.md). Project source is `master`;
-shared Orcha standards follow current published `main`.
+Grow a civilization from five people. Population supplies shared labor; Food and Water sustain growth; Shelter creates room. Develop Craft and Organization, then Money, free Time, Education and Culture.
 
-Run locked regression checks from the [development guide](docs/developer-guide.md#verify-a-focused-change).
-Build and preview the static Vue 3 package with `npm ci`, `npm run build`, then
-`npm run serve` from the isolated worktree root. See the
-[current interface/package owners](docs/developer-guide.md#vue-interface-and-packaging)
-and [UI01 verification](docs/milestones/UI01.verification.md).
-See [TST01 verification](docs/milestones/TST01.verification.md) for the implemented
-test foundation, fixed defects and evidence limits.
+This game replaces the fork's original Prestige Tree Rewritten content. It runs on the retained session-bound Modding Tree engine with Vue 3 and Decimal arithmetic. Original attribution and both licenses are retained.
 
-Proposed delivery milestones (documentation proposals; dependencies are technical sequencing, not runtime status):
+## Play locally
 
-| Milestone | Outcome | Depends on |
-| --- | --- | --- |
-| [TST01](docs/milestones/TST01.md) | Repeatable game regression testing | Foundation |
-| [SAV01](docs/milestones/SAV01.md) | Separate save validation and persistence | TST01 |
-| [SIM01](docs/milestones/SIM01.md) | Deterministic simulation and explicit runtime lifecycle | TST01 |
-| [LAY01](docs/milestones/LAY01.md) | Organize game content by layer | TST01, SIM01 (soft) |
-| [DEV01](docs/milestones/DEV01.md) | Explicit state ownership and enforceable JavaScript contracts | SAV01, SIM01, LAY01 |
-| [UI01](docs/milestones/UI01.md) | Migrate the interface to supported Vue | TST01, DEV01 |
+From a dedicated worktree, use Node 24.22.1 and npm 11.19.1:
 
-## Upstream engine introduction
+```powershell
+npm ci
+npm run build
+npm run serve
+```
 
-### The-Modding-Tree
+Open http://127.0.0.1:8000/. The static `dist/` package contains its own Vue runtime; gameplay makes no external requests. Stop the local server with Ctrl+C.
 
-A modified version of The Prestige Tree that is much easier to mod. It still requires programming knowledge, but it's mostly pretty easy things and copy/pasting.
+Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime rules and Chromium journeys. Playwright requires its matching Chromium installation (`npx playwright install chromium`).
 
-[Look here for a tutorial on getting started with modding with TMT](docs/getting-started.md)
+## Find and change the rules
 
-You can look in the [documentation](docs/!general-info.md) for feature reference, or start at the current [layer manifest](js/layers/manifest.js) and [state ownership guide](docs/developer-guide.md#state-and-command-ownership).
+- [Civilization design](docs/civilization.md): resource relationships, pacing coefficients, reset consequences and save isolation.
+- [Developer guide](docs/developer-guide.md): actual owners, commands and focused checks.
+- [CIV01 delivery scope](docs/milestones/CIV01.md), [preparation](docs/milestones/CIV01.preparation.json) and [verification](docs/milestones/CIV01.verification.md).
+- [Agent instructions](AGENTS.md), [Orcha manifest](.orcha/repository.json) and [engine feature reference](docs/!general-info.md).
+
+Civ uses `civ-prestige-tree` browser storage. The previous game's `ptr` saves are neither read nor changed. Export Civ saves through Settings to back them up. Incompatible imports are rejected; malformed or inaccessible storage opens recovery without overwriting the original.
+
+The owner explicitly selected current `main` at `0098433` for this replacement. The retained manifest/AGENTS still name `master`; this direct-session source exception does not silently change Orcha's registry or native milestone authority.
+
+Based on [The Prestige Tree](https://github.com/Jacorb90/Prestige-Tree) by Jacorb and Aarex and The Modding Tree by Acamaeda; original idea by papyrus. See [LICENSE](LICENSE) and [Prestige-tree-license](Prestige-tree-license).
