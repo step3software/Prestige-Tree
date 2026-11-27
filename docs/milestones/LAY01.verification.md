@@ -251,3 +251,38 @@ create its separate chat/worktree/branch from the verified final LAY01 head and
 use LAY01 as the stacked PR base. Refresh standards, sources, dependencies, plan/
 preparation and independent model/quota/priority/pause/writer/authority gates.
 No native acceptance, merge, deployment or activation is inferred from delivery.
+
+## PR #5 CI baseline repair — 27 November 2026
+
+At `b29d034a3419d8ade0fe30d6cd44fa5712a908e3`, PR #6 had been squash-merged
+into this branch. The original DEV01 commit `51a9b96c9949e6d0f96a65d5650ecac575fb9da8`
+was no longer reachable from advertised branch history. The full-depth CI checkout
+therefore omitted the exact source required by three Vue early/middle/late comparisons.
+[Failed PR run 46021438951](https://github.com/step3software/Prestige-Tree/actions/runs/46021438951)
+stopped with 153 passing rules and three failing `git show ...:index.html` calls.
+
+The workflow now explicitly fetches that exact immutable commit before setup/test
+execution. The developer guide documents the same fetch for clean local clones,
+including its GitHub network effect and why full-depth history is insufficient
+after a squash merge. Comparison identities/assertions, application code, workflow
+permissions, pinned actions, dependencies, save data and branch targets are unchanged.
+
+A fresh single-branch GitHub clone at the failing head reproduced the missing
+`index.html` object. `git fetch --no-tags origin 51a9b96c9949e6d0f96a65d5650ecac575fb9da8`
+restored it. Locked `npm ci` and build passed; all three formerly failing real-Vue
+state/tick/save comparisons then passed without skips or changed assertions.
+The complete local suite and updated-head hosted CI are publication checks;
+their final observed outcomes are recorded in the PR/local evidence after the run.
+
+This bounded correction follows TST01 AC01/09, DEV01 AC06, UI01 regression
+preservation, RC-01/06/07 and the shared fix procedure. README → developer guide →
+verification setup → the named workflow fetch → `vue-interface.test.cjs` supplies
+the reader route. No new player journey is needed for Git test-source setup;
+existing full browser journeys remain required and unchanged. Current Orcha main
+was freshly resolved at `cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78`;
+[standards/source document hashes](PR5-ci-standards.json) record canonical master
+`5354011` separately from the changing PR head. The existing owned writer fence
+was verified and extended for this exact workflow/documentation scope.
+All four changed paths (workflow, developer guide, this appendix and hash record)
+were inspected; `git diff --check` passes. No merge, deployment, activation,
+permission change or new milestone acceptance follows.

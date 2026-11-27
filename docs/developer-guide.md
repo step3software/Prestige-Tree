@@ -252,6 +252,7 @@ From a dedicated worktree root on Windows or the Ubuntu CI runner:
 ```powershell
 npm ci
 npx playwright install chromium
+git fetch --no-tags origin 51a9b96c9949e6d0f96a65d5650ecac575fb9da8
 npm run build
 npm run test:package
 npm run test:syntax
@@ -272,6 +273,13 @@ Every required test command exits **0** on success and nonzero on failure.
 `npm test` runs all six required checks after installation. For a focused rule
 run, use `node --test --test-name-pattern="F1" tests/rules/save-safety.test.cjs`;
 the final required suite must run without filtering, skips or retries.
+
+The explicit Git fetch supplies the immutable DEV01 source used by the Vue
+early/middle/late comparisons. A full-depth checkout contains reachable history;
+it can omit this commit after a squash merge and source-branch deletion. CI runs
+the same fetch before testing. It contacts this fork on GitHub and changes no
+working files or branch refs. Keep the comparison pinned; do not substitute the
+current source or skip the regression when historical source is missing.
 
 | Behavior to change | Test and concrete entry route |
 | --- | --- |
