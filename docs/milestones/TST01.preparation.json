@@ -1,0 +1,360 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#TST01",
+  "plan_sha256": "7d850cdd3bdf831c314d1dc64446f3fa29223431a8adc1808713081267636c9f",
+  "base_revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+  "handoff_head": "f717064156b66f4a8ed98b586ccbedcac3d88221",
+  "implementation_branch": "codex/tst01-testing-milestone",
+  "validation_commands": [
+    "npm ci",
+    "npm run test:syntax",
+    "npm run test:rules",
+    "npm run test:sensitivity",
+    "npx playwright install chromium",
+    "npm run test:browser",
+    "git diff --check"
+  ],
+  "handoff_instructions": [
+    "Continue PR #2 and its existing milestone branch after verifying exclusive fenced writer protection.",
+    "The owner request in this chat explicitly authorizes review, fixes and the full TST01 development cycle; this direct legacy-mode run grants no native lifecycle receipt or runtime enrollment.",
+    "Retain the original plan/specification as the historical planning snapshot; this handoff binds those exact validated bytes.",
+    "Commit the harness, run and publish baseline failure evidence, then commit only F1-F3 repairs and verify the current complete candidate.",
+    "Keep follow-on milestone documents as proposals; do not implement them, change source branch/save key/layer IDs/Decimal or licenses, merge, deploy, activate services or change policy."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "package.json",
+      "operation": "create",
+      "implementation": "Pin Node 24.22.1, npm 11.19.1, Playwright 1.65.1 and test-local Vue 2.6.12; expose syntax, rule, browser and sensitivity commands.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC08."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC08"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "operation": "create",
+      "implementation": "Generate the npm lock with exact dependency integrity metadata; use npm ci.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC08."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC08"
+      ]
+    },
+    {
+      "path": ".node-version",
+      "operation": "create",
+      "implementation": "Pin 24.22.1 for developers and setup-node.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01"
+      ]
+    },
+    {
+      "path": ".gitignore",
+      "operation": "create",
+      "implementation": "Ignore installed modules and bounded generated Playwright reports/results only.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC02."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC02"
+      ]
+    },
+    {
+      "path": "playwright.config.cjs",
+      "operation": "create",
+      "implementation": "Use one Chromium project, no retries, isolated contexts, local webServer, bounded failure diagnostics.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC02, TST01-AC07, TST01-AC08, TST01-AC09."
+      ],
+      "acceptance_ids": [
+        "TST01-AC02",
+        "TST01-AC07",
+        "TST01-AC08",
+        "TST01-AC09"
+      ]
+    },
+    {
+      "path": "scripts/check-syntax.cjs",
+      "operation": "create",
+      "implementation": "Derive shipped scripts from index.html; syntax-check them and tracked test/config scripts.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC08."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC08"
+      ]
+    },
+    {
+      "path": "scripts/verify-regressions.cjs",
+      "operation": "create",
+      "implementation": "Run F1-F3 baseline and save/offline mutations against in-memory source variants in disposable runtimes; require nonzero failing assertions.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC09."
+      ],
+      "acceptance_ids": [
+        "TST01-AC09"
+      ]
+    },
+    {
+      "path": "tests/support/game-runtime.cjs",
+      "operation": "create",
+      "implementation": "Execute the actual ordered page scripts and shipped Decimal in a fresh VM; explicit clock, timer, prompt, reload, clipboard and memory-storage adapters.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC02, TST01-AC03, TST01-AC04, TST01-AC05, TST01-AC06."
+      ],
+      "acceptance_ids": [
+        "TST01-AC02",
+        "TST01-AC03",
+        "TST01-AC04",
+        "TST01-AC05",
+        "TST01-AC06"
+      ]
+    },
+    {
+      "path": "tests/support/server.cjs",
+      "operation": "create",
+      "implementation": "Serve the real page at loopback, replacing only pinned Vue and remote font URLs in the test response. Confine file paths and MIME types.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC02, TST01-AC07, TST01-AC08."
+      ],
+      "acceptance_ids": [
+        "TST01-AC02",
+        "TST01-AC07",
+        "TST01-AC08"
+      ]
+    },
+    {
+      "path": "tests/fixtures/representative-save.json",
+      "operation": "create",
+      "implementation": "Commit an entirely synthetic current-format save with huge Decimals, milestone/upgrade IDs, Decimal arrays and additional dormant-layer fields.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC03, TST01-AC04."
+      ],
+      "acceptance_ids": [
+        "TST01-AC03",
+        "TST01-AC04"
+      ]
+    },
+    {
+      "path": "tests/rules/progression.test.cjs",
+      "operation": "create",
+      "implementation": "Assert initialization, purchase guards, first prestige/reset, progression, Decimal/export/save/reload and multiple-save retention.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC02, TST01-AC03."
+      ],
+      "acceptance_ids": [
+        "TST01-AC02",
+        "TST01-AC03"
+      ]
+    },
+    {
+      "path": "tests/rules/save-safety.test.cjs",
+      "operation": "create",
+      "implementation": "Assert invalid imports and storage failures preserve active/durable state and future autosave; accepted imports reload; cancellation/names; failed ticks stop unsafe mutation and clear guard.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC04, TST01-AC06, TST01-AC09."
+      ],
+      "acceptance_ids": [
+        "TST01-AC04",
+        "TST01-AC06",
+        "TST01-AC09"
+      ]
+    },
+    {
+      "path": "tests/rules/clock.test.cjs",
+      "operation": "create",
+      "implementation": "Assert seconds at zero/backwards/below/at/above hour cap, offline disabled and catch-up conservation with controlled time.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC05, TST01-AC09."
+      ],
+      "acceptance_ids": [
+        "TST01-AC05",
+        "TST01-AC09"
+      ]
+    },
+    {
+      "path": "tests/browser/game.spec.cjs",
+      "operation": "create",
+      "implementation": "Exercise rendered startup, prestige/upgrades/progression, save/reload, accepted/rejected imports and menu cancellation; keyboard and narrow recovery feedback.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC07, TST01-AC09."
+      ],
+      "acceptance_ids": [
+        "TST01-AC07",
+        "TST01-AC09"
+      ]
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "create",
+      "implementation": "Run locked install, syntax/rules/sensitivity/Chromium on existing public hosted capacity with read-only permissions and bounded failure artifacts. Capture a real failed baseline run before the fixed run.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC08, TST01-AC09."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC08",
+        "TST01-AC09"
+      ]
+    },
+    {
+      "path": "js/utils.js",
+      "operation": "modify",
+      "implementation": "F1: validate/repair an isolated import candidate, atomically persist before publishing player, visibly report recoverable failure; F3: handle cancellation/empty/invalid save names. Bound offline accumulation in seconds without backwards grants.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC04, TST01-AC05, TST01-AC06."
+      ],
+      "acceptance_ids": [
+        "TST01-AC04",
+        "TST01-AC05",
+        "TST01-AC06"
+      ],
+      "source": {
+        "revision": "f717064156b66f4a8ed98b586ccbedcac3d88221",
+        "sha256": "b445cf9285d6f236cccadbaf2970c0343f57f6358c728af6bf5ee8b1100e6cb1",
+        "git_blob": "a3f8734fcf17689e2d78b0b4f9a6b0a9dec8d763"
+      }
+    },
+    {
+      "path": "js/game.js",
+      "operation": "modify",
+      "implementation": "F1: tick try/finally plus explicit fault latch stops tick/autosave after exceptions. F2: cap/consume offline seconds only when enabled, never consume beyond bank.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC04, TST01-AC05."
+      ],
+      "acceptance_ids": [
+        "TST01-AC04",
+        "TST01-AC05"
+      ],
+      "source": {
+        "revision": "f717064156b66f4a8ed98b586ccbedcac3d88221",
+        "sha256": "5e445fdfa6c711fd477799d32bd792fe051005b7b66573e2b22949103eddc2f3",
+        "git_blob": "18bc1a69359fb9ceaeb22a7081895280e2372047"
+      }
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Replace baseline limitations with exact install/test commands, pinned versions, source/test trace, fixtures, generated outputs, isolation and browser limits.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC10."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC10"
+      ],
+      "source": {
+        "revision": "f717064156b66f4a8ed98b586ccbedcac3d88221",
+        "sha256": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190",
+        "git_blob": "cda3d726c8dbd52dc41d4b2e84965acbd10434ac"
+      }
+    },
+    {
+      "path": "README.md",
+      "operation": "modify",
+      "implementation": "Link existing developer guide test commands and the current TST01 implementation evidence without duplicating setup.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC01, TST01-AC10."
+      ],
+      "acceptance_ids": [
+        "TST01-AC01",
+        "TST01-AC10"
+      ],
+      "source": {
+        "revision": "f717064156b66f4a8ed98b586ccbedcac3d88221",
+        "sha256": "6fd00c64fc4e7481a3e8bde7c39e7d60fd276b4cc137423ffc01e42c9b8ef3f7",
+        "git_blob": "e3060d1a4c8ce3765635834ef6c3c3ebd8496cfa"
+      }
+    },
+    {
+      "path": "docs/milestones/TST01.verification.md",
+      "operation": "create",
+      "implementation": "Record complete review requirements/path accounting, scenario/criterion checks, baseline/sensitivity and fresh local/CI results with limits; no acceptance claims.",
+      "verification": [
+        "Run the relevant required command and inspect actual outcomes for TST01-AC09, TST01-AC10."
+      ],
+      "acceptance_ids": [
+        "TST01-AC09",
+        "TST01-AC10"
+      ]
+    }
+  ],
+  "standards_observation": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+    "document_sha256": {
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+      "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+      "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+      "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+      "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+      "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+      "docs/agent-workflows/prepare.md": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255",
+      "docs/agent-workflows/implement.md": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51",
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+      "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+    },
+    "purpose": "Current-run observation; not a consumer pin"
+  },
+  "owner_authority": {
+    "channel": "Codex chat 01a21b4b-29cd-7771-a66e-5624fda67054",
+    "request": "Review https://github.com/step3software/Prestige-Tree/pull/2 against orcha and project standards and fix any issues you find. Perform a full development cycle on the new milestone.",
+    "scope": "Direct TST01 preparation, implementation, verification, review/fix and unmerged publication; no automated enrollment or milestone acceptance"
+  },
+  "technical_choices": [
+    "Use current installed Node 24.22.1 and exact npm metadata for Playwright 1.65.1 / Vue 2.6.12.",
+    "Existing repository Actions enabled, public, no self-hosted runners: ubuntu-24.04 standard public hosted runner; no paid capacity or policy changes."
+  ],
+  "source_invariants": [
+    "Retain ptr storage key, layer registry/IDs, licenses and real Decimal semantics.",
+    "Missing known save fields use existing defaults; malformed present fields reject before active/durable mutation; no format migration or permanent compatibility mode.",
+    "Tick faults latch until reload; clearing ticking never silently resumes unsafe state."
+  ],
+  "user_outcome_journeys": [
+    {
+      "criteria": [
+        "TST01-AC04",
+        "TST01-AC06",
+        "TST01-AC07"
+      ],
+      "task_and_start": "Player with synthetic valid progress opens Options, imports or cancels New Save/Rename.",
+      "success": "Valid import survives reload; cancellation changes neither active selection nor stored progress.",
+      "failure_recovery": "Invalid input/storage failure preserves valid state and shows native keyboard-operable alert; player can retry valid input.",
+      "quality": "Rendered Chromium, keyboard dismissal, 1280x800 and 320x800; no invented performance budget or actual-user claim.",
+      "status": "planned"
+    },
+    {
+      "criteria": [
+        "TST01-AC01",
+        "TST01-AC08",
+        "TST01-AC09"
+      ],
+      "task_and_start": "Developer starts from a clean Windows checkout or public Linux runner.",
+      "success": "Locked install and identical required commands expose regressions with nonzero exits.",
+      "failure_recovery": "Bounded synthetic trace/report retained on failure; fix and rerun without skip/retry masking.",
+      "status": "planned"
+    }
+  ],
+  "rollback": "Revert only TST01 implementation commits on this branch; no external game data or release is changed. Retain original valid saves on failed imports.",
+  "status": "Validated direct-session preparation, not a source-native acceptance receipt"
+}
