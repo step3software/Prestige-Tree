@@ -130,6 +130,8 @@ The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simul
 
 `policy.cjs` uses one construction project at a time, restarts available expeditions, buys automation and enables separate repeat orders. It funds later Food autonomy through Education and retained Craft. The observed best policy is not a proven optimum or actual-user timing. No manual choices occur between configured checks; batch jobs, construction and earned automation continue normally.
 
+Buyables now reset on either prestige until lifetime Organization protects Water at 1, Food at 3 and Shelter at 5. Policies earn the first Craft, then prioritize these retention milestones before repeated Craft gains. The catalog records each retention threshold; all active/regular opening runs must reach all three. Auto-building is earned at 2 lifetime Organization and remains available after spending it. This policy revision exercises the new reset rules through legal play rather than granting retained infrastructure.
+
 ## Rough and fixed calibration
 
 Civ advances internally in one-second steps. Fixed mode uses the selected outer step (default 5 seconds); rough mode coalesces engine/cache calls while retaining the same adaptive manual cadence. Checkpoint observation is capped to 5 seconds before farming and 15 before Education/Culture discovery, then up to the selected maximum. Entry windows describe observation precision, not statistical uncertainty. Resources and decisions remain governed by actual content rules.

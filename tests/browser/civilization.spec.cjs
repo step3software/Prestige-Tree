@@ -41,17 +41,38 @@ test('real construction controls recover the foundation and improve capacity',as
 test('prestige preview, cancellation and confirmation match retained game state',async({page})=>{
     const errors=await open(page);
     // Synthetic prepared economy isolates the destructive-action UI contract.
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.food.routes.gather=2;p.shelter.homes=1;p.shelter.points=new Decimal(12);});
     await node(page,'Craft').click();
-    await expect(page.getByText('Population, housing, infrastructure, construction and every other resource',{exact:true})).toBeVisible();
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Food, Water, Shelter buyables');
+    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Population; permanent upgrades; repeat orders');
     page.once('dialog',dialog=>dialog.dismiss());
     await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(50);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(2);
     page.once('dialog',async dialog=>{expect(dialog.message()).toContain('Keep Population');await dialog.accept();});
     await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBe(8);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(0);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(0);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(0);
     await expect(page.getByRole('button',{name:'Develop Craft',exact:true})).toBeDisabled();
+    expect(errors).toEqual([]);
+});
+
+test('Organization shows permanent milestones and previews rewards earned by the next prestige',async({page})=>{
+    const errors=await open(page);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.routes.gather=2;p.water.sites=2;p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await node(page,'Organization').click();
+    await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
+    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Water buyables');
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Food, Shelter buyables');
+    page.once('dialog',dialog=>dialog.accept());
+    await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
+    await expect(page.getByText('1 Organization · Water records · Earned',{exact:true})).toBeVisible();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.sites)).toBe(2);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(0);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.points=new Decimal(0);});
+    await expect(page.getByText('1 Organization · Water records · Earned',{exact:true})).toBeVisible();
     expect(errors).toEqual([]);
 });
 test('save, reload, native save dialog and denied import preserve progress',async({page})=>{

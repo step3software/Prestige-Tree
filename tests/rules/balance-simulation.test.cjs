@@ -35,6 +35,7 @@ test('both active branch orders and adaptive regular play reach the opening usin
   assert.equal(run.sections.find(row=>row.id==='endgame').status,'reached');
   assert.ok(run.actions.prestige>=2&&run.actions.investment>=2&&run.actions.construction>=3);
   assert.ok(run.actions.automation>=1);
+  for(const id of ['water-retention','food-retention','shelter-retention'])assert.equal(run.sections.find(row=>row.id===id).status,'reached',strategy+' '+id);
   assert.ok(run.sections.every(row=>row.sectionSeconds===null||row.sectionSeconds>=0));
   console.log(strategy+' opening complete at '+run.simulatedSeconds+' simulated seconds');
  }

@@ -50,9 +50,20 @@ One construction project runs at a time, reserving one builder. Progress is meas
 
 ## Prestige and later resources
 
-Craft requires 8 Population and 25 Food/Water. Organization requires 8 Population, 12 housing and 35 Food/Water. Their gains remain floor(sqrt(min(stores)/requirement)). Both clear Food/Water stores and next-person growth progress; they keep Population, housing, equipment, upgrades, repeat orders, active trips, active construction, sibling prestige and all other resources.
+Craft requires 8 Population and 25 Food/Water. Organization requires 8 Population, 12 housing and 35 Food/Water. Their gains remain floor(sqrt(min(stores)/requirement)). Both clear Food/Water stores, growth and irrigation progress, and all repeatable buyables not protected by Organization milestones. Permanent one-time upgrades, repeat orders, Population and sibling/later resources remain.
 
-Craft improves yields and worker-free Water flow by 18% per point. Knowledge adds 12%. Organization improves construction speed and reduces upkeep; cultural influence also reduces upkeep. At 2 Organization, the existing optional auto-builder can improve the foundations. Extensive Organization milestones remain future content.
+| Lifetime Organization earned | Permanent milestone |
+| --- | --- |
+| 1 | Water records: keep wells and reservoirs |
+| 2 | Building orders: unlock automatic construction |
+| 3 | Provisioning records: keep all route equipment, provisioning and Food baskets |
+| 5 | Settlement records: keep purchased homes and domestic improvements |
+
+Milestones derive from lifetime Organization earnings, never the spendable balance. A milestone earned by the current Organization prestige takes effect immediately for that reset. Both Craft and Organization follow the same retention rules. Their UI preview and confirmation use the same prospective reset plan as the command.
+
+Before Shelter retention, housing returns to its base capacity of 8 even if Population is higher; growth pauses until housing is rebuilt. People are not lost. Unprotected construction loses its progress and releases its builder. Trips using reset buyables return without yield; repeat orders remain enabled for the next cycle. Protected trips and construction continue, except enough crews return if losing domestic improvements would overcommit workers. The preview names those trips explicitly.
+
+Craft improves yields and worker-free Water flow by 18% per point. Knowledge adds 12%. Organization improves construction speed and reduces upkeep; cultural influence also reduces upkeep. At 2 lifetime Organization, the optional auto-builder permanently becomes available. Further Organization rewards can extend this milestone list.
 
 Both prestige branches unlock Money and Time. Unreserved labor splits between trade and free hours. Earning 5 Money and 3 Time in total discovers Education and Culture. Education consumes Money/Time for Knowledge; Culture consumes Time/Craft for influence. Unlocks persist when currencies are spent.
 
@@ -60,6 +71,6 @@ Both prestige branches unlock Money and Time. Unreserved labor splits between tr
 
 The canonical owner is createCivilizationRules in js/civilization.js. The registered Food update advances the entire economy, once, in one-second internal steps. Population is player.points; the Time resource uses freeTime because player.time is the runtime timestamp.
 
-Version 0.2 extends 0.1 Civ saves additively at codec ingress: missing route levels, comfort, improvements and action contracts acquire explicit defaults. Existing Population, stocks, infrastructure and construction progress remain. An existing construction project acquires one reserved builder. All reads and writes then use the one current model; malformed or overcommitted action contracts fail before activation. The original ptr game's data stays untouched.
+Current version 0.3 accepts earlier Civ saves through the same codec. The 0.2 additions to 0.1 saves supply missing route levels, comfort, improvements and action contracts. Existing Population, stocks, infrastructure and construction progress are retained on load; the new buyable rules apply on the next prestige. Organization's existing lifetime total supplies its earned milestones without a second saved milestone ledger. All reads and writes use the one current model; malformed or overcommitted action contracts fail before activation. The original ptr game's data stays untouched.
 
 The base dark theme, monospace type, circular nodes and native upg/tabButton treatments are retained. Tests cover parallel crews, overbooking, recall, timed yields, the separate automation stages, irrigation, Shelter, prestige retention, saves and offline chunk parity. Balance profiles use real commands: active decisions every 5 seconds; regular decisions every 20 seconds until overseer plus gravity flow are earned, then every 300 seconds. This cadence change is owner-requested. Synthetic pacing is not human enjoyment evidence.

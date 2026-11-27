@@ -2,6 +2,9 @@
 // branch entries retain their timings; the final checkpoint requires both investments.
 const sections = [
   {id:'supported-eight',name:'8 supported people',test:p=>p.points.gte(8)},
+  {id:'water-retention',name:'Water buyables retained',test:p=>p.organization.total.gte(1)},
+  {id:'food-retention',name:'Food buyables retained',test:p=>p.organization.total.gte(3)},
+  {id:'shelter-retention',name:'Shelter buyables retained',test:p=>p.organization.total.gte(5)},
   {id:'overseer',name:'Food repeat orders earned',test:p=>p.civ.improvements.overseer},
   {id:'water-flow',name:'Worker-free Water',test:p=>p.civ.improvements.gravity},
   {id:'farming',name:'Farming cycles',test:p=>p.civ.improvements.farming},

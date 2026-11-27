@@ -6,6 +6,8 @@ For the civilization's historical grounding, start at the [research index](docs/
 
 Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into a reservoir; carrying upgrades and a gravity-fed spring free the hauling crew. Food overseers repeat trips with workers, farming adds longer cycles, and worker-free Food comes later. Build new huts for capacity or improve existing homes to free domestic labor.
 
+Prestige resets repeatable buyables until lifetime Organization milestones protect Water at 1, Food at 3 and Shelter at 5. One-time upgrades and Population stay; the reset preview lists the exact losses and retained progress.
+
 This game replaces the fork's original Prestige Tree Rewritten content. It runs on the retained session-bound Modding Tree engine with Vue 3 and Decimal arithmetic. Original attribution and both licenses are retained. The game retains the base project's dark theme, monospace typography, colored circular nodes and action-button styling.
 
 ## Play locally

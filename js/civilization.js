@@ -53,6 +53,23 @@ function createCivilizationRules({ saveState }) {
         builderTools: {resource: "shelter", name: "Construction tools", description: "Double construction speed. Projects still reserve a builder.", costs: {craft: 2, organization: 1}},
     };
     const owns = id => player().civ.improvements[id];
+    const organizationRewards = [
+        {id: "water-records", requirement: 1, name: "Water records", retains: "water", reward: "Keep wells and reservoirs through prestige."},
+        {id: "building-orders", requirement: 2, name: "Building orders", retains: "", reward: "Unlock automatic construction permanently."},
+        {id: "provisioning-records", requirement: 3, name: "Provisioning records", retains: "food", reward: "Keep all Food route equipment, provisioning and baskets through prestige."},
+        {id: "settlement-records", requirement: 5, name: "Settlement records", retains: "shelter", reward: "Keep purchased homes and domestic improvements through prestige."},
+    ];
+    function organizationMilestones(total = amountTotal("organization")) {
+        return organizationRewards.map(reward => ({...reward, earned: total >= reward.requirement}));
+    }
+    function amountTotal(id) { return player()[id].total.toNumber(); }
+    function retention(resource, total = amountTotal("organization")) {
+        return organizationMilestones(total).some(reward => reward.retains === resource && reward.earned);
+    }
+    function projectResource(id) {
+        if (id.endsWith("-tools")) return "food";
+        return id.split("-")[0];
+    }
     function emptyAction() {
         return {remaining: 0, duration: 0, workers: 0, reward: 0, completed: 0, repeat: false};
     }
@@ -265,7 +282,7 @@ function createCivilizationRules({ saveState }) {
         // Water gets first refusal; continuous flow needs no crew. Construction
         // then reserves its builder before Food can take the remaining workers.
         if (p.civ.actions.water.repeat && owns("waterOrders") && amount("water") < storageCapacity().water - 1) dispatch("water");
-        if (p.civ.autoBuild && p.organization.points.gte(2) && !p.civ.project) chooseAutomaticProject();
+        if (p.civ.autoBuild && amountTotal("organization") >= 2 && !p.civ.project) chooseAutomaticProject();
         if (!owns("overseer")) return;
         const order = p.civ.priority === "food" ? ["farm", "hunt", "fish", "gather"] : ["gather", "fish", "hunt", "farm"];
         for (const id of order) if (p.civ.actions[id].repeat && amount("food") < storageCapacity().food - 1) dispatch(id);
@@ -316,15 +333,63 @@ function createCivilizationRules({ saveState }) {
     function prestigeRequirements(id) {
         return id === "craft" ? "8 Population and 25 each of Food and Water" : "8 Population, 12 housing and 35 each of Food and Water";
     }
+    /** The same prospective plan drives the UI, confirmation and reset. An
+     * Organization reward earned by this prestige protects its buyables now. */
+    function prestigePreview(id) {
+        const p = player(), gain = prestigeGain(id);
+        const organizationTotal = amountTotal("organization") + (id === "organization" ? gain : 0);
+        const kept = Object.fromEntries(["food", "water", "shelter"].map(resource => [resource, retention(resource, organizationTotal)]));
+        const resetBuyables = Object.keys(kept).filter(resource => !kept[resource]);
+        const keptBuyables = Object.keys(kept).filter(resource => kept[resource]);
+        const resetConstruction = !!p.civ.project && !kept[projectResource(p.civ.project)];
+        const recalledActions = Object.keys(actionBase).filter(action => p.civ.actions[action].remaining > 0 && !kept[actionBase[action].resource]);
+        // Losing domestic improvements can reclaim labor from otherwise retained
+        // trips. Return only enough additional crews to keep the ledger valid.
+        const comfort = kept.shelter ? p.shelter.comfort : 0;
+        const domestic = Math.max(0, p.points.toNumber() * 0.12 - comfort * 0.5) * (owns("hearth") ? 0.75 : 1);
+        let committed = domestic + (p.civ.project && !resetConstruction ? 1 : 0);
+        const remaining = Object.keys(actionBase).filter(action => p.civ.actions[action].remaining > 0 && !recalledActions.includes(action));
+        for (const action of remaining) committed += p.civ.actions[action].workers;
+        for (const action of remaining.sort((a, b) => p.civ.actions[b].workers - p.civ.actions[a].workers)) {
+            if (committed <= p.points.toNumber() + 1e-9) break;
+            recalledActions.push(action);
+            committed -= p.civ.actions[action].workers;
+        }
+        const reset = ["Food and Water stores", "growth and irrigation progress"];
+        if (resetBuyables.length) reset.push(resetBuyables.map(resource => names[resource]).join(", ") + " buyables");
+        if (!kept.shelter) reset.push("housing capacity returns to 8; Population stays");
+        if (resetConstruction) reset.push("current construction progress");
+        if (recalledActions.length) reset.push(recalledActions.map(action => actionNames[action]).join(", ") + " trips return without yield");
+        const keep = ["Population", "permanent upgrades", "repeat orders", "every other resource"];
+        if (keptBuyables.length) keep.push(keptBuyables.map(resource => names[resource]).join(", ") + " buyables");
+        if (p.civ.project && !resetConstruction) keep.push("current construction");
+        return {gain, organizationTotal, kept, resetBuyables, keptBuyables, resetConstruction, recalledActions,
+            resetText: reset.join("; "), keepText: keep.join("; ")};
+    }
     function prestige(id) {
-        const gain = prestigeGain(id);
+        const plan = prestigePreview(id), gain = plan.gain;
         if (!gain) return false;
         addResource(id, gain);
         player()[id].unlocked = true;
+        const p = player();
+        if (!plan.kept.food) {
+            p.food.sites = 0;
+            p.food.storage = 0;
+            for (const route of Object.keys(p.food.routes)) p.food.routes[route] = 0;
+        }
+        if (!plan.kept.water) { p.water.sites = 0; p.water.storage = 0; }
+        if (!plan.kept.shelter) {
+            p.shelter.homes = 0;
+            p.shelter.comfort = 0;
+            p.shelter.points = new Decimal(8);
+        }
+        if (plan.resetConstruction) { p.civ.project = ""; p.civ.projectWork = 0; }
+        for (const action of plan.recalledActions) Object.assign(p.civ.actions[action], {remaining: 0, duration: 0, workers: 0, reward: 0});
         player().food.points = new Decimal(0);
         player().water.points = new Decimal(0);
         player().civ.growth = 0;
-        player().civ.message = names[id] + " increased by " + gain + ". Supplies are rebuilding; people and infrastructure remain.";
+        p.civ.irrigation = 0;
+        player().civ.message = names[id] + " increased by " + gain + ". " + (plan.resetBuyables.length ? "Unprotected buyables reset. " : "All buyables retained. ") + "Organization milestones use lifetime earnings.";
         unlock();
         return true;
     }
@@ -353,7 +418,12 @@ function createCivilizationRules({ saveState }) {
             value: p[id].points, unit: id === "shelter" ? "housing" : id === "freeTime" ? "free hours" :
                 id === "organization" ? "coordination" : id === "education" ? "knowledge" : id === "culture" ? "influence" : "",
             requirement: isPrestige ? prestigeRequirements(id) : tier(id) === 2 ? "Earn Craft and Organization" : "Earn 5 Money and 3 free hours in total",
-            canPrestige: prestigeGain(id) > 0, prestigeGain: prestigeGain(id), projects: projects(id), upgrades: upgrades(id),
+            canPrestige: prestigeGain(id) > 0, prestigeGain: prestigeGain(id), prestigePreview: isPrestige ? prestigePreview(id) : null,
+            organizationMilestones: id === "organization" ? organizationMilestones() : [], organizationEarned: amountTotal("organization"),
+            buyableRetention: organizationRewards.some(reward => reward.retains === id) ?
+                retention(id) ? "These buyables are protected by your Organization milestone." :
+                    "These buyables reset on prestige. Keep them at " + organizationRewards.find(reward => reward.retains === id).requirement + " lifetime Organization." : "",
+            projects: projects(id), upgrades: upgrades(id),
             actions: Object.keys(actionBase).filter(key => actionBase[key].resource === id).map(key => ({...actionDefinition(key), canDispatch: canDispatch(key)})),
             costs: Object.entries(investments(id)).map(([resource, cost]) => ({name: names[resource], cost})), canInvest: canInvest(id)};
     }
@@ -366,7 +436,7 @@ function createCivilizationRules({ saveState }) {
                 s.bottleneck.includes("reserves") ? "Send a crew or enable an earned repeat order. Existing people remain safe." :
                     "Build housing to support the next person.",
             toolBonus: (1 + amount("craft") * 0.18 + amount("education") * 0.12),
-            autoAvailable: p.organization.points.gte(2)};
+            autoAvailable: amountTotal("organization") >= 2};
     }
     /** Defaults add the new fields to 0.1 saves once at codec ingress. Old
      * infrastructure and in-flight construction retain their meaningful values;
@@ -407,5 +477,5 @@ function createCivilizationRules({ saveState }) {
     }
     return {defaults, supply, summary, node, projects, startProject, cancelProject, advance,
         actionDefinition, canDispatch, dispatch, recall, toggleRepeat, upgrades, buyUpgrade, irrigate,
-        prestige, prestigeGain, prestigeRequirements, investments, canInvest, invest, validateData};
+        prestige, prestigeGain, prestigeRequirements, prestigePreview, organizationMilestones, investments, canInvest, invest, validateData};
 }

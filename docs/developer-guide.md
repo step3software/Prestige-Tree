@@ -32,6 +32,8 @@ The server exposes the exact generated `dist/` bytes on `http://127.0.0.1:8000/`
 
 For a Water change: follow `README` -> this table -> `actionDefinition()`, `dispatch()`, `advanceActions()` and `step()` in `js/civilization.js`. The same owner defines Water upgrades and irrigation. Identify the canonical saved action record, advance it through the registered Food update, then inspect the Water panel in `index.html`. Copy the nearby hauling/flow regression from the economy suite. Avoid maintaining a second UI copy of persistent state.
 
+For prestige retention: follow `organizationRewards` -> `organizationMilestones()` (lifetime `organization.total`) -> `prestigePreview()` -> `prestige()`. The node panel and native confirmation consume that same plan. The economy suite covers exact earning thresholds, spending, housing below Population, crew safety and protected/unprotected construction; the browser suite exercises preview, cancellation, confirmation and earned milestone display.
+
 ## State and simulation contracts
 
 Population is `player.points` (Decimal). Food, Water, Shelter and the other resource layers have session-owned player records. The visible Time resource uses the internal ID `freeTime`: root `player.time` remains the runtime clock timestamp. No population or food/water global exists.

@@ -92,3 +92,13 @@ test('malformed action contracts and overcommitted crews are rejected before act
         assert.equal(r.run('p.points.toNumber()'),5);
     }
 });
+
+test('spent Organization retains milestone progress across saving and reload',t=>{
+    const r=open(t);
+    r.run('p.organization.total=new Decimal(5);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
+    const restored=open(t,{storage:Object.fromEntries(r.data)});
+    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),4);
+    assert.equal(restored.run('e.prestigePreview("craft").kept.shelter'),true);
+    assert.equal(restored.run('p.food.routes.fish'),2);
+    assert.equal(restored.run('e.summary().autoAvailable'),true);
+});

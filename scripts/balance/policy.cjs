@@ -20,10 +20,12 @@ function createPolicy(engine,settings,onAction=()=>{}){
     }
     const sequence=settings.first==='organization'?['organization','craft']:['craft','organization'];
     for(const id of sequence){
-      const target=id==='craft'?15:3;
-      if(p[id].points.lt(target) && economy.prestigeGain(id)>0 && economy.prestige(id))record('prestige',id,time);
+      const needsRetention=p.organization.total.lt(5);
+      const wanted=id==='organization'?p.organization.points.lt(3)||needsRetention:
+        p.craft.points.lt(15)&&(!needsRetention||p.craft.total.lt(1));
+      if(wanted && economy.prestigeGain(id)>0 && economy.prestige(id))record('prestige',id,time);
     }
-    if(p.organization.points.gte(2) && !p.civ.autoBuild){p.civ.autoBuild=true;record('automation','organization',time);}
+    if(economy.summary().autoAvailable && !p.civ.autoBuild){p.civ.autoBuild=true;record('automation','organization',time);}
     for(const id of ['education','culture']){
       const target=id==='education'?8:1;
       const held=id==='education'?p[id].points:p[id].total;

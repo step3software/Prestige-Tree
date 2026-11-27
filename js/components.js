@@ -37,8 +37,8 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         invest(id) { return actionable(() => modRules.civilization.invest(id)); },
         prestige(id) {
             if (gameRules.tickFaulted || !modRules.civilization.prestigeGain(id)) return false;
-            const gain = modRules.civilization.prestigeGain(id);
-            if (!effects.confirm('Gain ' + gain + ' ' + modRules.civilization.node(id).name + '? Food and Water stores return to zero and growth progress restarts. Keep Population, housing, all infrastructure, current construction, and every other resource.')) return false;
+            const plan = modRules.civilization.prestigePreview(id);
+            if (!effects.confirm('Gain ' + plan.gain + ' ' + modRules.civilization.node(id).name + '? Reset ' + plan.resetText + '. Keep ' + plan.keepText + '.')) return false;
             return actionable(() => modRules.civilization.prestige(id));
         },
         setPriority(event) { return actionable(() => { binding.player.civ.priority = event.target.value; }); },
