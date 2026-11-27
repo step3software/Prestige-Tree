@@ -328,9 +328,9 @@
       ]
     },
     {
-      "path": "js/layers/hyper-boosters.js",
+      "path": "js/layers/honour.js",
       "operation": "create",
-      "implementation": "Move hn unchanged into createHyperBoostersLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "implementation": "Move hn unchanged into createHonourLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
       "verification": [
         "Full diff/source and consumer accounting; npm test.",
         "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
@@ -373,18 +373,18 @@
       ]
     },
     {
-      "path": "js/layers/gear.js",
+      "path": "js/layers/gears.js",
       "operation": "create",
-      "implementation": "Move ge unchanged into createGearLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "implementation": "Move ge unchanged into createGearsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
       "verification": [
         "Full diff/source and consumer accounting; npm test.",
         "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
       ]
     },
     {
-      "path": "js/layers/machine.js",
+      "path": "js/layers/machines.js",
       "operation": "create",
-      "implementation": "Move mc unchanged into createMachineLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "implementation": "Move mc unchanged into createMachinesLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
       "verification": [
         "Full diff/source and consumer accounting; npm test.",
         "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
@@ -418,9 +418,9 @@
       ]
     },
     {
-      "path": "js/layers/reality.js",
+      "path": "js/layers/robots.js",
       "operation": "create",
-      "implementation": "Move r unchanged into createRealityLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "implementation": "Move r unchanged into createRobotsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
       "verification": [
         "Full diff/source and consumer accounting; npm test.",
         "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
@@ -436,9 +436,9 @@
       ]
     },
     {
-      "path": "js/layers/sanctum.js",
+      "path": "js/layers/civilizations.js",
       "operation": "create",
-      "implementation": "Move c unchanged into createSanctumLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "implementation": "Move c unchanged into createCivilizationsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
       "verification": [
         "Full diff/source and consumer accounting; npm test.",
         "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
@@ -727,7 +727,7 @@
     },
     {
       "id": "hn",
-      "slug": "hyper-boosters",
+      "slug": "honour",
       "kind": "layer",
       "source": "js/layers.js",
       "object_sha256": "bc846bafa00b5e8c713e09992acf1b4aa1a088260fb1412db85522bed1fe62ee",
@@ -735,8 +735,8 @@
         5142,
         5752
       ],
-      "path": "js/layers/hyper-boosters.js",
-      "factory": "createHyperBoostersLayer"
+      "path": "js/layers/honour.js",
+      "factory": "createHonourLayer"
     },
     {
       "id": "n",
@@ -792,7 +792,7 @@
     },
     {
       "id": "ge",
-      "slug": "gear",
+      "slug": "gears",
       "kind": "layer",
       "source": "js/layers.js",
       "object_sha256": "e6a4334821df6d094c58f7dda17dfe0423af378e1f66bc16c4c8878e2f06dbbb",
@@ -800,12 +800,12 @@
         6916,
         7248
       ],
-      "path": "js/layers/gear.js",
-      "factory": "createGearLayer"
+      "path": "js/layers/gears.js",
+      "factory": "createGearsLayer"
     },
     {
       "id": "mc",
-      "slug": "machine",
+      "slug": "machines",
       "kind": "layer",
       "source": "js/layers.js",
       "object_sha256": "4d1289b4ed8412c566a60a4e2594170b32e834243e949ece50a3f4ea7b2029ac",
@@ -813,8 +813,8 @@
         7249,
         7549
       ],
-      "path": "js/layers/machine.js",
-      "factory": "createMachineLayer"
+      "path": "js/layers/machines.js",
+      "factory": "createMachinesLayer"
     },
     {
       "id": "en",
@@ -857,7 +857,7 @@
     },
     {
       "id": "r",
-      "slug": "reality",
+      "slug": "robots",
       "kind": "layer",
       "source": "js/layers.js",
       "object_sha256": "2f024d2d0ef56165faced2744f78a56ce81af33c54fa4eb934e4f05213c3b2d3",
@@ -865,8 +865,8 @@
         8088,
         8448
       ],
-      "path": "js/layers/reality.js",
-      "factory": "createRealityLayer"
+      "path": "js/layers/robots.js",
+      "factory": "createRobotsLayer"
     },
     {
       "id": "ai",
@@ -883,7 +883,7 @@
     },
     {
       "id": "c",
-      "slug": "sanctum",
+      "slug": "civilizations",
       "kind": "layer",
       "source": "js/layers.js",
       "object_sha256": "aa574381cd807fa0ce617151bd8d2f95be777d8b8e4073f5c730cb2e4be4fb51",
@@ -891,8 +891,8 @@
         8938,
         9134
       ],
-      "path": "js/layers/sanctum.js",
-      "factory": "createSanctumLayer"
+      "path": "js/layers/civilizations.js",
+      "factory": "createCivilizationsLayer"
     },
     {
       "id": "a",
@@ -999,19 +999,19 @@
         "js/layers/magic.js",
         "js/layers/balance.js",
         "js/layers/phantom-souls.js",
-        "js/layers/hyper-boosters.js",
+        "js/layers/honour.js",
         "js/layers/nebula.js",
         "js/layers/hyperspace.js",
         "js/layers/imperium.js",
         "js/layers/mastery.js",
-        "js/layers/gear.js",
-        "js/layers/machine.js",
+        "js/layers/gears.js",
+        "js/layers/machines.js",
         "js/layers/energy.js",
         "js/layers/neurons.js",
         "js/layers/ideas.js",
-        "js/layers/reality.js",
+        "js/layers/robots.js",
         "js/layers/artificial-intelligence.js",
-        "js/layers/sanctum.js",
+        "js/layers/civilizations.js",
         "js/layers/achievements.js",
         "js/layers/softcaps.js",
         "js/layers/autobuyers.js"
@@ -1053,19 +1053,19 @@
         "js/layers/magic.js",
         "js/layers/balance.js",
         "js/layers/phantom-souls.js",
-        "js/layers/hyper-boosters.js",
+        "js/layers/honour.js",
         "js/layers/nebula.js",
         "js/layers/hyperspace.js",
         "js/layers/imperium.js",
         "js/layers/mastery.js",
-        "js/layers/gear.js",
-        "js/layers/machine.js",
+        "js/layers/gears.js",
+        "js/layers/machines.js",
         "js/layers/energy.js",
         "js/layers/neurons.js",
         "js/layers/ideas.js",
-        "js/layers/reality.js",
+        "js/layers/robots.js",
         "js/layers/artificial-intelligence.js",
-        "js/layers/sanctum.js",
+        "js/layers/civilizations.js",
         "js/layers/achievements.js",
         "js/layers/softcaps.js",
         "js/layers/autobuyers.js"
@@ -1107,19 +1107,19 @@
         "js/layers/magic.js",
         "js/layers/balance.js",
         "js/layers/phantom-souls.js",
-        "js/layers/hyper-boosters.js",
+        "js/layers/honour.js",
         "js/layers/nebula.js",
         "js/layers/hyperspace.js",
         "js/layers/imperium.js",
         "js/layers/mastery.js",
-        "js/layers/gear.js",
-        "js/layers/machine.js",
+        "js/layers/gears.js",
+        "js/layers/machines.js",
         "js/layers/energy.js",
         "js/layers/neurons.js",
         "js/layers/ideas.js",
-        "js/layers/reality.js",
+        "js/layers/robots.js",
         "js/layers/artificial-intelligence.js",
-        "js/layers/sanctum.js",
+        "js/layers/civilizations.js",
         "js/layers/achievements.js",
         "js/layers/softcaps.js",
         "js/layers/autobuyers.js"
@@ -1161,19 +1161,19 @@
         "js/layers/magic.js",
         "js/layers/balance.js",
         "js/layers/phantom-souls.js",
-        "js/layers/hyper-boosters.js",
+        "js/layers/honour.js",
         "js/layers/nebula.js",
         "js/layers/hyperspace.js",
         "js/layers/imperium.js",
         "js/layers/mastery.js",
-        "js/layers/gear.js",
-        "js/layers/machine.js",
+        "js/layers/gears.js",
+        "js/layers/machines.js",
         "js/layers/energy.js",
         "js/layers/neurons.js",
         "js/layers/ideas.js",
-        "js/layers/reality.js",
+        "js/layers/robots.js",
         "js/layers/artificial-intelligence.js",
-        "js/layers/sanctum.js",
+        "js/layers/civilizations.js",
         "js/layers/achievements.js",
         "js/layers/softcaps.js",
         "js/layers/autobuyers.js"
@@ -1215,19 +1215,19 @@
         "js/layers/magic.js",
         "js/layers/balance.js",
         "js/layers/phantom-souls.js",
-        "js/layers/hyper-boosters.js",
+        "js/layers/honour.js",
         "js/layers/nebula.js",
         "js/layers/hyperspace.js",
         "js/layers/imperium.js",
         "js/layers/mastery.js",
-        "js/layers/gear.js",
-        "js/layers/machine.js",
+        "js/layers/gears.js",
+        "js/layers/machines.js",
         "js/layers/energy.js",
         "js/layers/neurons.js",
         "js/layers/ideas.js",
-        "js/layers/reality.js",
+        "js/layers/robots.js",
         "js/layers/artificial-intelligence.js",
-        "js/layers/sanctum.js",
+        "js/layers/civilizations.js",
         "js/layers/achievements.js",
         "js/layers/softcaps.js",
         "js/layers/autobuyers.js"
@@ -1269,19 +1269,19 @@
         "js/layers/magic.js",
         "js/layers/balance.js",
         "js/layers/phantom-souls.js",
-        "js/layers/hyper-boosters.js",
+        "js/layers/honour.js",
         "js/layers/nebula.js",
         "js/layers/hyperspace.js",
         "js/layers/imperium.js",
         "js/layers/mastery.js",
-        "js/layers/gear.js",
-        "js/layers/machine.js",
+        "js/layers/gears.js",
+        "js/layers/machines.js",
         "js/layers/energy.js",
         "js/layers/neurons.js",
         "js/layers/ideas.js",
-        "js/layers/reality.js",
+        "js/layers/robots.js",
         "js/layers/artificial-intelligence.js",
-        "js/layers/sanctum.js",
+        "js/layers/civilizations.js",
         "js/layers/achievements.js",
         "js/layers/softcaps.js",
         "js/layers/autobuyers.js"
