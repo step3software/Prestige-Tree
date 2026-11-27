@@ -8,6 +8,8 @@ For development, start with [AGENTS.md](AGENTS.md), the
 shared Orcha standards follow current published `main`.
 
 Run locked regression checks from the [development guide](docs/developer-guide.md#verify-a-focused-change).
+See [TST01 verification](docs/milestones/TST01.verification.md) for the implemented
+test foundation, fixed defects and evidence limits.
 
 Proposed delivery milestones (documentation proposals; dependencies are technical sequencing, not runtime status):
 
