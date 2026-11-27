@@ -52,6 +52,59 @@ test('unfunded and unstaffed basket starts have no side effects', t => {
     assert.equal(p.civ.project, '');
 });
 
+test('earthenware jars cost one Craft at every level and retain their full scaling work requirement', t => {
+    const {engine,p,e} = game(t);
+    const before = JSON.stringify(p);
+    assert.equal(e.startProject('water-storage'), false);
+    assert.equal(JSON.stringify(p), before);
+    p.craft.points = new Decimal(3);
+    for (let level = 0; level < 3; level++) {
+        const project = e.projects('water').find(item => item.id === 'water-storage');
+        assert.equal(project.name, 'Craft earthenware jars');
+        assert.equal(project.craftCost, 1);
+        assert.equal(project.work, 12 * 1.35 ** level);
+        assert.equal(e.startProject('water-storage'), true);
+        assert.equal(p.craft.points.toNumber(), 2-level);
+        assert.equal(e.startProject('water-storage'), false);
+        engine.advance(Math.ceil(project.work)-1);
+        assert.equal(p.water.storage, level, 'Paid Craft does not bypass the work');
+        assert.equal(e.supply().builders, 1);
+        engine.advance(1);
+        assert.equal(p.water.storage, level+1);
+        assert.equal(e.supply().storage.water, 50+40*(level+1));
+    }
+    assert.equal(e.startProject('water-storage'), false);
+    p.craft.points = new Decimal(1);
+    assert.equal(e.startProject('water-storage'), true);
+    e.cancelProject();
+    assert.equal(p.craft.points.toNumber(), 0);
+    assert.equal(p.water.storage, 3);
+});
+
+test('earlier Water storage projects finish without retroactive Craft costs and paid jars resume without double charging', t => {
+    const {engine} = game(t);
+    const raw = JSON.parse(atob(engine.exportPlayer()));
+    raw.civ.project = 'water-storage'; raw.civ.projectWork = 5;
+    const old = game(t,btoa(JSON.stringify(raw)));
+    old.engine.advance(7);
+    assert.equal(old.p.water.storage, 1);
+    assert.equal(old.p.craft.points.toNumber(), 0);
+    old.p.craft.points = new Decimal(1);
+    assert.equal(old.e.startProject('water-storage'), true);
+    old.engine.advance(2);
+    const paid = game(t,old.engine.exportPlayer());
+    assert.equal(paid.p.civ.projectWork, 2);
+    paid.engine.advance(15);
+    assert.equal(paid.p.water.storage, 2);
+    assert.equal(paid.p.craft.points.toNumber(), 0);
+    paid.p.points = new Decimal(12);
+    paid.p.organization.total = new Decimal(4);
+    assert.equal(paid.e.prestigePreview('craft').kept['water-storage'], true);
+    assert.match(paid.e.prestigePreview('craft').keepText, /Earthenware jars/);
+    assert.equal(paid.e.prestige('craft'), true);
+    assert.equal(paid.p.water.storage, 2);
+});
+
 test('Craft and Organization never unlock or produce later resources, even with saved unlock flags', t => {
     const {engine,p,e} = game(t);
     p.craft.points = new Decimal(10); p.organization.points = new Decimal(10);

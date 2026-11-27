@@ -6,6 +6,29 @@ const {simulate}=require('../../scripts/balance/simulate.cjs');
 const {compareReference}=require('../../scripts/balance/report.cjs');
 const {createRuntime}=require('../support/game-runtime.cjs');
 
+test('legal active and regular play can fund and complete earthenware storage after the opening',t=>{
+ for(const strategy of ['active-balanced','regular']){
+  const run=simulate({strategy,horizonSeconds:14400});
+  assert.equal(run.status,'endgame');
+  const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
+  const p=engine.player,e=engine.session.modRules.civilization;
+  const policy=createPolicy(engine,strategies[strategy]);
+  const cadence=strategy==='regular'?300:5;
+  let started=false,time=0;
+  for(;time<3600;time+=cadence){
+   if(!started && e.canStartProject('water-storage'))started=e.startProject('water-storage');
+   policy.act(time);
+   engine.advance(cadence);
+   if(started && p.water.storage>=1)break;
+  }
+  assert.equal(started,true);
+  assert.ok(p.water.storage>=1);
+  assert.ok(p.points.gte(5));
+  assert.ok(e.supply().storage.water>=90);
+  console.log(strategy+' legal earthenware jars: opening '+run.simulatedSeconds+'s; crafted within '+(time+cadence)+' additional seconds (synthetic).');
+ }
+});
+
 test('legal active and regular settlements can develop all three distinct Food routes',t=>{
  for(const strategy of ['active-balanced','regular']){
   const engine=createBalanceEngine();t.after(engine.dispose);

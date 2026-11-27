@@ -8,6 +8,35 @@ async function open(page){
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
 
+test('Water storage is crafted earthenware with one Craft and a timed builder requirement',async({page})=>{
+    const errors=await open(page);
+    await node(page,'Water').click();
+    await expect(page.getByText('Water reserves 10 / 50',{exact:true})).toBeVisible();
+    const jars=page.getByRole('button',{name:/^Craft earthenware jars/});
+    await expect(jars).toContainText('Hand-shaped, fired clay jars');
+    await expect(jars).toContainText('1 Craft');
+    await expect(jars.locator('.project-cost')).toContainText('12');
+    await expect(jars).toBeDisabled();
+    await page.evaluate(()=>{const s=gameUI.session;s.saveState.player.craft.points=new Decimal(2);s.derivedState.updateTemp();});
+    await jars.click();
+    await expect(page.locator('.event-log')).toContainText('Spent 1 Craft');
+    await expect(jars).toBeDisabled();
+    await page.evaluate(()=>gameUI.session.advance(11));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.storage)).toBe(0);
+    await page.evaluate(()=>gameUI.session.advance(1));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.storage)).toBe(1);
+    await expect(jars).toBeEnabled();
+    await expect(jars.locator('.project-cost')).toContainText('16');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.craft.points.toNumber())).toBe(1);
+    for(const width of [1280,320]){
+        await page.setViewportSize({width,height:800});
+        await expect(jars).toBeVisible();
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        await page.screenshot({path:'test-results/earthenware-jars-'+width+'.png',fullPage:true});
+    }
+    expect(errors).toEqual([]);
+});
+
 test('the opening uses every worker, sells baskets for one Craft each and hides later resources',async({page})=>{
     const errors=await open(page);
     await expect(page.locator('.chapter')).toContainText('v0.6');
@@ -138,18 +167,18 @@ test('Organization previews exact buyable protection earned by the next mileston
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.shelter.homes=4;p.shelter.points=new Decimal(24);p.food.routes.gather=2;p.water.sites=2;p.water.storage=2;p.organization.total=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await node(page,'Organization').click();
     await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
-    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Reservoirs');
+    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Earthenware jars');
     await expect(page.getByTestId('prestige-keep-preview')).not.toContainText('Well improvements');
     await expect(page.getByTestId('prestige-reset-preview')).toContainText('Explore farther afield');
-    await expect(page.getByText('4 Organization · Reservoir records · Locked',{exact:true})).toBeVisible();
+    await expect(page.getByText('4 Organization · Water-storage records · Locked',{exact:true})).toBeVisible();
     page.once('dialog',dialog=>dialog.accept());
     await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
-    await expect(page.getByText('4 Organization · Reservoir records · Earned',{exact:true})).toBeVisible();
+    await expect(page.getByText('4 Organization · Water-storage records · Earned',{exact:true})).toBeVisible();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.water.storage)).toBe(2);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.water.sites)).toBe(0);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(0);
     await page.evaluate(()=>{gameUI.session.saveState.player.organization.points=new Decimal(0);});
-    await expect(page.getByText('4 Organization · Reservoir records · Earned',{exact:true})).toBeVisible();
+    await expect(page.getByText('4 Organization · Water-storage records · Earned',{exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:/^Auto-build:/})).toHaveCount(0);
     expect(errors).toEqual([]);
 });

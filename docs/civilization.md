@@ -43,13 +43,13 @@ Coordinated hunting reduces the base crew from 3 to 2 before bigger-game scaling
 
 Cultivated fields become available at Organization milestone 7, cost Food, Water, Craft and Organization and unlock longer farming cycles. The overseer repeats those cycles with 3 workers. Food autonomy and Automatic sluice require later resources and are unavailable in this opening; their previously purchased effects remain intact in older saves. Purchased repeat orders still control which routes run. These costs are game abstractions, not historical dates.
 
-## Water: hauling, reservoir and flow
+## Water: hauling, jars and flow
 
-Water starts with manual collection trips into a 50-capacity reservoir. Carrying yokes, the initially available Water Craft upgrade, reduce the crew from 2 to 1. Well lining unlocks at 2 lifetime Organization and improves collection and gravity-fed flow by 25%. Water keeper unlocks at milestone 4. Turning it on reserves one dedicated keeper even at full storage, in addition to any carrying crew. It cannot be enabled without that worker. Prestige turns it off; Gravity-fed spring also switches it off and releases the keeper.
+Water starts with manual collection trips into 50-capacity reserves. **Craft earthenware jars** adds 40 Water storage per purchase for exactly 1 Craft plus the existing work requirement: 12 × 1.35^owned jars. Craft is spent at start, with the same cancellation/prestige no-refund rule as Food baskets. Existing jar projects finish without retroactive charges. [Research and material options](research/reference-guide.md#water-storage-materials) explain the early fired-clay name; later material upgrades have no current cost or unlock. Carrying yokes, the initially available Water Craft upgrade, reduce the crew from 2 to 1. Well lining unlocks at 2 lifetime Organization and improves collection and gravity-fed flow by 25%. Water keeper unlocks at milestone 4. Turning it on reserves one dedicated keeper even at full storage, in addition to any carrying crew. It cannot be enabled without that worker. Prestige turns it off; Gravity-fed spring also switches it off and releases the keeper.
 
 A Gravity-fed spring unlocks at milestone 6 and requires 2 Craft, 1 Organization and 30 Food. It replaces hauling with continuous, unattended, worker-free Water flow: 24 base Water per minute plus 10 per improved well, scaled by tools and knowledge. An existing carrying crew finishes normally. New games currently retain staffed Food production.
 
-Well projects also improve manual trip yield and speed. Reservoir projects add 40 capacity. Irrigation spends 20 surplus Water, protecting the household growth reserve, to boost newly dispatched Food rewards by 35% for 45 seconds. It does not retroactively change active jobs. Previously owned Automatic sluice still obeys the same reserve and cooldown guards; new purchases await future resource unlocks.
+Well projects also improve manual trip yield and speed. Earthenware jar projects add 40 capacity. Irrigation spends 20 surplus Water, protecting the household growth reserve, to boost newly dispatched Food rewards by 35% for 45 seconds. It does not retroactively change active jobs. Previously owned Automatic sluice still obeys the same reserve and cooldown guards; new purchases await future resource unlocks.
 
 ## Shelter: expand housing
 
@@ -79,7 +79,7 @@ Each foundation begins with exactly one available one-time Craft upgrade: Food h
 | 1 | Fishing nets | None |
 | 2 | Well lining | None |
 | 3 | Timber frames | None |
-| 4 | Water keeper and Emergency cistern | Reservoirs |
+| 4 | Water keeper and Emergency cistern | Earthenware jars |
 | 5 | Expedition overseer and Emergency rations | Food baskets |
 | 6 | Gravity-fed spring | Well improvements |
 | 7 | Cultivated fields | Explore farther afield |
@@ -87,7 +87,7 @@ Each foundation begins with exactly one available one-time Craft upgrade: Food h
 | 9 | None in the current opening | Weave river traps |
 | 10 | Auto-building toggle | Huts |
 
-Retention is evaluated by the exact buyable ID, not its resource layer. Reservoir records do not retain wells; gathering records do not retain bigger-game levels. Provisioning and farming tools continue to reset through milestone 10. Later rewards can extend that progression.
+Retention is evaluated by the exact buyable ID, not its resource layer. Water-storage records do not retain wells; gathering records do not retain bigger-game levels. Provisioning and farming tools continue to reset through milestone 10. Later rewards can extend that progression.
 
 Milestones use lifetime Organization earnings, never the spendable balance. Newly earned unlocks and specific retention apply immediately on that Organization prestige. Both Craft and Organization use the same retention rules. The UI preview and native confirmation share the command's prospective reset plan.
 

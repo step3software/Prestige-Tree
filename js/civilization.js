@@ -6,7 +6,7 @@ function createCivilizationRules({ saveState }) {
         organization: "Organization", money: "Money", freeTime: "Time", education: "Education", culture: "Culture"};
     const descriptions = {
         food: "Send gathering, hunting and fishing expeditions. Develop each route, then cultivate fields.",
-        water: "Carry water into your reservoir, then replace hauling with reliable worker-free flow.",
+        water: "Carry water into storage jars, then replace hauling with reliable worker-free flow.",
         shelter: "Build more homes to make room for growth. Organization can eventually preserve your huts.",
         craft: "Turn a well-supplied community into better tools and more productive work.",
         organization: "Coordinate shared labor. Keep useful knowledge and automate rebuilding.",
@@ -61,7 +61,7 @@ function createCivilizationRules({ saveState }) {
     const buyableNames = {
         "gather-tools": "Explore farther afield", "hunt-tools": "Hunt bigger game", "fish-tools": "Weave river traps",
         "farm-tools": "Farming tools", "food-site": "Provisioning", "food-storage": "Food baskets",
-        "water-site": "Well improvements", "water-storage": "Reservoirs",
+        "water-site": "Well improvements", "water-storage": "Earthenware jars",
         "shelter-home": "Huts",
     };
     // This one progression table owns unlock gates, specific retention and the
@@ -70,7 +70,7 @@ function createCivilizationRules({ saveState }) {
         {id: "fishing-craft", requirement: 1, name: "Fishing craft", upgrades: ["fishing"], retains: "", reward: "Unlock the Fishing nets Craft upgrade."},
         {id: "water-craft", requirement: 2, name: "Water craft", upgrades: ["wellLining"], retains: "", reward: "Unlock the Well lining Craft upgrade."},
         {id: "building-craft", requirement: 3, name: "Building craft", upgrades: ["joinery"], retains: "", reward: "Unlock the Timber frames Craft upgrade."},
-        {id: "reservoir-records", requirement: 4, name: "Reservoir records", upgrades: ["waterOrders", "waterReserves"], retains: "water-storage", reward: "Unlock Water keeper and Emergency cistern. Keep reservoirs only."},
+        {id: "reservoir-records", requirement: 4, name: "Water-storage records", upgrades: ["waterOrders", "waterReserves"], retains: "water-storage", reward: "Unlock Water keeper and Emergency cistern. Keep water-storage jars only."},
         {id: "storehouse-records", requirement: 5, name: "Storehouse records", upgrades: ["overseer", "rationing"], retains: "food-storage", reward: "Unlock Expedition overseer and Emergency rations. Keep Food baskets only."},
         {id: "well-records", requirement: 6, name: "Well records", upgrades: ["gravity"], retains: "water-site", reward: "Unlock Gravity-fed spring. Keep well improvements."},
         {id: "gathering-records", requirement: 7, name: "Gathering records", upgrades: ["farming"], retains: "gather-tools", reward: "Unlock Cultivated fields. Keep exploration levels only."},
@@ -314,7 +314,7 @@ function createCivilizationRules({ saveState }) {
         ];
         if (id === "water") return [
             {id: "water-site", name: "Improve the well", description: "Improve collection yield and speed; +10 base Water/min once gravity-fed.", work: work(16, p.water.sites)},
-            {id: "water-storage", name: "Expand the reservoir", description: "+40 Water storage. Store more between collection trips.", work: work(12, p.water.storage)},
+            {id: "water-storage", name: "Craft earthenware jars", craftCost: 1, description: "Hand-shaped, fired clay jars. +40 Water storage. Costs 1 Craft per purchase, paid when construction starts.", work: work(12, p.water.storage)},
         ];
         if (id === "shelter") return [
             {id: "shelter-home", name: "Build a new hut", description: "+" + (owns("joinery") ? 6 : 4) + " housing. Owned: " + p.shelter.homes + ".", work: work(16, p.shelter.homes)},
