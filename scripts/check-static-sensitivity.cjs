@@ -37,7 +37,7 @@ async function main() {
       ['derived Decimal', 'isolated.derivedState.tmp.pointGen="invalid";', /TS2322/],
       ['runtime seconds/clock', 'isolated.runtimeServices.observeGameTime({time:0}, "milliseconds");', /TS2345/],
       ['UI command', 'isolated.gameView.bind(1);', /TS2554/],
-      ['layer command', 'createPrestigeLayer({saveState:isolated.saveState});', /TS2739/],
+      ['layer command', 'createResourceLayer("food",{});', /TS2739/],
     ]) {
       fs.writeFileSync(fixture,baseline+source+'\n');
       const rejected=check();

@@ -1,263 +1,152 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link id="styleStuff" rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="stylesheet" type="text/css" href="notification.css" />
-	<link rel="stylesheet" type="text/css" href="interface.css" />
-	<script src="vendor/vue.global.prod.js"></script>
-	<script type="text/javascript" src="js/technical/break_eternity.js"></script>
-	<script type="text/javascript" src="js/technical/layerSupport.js"></script>
-	<script type="text/javascript" src="js/tree.js"></script>
-	<script type="text/javascript" src="js/sc.js"></script>
-	<script type="text/javascript" src="js/help.js"></script>
-	<script src="js/layers/info-tab.js"></script>
-	<script src="js/layers/options-tab.js"></script>
-	<script src="js/layers/blank.js"></script>
-	<script src="js/layers/tree-tab.js"></script>
-	<script src="js/layers/prestige.js"></script>
-	<script src="js/layers/boosters.js"></script>
-	<script src="js/layers/generators.js"></script>
-	<script src="js/layers/time.js"></script>
-	<script src="js/layers/enhance.js"></script>
-	<script src="js/layers/space.js"></script>
-	<script src="js/layers/super-boosters.js"></script>
-	<script src="js/layers/super-generators.js"></script>
-	<script src="js/layers/hindrance.js"></script>
-	<script src="js/layers/quirks.js"></script>
-	<script src="js/layers/solarity.js"></script>
-	<script src="js/layers/subspace.js"></script>
-	<script src="js/layers/magic.js"></script>
-	<script src="js/layers/balance.js"></script>
-	<script src="js/layers/phantom-souls.js"></script>
-	<script src="js/layers/honour.js"></script>
-	<script src="js/layers/nebula.js"></script>
-	<script src="js/layers/hyperspace.js"></script>
-	<script src="js/layers/imperium.js"></script>
-	<script src="js/layers/mastery.js"></script>
-	<script src="js/layers/gears.js"></script>
-	<script src="js/layers/machines.js"></script>
-	<script src="js/layers/energy.js"></script>
-	<script src="js/layers/neurons.js"></script>
-	<script src="js/layers/ideas.js"></script>
-	<script src="js/layers/robots.js"></script>
-	<script src="js/layers/artificial-intelligence.js"></script>
-	<script src="js/layers/civilizations.js"></script>
-	<script src="js/layers/achievements.js"></script>
-	<script src="js/layers/softcaps.js"></script>
-	<script src="js/layers/autobuyers.js"></script>
-	<script src="js/layers/manifest.js"></script>
-	<script type="text/javascript" src="js/mod.js"></script>
-	<script type="text/javascript" src="js/technical/temp.js"></script>
-	<script type="text/javascript" src="js/game.js"></script>
-	<script type="text/javascript" src="js/utils.js"></script>
-	<script src="js/save-codec.js"></script>
-	<script src="js/save-storage.js"></script>
-	<script src="js/saves.js"></script>
-	<script type="text/javascript" src="js/technical/systemComponents.js"></script>
-	<script type="text/javascript" src="js/components.js"></script>
-	<script type="text/javascript" src="js/technical/canvas.js"></script>
-	<script src="js/game-runtime.js"></script>
-	<script src="js/game-session.js"></script>
-	<script src="js/contracts.js"></script>
-	<script src="js/browser-entry.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="description" content="Grow a civilization from five people. Balance Food, Water and Shelter, then discover what shared work makes possible.">
+<title>Civ Prestige Tree</title>
+<link id="styleStuff" rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="interface.css">
+<link rel="stylesheet" href="civ.css">
+<script src="vendor/vue.global.prod.js"></script>
+<script src="js/technical/break_eternity.js"></script>
+<script src="js/technical/layerSupport.js"></script>
+<script src="js/tree.js"></script>
+<script src="js/sc.js"></script>
+<script src="js/help.js"></script>
+<script src="js/civilization.js"></script>
+<script src="js/layers/resources.js"></script>
+<script src="js/layers/manifest.js"></script>
+<script src="js/mod.js"></script>
+<script src="js/technical/temp.js"></script>
+<script src="js/game.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/save-codec.js"></script>
+<script src="js/save-storage.js"></script>
+<script src="js/saves.js"></script>
+<script src="js/components.js"></script>
+<script src="js/technical/canvas.js"></script>
+<script src="js/game-runtime.js"></script>
+<script src="js/game-session.js"></script>
+<script src="js/contracts.js"></script>
+<script src="js/browser-entry.js"></script>
 </head>
-<body onload="gameUI.commands.load()" style="display: flex; flex-direction: column;">
-	<p id="save-status" role="status" aria-live="polite" hidden style="color: #fff; background: #333; padding: 12px; margin: 0; flex: none; position: relative; z-index: 1;"></p>
-	<section id="save-recovery" hidden style="color: #fff; background: #222; padding: 20px; max-width: 600px; margin: 20px auto;">
-		<h1>Recover your saved progress</h1>
-		<p>The game has paused to protect your original saves. Allow browser storage or check your save data, then retry loading. You can copy the original data below before importing a validated recovery save.</p>
-		<label for="save-original">Original saved data</label>
-		<textarea id="save-original" readonly style="display: block; width: 95%; height: 120px;"></textarea>
-		<button onclick="window.location.reload()">Retry loading</button>
-		<button onclick="gameUI.commands.importSave()">Import recovery save</button>
-	</section>
-	<div id="app" v-cloak style="position: relative; min-height: 0; flex: 1; width: 100%; isolation: isolate;">
-		<canvas id="treeCanvas" class="canvas" :class="{'split-tree': player.tab !== 'none' && player.navTab !== 'none'}" v-if ="!(gameEnded && !player.keepGoing)"></canvas>
-
-		<div v-if="false" id="loadingSection" class="fullWidth">
-			<h1>Loading...<br></h1><br>If this takes too long, please let me know in <a style="font-size: 30px" href="https://discord.gg/ww5NQutTRK">my discord</a>.
-		</div>
-		<div>
-			<div class="vl" v-if="player.navTab!= 'none' &&player.tab!='none'&&!(gameEnded && !player.keepGoing)"></div>
-			<div v-if="(gameEnded && !player.keepGoing)" class="fullWidth">
-				<br>
-				<h2>{{modInfo.name}} {{VERSION.withoutName}}</h2><br><br>
-				<h3>Congratulations! You have reached the end and beaten this game, but for now...</h3><br>
-				<h3>Please check the Discord to see if there are new content updates!</h3><br><br>
-				<div v-if="!player.timePlayedReset">It took you {{formatTime(player.timePlayed)}} to beat the game.</div>
-				<div v-if="player.timePlayedReset">Make sure that you record the time in your stream or else your speedrun won't count!</div>
-				<br>
-				<button class="longUpg can" onclick="gameUI.commands.hardReset(true)">Play Again</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="longUpg can" onclick="gameUI.commands.keepGoing()">Keep Going</button>
-				<br><br><br>
-				<a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">The Prestige Tree Discord</a><br>
-				<a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
-				<br><br>
-				If you would like to speedrun this, press Play Again and record your attempt, then submit on the Discord Server in the channel #speedrun-submissions.
-				<br><br><br>
-			</div>
-
-			<!-- Notifications -->
-			<div class="notification-container">
-				<transition-group name="fade">
-					<div v-for="notification,index in activeNotifications" class="notification" v-bind:class="notification.type" v-bind:key="notification.id">
-						<h3>{{notification.title}}</h3><br>
-						<h2 v-html="notification.message"></h2>
-					</div>
-				</transition-group>
-			</div>
-
-
-			<div v-if="player.tab=='info'" class="col right">
-				<button class="back" onclick="gameUI.commands.showTab('none')">←</button><br>
-				<h2>{{modInfo.name}}</h2>
-				<br>
-				<h3>{{VERSION.withName}}</h3>
-				<span v-if="modInfo.author">
-					<br>
-					Made by {{modInfo.author}}
-				</span>
-				<br>
-				The Modding Tree {{TMT_VERSION.tmtNum}} by Acamaeda
-				<br>
-				Original idea by papyrus#6977 (on discord)
-				<br><br>
-				Note: If anyone wishes to make a mod of this game, that is perfectly fine with me, just make sure to name it something different (ex: Prestige Tree NG+), and to make sure that the credit shown above is kept in-game.<br><br>
-				<a v-bind:href="modInfo.changelogLink" target="_blank" class="link" >Changelog</a><br>
-				<a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">The Prestige Tree Discord</a><br>
-				<a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
-				<a class="link pat" href="http://patreon.com/Jacorb90" target="_blank" v-bind:style="{'font-size': '18px'}">Donate</a><br>
-				<br><br>
-				Time Played: {{ formatTime(player.timePlayed) }}<br>
-				<span v-for="layer in LAYERS"><span v-if="player[layer].first!==undefined && player[layer].unlocked">First {{layer}} reset: {{formatTime(player[layer].first)}}<br></span></span><br>
-				<h3>Hotkeys</h3><br>
-				<template v-for="(key, name) in hotkeys" :key="name"><span v-if="player[key.layer].unlocked"><br>{{key.description}}</span></template>
-				<br>Press - to Show Formulas
-			</div>
-			<div v-if="player.tab=='help' && (typeof help_data != 'undefined')" class="col right">
-				<div v-if="typeof tmp.helpTab == 'number'">
-					<button class="back" onclick="gameUI.commands.showTab('none')">←</button><br>
-					<div v-if="player.a.achievements.length==0">Why are you even here? You haven't started yet!</div>
-					<ul v-else><br><br><br><li v-for="data in tmp.helpData"><a v-if="data.unlocked" class="link" v-on:click="tmp.helpTab = data.id" v-html="data.title"></a><br></li></ul>
-				</div>
-				<div v-else>
-					<button class="back" onclick="gameUI.session.derivedState.tmp.helpTab = NaN">←</button><br>
-					<h2 v-html="tmp.helpData[tmp.helpTab].title"></h2><br><br>
-					<div v-html="tmp.helpData[tmp.helpTab].text"></div>
-				</div>
-			</div>
-			<div v-if="player.tab=='options'" class="col right">
-				<button class="back" onclick="gameUI.commands.showTab('none')">←</button><br>
-				<div class="upgTable" style="padding-top: 25px; margin-bottom: 24px;">
-					<div class="upgRow">
-						<div><button class="tabButton" style="border-color: white;" v-on:click="player.optTab='mainOpt'">Main Options</button></div>
-						<div><button class="tabButton" style="border-color: white;" v-on:click="player.optTab='displayOpt'">Display Options</button></div>
-						<div><button class="tabButton" style="border-color: white;" v-on:click="player.optTab='notifyOpt'">Node Glow Options</button></div>
-					</div>
-				</div>
-				<div v-if="player.optTab=='mainOpt'">
-					<table><tbody>
-						<tr>
-							<td><button class="opt" onclick="gameUI.commands.save()">Save</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('autosave')">Autosave: {{ player.autosave?"ON":"OFF" }}</button></td>
-							<td><button class="opt" onclick="gameUI.commands.hardReset()">HARD RESET</button></td>
-						</tr>
-						<tr>
-							<td><button class="opt" onclick="gameUI.commands.exportSave()">Export to clipboard</button></td>
-							<td><button class="opt" onclick="gameUI.commands.importSave()">Import</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('offlineProd')">Offline Prod: {{ player.offlineProd?"ON":"OFF" }}</button></td>
-						</tr>
-						<tr>
-							<td><button class="opt" onclick="gameUI.commands.showAllSaves()">All Save Files</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('tapNerd')">"Nerd Mode" Activation: {{player.tapNerd?"ON TAP":"ON HOLD"}}</button></td>
-							<td></td>
-						</tr>
-					</tbody></table>
-				</div><div v-if="player.optTab=='displayOpt'">
-					<table><tbody>
-						<tr>
-							<td><button class="opt" onclick="gameUI.commands.switchTheme()">Theme: {{ getThemeName() }}</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('oldStyle')">Style: {{ player.oldStyle?"v1.0":"NEW" }}</button></td>
-							<td><button v-bind:class="{opt: true, locked: player.oldStyle}" onclick="if (!gameUI.session.saveState.player.oldStyle) gameUI.commands.toggleOpt('hqTree')">High-Quality Tree: {{ (player.hqTree&&!player.oldStyle)?"ON":"OFF" }}</button></td>
-						</tr>
-						<tr>
-							<td><button v-bind:class="{opt: true, locked: player.oldStyle}" onclick="if (!gameUI.session.saveState.player.oldStyle) gameUI.commands.toggleOpt('grad')">Gradients: {{ (player.grad&&!player.oldStyle)?"ON":"OFF" }}</button></td>
-							<td><button class="opt" onclick="gameUI.commands.adjustMSDisp()">Show Milestones: {{ player.msDisplay.toUpperCase() }}</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('milNotify')">Milestone Notifications: {{ player.milNotify?"ON":"OFF" }}</button></td>
-						</tr>
-						<tr>
-							<td><button v-bind:class="{opt: true, locked: player.oldStyle}" onclick="if (!gameUI.session.saveState.player.oldStyle) gameUI.commands.toggleOpt('anim')">Animations: {{ (player.anim&&!player.oldStyle)?"ON":"OFF" }}</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('hideChallenges')">Completed Challenges: {{ player.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
-							<td><button v-if="hasAchievement('a', 21)" class="opt" onclick="gameUI.commands.toggleOpt('scShown')">Softcap Node: {{player.scShown?"SHOWN":"HIDDEN"}}</button></td>
-						</tr>
-						<tr>
-							<td><button v-if="player.ma.unlocked" class="opt" onclick="gameUI.commands.toggleOpt('hideStars')">Mastery Stars: {{ player.hideStars?"HIDDEN":"SHOWN" }}</button></td>
-						</tr>
-					</tbody></table>
-				</div><div v-if="player.optTab=='notifyOpt'">
-					<table><tbody>
-						<tr>
-							<td><button class="opt" onclick="gameUI.commands.adjustGlow('slight')">White Glow: {{ player.slightGlow.toUpperCase() }}</button></td>
-							<td><button class="opt" onclick="gameUI.commands.toggleOpt('redGlowActive')">Red Glow: {{ player.redGlowActive?"ON":"OFF" }}</button></td>
-							<td><button v-if="player.s.unlocked" class="opt" onclick="gameUI.commands.adjustGlow('space')">Red Glow - Space Buildings: {{ player.spaceGlow.toUpperCase() }}</button></td>
-						</tr>
-						<tr>
-							<td><button v-if="player.o.unlocked" class="opt" onclick="gameUI.commands.adjustGlow('sol')">Red Glow - Solarity Buyables: {{ player.solGlow.toUpperCase() }}</button></td>
-							<td><button v-if="player.m.unlocked" class="opt" onclick="gameUI.commands.adjustGlow('maj')">Red Glow - Spells: {{ player.majGlow.toUpperCase() }}</button></td>
-							<td><button v-if="player.mc.unlocked" class="opt" onclick="gameUI.commands.toggleOpt('shellGlow')">Red Glow - Shell Expansion: {{ player.shellGlow?"ON":"OFF" }}</button></td>
-						</tr>
-					</tbody></table>
-				</div><br><br>
-				<saves></saves>
-			</div>
-			<div id="treeOverlay" class="treeOverlay" v-if="player.tab!='gameEnded'" v-bind:class="{ fullWidth: (player.tab == 'tree' || player.tab == 'none'), col: (player.tab != 'tree' && player.tab != 'none'), left: (player.tab != 'tree' && player.tab != 'none')}">
-				<div id="version" class="overlayThing" style="margin-right: 25px">{{VERSION.withoutName}}</div>
-				<button id="optionWheel" class="overlayThing icon-control" v-if="player.tab!='options'" aria-label="Options" onclick="gameUI.commands.showTab('options')"><img src="images/options_wheel.png" alt=""></button>
-				<button id="info" v-if="player.tab!='info'"  class="overlayThing" onclick="gameUI.commands.showTab('info')" aria-label="Information">i</button>
-				<button id="help" v-if="player.tab!='help' && (typeof help_data != 'undefined')"  class="overlayThing" onclick="gameUI.commands.showTab('help')" aria-label="Help">?</button>
-				<div id="discord" class="overlayThing">
-					<img onclick="window.open((modInfo.discordLink ? modInfo.discordLink : 'http://discord.gg/wwQfgPa'),'mywindow')" src="images/discord.png" alt="Discord" target="_blank">
-					<ul id="discord-links">
-						<li><a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Prestige Tree Discord</a></li>
-						<li><a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br></li>
-					</ul>
-				</div>
-				<div class="overlayThing game-summary" style="padding-bottom:7px; width: 90%;">
-					<span v-if="player.devSpeed && player.devSpeed != 1" class="overlayThing">
-						<br>Dev Speed: {{format(player.devSpeed)}}x<br>
-					</span>
-					<span v-if="player.offTime !== undefined && player.offTime !== null"  class="overlayThing">
-						<br>Offline Time: {{formatTime(player.offTime?player.offTime.remain:0)}}<br>
-					</span>
-					<span v-if="!player.keepGoing" class="overlayThing">
-						<br><span v-if="modInfo.specialEndgameText">{{modInfo.specialEndgameText}}</span><span v-if="!modInfo.specialEndgameText">Reach {{formatWhole(modInfo.endgame)+" "+modInfo.pointsName}} to beat the game!</span><br>
-					</span>
-					<br>
-					<span v-if="player.points.lt('1e1000')">You have </span>
-					<h2 id="points">{{format(player.points)}}</h2>
-					<span v-if="player.points.lt('1e1e6')">&nbsp;{{modInfo.pointsName}}</span>
-					<br>
-					<span v-if="canGenPoints()">({{format(getPointGen())}}/sec)</span>
-					<div v-for="thing in tmp.displayThings"><span v-if="thing" v-html="thing"></span></div>
-				</div>
-				<div class="sideLayers" >
-					<div v-for="node in OTHER_LAYERS['side']"><layer-node :layer='node' :abb='tmp[node].symbol' :size="'small'"></layer-node><br><button class='smallNode hidden'></button></div>
-				</div>
-			</div>
+<body onload="gameUI.commands.load()">
+<p id="save-status" role="status" aria-live="polite" hidden></p>
+<section id="save-recovery" hidden>
+    <p class="eyebrow">Progress protected</p><h1>Recover your settlement</h1>
+    <p>The game is paused to protect your saved data. Restore browser storage or import a valid Civ save, then retry.</p>
+    <label for="save-original">Original saved data</label><textarea id="save-original" readonly></textarea>
+    <div class="actions"><button onclick="window.location.reload()">Retry loading</button><button onclick="gameUI.commands.importSave()">Import recovery save</button></div>
+</section>
+<div id="app" v-cloak>
+    <a class="skip-link" href="#resource-panel">Skip to selected resource</a>
+    <header class="masthead">
+        <h2 class="game-title">Civ Prestige Tree</h2>
+        <div class="chapter"><span class="chapter-dot"></span> {{version.name}} <span class="version">v{{version.num}}</span></div>
+        <nav aria-label="Game controls"><button class="tabButton" @click="save">Save</button><button class="tabButton" @click="openSaves">Settlements</button><button class="tabButton" :aria-expanded="ui.settings" aria-controls="settings" @click="ui.settings = !ui.settings">Settings</button></nav>
+    </header>
+    <section v-if="ui.settings" id="settings" class="settings">
+        <h2>Settlement settings</h2>
+        <div class="actions"><button @click="exportSave">Export save</button><button @click="importSave">Import save</button><button @click="player.autosave = !player.autosave">Autosave: {{player.autosave ? 'on' : 'off'}}</button><button @click="player.offlineProd = !player.offlineProd">Offline progress: {{player.offlineProd ? 'on' : 'off'}}</button><button class="danger" @click="reset">Reset this settlement</button></div>
+        <p>Progress saves in this browser. Export a copy to keep a backup or move to another device.</p>
+    </section>
+    <main :inert="frozen">
+        <section class="population-banner" aria-labelledby="population-title">
+            <div class="population-main"><p id="population-title" class="eyebrow">You have</p><div class="population-count"><strong data-testid="population">{{number(civ.population,0)}}</strong><h1>Population<span>{{number(civ.housing,0)}} housing capacity</span></h1></div></div>
+            <div class="growth-overview"><div class="growth-heading"><span>{{civ.growing ? 'A community taking root' : 'Growth paused'}}</span><span>{{number(player.civ.growth * 100,0)}}%</span></div>
+                <progress :value="player.civ.growth" max="1" aria-label="Progress toward the next person"></progress>
+                <p v-if="civ.growing">{{civ.advice}}</p><p v-else><button class="text-button" @click="select(civ.next)">{{civ.bottleneck}}</button> is limiting growth. {{civ.advice}}</p>
+                <p class="small-note" data-testid="abundance-growth">Abundance: {{number(civ.abundance.multiplier,2)}}× growth<span v-if="!civ.growing"> · paused</span></p>
+                <details class="small-note" data-testid="abundance-details"><summary>Abundance breakdown</summary>
+                    <p>Food: +{{number(civ.abundance.food.bonus * 100,0)}}% · {{number(civ.abundance.food.coverageSeconds,0)}}s in reserve. Bonus starts above {{number(civ.abundance.food.thresholdSeconds,0)}}s of current upkeep.</p>
+                    <p>Water: +{{number(civ.abundance.water.bonus * 100,0)}}% · {{number(civ.abundance.water.coverageSeconds,0)}}s in reserve. Bonus starts above {{number(civ.abundance.water.thresholdSeconds,0)}}s of current upkeep.</p>
+                    <p>Shelter: +{{number(civ.abundance.shelter.bonus * 100,0)}}% · room for {{number(civ.abundance.shelter.freePlaces,0)}} more people.</p>
+                    <p>Supply bonuses peak near full storage. Shelter bonuses start above {{number(civ.abundance.shelter.thresholdSeconds,0)}}s of normal growth headroom and peak at {{number(civ.abundance.shelter.fullSeconds,0)}}s.</p>
+                    <p>Bonuses add to normal {{number(civ.abundance.secondsPerPerson,0)}}s-per-person growth, up to {{number(civ.abundance.maximumMultiplier,0)}}×. Housing and supply limits still pause growth.</p>
+                </details>
+            </div>
+        </section>
+        <section v-if="civ.shortage.active" class="shortage-warning" role="alert" aria-labelledby="shortage-title" data-testid="shortage-warning"><h2 id="shortage-title">{{civ.shortage.resources.join(' and ')}} depleted</h2>
+            <p v-if="civ.shortage.lastSurvivor">One survivor remains protected. Gather Food and collect Water to rebuild.</p>
+            <p v-else>{{civ.shortage.losses === 0 ? 'Grace period' : 'Next population loss'}}: {{number(civ.shortage.remaining)}}s. {{civ.shortage.losses}} lost during this shortage.</p>
+            <progress v-if="!civ.shortage.lastSurvivor" :value="civ.shortage.progress" max="1" aria-label="Shortage countdown"></progress>
+            <p>Restore both supplies above zero to reset the countdown. Losses accelerate during a continuing shortage.</p>
+        </section>
+        <div class="game-layout">
+            <section class="tree-section" aria-labelledby="tree-heading">
+                <div class="section-heading"><div><p class="eyebrow">EVERYTHING IS CONNECTED</p><h2 id="tree-heading">The resource tree</h2></div><span class="live-label">Live economy</span></div>
+                <div class="resource-tree">
+                    <div class="resource-tier" v-for="(row,index) in rows" :key="index" v-show="row.length">
+                        <span class="tier-label">{{['FOUNDATIONS','SHARED WORK','SURPLUS','EXPRESSION'][index]}}</span>
+                        <div class="node-row" :class="{'three-nodes': index === 0}">
+                            <div class="node-cell" v-for="node in row" :key="node.id">
+                                <button class="treeNode resource-node" :class="{selected: player.tab === node.id, locked: !node.unlocked, can: node.unlocked, resetNotify: node.canPrestige}" :style="{backgroundColor: node.unlocked ? node.color : undefined}" :aria-pressed="player.tab === node.id" :aria-label="node.name + (node.unlocked ? ', ' + number(node.value) + ' ' + node.unit : ', locked. ' + node.requirement)" @click="select(node.id)">{{node.symbol}}</button>
+                                <span class="node-label">{{node.name}}</span><span class="node-value">{{node.unlocked ? number(node.value) : 'Locked'}}<small v-if="node.unlocked && node.unit"> {{node.unit}}</small></span><span class="node-hint" v-if="node.canPrestige">Prestige available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="resource-panel" tabindex="-1" class="resource-panel" :class="selected.id" aria-labelledby="resource-title">
+                <div class="panel-title"><p class="eyebrow">{{['FOUNDATION RESOURCE','SHARED WORK','SURPLUS RESOURCE','CIVILIZATION RESOURCE'][selected.tier]}}</p></div>
+                <h2 id="resource-title" :style="{color:selected.color}">{{selected.name}}</h2><p class="resource-description">{{selected.description}}</p>
+                <template v-if="!selected.unlocked"><div class="unlock-note"><p class="eyebrow">NOT YET DISCOVERED</p><h3>{{selected.requirement}}</h3><p>Develop the earlier branches to bring this resource into your civilization.</p></div></template>
+                <template v-else>
+                    <div class="resource-total"><strong>{{number(selected.value)}}</strong><span>{{selected.unit || selected.name.toLowerCase()}}</span></div>
+                    <template v-if="['food','water'].includes(selected.id)">
+                        <dl class="flow-ledger"><div><dt>Population upkeep</dt><dd>&minus;{{number(civ.demand)}} <small>/ min</small></dd></div><div><dt>{{selected.id === 'water' && player.civ.improvements.gravity ? 'Flow + active collection' : 'Active crews, average yield'}}</dt><dd>{{signed(civ.production[selected.id])}} <small>/ min</small></dd></div></dl>
+                        <div class="storage-line"><span>{{selected.id === 'water' ? 'Water reserves' : 'Food reserves'}} {{number(selected.value)}} / {{number(civ.storage[selected.id])}}</span><span>{{civ.workers[selected.id]}} busy workers</span></div><progress :value="Number(selected.value)" :max="civ.storage[selected.id]" :aria-label="selected.name + ' storage'"></progress>
+                        <p class="small-note">Growth needs {{number(civ.reserve)}} in reserve. Trips deliver their yield when they finish; excess above storage is lost.</p>
+                        <p class="small-note" data-testid="available-workers">{{civ.availableWorkers}} workers available. Busy crews return automatically; recall forfeits the unfinished yield.</p>
+                        <p v-if="selected.id === 'water' && player.civ.improvements.waterOrders && !player.civ.improvements.gravity" class="small-note">Water Keeper reserves 1 dedicated worker while on, plus any carrying crew. Reserved now: {{civ.keeperWorkers}}. Prestige switches it off.</p>
+                        <h3>{{selected.id === 'food' ? 'Expeditions & harvests' : 'Water collection'}}</h3>
+                        <div v-for="action in selected.actions" :key="action.id" class="action-row">
+                            <h4>{{action.name}} <small v-if="action.level">· route {{action.level}}</small></h4>
+                            <template v-if="!action.unlocked"><p class="small-note">Unlock Cultivated fields to begin farming cycles.</p></template>
+                            <template v-else-if="action.automatic && !action.active"><p class="small-note">Gravity-fed flow is fully automatic and uses 0 workers.</p></template>
+                            <template v-else>
+                                <p v-if="action.active">{{action.crew}} workers busy · {{number(action.remaining)}}s left · {{number(action.runningReward)}} {{selected.name}} returning</p>
+                                <p v-else>{{action.workers}} workers · {{number(action.duration)}}s · {{number(action.reward)}} {{selected.name}}</p>
+                                <progress v-if="action.active" :value="action.progress" max="1" :aria-label="action.name + ' progress'"></progress>
+                                <div class="action-controls"><button v-if="!action.active" class="upg" :class="{can:action.canDispatch,locked:!action.canDispatch}" :style="{backgroundColor:action.canDispatch ? selected.color : undefined}" :disabled="!action.canDispatch" @click="dispatch(action.id)">Send {{action.name}}</button>
+                                    <button v-else class="tabButton" @click="recall(action.id)">Recall {{action.name}}</button>
+                                    <button v-if="action.repeatAvailable && !action.automatic" class="tabButton" :disabled="!action.repeatCanToggle" :aria-pressed="action.repeat" @click="toggleRepeat(action.id)">{{action.id === 'water' ? 'Water Keeper' : action.name + ' repeat'}}: {{action.repeat ? 'on' : 'off'}}</button></div>
+                                <p v-if="!action.active && !action.canDispatch" class="small-note">Needs {{action.workers}} available workers. Wait for a crew or recall an action.</p>
+                            </template>
+                        </div>
+                        <div v-if="selected.id === 'water'" class="action-row"><h3>Irrigation</h3><p>Spend 20 surplus Water: new Food trips and farming cycles gain 35% yield for 45s. Household reserves are protected.</p><p v-if="civ.irrigation">Irrigation active: {{number(civ.irrigation)}}s</p><button class="tabButton" :disabled="civ.irrigation > 0 || Number(player.water.points) < 20 + civ.reserve" @click="irrigate">Release irrigation water</button><button v-if="civ.autoIrrigateAvailable" class="tabButton" :aria-pressed="player.civ.autoIrrigate" @click="toggleIrrigation">Auto-irrigation: {{player.civ.autoIrrigate ? 'on' : 'off'}}</button></div>
+                    </template>
+                    <template v-if="selected.id === 'shelter'"><dl class="flow-ledger"><div><dt>Occupied housing</dt><dd>{{number(civ.population,0)}} / {{number(civ.housing,0)}}</dd></div></dl><p class="small-note">New huts add room for population growth. Every person is available for expeditions or construction.</p></template>
+                    <div v-if="selected.projects.length" class="projects"><h3>Buyables · construction</h3><p class="small-note">{{selected.buyableRetention}}</p>
+                        <button v-for="project in selected.projects" :key="project.id" class="upg project-button" :class="{can:project.canStart,locked:!project.canStart}" :style="{backgroundColor: project.canStart ? selected.color : undefined}" :disabled="!project.canStart" @click="build(project.id)"><span><strong>{{project.name}}</strong><small>{{project.description}}</small></span><span class="project-cost">{{number(project.work,0)}}<small>work · 1 builder</small><small v-if="project.craftCost">{{number(project.craftCost,0)}} Craft</small><small v-if="project.organizationRequired">Requires {{number(project.organizationRequired,0)}} lifetime Organization</small></span></button>
+                        <p class="small-note">One construction project at a time. A builder stays busy until completion. Construction uses no Food or Water. Food baskets, earthenware jars and river traps spend Craft up front; canceling or losing construction on prestige does not refund it.</p>
+                    </div>
+                    <div v-if="selected.upgrades.length" class="projects"><h3>Craft upgrades · keep through prestige</h3><p class="small-note">Organization milestones unlock more upgrades to purchase with Craft.</p>
+                        <button v-for="upgrade in selected.upgrades" :key="upgrade.id" class="upg project-button" :class="{can:upgrade.canBuy,locked:!upgrade.canBuy && !upgrade.owned,bought:upgrade.owned}" :style="{backgroundColor:upgrade.owned || upgrade.canBuy ? selected.color : undefined}" :disabled="!upgrade.canBuy" @click="buyUpgrade(upgrade.id)"><span><strong>{{upgrade.name}}{{upgrade.owned ? ' · Owned' : ''}}</strong><small>{{upgrade.description}}</small><small v-if="!upgrade.owned">{{upgrade.costText}}</small></span></button>
+                    </div>
+                    <template v-if="['craft','organization'].includes(selected.id)"><div class="prestige-box"><p class="eyebrow">REORGANIZE, THEN REBUILD</p><h3>Gain {{selected.prestigeGain}} {{selected.id === 'craft' ? 'Craft' : 'coordination'}}</h3><p>Requires {{selected.requirement}}.</p><dl class="reset-preview"><div><dt>Restart</dt><dd data-testid="prestige-reset-preview">{{selected.prestigePreview.resetText}}</dd></div><div><dt>Keep</dt><dd data-testid="prestige-keep-preview">{{selected.prestigePreview.keepText}}</dd></div></dl><button class="reset primary" :class="{can:selected.canPrestige,locked:!selected.canPrestige}" :style="{backgroundColor:selected.canPrestige ? selected.color : undefined}" :disabled="!selected.canPrestige" @click="prestige(selected.id)">Develop {{selected.name}}</button></div>
+                        <p v-if="selected.id === 'craft'" class="small-note">Each Craft adds 18% to expedition yields and gravity-fed flow.</p><p v-else class="small-note">Coordination reduces upkeep and speeds construction. Lifetime Organization earns permanent milestones.</p>
+                    </template>
+                    <div v-if="selected.id === 'organization'" class="organization-milestones"><h3>Organization milestones</h3><p class="small-note">{{number(selected.organizationEarned,0)}} lifetime Organization earned. Spending Organization does not remove milestones. Milestone rewards apply immediately when earned. Craft upgrades still need to be purchased.</p>
+                        <div v-for="milestone in selected.organizationMilestones" :key="milestone.id" class="milestone" :class="{milestoneDone:milestone.earned}" :data-earned="milestone.earned"><strong>{{milestone.requirement}} Organization · {{milestone.name}} · {{milestone.earned ? 'Earned' : 'Locked'}}</strong><p>{{milestone.reward}}</p></div>
+                    </div>
 
 
-			<div v-if="!(gameEnded && !player.keepGoing)" id="treeTab" style="z-index: 0" onscroll="gameUI.session.treeCanvas.resizeCanvas()" v-bind:class="{ fullWidth: (player.tab == 'none' || player.navTab == 'none'), col: (player.tab !== 'none' && player.navTab !== 'none'), left: (player.tab !== 'none' && player.navTab !== 'none')}">
-				<br><br><br><br><br><br>
-				<overlay-head id="fakeHead" style="visibility: hidden;">
-				</overlay-head>
-
-				<layer-tab :layer="player.navTab == 'none' ? player.tab : player.navTab"></layer-tab>
-
-			</div>
-			<div v-if="(player.navTab !== 'none' && player.tab !== 'tree' && LAYERS.includes(player.tab)) && !(gameEnded && !player.keepGoing)" onscroll="gameUI.session.treeCanvas.resizeCanvas()" v-bind:class="{ fullWidth: player.navTab == 'none', col: player.navTab != 'none', right: player.navTab != 'none', fast: true, tab: true}">
-				<layer-tab :layer="player.tab" :back="'tree'" :spacing="'50px'"></layer-tab>
-			</div>
-		</div>
-	</div>
+                    <template v-if="['education','culture'].includes(selected.id)"><div class="prestige-box"><h3>{{selected.id === 'education' ? 'Support an apprenticeship' : 'Create a shared tradition'}}</h3><p>Gain 1 {{selected.unit}}.</p><p class="investment-cost"><span v-for="cost in selected.costs" :key="cost.name">{{number(cost.cost)}} {{cost.name}} </span></p><button class="reset primary" :class="{can:selected.canInvest,locked:!selected.canInvest}" :style="{backgroundColor:selected.canInvest ? selected.color : undefined}" :disabled="!selected.canInvest" @click="invest(selected.id)">Invest in {{selected.name}}</button></div><p class="small-note">{{selected.id === 'education' ? 'Each Knowledge adds 12% to expedition yields and gravity-fed flow.' : 'Cultural influence strengthens cooperation and reduces Population upkeep.'}}</p></template>
+                </template>
+            </section>
+        </div>
+        <section class="workbench" aria-labelledby="work-heading"><div><p class="eyebrow">SHARED LABOR</p><h2 id="work-heading">{{civ.project ? civ.project.name : 'What will you build next?'}}</h2><p>{{civ.project ? (civ.project.paused ? 'Construction paused for lack of workers. Progress is kept; it resumes after supplies and labor recover.' : 'One builder is reserved until this project finishes.') : 'Choose an improvement in Food, Water or Shelter.'}}</p></div>
+            <div v-if="civ.project" class="construction-progress"><div><span>{{number(player.civ.projectWork)}} / {{number(civ.project.work)}} work</span><button class="text-button" @click="cancelProject">Cancel project</button></div><progress :value="civ.project.progress" max="1" aria-label="Construction progress"></progress></div>
+            <p class="worker-ledger" data-testid="worker-ledger">{{civ.availableWorkers}} workers available · {{civ.workers.food + civ.workers.water - civ.keeperWorkers}} on trips · {{civ.keeperWorkers}} Water Keeper · {{civ.builders}} building</p><div class="labor-controls"><label for="priority">Repeat order priority</label><select id="priority" :value="player.civ.priority" @change="setPriority"><option value="balanced">Short trips first</option><option value="food">Large harvests first</option></select><button v-if="civ.autoAvailable" :aria-pressed="player.civ.autoBuild" @click="toggleAutomation">Auto-build: {{player.civ.autoBuild ? 'on' : 'off'}}</button></div>
+        </section>
+        <p class="event-log" role="status">{{player.civ.message}}</p>
+        <p class="offline-note" v-if="player.offTime && player.offTime.remain > 0">Applying {{number(player.offTime.remain)}} seconds of offline progress.</p>
+    </main>
+    <footer><span>From a handful of people, a civilization.</span><button class="text-button" :aria-expanded="ui.about" @click="ui.about = !ui.about">About & credits</button><p v-if="ui.about">Civ Prestige Tree by step3software. Built on The Modding Tree by Acamaeda and The Prestige Tree by Jacorb and Aarex; original idea by papyrus. Original licenses are included.</p></footer>
+    <save-files></save-files>
+</div>
 </body>
+</html>

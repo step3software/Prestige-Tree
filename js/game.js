@@ -3,8 +3,8 @@ function createGameRules({ derivedState, effects, gameHelpers, gameView, layerRe
 let needCanvasUpdate = true;
 // Vue observes this same rule-owned object; a computed scalar getter would
 // otherwise cache its first value without seeing the endgame transition.
-/** @type {{gameEnded:boolean|1}} */
-const status = effects.observe({ gameEnded: false });
+/** @type {{gameEnded:boolean|1,tickFaulted:boolean}} */
+const status = effects.observe({ gameEnded: false, tickFaulted: false });
 
 // Don't change this
 const TMT_VERSION = {
@@ -27,7 +27,7 @@ function getResetGain(layer, useType = null) {
 		if (derivedState.tmp[layer].baseAmount.lt(derivedState.tmp[layer].requires)) return new Decimal(0)
 		let gain = derivedState.tmp[layer].baseAmount.div(derivedState.tmp[layer].requires).pow(derivedState.tmp[layer].exponent).times(derivedState.tmp[layer].gainMult).pow(derivedState.tmp[layer].gainExp)
 		gain = softcapRules.softcap("normal_layers_2", softcapRules.softcap("normal_layers", gain));
-		if (layer=="e") gain = softcapRules.softcap("epGain", gain);
+
 		return gain.floor().max(0);
 	} else if (type=="custom"){
 		return layerRegistry.layers[layer].getResetGain()
@@ -83,26 +83,7 @@ function shouldNotify(layer){
 		if (!isNaN(id)){
 			if (derivedState.tmp[layer].buyables[id].autoed) continue;
 			if (derivedState.tmp[layer].buyables[id].unlocked && derivedState.tmp[layer].buyables[id].canAfford){
-				if (layer=="s") {
-					if (saveState.player.spaceGlow=="never") continue;
-					if (saveState.player.spaceGlow!="normal") {
-						let str = saveState.player.spaceGlow
-						if (str.includes("+")) str = str.split("+")[0];
-						str = Number(str);
-						let trueId = id-10;
-						if (str>trueId) continue;
-					}
-				} else if (layer=="o") {
-					if (saveState.player.solGlow=="never") continue;
-					if (saveState.player.solGlow!="normal") {
-						let buyableData = { "solar cores onward": 11, "tachoclinal plasma onward": 12, "convectional energy": 13, "convectional energy onward": 13, "coronal waves": 21 }
-						let str = buyableData[saveState.player.solGlow]
-						if (str>id) continue;
-					}
-				} else if (layer=="m") {
-					if (saveState.player.majGlow=="never" || (saveState.player.m.auto && gameHelpers.hasMilestone("hn", 2))) continue;
-					if (saveState.player.majGlow=="uncasted") if (Object.values(saveState.player.m.spellTimes).some(x => Decimal.eq(x, 0))) continue;
-				} else if (layer=="mc" && id==11 && !saveState.player.shellGlow) continue;
+
 				return true
 			}
 		}
@@ -400,7 +381,7 @@ function hardReset() {
 
 let ticking = false
 // A failed tick may leave partial mutations. Only a reload restores a safe state.
-let tickFaulted = false
+
 
 /** Advance this owner's identity-bound state by elapsed seconds, without I/O.
  * Rule/cache collaborators belong to this session. Callers own clock/offline
@@ -409,7 +390,7 @@ let tickFaulted = false
  */
 function advanceGame(session, elapsedSeconds) {
 	if (!runtimeServices.isCurrentGameSession(session)) throw new Error("Superseded game session");
-	if (tickFaulted) throw new Error("Reload required after runtime failure");
+	if (status.tickFaulted) throw new Error("Reload required after runtime failure");
 	if (!Number.isFinite(elapsedSeconds) || elapsedSeconds < 0) throw new Error("Expected finite nonnegative elapsed seconds");
 	if (ticking) throw new Error("Game advancement is already in progress");
 	if (status.gameEnded && !saveState.player.keepGoing) return;
@@ -422,7 +403,7 @@ function advanceGame(session, elapsedSeconds) {
 		gameRules.gameLoop(elapsedSeconds);
 		gameHelpers.fixNaNs();
 	} catch (error) {
-		tickFaulted = true;
+		status.tickFaulted = true;
 		throw error;
 	} finally {
 		ticking = false;
@@ -455,8 +436,8 @@ const gameRules = {
  hardReset,
  get ticking() { return ticking; },
  set ticking(value) { ticking = value; },
- get tickFaulted() { return tickFaulted; },
- set tickFaulted(value) { tickFaulted = value; },
+ get tickFaulted() { return status.tickFaulted; },
+ set tickFaulted(value) { status.tickFaulted = value; },
  advanceGame,
 };
 return gameRules;

@@ -153,39 +153,8 @@ function toggleOpt(name) {
 	if (name == "oldStyle") gameHelpers.updateStyle()
 }
 
-function adjustGlow(type) {
-	let glowData = {
-		slight() { return ["normal", "never"] },
-		space() { 
-			let data = ["normal", "2+", "3"];
-			if (gameHelpers.hasUpgrade("s", 14)) {
-				data[2] = "3+"
-				data.push("4")
-				if (gameHelpers.hasUpgrade("s", 25)) {
-					data[3] = "4+"
-					data.push("5")
-				}
-			}
-			data.push("never")
-			return data;
-		},
-		sol() { 
-			let data = ["normal"]
-			if (saveState.player.ss.unlocked) {
-				data.push("tachoclinal plasma onward")
-				if (gameHelpers.hasUpgrade("ss", 41)) {
-					data.push("convectional energy onward")
-					data.push("coronal waves")
-				} else data.push("convectional energy")
-			} else data.push("tachoclinal plasma")
-			data.push("never")
-			return data;
-		},
-		maj() { return ["normal", "uncasted", "never"] },
-	}
-	let data = glowData[type]()
-	let index = data.indexOf(saveState.player[type+"Glow"]);
-	saveState.player[type+"Glow"] = data[(index+1)%data.length]
+function adjustGlow() {
+    saveState.player.slightGlow = saveState.player.slightGlow === "never" ? "normal" : "never";
 }
 
 let styleCooldown = 0;
@@ -550,12 +519,10 @@ function nodeShown(layer) {
 }
 
 function unl(layer) {
-	if (Array.isArray(derivedState.tmp.ma.canBeMastered)) if (saveState.player.ma.selectionActive&&derivedState.tmp[layer].row<6&&!derivedState.tmp.ma.canBeMastered.includes(layer)) return false;
 	return saveState.player[layer].unlocked;
 }
 
 function layerunlocked(layer) {
-	if (saveState.player.ma.selectionActive&&derivedState.tmp[layer].row<6&&!derivedState.tmp.ma.canBeMastered.includes(layer)) return false;
 	if (derivedState.tmp[layer] && derivedState.tmp[layer].type == "none") return (saveState.player[layer].unlocked)
 	return layerRegistry.LAYERS.includes(layer) && (saveState.player[layer].unlocked || (derivedState.tmp[layer].canReset && derivedState.tmp[layer].layerShown))
 }
@@ -600,7 +567,7 @@ function updateAchievements(layer){
 function addTime(diff, layer) {
 	let data = saveState.player
 	let time = data.timePlayed
-	if (!layer && !saveState.player.p.unlocked) return;
+
 	if (layer) {
 		data = data[layer]
 		time = data.time

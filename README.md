@@ -1,44 +1,41 @@
-# Prestige Tree development fork
+# Civ Prestige Tree
 
-This is `step3software/Prestige-Tree`, forked from
-[Jacorb90/Prestige-Tree](https://github.com/Jacorb90/Prestige-Tree).
-For the Civilization game's historical grounding, start at the
-[research index](docs/research/README.md) and [game reference guide](docs/research/reference-guide.md).
-Build balance tests alongside new or replaced content. The
-[balance testing guide](docs/balance-testing.md#add-balance-coverage-with-content)
-explains checkpoints, play policies, focused tests and timing evidence.
-`npm run balance` provides rough estimates and fixed-step comparisons for active
-and five-minute regular play; current coverage is a foundation for the new content.
-For development, start with [AGENTS.md](AGENTS.md), the
-[Orcha manifest](.orcha/repository.json) and the
-[development guide](docs/developer-guide.md). Project source is `master`;
-shared Orcha standards follow current published `main`.
+Grow a civilization from five people. Population supplies shared labor; Food and Water sustain growth; Shelter creates room. Abundant Food, Water and spare housing independently accelerate growth up to 10×, helping rebuild after starvation. [Growth curves](docs/civilization.md#abundance-growth-curves) explain the one-minute thresholds. Develop Craft and Organization. Later resource branches are locked and hidden for now.
 
-Run locked regression checks from the [development guide](docs/developer-guide.md#verify-a-focused-change).
-Build and preview the static Vue 3 package with `npm ci`, `npm run build`, then
-`npm run serve` from the isolated worktree root. See the
-[current interface/package owners](docs/developer-guide.md#vue-interface-and-packaging)
-and [UI01 verification](docs/milestones/UI01.verification.md).
-See [TST01 verification](docs/milestones/TST01.verification.md) for the implemented
-test foundation, fixed defects and evidence limits.
+For the civilization's historical grounding, start at the [research index](docs/research/README.md) and [game reference guide](docs/research/reference-guide.md). Build balance coverage alongside content using the [balance workflow](docs/balance-testing.md#add-balance-coverage-with-content).
 
-Proposed delivery milestones (documentation proposals; dependencies are technical sequencing, not runtime status):
+Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into water reserves; carrying upgrades and a gravity-fed spring free the hauling crew. Food overseers repeat trips with workers, farming adds longer cycles, and every Food cycle still uses its crew. Build new huts for capacity. Every person is available for expeditions or construction; there is no domestic labor reservation.
 
-| Milestone | Outcome | Depends on |
-| --- | --- | --- |
-| [TST01](docs/milestones/TST01.md) | Repeatable game regression testing | Foundation |
-| [SAV01](docs/milestones/SAV01.md) | Separate save validation and persistence | TST01 |
-| [SIM01](docs/milestones/SIM01.md) | Deterministic simulation and explicit runtime lifecycle | TST01 |
-| [LAY01](docs/milestones/LAY01.md) | Organize game content by layer | TST01, SIM01 (soft) |
-| [DEV01](docs/milestones/DEV01.md) | Explicit state ownership and enforceable JavaScript contracts | SAV01, SIM01, LAY01 |
-| [UI01](docs/milestones/UI01.md) | Migrate the interface to supported Vue | TST01, DEV01 |
+Food baskets and earthenware water jars each cost 1 Craft and add 40 of their supply’s storage; their work requirement still scales with the number owned. Food buyables have distinct tradeoffs: explore farther for longer, richer gathering trips; organize larger hunting parties for bigger game; or spend Craft on river traps for larger catches with the same fishing crew. See [Food routes](docs/civilization.md#worker-actions-and-food-routes) for costs and scaling.
 
-## Upstream engine introduction
+Each foundation starts with one available Craft upgrade. Organization milestones 1–3 unlock Fishing nets, Well lining and Timber frames. Milestones 4–10 reveal later Craft upgrades and retain named buyables individually; auto-building arrives at 10. Other buyables reset on prestige. Purchased one-time upgrades stay. Both prestiges restart with 5 Population and 10 of each supply. Craft starts at 12 Population and adds one per two more; Organization starts at 12 housing and raises its one-point requirement by four each time. The preview lists exact losses and retained progress.
 
-### The-Modding-Tree
+This game replaces the fork's original Prestige Tree Rewritten content. It runs on the retained session-bound Modding Tree engine with Vue 3 and Decimal arithmetic. Original attribution and both licenses are retained. The game retains the base project's dark theme, monospace typography, colored circular nodes and action-button styling.
 
-A modified version of The Prestige Tree that is much easier to mod. It still requires programming knowledge, but it's mostly pretty easy things and copy/pasting.
+Empty Food or Water causes population loss after a ten-second grace period, then accelerating losses. Survival upgrades extend grace or slow acceleration. One survivor remains able to rebuild. Water Keeper reserves a dedicated worker while enabled and starts off after prestige.
 
-[Look here for a tutorial on getting started with modding with TMT](docs/getting-started.md)
+## Play locally
 
-You can look in the [documentation](docs/!general-info.md) for feature reference, or start at the current [layer manifest](js/layers/manifest.js) and [state ownership guide](docs/developer-guide.md#state-and-command-ownership).
+From a dedicated worktree, use Node 24.22.1 and npm 11.19.1:
+
+```powershell
+npm ci
+npm run dev
+```
+
+Open http://127.0.0.1:8000/. On Windows/macOS, `dev` builds once, watches the packaged HTML/JS/CSS and build tooling, then rebuilds and restarts the local server on changes. Refresh the browser after a rebuild. Stop with Ctrl+C. Generated `dist/` changes do not trigger another build. For a one-time build and preview, use `npm run build` followed by `npm run serve`. The static package contains its own Vue runtime; gameplay makes no external requests.
+
+Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime/balance rules and Chromium journeys. Run `npm run balance -- --hours 4 --calibrate-minutes 60` for active and regular pacing observations: regular checks every 20 seconds in the opening, then every five minutes after Food repeat orders, worker-free Water and milestone-10 auto-building. See the [balance guide](docs/balance-testing.md). Playwright requires its matching Chromium installation (`npx playwright install chromium`).
+
+## Find and change the rules
+
+- [Civilization design](docs/civilization.md): resource relationships, pacing coefficients, reset consequences and save isolation.
+- [Developer guide](docs/developer-guide.md): actual owners, commands and focused checks.
+- [CIV01 delivery scope](docs/milestones/CIV01.md), [preparation](docs/milestones/CIV01.preparation.json) and [verification](docs/milestones/CIV01.verification.md).
+- [Agent instructions](AGENTS.md), [Orcha manifest](.orcha/repository.json) and [engine feature reference](docs/!general-info.md).
+
+Civ uses `civ-prestige-tree` browser storage. The previous game's `ptr` saves are neither read nor changed. Export Civ saves through Settings to back them up. Incompatible imports are rejected; malformed or inaccessible storage opens recovery without overwriting the original.
+
+The owner selected current `main` for this replacement. The branch was reconciled with `d7d260f`, including its AGENTS source correction and balance-testing workflow. The retained manifest/Orcha registry still name `master`; no native lifecycle authority is changed.
+
+Based on [The Prestige Tree](https://github.com/Jacorb90/Prestige-Tree) by Jacorb and Aarex and The Modding Tree by Acamaeda; original idea by papyrus. See [LICENSE](LICENSE) and [Prestige-tree-license](Prestige-tree-license).

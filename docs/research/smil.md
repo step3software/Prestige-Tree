@@ -226,6 +226,22 @@ progression measures without being a complete welfare score. Free time,
 reliable essentials and access to learning can provide distinct objectives.
 Do not turn the edition's historical national comparisons into current targets.
 
+## SMI-14 Early containers and fired clay
+
+**Source:** chapter 2, paragraphs 14, 17 and 59, file `OPS/c10752_002.xhtml`.
+The supplied EPUB and chapter hashes are verified by `read_sources.py`.
+
+Smil includes pottery and woven containers among early technologies, describes
+water-filled leather pouches in prehistoric cooking, and notes fired-clay work
+among some Upper Paleolithic foragers. These examples support varied container
+traditions; they do not identify one universally earliest water-storage vessel.
+
+**Game interpretation:** the requested first pottery buyable can be named
+**Craft earthenware jars**. This specifies a fired-clay material without requiring
+wheel throwing, glazing or a separate kiln system. Material/firing improvements
+can later become distinct Craft investments. The name and 1 Craft/+40 capacity
+coefficients are authored game choices, not numerical results from Smil.
+
 ## Citation example
 
 `SMI-03; Smil 2017, ch. 3, “Routes to Intensification,” ¶59-61,

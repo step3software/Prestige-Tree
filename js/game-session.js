@@ -76,8 +76,7 @@ function createGameSession({ now = 0, effects = {}, content = registerGameLayers
     connectGamePort(gameRules, createGameRules({ treeCanvas, saveDefaults, derivedState, effects: integration, gameHelpers, modRules, layerRegistry, runtimeServices, saveCommands, softcapRules, saveState, gameView }));
     connectGamePort(derivedState, createDerivedState({ effects: integration, helpContent, gameHelpers, modRules, layerRegistry, gameRules, saveState }));
     connectGamePort(treeCanvas, createTreeCanvas({ derivedState, effects: integration, layerRegistry, gameRules }));
-    const componentDefinitions = createSystemComponents({});
-    connectGamePort(gameView, createGameView({ componentDefinitions, derivedState, effects: integration, gameHelpers, modRules, layerRegistry, gameRules, saveState, helpContent, saveCommands, runtimeServices }));
+    connectGamePort(gameView, createGameView({ derivedState, effects: integration, gameHelpers, modRules, layerRegistry, gameRules, saveState, helpContent, saveCommands, runtimeServices }));
     connectGamePort(saveCommands, createSaveCommands({ saveDefaults, derivedState, effects: integration, gameHelpers, modRules, layerRegistry, gameRules, runtimeServices, saveState, gameView }));
     connectGamePort(runtimeServices, createRuntimeServices({ treeCanvas, derivedState, effects: integration, gameHelpers, modRules, gameRules, saveCommands, saveState, isLive: () => !disposed }));
 

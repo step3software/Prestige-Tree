@@ -24,11 +24,11 @@ function compareReference(rough,fixed) {
 function markdown(report) {
   const regular=report.runs.find(run=>run.strategy==='regular');
   const candidates=report.runs;
-  const lines=['# Prestige Tree balance timing','',
+  const lines=['# Civ Prestige Tree balance timing','',
     `Source: \`${report.sourceRevision}\`. Mode: **${report.mode}**. ${report.startDescription}.`,
-    '', 'Regular play checks every **five minutes**; active policies use a five-second minimum cadence.',
+    '', 'Regular play checks every **20 seconds** until Food overseer, worker-free Water and milestone-10 auto-building, then every **five minutes**. Active policies check every five seconds. Actual transitions are recorded in report.json.',
     '“Best tested” is an envelope of the tested strategies, not a proven optimum or one combined playthrough.',
-    'Rough mode predicts quiet periods and uses larger elapsed-time calls to the real engine. Timings can shift because production and automation are nonlinear.',
+    'Rough mode coalesces outer engine calls while the real Civ economy retains one-second internal steps. Checkpoint observation windows can differ; manual cadence stays fixed.',
     '', '| Section entry | Best tested | Winning policy | Regular |', '| --- | --- | --- | --- |'];
   for (const section of report.runs[0].sections) {
     const eligible=candidates.map(run=>({run,row:run.sections.find(item=>item.id===section.id)})).filter(item=>item.row.entrySeconds!==null)
@@ -54,8 +54,8 @@ function markdown(report) {
     '- Times are simulated active/AFK game time from the input state, not computer runtime. The one-hour browser absence bank is not used.',
     '- Per-run section durations and every individual layer unlock are in `report.json`. Durations are not subtracted between different winning policies.',
     '- Checkpoints are codec-validated synthetic player exports. Starting from a supplied save measures time since that save, not lifetime completion time.',
-    '- Policies buy available upgrades/buyables, prestige, enable earned automation, attempt Hindrances/Mastery, and handle several allocations. They do not search all discoverable-upgrade challenge builds; later sections may require a better policy.',
-    '- Frozen-multiplier event forecasts are approximate. Use fixed mode, smaller steps and saved section inputs to investigate a suspected balance wall.',
+    '- Policies construct supply/housing, earn Craft/Organization, enable earned automatic building, and invest in Education/Culture. No currency or unlocks are granted. The final checkpoint is the opening chapter, not an estimate for future space/time content.',
+    '- Use fixed mode, smaller outer steps and reached checkpoint saves to investigate timing differences. Numerical observation windows are not statistical confidence intervals.',
     '- No gameplay balance, save data, offline cap, development-speed multiplier or game formula is changed.','');
   return lines.join('\n');
 }

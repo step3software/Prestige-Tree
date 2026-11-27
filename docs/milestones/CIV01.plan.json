@@ -1,0 +1,76 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#CIV01",
+  "objective": "Replace the shipped Prestige Tree Rewritten content with the resource-centered Civ design, including Population and the first four resource tiers.",
+  "scope": {
+    "include": [
+      "Population base resource; Food, Water, Shelter",
+      "Craft and Organization prestige with population/housing retention",
+      "Money and Time; Education and Culture investments",
+      "Shared labor, sustainable growth, reserve buffers, free construction recovery",
+      "Civ interface, isolated save identity, save/runtime safety and focused tests"
+    ],
+    "exclude": [
+      "Spacefaring and time travel content",
+      "Migration or destruction of original ptr saves",
+      "Deployment, merge, service activation, native milestone enrollment"
+    ]
+  },
+  "acceptance_criteria": [
+    "Fresh game starts with 5 Population, housing for 8, passive supplies and no inherited content nodes.",
+    "Food/Water production and upkeep share one labor budget; growth respects reserves and infrastructure/housing support.",
+    "Zero-stock shortages pause growth without deaths and permit labor-only recovery.",
+    "Construction and upgrades produce observable effects; either Craft/Organization branch can be earned first.",
+    "Prestige preview and actual reset preserve Population, housing, infrastructure and sibling progress.",
+    "Money/Time unlock through Craft/Organization; Education/Culture consume resources and improve earlier production.",
+    "Civ saves, import/export, denied storage and runtime-fault recovery preserve valid durable data; ptr is untouched.",
+    "Keyboard controls, desktop and narrow-screen journeys work with truthful status and no runtime errors.",
+    "Balance policies legally reach the new resource stages under active and five-minute regular play, with focused regressions and matched rough/fixed observations.",
+    "The page loads the unchanged base style.css and interface.css and uses the original treeNode/upg/reset/tabButton classes.",
+    "Replacing/reloading the selected save updates all visible derived economy state; runtime faults expose a reactive disabled state."
+  ],
+  "constraints": [
+    "Source main explicitly approved by user; reconciled from 0098433b8a18dedbabca8605d96cd40f3e995371 to published d7d260fa66b270aae228dec2183f4df9da508b5f",
+    "Preserve upstream licenses and session-bound state ownership.",
+    "Validate direct-session artifacts without claiming native lifecycle acceptance.",
+    "Keep the base project styling: original dark theme, monospace typography, colored circular tree nodes and original action button treatments."
+  ],
+  "decisions": [
+    {
+      "id": "SOURCE",
+      "question": "Which source branch?",
+      "answer": "Use current main (recommended)",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "User async answer in this chat"
+    },
+    {
+      "id": "REPLACEMENT",
+      "question": "Should current content be replaced?",
+      "answer": "Gut the current content and replace it with this design",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "Current user implementation request"
+    },
+    {
+      "id": "SAVE-IDENTITY",
+      "question": "How should unrelated ptr saves be protected?",
+      "answer": "Use the Civ mod identity and key; reject incompatible imports and leave ptr untouched.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "rationale": "The request changes the game content; existing unrelated saves cannot be meaningfully converted into this new economy. This preserves them without a legacy runtime.",
+      "evidence_reference": "Project developer guide save boundaries; resource design and explicit replacement request"
+    },
+    {
+      "id": "BASE-STYLING",
+      "question": "Which visual style should the replacement use?",
+      "answer": "You should be sticking with the base projects styling",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "Current user correction after seeing the running-game screenshot"
+    }
+  ],
+  "dependencies": [],
+  "source_specification": "docs/civilization.md and docs/milestones/CIV01.md on codex/civ-resource-opening",
+  "open_questions": [],
+  "source_reconciliation": "main advanced with AGENTS source correction and content balance workflow. Rebased the isolated feature branch, preserving the published engine runner and adapting its content-specific policy/catalog."
+}

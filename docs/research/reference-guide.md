@@ -84,6 +84,28 @@ also supports accounting, distribution and concentrated control. It is a design
 lead for Organization, not a reason to turn every early food source into grain.
 [SCT-05](scott.md#sct-05-grain-and-legibility).
 
+## Water-storage materials
+
+The first pottery storage buyable is **Craft earthenware jars**: hand-shaped,
+fired-clay vessels. Smil's early pottery, fired-clay and leather-container examples
+support container craft in a foraging opening, while leaving earlier non-pottery
+containers possible. [SMI-14](smil.md#smi-14-early-containers-and-fired-clay).
+
+The [Ashmolean's ceramic classification](https://potweb.ashmolean.org/PotABCs1.html)
+distinguishes porous, lower-fired earthenware from higher-fired stoneware and
+porcelain. The [Met's unglazed water-storage jar](https://www.metmuseum.org/art/collection/search/448695)
+shows that porous clay vessels could store and cool liquids. That particular
+object is 8th–10th century; it is evidence of use, not the date or form of the
+first water jar. Earthenware is not described here as inherently waterproof.
+
+For the game, improved sealing/glazing or a suitable higher-fired clay body are
+possible later investments costing more Craft. They would require their own
+costs, effects and unlocks: no automatic material tiers or universal historical
+sequence is implemented. Keep the `water-storage` ID and owned count independent
+of the displayed material so a later upgrade can improve existing storage.
+Current purchases cost 1 Craft plus scaling work and add 40 storage; those
+numbers are balancing decisions. See [Water rules](../civilization.md#water-hauling-jars-and-flow).
+
 ## Craft and shared work
 
 The prototype combines Craft and Education into a general tool bonus. For the

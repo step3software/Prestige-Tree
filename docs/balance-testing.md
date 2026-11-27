@@ -4,13 +4,7 @@ Build balance coverage **in the same PR as each new or replaced section of game
 content**. The planned content replacement should develop its checkpoints,
 playable strategies and pacing tests together. Extend coverage as sections land.
 
-The balance tooling provides a reusable headless runner and focused test foundation. Its
-current section catalog, layer IDs, purchase priorities and challenge adapters
-describe the inherited game. They are starting examples to revise with the new
-content, not requirements to preserve its progression. The focused suite currently
-checks runner contracts and early-game parity; it does not cover a full campaign.
-Later policy adapters are experimental, and no full-playthrough duration has been
-established.
+The runner uses the shipped Civ session and resource rules. Its catalog follows supported population, Craft, all ten Organization milestones, Food repeat orders, worker-free Water and staffed farming. The opening completion checkpoint requires milestone 10, overseer, gravity flow and farming. Later resources are locked and hidden and are not opening checkpoints.
 
 ## Add balance coverage with content
 
@@ -28,7 +22,8 @@ formulas in their existing owners; the balance tool calls those rules.
 1. **Define the pacing question.** State the section's start, observable completion
    condition and intended timing range, if the content design supplies one.
    Specify simulated seconds, the starting state and the policy assumptions.
-   Preserve five-minute regular manual checks and explicitly describe the active
+   Preserve the owner-selected regular cadence: 20-second opening checks, then
+   five-minute checks after overseer, gravity flow and auto-building. Describe the active
    strategy. Record an undecided target as undecided; an observed time alone does
    not become a design requirement.
 2. **Register the actual progression.** Add or revise section predicates and the
@@ -74,7 +69,7 @@ Run from the worktree root:
 
 ```powershell
 npm run test:balance
-npm run balance -- --profiles active-generators,regular --hours 24 --budget 30
+npm run balance -- --profiles active-balanced,regular --hours 24 --budget 30
 ```
 
 The first command should pass the focused contracts and all section scenarios
@@ -93,7 +88,7 @@ Content/section and entry → completion condition:
 Intended timing range and design source (or undecided):
 Starting state: fresh game / reached checkpoint / constructed fixture; skipped scope:
 Source revision, fixture identity and policy/configuration:
-Active and five-minute regular: observed game time, stop reason, actions exercised:
+Active and adaptive regular: observed game time, cadence transitions, stop reason, actions exercised:
 Rough vs fixed: matched horizon, step sizes, checkpoint drift and accepted tolerance:
 Focused assertions/commands and results:
 Unreached branches, missing policy decisions and remaining coverage:
@@ -121,143 +116,49 @@ times into a campaign total or call the best tested strategy a proven optimum.
 
 ## Run the current quick comparison
 
-Run from the worktree root after the normal locked setup:
-
 ```powershell
-npm ci
-npm run balance
+npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60
 ```
 
-The quick default compares Generator-first active play and regular play from a
-fresh game, over a requested 24-hour game horizon with a **15-second wall-time
-budget per strategy** and a matched 10-minute early calibration. Regular play acts
-at the owner's chosen five-minute cadence. Active
-strategies use a five-second minimum cadence; rough mode predicts which checks
-can be deferred until an affordable action. A run ending at its wall budget is
-incomplete, and records exactly how far it simulated. Reports are written after
-each completed strategy, so completed results survive a later interrupted run.
+The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 20 seconds until Expedition overseer, Gravity-fed spring and milestone-10 auto-building are earned, then every 300 seconds). This opening cadence was requested by the owner because five-minute fresh checks could not sustain manual expeditions. `cadenceChanges` records the actual transition. `active-organization` reverses the early prestige priority. Policies dispatch real crews, buy equipment and automation, construct housing/storage, earn Craft/Organization and invest through the shipped guards. No resources, workers or unlocks are granted.
 
-Open ignored `balance-results/report.md` for the comparison and `report.json` for
-exact configurations, every individual layer unlock, per-run section durations,
-recent actions, unmet discoverable requirements, source/policy hashes and stop
-reasons. `*.save.txt` are synthetic codec-validated section/final checkpoints.
-They are generated, not production game data. Rerun this command to regenerate
-them. No game code, hosting, browser saves or deployment is changed.
-
-## A faster rough calculation
-
-```powershell
-npm run balance -- --hours 24 --budget 30 --calibrate-minutes 10
-```
-
-For a wider strategy sweep, add
-`--profiles active-generators,active-boosters,active-patient,regular` and increase
-`--budget` as needed. The quick default deliberately bounds computer time rather
-than pretending every section has been simulated.
-
-The runner loads the shipped engine in Node without the browser composition entry
-or a real Vue render. Decimal and every progression function come from the shipped
-source. It uses `createGameSession()` and explicit elapsed-seconds advancement;
-it never sleeps, increases `devSpeed`, grants currency or unlocks content for free.
-The only view port is an inert mount for the existing challenge notification.
-The new loader is compared with the original VM harness through real purchases,
-prestige and the first Generator reset, including complete player serialization.
-
-Rough mode estimates the wait to an upgrade or policy-selected reset using current
-production rates and the engine's own inverse reset-cost function. It advances
-quiet periods in larger chunks, then re-evaluates the real rules. Early branching
-uses at most 15-second steps; after both row-two layers it can use 60-second steps,
-and later quiet periods allow up to `--max-step 300`. Automatic prestige bounds
-steps to 60 seconds; challenges/spells bound them to 30 seconds. Regular manual
-actions stay on the five-minute grid. Earned automation runs through the real
-engine between manual decisions; coarse calls run it less frequently than the
-50ms browser driver. These are approximate offline-sized steps, not an exact
-replay of the browser's complete tick sequence.
-
-Multipliers, compound growth, timed challenges, allocations and automation can
-change during a jump. Therefore the report includes a **matched fixed-step
-calibration** of the first active profile and regular play. It reports measured
-speedup only when both runs finish the same horizon, and displays checkpoint
-timing differences or missing coverage. Early agreement does not validate late
-game. A coarse run's time grid/window is not a statistical confidence interval.
-
-For more precise investigation:
-
-```powershell
-npm run balance -- --mode fixed --hours 4 --step 1 --budget 600 --profiles active-generators,regular --calibrate-minutes 0
-```
-
-Fixed mode executes every policy decision at its configured cadence and splits
-engine steps at those boundaries. Smaller steps are slower and can give different
-answers in this nonlinear game. Compare steps rather than treating one value as
-mathematically exact. Keep game-time horizon and source/strategy settings equal
-when comparing execution speed or revisions.
+The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simulated game-time horizon, not a claim that the opening takes that long. `--save` loads a codec-validated synthetic checkpoint and measures time since that input. Reports include actual source hashes, actions, layer unlocks, completion/censoring and rough/fixed calibration. `balance-results/` is ignored; its saves are generated synthetic inputs, not player data.
 
 ## Policies and sections
 
-`scripts/balance/policy.cjs` owns the explicit strategies. The active variants
-compare Generator-first and Booster-first routes and different normal-reset gain
-multiples. Regular play makes the same kinds of purchases/resets but checks every
-300 seconds. Each check uses a bounded purchase/reset burst, with no simulated
-mouse travel or thinking time. Unlock choices are agent strategy assumptions, not
-owner-defined design targets or measured human behavior.
+`sections.cjs` owns the current opening predicates. Craft and Organization are recorded independently; `endgame` requires all ten Organization milestones plus overseer, gravity flow and farming. It is a balance checkpoint, not the engine ending. The continuous legal test confirms Food remains staffed and later resources stay locked with zero balances after another 300 seconds.
 
-Policies use existing command guards for upgrades, discoverable upgrades when
-already eligible, buyables, resets, earned milestone automation, Hindrance runs,
-Mastery and several resource allocations. The Hindrance build restrictions and
-Space/Hyper Building priorities use the game's own help. They are heuristics,
-not an exhaustive planner. In particular, the policies do not search every
-special no-resource build needed to discover some late-game upgrades. A stalled
-policy does not establish a balance defect or an impossible section.
-Late-game action adapters are experimental; their presence is not evidence that
-a complete campaign has been measured. `policyCapabilities` describes implemented
-actions, while each run's action counts show what was actually exercised.
+`policy.cjs` uses one construction project at a time, restarts available expeditions, buys automation and enables separate repeat orders. It funds Food baskets at 1 Craft each and skips unaffordable basket starts so well construction can proceed. Domestic improvements and later-resource investments are outside the current opening. The observed best policy is not a proven optimum or actual-user timing. No manual choices occur between configured checks; batch jobs, construction and earned automation continue normally.
 
-`scripts/balance/sections.cjs` follows the help topics from Prestige through current
-endgame. A section begins at the **first unlock of any of its parallel branches**;
-individual layer times retain the complete branch detail. A section ends at the
-next observed catalog section. Those durations belong to that one playthrough;
-the report does not subtract the best times from different strategies to invent
-an “optimal” combined route. “Best tested” is the earliest entry observed across
-the listed runs, including regular play. It is not a proven global optimum.
+Policies exercise all ten Organization milestones through legal commands. First reach 12 Population for the opening Craft, then build toward the next housing-only Organization requirement while banking enough Craft for upgrades. Organization pays one point at 12 housing and raises that requirement by four lifetime housing each time; Craft pays one at 12 people and another per two more. Both restart at five people with ten Food/Water. Policies buy survival upgrades and legally re-enable Water Keeper after resets; its dedicated worker counts in the same budget. Only named buyables survive their individual milestones (earthenware jars 4, Food baskets 5, wells 6, exploration levels 7, bigger-game levels 8, river trap levels 9, huts 10). Auto-building requires 10 lifetime Organization. Provisioning and farming tools still reset. Each opening completion must reach every Organization checkpoint and purchase farming; a shorter run cannot imply ten-milestone coverage. The active/regular policies also exercise the single initial Craft choice per node and the first three unlock gates.
 
-Unreached sections have `null` timings and explicit censoring/stop reasons, never
-zero, a guessed duration or a pass. There are no invented target completion times
-and no assertion that the entire campaign has been completed. Use this tool to
-find candidate pacing walls, then validate the relevant section and policy.
+## Rough and fixed calibration
 
-## Investigate an isolated later section
+Civ advances internally in one-second steps. Fixed mode uses the selected outer step (default 5 seconds); rough mode coalesces engine/cache calls while retaining the same adaptive manual cadence. Checkpoint observation is capped to 5 seconds before farming and 15 after farming, then up to the selected maximum. Entry windows describe observation precision, not statistical uncertainty. Resources and decisions remain governed by actual content rules.
+
+Compare active and regular modes over the same 60-minute horizon. The focused suite requires matching checkpoint coverage, matching action counts and at most 15 simulated seconds of checkpoint observation drift. That tolerance follows the explicit outer observation bound; it is not a balance target. No timing target for player satisfaction has been accepted. Investigate a differing transition or policy outcome rather than loosening tolerance to hide it.
 
 ```powershell
-npm run balance -- --save balance-results/active-generators.time-enhance-space.save.txt --hours 8 --profiles active-generators,regular --budget 120
-```
-
-The save is decoded by the normal codec into an independent in-memory session;
-corrupt input and development-speed multipliers are rejected. Such a run measures
-**time since the supplied state**, with its own policy starting decisions. It is
-not a byte-for-byte continuation of the old controller's cooldown/challenge state,
-and its zero-time already-unlocked sections are not fresh-game completion times.
-Never mix these results into a fresh-game total. Keep synthetic checkpoints and
-their source/report together when comparing later sections.
-
-This is headless active/AFK calculation, not the browser's one-hour offline-absence
-bank. Five minutes between manual checks does not mean the game stops production
-for those five minutes. Nothing changes that bank or its cap.
-
-## Focused checks and navigation
-
-```powershell
+npm run balance -- --mode fixed --hours 4 --step 1 --profiles active-balanced,regular --calibrate-minutes 0
 npm run test:balance
 ```
 
-Expected: deterministic sessions; native/VM player equality; isolation/no
-persistence effects; valid/invalid saved state; exact five-minute fixed/rough
-manual boundaries; coalesced rough steps; cache restoration after forecast errors;
-and truthful censored/calibration output. This suite is also automatically included
-in the normal `npm test` rule stage. Long balance sweeps are opt-in and do not add
-multi-hour simulations to normal CI. All generated files are ignored.
+The focused suite checks native/VM parity through actual construction, growth and both prestige branches; isolated sessions/no persistence; five-minute manual cadence; both active prestige orders and regular completion; matched rough/fixed checkpoint observations; and validated checkpoint inputs. It runs in normal `npm test` CI. The smaller fixed reference is useful when changing numerical rules or automation. Long sweeps remain opt-in.
 
-README → [developer guide](developer-guide.md#game-time-balance-tests) → this guide
-→ `scripts/balance/run.cjs` → `simulate.cjs` / `policy.cjs` → the canonical session
-and rule owners. `rough.cjs` schedules estimates; `report.cjs` formats observations.
-No new game schema, alternate formulas, service or paid provider is introduced.
+## Preservation and evidence
+
+The old layer catalog, old challenge/mastery policies, inverse-cost forecasts and immutable original-game formula comparisons were retired because that content was intentionally replaced. The reusable engine loader, session isolation, codec, wall budget, reporting and checkpoint mechanisms remain. Save/runtime safety is exercised by the Civ-specific rules and browser suites; old `ptr` data is never read or modified. See [the save boundary contract](developer-guide.md#save-boundaries-and-recovery).
+
+README -> developer guide -> this document -> `scripts/balance/run.cjs` -> `simulate.cjs` / `policy.cjs` -> `createGameSession` -> the actual civilization rules. The verification record reports measured synthetic results and unmeasured limits separately.
+
+Survival regressions exercise zero Food/Water, combined shortages, exact grace deadlines, acceleration, recovery upgrades, one-survivor rebuilding and deterministic online/offline chunks. A legally reached tenth Organization checkpoint verifies ten minutes of idle rebuilding without additional manual actions. The prestige sensitivity check detects accidentally retaining Population.
+
+The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded settlement through ordinary active/regular play, then constructs exploration, bigger-game hunting and river traps through real guarded commands while maintaining supplies. It grants no resources or levels and checks the new trip/crew contracts. Work, lifetime Organization and Craft are distinct scaling axes; no enjoyment or target pacing range is asserted.
+
+Version 0.6 opening observations (no timing target): active-balanced 3105s, active-organization 3100s, regular 3720s. The route-buyable scenario enters after legal play at 3325s/3940s and completes all three improvements by 3340s/4000s for active/regular. These replace earlier completion timings tied to retired investment checkpoints. Matched rough/fixed calibration still requires equal action counts and checkpoint coverage with at most 15 seconds drift.
+
+The earthenware-jar scenario resumes each legally reached opening checkpoint and uses actual guarded construction while the active/regular policy maintains the settlement. It adds no Craft or storage. A jar purchase completes within 225 additional active seconds or 900 regular seconds in the current synthetic observation. The cost is fixed at 1 Craft; work retains its existing 12 × 1.35^owned scaling. This scenario is separate from the unchanged opening ending, so the extra time is not a campaign completion estimate.
+
+Abundance growth uses separate reserve/housing curves described in [the design](civilization.md#abundance-growth-curves). The legal recovery scenario reaches Organization 10, pauses auto-building, cancels current construction, disables Food orders and waits for actual starvation to one survivor. It then restores the four already-owned repeat orders once and makes no further decisions. Active and regular reached states both recover from 1 to 50 in 84 simulated seconds, peaking at 10x; the previous 12s/person rate would require at least 588 supported seconds before any pauses. No supplies, population, housing or unlocks are granted. This is synthetic recovery evidence, not a player-enjoyment measurement.
+
+With abundance, the current legal opening times are active-balanced 1445s, active-organization 1535s and regular 1660s. The route scenario enters at 1550s/1760s and completes by 1565s/1820s; earned auto-building can complete jar storage within another 65s/600s after the opening. These supersede earlier source-specific observations. The jar scenario now counts real earned automatic construction as well as direct starts: faster recovery can complete the jars before a regular 300-second check, so requiring a redundant manual start would misclassify a completed purchase. The policy and 20s/300s cadence are unchanged. Rough/fixed coverage, action equality and the existing 15-second drift bound remain required.

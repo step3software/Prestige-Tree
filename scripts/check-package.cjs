@@ -49,8 +49,8 @@ function checkTemplates() {
   try {
     r.run(`var templates=[]; Vue.createApp=()=>({config:{},component(name,definition){templates.push({name,template:definition.template});},mount(){return {$forceUpdate(){}};}}); gameUI.commands.load();`);
     const templates = JSON.parse(r.run('JSON.stringify(templates)'));
-    assert.ok(templates.length > 30,'Actual app must register all templates before compiler checking');
-    for (const file of ['index.html','demo.html']) {
+    assert.ok(templates.length >= 2,'Actual Civ app must register its icon and native save dialog templates');
+    for (const file of ['index.html']) {
       const text = fs.readFileSync(path.join(root,file),'utf8');
       templates.push({name:file,template:text.slice(text.indexOf('<body'),text.lastIndexOf('</body>')+7)});
     }
