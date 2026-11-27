@@ -2,8 +2,11 @@
 
 This is `step3software/Prestige-Tree`, forked from
 [Jacorb90/Prestige-Tree](https://github.com/Jacorb90/Prestige-Tree).
-For game-time pacing estimates, use the [offline balance tests](docs/balance-testing.md)
-(`npm run balance`), including five-minute regular play and rough/fixed comparisons.
+Build balance tests alongside new or replaced content. The
+[balance testing guide](docs/balance-testing.md#add-balance-coverage-with-content)
+explains checkpoints, play policies, focused tests and timing evidence.
+`npm run balance` provides rough estimates and fixed-step comparisons for active
+and five-minute regular play; current coverage is a foundation for the new content.
 For development, start with [AGENTS.md](AGENTS.md), the
 [Orcha manifest](.orcha/repository.json) and the
 [development guide](docs/developer-guide.md). Project source is `master`;
