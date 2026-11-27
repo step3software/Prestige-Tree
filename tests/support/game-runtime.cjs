@@ -13,7 +13,8 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
   const intervals = new Map();
   const alerts = [];
   const clock = { now: 1700000000000 };
-  const io = { prompt: null, confirm: false, storageError: false, reloads: 0, clipboard: '' };
+  const io = { prompt: null, confirm: false, storageError: false, readError: false, writes: 0, reloads: 0, clipboard: '' };
+  const elements = Object.fromEntries(['styleStuff', 'save-status', 'save-recovery', 'save-original', 'app'].map(id => [id, { hidden: true, textContent: '', value: '' }]));
   let nextTimer = 0;
   class ControlledDate extends Date { static now() { return clock.now; } }
   function Vue() {}
@@ -23,14 +24,18 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
     console, Date: ControlledDate, Vue,
     document: {
       body: { style: { setProperty() {} }, appendChild() {}, removeChild() {} },
-      getElementById: id => id === 'styleStuff' ? {} : null,
+      getElementById: id => elements[id] ?? null,
       createElement: () => ({ value: '', select() { io.clipboard = this.value; }, setSelectionRange() {} }),
       execCommand: () => true,
     },
     window: { addEventListener() {}, location: { reload() { io.reloads++; } } },
     localStorage: {
-      getItem: key => data.get(key) ?? null,
+      getItem: key => {
+        if (io.readError) throw new Error('Synthetic storage read denial');
+        return data.get(key) ?? null;
+      },
       setItem: (key, value) => {
+        io.writes++;
         if (io.storageError) throw new Error('Synthetic storage quota failure');
         data.set(key, value);
       },
@@ -52,7 +57,7 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
     if (!timer) throw new Error(`No ${ms}ms timer registered`);
     timer.fn();
   };
-  return { run, fire, data, clock, io, alerts, dispose: () => intervals.clear() };
+  return { run, fire, data, clock, io, alerts, elements, dispose: () => intervals.clear() };
 }
 
 function loadedRuntime(options) {

@@ -2,7 +2,7 @@ name: Game regressions
 on:
   pull_request:
   push:
-    branches: [master, codex/tst01-testing-milestone]
+    branches: [master, codex/tst01-testing-milestone, codex/sav01-save-boundaries]
 permissions:
   contents: read
 jobs:

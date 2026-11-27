@@ -33,7 +33,7 @@ access; a checkout alone does not establish offline availability. Git fetch/push
 and PR commands contact GitHub; serving files locally does not publish the game.
 
 Use a disposable browser profile/origin with synthetic saves. Saves are local
-browser state under `modInfo.id` (`ptr`), owned by `js/utils.js`; do not overwrite
+browser state under `modInfo.id` (`ptr`), accessed only by `js/save-storage.js`; do not overwrite
 someone's existing progress. Never change that ID as routine setup for this fork.
 Save or schema changes need an explicit migration and recovery plan. Preserve
 export/import, reset, Decimal arithmetic and offline progress behavior.
@@ -42,11 +42,13 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 
 | Task | Owning implementation | Relevant reference |
 | --- | --- | --- |
-| Page startup and script order | `index.html` → `load()` in `js/utils.js` | [Main mod info](main-mod-info.md) |
+| Page startup and script order | `index.html` → `load()` in `js/saves.js` | [Main mod info](main-mod-info.md) |
 | Game identity, version, point rules | `js/mod.js` | [Main mod info](main-mod-info.md) |
 | Layer costs, rewards, upgrades and progression | `js/layers.js`; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
 | Tick and reset calculations | `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
-| Saves, export/import and loading | `js/utils.js` (`save`, `load`, `exportSave`, `importSave`) | [Mod configuration](main-mod-info.md) |
+| Save commands, active state and recovery UI | `js/saves.js` (`save`, `load`, `exportSave`, `importSave`, menu commands) | [Save boundaries below](#save-boundaries-and-recovery) |
+| Pure save data/defaults, validation and conversion | `js/save-codec.js` (`createSaveCodec`, `createSavePlayer`) | [Mod configuration](main-mod-info.md) |
+| Durable storage I/O | `js/save-storage.js` (`createSaveStorage`) | [Save boundaries below](#save-boundaries-and-recovery) |
 | Vue UI and tree display | `js/components.js`, `js/technical/systemComponents.js`, `js/tree.js`, `js/technical/canvas.js`, `style.css` | [Tabs](custom-tab-layouts.md), [trees](trees-and-tree-customization.md) |
 | Layer registration and large numbers | `js/technical/layerSupport.js`, `js/technical/break_eternity.js` | [General info](!general-info.md) |
 
@@ -83,9 +85,9 @@ the final required suite must run without filtering, skips or retries.
 | Behavior to change | Test and concrete entry route |
 | --- | --- |
 | Prestige, purchases, resets, Decimal round-trips | [progression.test.cjs](../tests/rules/progression.test.cjs): real `load` → `doReset` → `buyUpg` → tick → `save`/reload |
-| Import validation, atomic persistence, save menu | [save-safety.test.cjs](../tests/rules/save-safety.test.cjs): `importSave` → `validateImportedSave`/`fixSave(candidate)` → one storage write → reload; rejection keeps active/durable state |
+| Import validation, atomic persistence, save menu | [save-safety.test.cjs](../tests/rules/save-safety.test.cjs) and [save-boundary.test.cjs](../tests/rules/save-boundary.test.cjs): `importSave` → pure codec → storage adapter → activation → reload; rejection keeps active/durable state |
 | Offline elapsed time and bank consumption | [clock.test.cjs](../tests/rules/clock.test.cjs): `load` accumulation → the actual 50ms tick; bank units are seconds, `offlineLimit` is hours |
-| Rendered controls and recovery | [game.spec.cjs](../tests/browser/game.spec.cjs): actual page, Options/Import, prestige and save-menu buttons |
+| Rendered controls and recovery | [game.spec.cjs](../tests/browser/game.spec.cjs) and [save-recovery.spec.cjs](../tests/browser/save-recovery.spec.cjs): actual page, Options/Import, prestige/save menu, live error status and blocked startup recovery |
 
 Copy the nearby test for a bounded behavior change. The
 [VM runtime](../tests/support/game-runtime.cjs) reads script order from `index.html`,
@@ -94,7 +96,7 @@ case. Vue/DOM are I/O adapters there; VM passes do not establish rendered behavi
 The [synthetic fixture](../tests/fixtures/representative-save.json) is test data,
 not someone's save. It covers huge Decimals, array-held Decimals, upgrade/milestone
 IDs and dormant-layer state. The sensitivity command also reads immutable baseline
-`077861d` with Git and tests two source mutations **only in memory**. Keep Git
+`077861d` with Git and tests three source mutations **only in memory**. Keep Git
 history available (`fetch-depth: 0` in CI); it changes no checked-out game source.
 
 Browser tests create fresh Chromium contexts and start/stop their own loopback
@@ -146,6 +148,65 @@ This observes remote Orcha `main` and checks manifest/reference integrity. Succe
 reports `reference_valid: true`; it does not certify workflow exercise, game
 correctness, domain compliance or milestone acceptance.
 
+## Save boundaries and recovery
+
+Follow `README` → this source map → `importSave` in `js/saves.js` →
+`createSaveCodec` in `js/save-codec.js` → `createSaveStorage` in
+`js/save-storage.js` → activation/reload. To change a validation rule, copy the
+nearby boundary assertion and run:
+
+```powershell
+node --test tests/rules/save-boundary.test.cjs
+```
+
+Expected result: every case passes and rejected candidates leave both the live
+player and the prior durable string unchanged. Final milestone verification uses
+the complete `npm test` suite, including the unchanged TST01 rules and journeys.
+
+`createSaveCodec({defaults, layerDefinitions, version, modId})` receives explicit
+defaults/time and static definitions. Its `decodePlayer`, `decodeCollection`,
+`encodePlayer` and `encodeCollection` return `{ok: true, value, text?}` or
+`{ok: false, error}` without I/O or active-state mutation. Values are detached,
+validated and hydrated with the shipped Decimal class. Missing known fields use
+fresh defaults; malformed present fields, invalid references and unsupported data
+are rejected. New runtime fields must have a defined durable shape here; caches,
+timers, functions, DOM/Vue objects and unknown root fields cannot be serialized.
+
+The canonical durable representation remains base64 JSON `{set, <name>: player}`
+under **ptr**, with one selected active `player` object also held by
+`allSaves[allSaves.set]`. Inactive entries use the same hydrated model. Vue receives
+these same objects after a successful collection commit. Export remains a single
+base64 player for compatibility. No schema envelope, second key, dual writer or
+legacy operating mode is introduced.
+
+Supported ingress representations are the source's pre-1.2 single player, the
+1.2+ selected collection, missing known defaults/version, numeric versions, and
+Gear's authored empty-string zero sentinels. The
+[synthetic historical fixtures](../tests/fixtures/historical-saves.json) cover
+source-shaped snapshots across the changelog versions, plus references and large
+Decimals. These fixtures establish those representations, not a survey of all
+historical installations. Retired/unknown layer IDs (such as old `sp`/`l`),
+pre-Rewritten challenge arrays, future versions and corrupt data are preserved
+and rejected; no guessed lossy conversion is provided.
+
+Startup converts a supported representation to the current model, validates the
+complete collection, and atomically replaces `ptr` before activating it. The
+original string is retained until that succeeds. A failed read/conversion/write
+shows a recovery panel with original data when readable; the game does not start
+or autosave replacement defaults. Copy that data if needed, restore storage and
+retry loading. Recovery import validates a single player and asks explicitly
+before replacing an unreadable collection; denied storage reads must be restored
+before replacement. A failed recovery import keeps the original.
+
+Manual/autosave, create/rename/delete/select/reorder, reset and import all use the
+single adapter. Each changing command validates a complete candidate and performs
+one `setItem` before changing active data or selection. Storage quota/denial keeps
+the previous durable value and valid active progress; the live status reports
+unsaved data and supports retry. Native import alerts remain dismissible and
+ordinary failures retain menu/input context. A tick fault retains its existing
+reload-only recovery gate across every write. Atomicity covers one Web Storage
+key replacement, not cross-key transactions or browser/OS durability guarantees.
+
 ## Delivery
 
 Create a focused PR from the dedicated branch to `step3software/Prestige-Tree`
@@ -153,3 +214,12 @@ Create a focused PR from the dedicated branch to `step3software/Prestige-Tree`
 actually run and limitations. Preserve upstream attribution and save data.
 Shared development process belongs to Orcha; local setup and game rules belong
 here. A PR or standards check grants no merge, release or service activation.
+
+SAV01's owner-authorized stack is an explicit exception to the ordinary PR base:
+its child branch `codex/sav01-save-boundaries` targets
+`codex/tst01-testing-milestone` ([PR #2](https://github.com/step3software/Prestige-Tree/pull/2)).
+Keep the TST01 dependency and its branch intact while unmerged. Final integration
+target remains `master`; retarget/rebase only after coordinating the parent merge
+and rechecking the resulting diff. [SAV01 preparation](milestones/SAV01.preparation.json)
+and [verification](milestones/SAV01.verification.md) retain the exact authorized
+source, file scope, current-main standards hashes and delivery evidence.

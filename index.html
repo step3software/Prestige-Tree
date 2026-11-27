@@ -15,12 +15,24 @@
 	<script type="text/javascript" src="js/technical/temp.js"></script>
 	<script type="text/javascript" src="js/game.js"></script>
 	<script type="text/javascript" src="js/utils.js"></script>
+	<script src="js/save-codec.js"></script>
+	<script src="js/save-storage.js"></script>
+	<script src="js/saves.js"></script>
 	<script type="text/javascript" src="js/technical/systemComponents.js"></script>
 	<script type="text/javascript" src="js/components.js"></script>
 	<script type="text/javascript" src="js/technical/canvas.js"></script>
 </head>
-<body onload="load()">
-	<div id="app">
+<body onload="load()" style="display: flex; flex-direction: column;">
+	<p id="save-status" role="status" aria-live="polite" hidden style="color: #fff; background: #333; padding: 12px; margin: 0; flex: none; position: relative; z-index: 1;"></p>
+	<section id="save-recovery" hidden style="color: #fff; background: #222; padding: 20px; max-width: 600px; margin: 20px auto;">
+		<h1>Recover your saved progress</h1>
+		<p>The game has paused to protect your original saves. Allow browser storage or check your save data, then retry loading. You can copy the original data below before importing a validated recovery save.</p>
+		<label for="save-original">Original saved data</label>
+		<textarea id="save-original" readonly style="display: block; width: 95%; height: 120px;"></textarea>
+		<button onclick="window.location.reload()">Retry loading</button>
+		<button onclick="importSave()">Import recovery save</button>
+	</section>
+	<div id="app" style="position: relative; min-height: 0; flex: 1; width: 100%; isolation: isolate;">
 		<canvas id="treeCanvas" class="canvas" v-if ="!(gameEnded && !player.keepGoing)"></canvas>
 
 		<div v-if="false" id="loadingSection" class="fullWidth">

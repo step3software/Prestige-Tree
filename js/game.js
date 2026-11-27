@@ -381,10 +381,13 @@ function gameLoop(diff) {
 }
 
 function hardReset() {
-	if (!confirm("Are you sure you want to do this? You will lose all your progress!")) return
-	player = getStartPlayer()
-	save();
+	if (!confirm("Are you sure you want to do this? You will lose all your progress!")) return false;
+	let candidate = currentSaveCollection();
+	if (!candidate) return false;
+	candidate[candidate.set] = getStartPlayer();
+	if (!persistSaveCollection(candidate)) return false;
 	window.location.reload();
+	return true;
 }
 
 var ticking = false
