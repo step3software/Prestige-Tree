@@ -8,11 +8,14 @@ Use Node 24.22.1, npm 11.19.1, Vue 3.5.46 and the locked development dependencie
 
 ```powershell
 npm ci
-npm run build
-npm run serve
+npm run dev
 ```
 
-The server exposes the exact generated `dist/` bytes on `http://127.0.0.1:8000/`. Stop it with Ctrl+C. Dependencies install through npm; the built game needs no CDN or remote fonts. `dist/`, `node_modules/`, `rule-results.xml`, `playwright-report/` and `test-results/` are generated or local and ignored. Never hand-edit them.
+`dev` is a foreground Windows/macOS command using Node 24's native [`--watch-path`](https://nodejs.org/download/release/v24.22.1/docs/api/cli.html#--watch-path). `scripts/dev.cjs` derives its watch paths from the build's `assets`; `scripts/dev-server.cjs` builds before starting the existing loopback server. HTML, nested JavaScript, CSS, licenses, package manifests and build/server tooling trigger a restart and rebuild. `dist/`, `node_modules/` and runtime outputs are excluded to prevent rebuild loops. Refresh the browser after a successful rebuild; there is no automatic browser reload. Build errors remain visible and do not start a server with partial output; fixing a watched input lets watch mode retry. Stop the watcher and server with Ctrl+C.
+
+The server exposes the exact generated `dist/` bytes on `http://127.0.0.1:8000/`. For a one-time build and preview (also usable on Linux), run `npm run build` then `npm run serve`. Dependencies install through npm; the built game needs no CDN or remote fonts. `dist/`, `node_modules/`, `rule-results.xml`, `playwright-report/` and `test-results/` are generated or local and ignored. Never hand-edit them.
+
+Verify dev command configuration and build-before-serve ordering without starting a server or filesystem watcher: `node --test tests/rules/dev-command.test.cjs`. These checks inject an inert server; they do not claim a live watch/restart exercise.
 
 ## Owning modules
 

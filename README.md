@@ -20,11 +20,10 @@ From a dedicated worktree, use Node 24.22.1 and npm 11.19.1:
 
 ```powershell
 npm ci
-npm run build
-npm run serve
+npm run dev
 ```
 
-Open http://127.0.0.1:8000/. The static `dist/` package contains its own Vue runtime; gameplay makes no external requests. Stop the local server with Ctrl+C.
+Open http://127.0.0.1:8000/. On Windows/macOS, `dev` builds once, watches the packaged HTML/JS/CSS and build tooling, then rebuilds and restarts the local server on changes. Refresh the browser after a rebuild. Stop with Ctrl+C. Generated `dist/` changes do not trigger another build. For a one-time build and preview, use `npm run build` followed by `npm run serve`. The static package contains its own Vue runtime; gameplay makes no external requests.
 
 Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime/balance rules and Chromium journeys. Run `npm run balance -- --hours 4 --calibrate-minutes 60` for active and regular pacing observations: regular checks every 20 seconds in the opening, then every five minutes after Food repeat orders, worker-free Water and milestone-10 auto-building. See the [balance guide](docs/balance-testing.md). Playwright requires its matching Chromium installation (`npx playwright install chromium`).
 
