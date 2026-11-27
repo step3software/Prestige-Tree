@@ -1,6 +1,6 @@
 {
   "milestone_id": "step3software/Prestige-Tree#TST01",
-  "plan_sha256": "7d850cdd3bdf831c314d1dc64446f3fa29223431a8adc1808713081267636c9f",
+  "plan_sha256": "e56f3ca7f153cceccce98b047bab7cc5e053cec1c68c6ac7a8ea3ac7457142d8",
   "base_revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
   "handoff_head": "f717064156b66f4a8ed98b586ccbedcac3d88221",
   "implementation_branch": "codex/tst01-testing-milestone",
@@ -356,5 +356,14 @@
     }
   ],
   "rollback": "Revert only TST01 implementation commits on this branch; no external game data or release is changed. Retain original valid saves on failed imports.",
-  "status": "Validated direct-session preparation, not a source-native acceptance receipt"
+  "status": "Validated direct-session preparation, not a source-native acceptance receipt",
+  "plan_hash_reconciliation": {
+    "initial_worktree_sha256": "7d850cdd3bdf831c314d1dc64446f3fa29223431a8adc1808713081267636c9f",
+    "canonical_git_sha256": "e56f3ca7f153cceccce98b047bab7cc5e053cec1c68c6ac7a8ea3ac7457142d8",
+    "initial_preparation_commit": "82d38ad96721ca52c8bae3b81d17c99919591881",
+    "initial_preparation_git_sha256": "3f40262320de3721ff9886490fc310092083cf5053a66a238bb0eecb29c93154",
+    "plan_revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+    "plan_path": "docs/milestones/TST01.plan.json",
+    "reason": "The original preparation hashed CRLF checkout bytes. Git stores LF bytes with identical parsed JSON. Bind the stored plan without changing its source, specification, criteria or file scope. Retain the original observed digest and preparation commit; no accepted receipt is overwritten or fabricated."
+  }
 }
