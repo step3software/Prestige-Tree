@@ -63,6 +63,7 @@ test('each retention milestone immediately keeps its exact buyable and protected
         p.food.points=new Decimal(50);p.water.points=new Decimal(50);
         p.organization.total=new Decimal(threshold-1);
         assert.equal(e.prestigePreview('craft').kept[id],false);
+        p.craft.points=new Decimal(4);
         assert.equal(e.startProject(id),true);
         p.civ.projectWork=2;
         const plan=e.prestigePreview('organization');

@@ -30,9 +30,16 @@ Each loss recalculates the shared labor budget. Construction pauses without losi
 
 Each active route has one canonical saved contract: remaining time, duration, reserved workers and reward. Workers are occupied until completion; the reward arrives as a batch, capped by storage. Overflow is lost. Recall immediately releases the crew, disables its repeat order and forfeits unfinished yield. Equipment and automation upgrades apply to the next dispatch, preserving an in-flight crew's contract.
 
-Gather, Hunt, Fish and Farm have independent repeatable equipment projects. Each level adds 35% of base yield and shortens its cycle. Provisioning projects improve all Food routes by 15% of base yield per level. Baskets add 40 storage. These construction projects reserve one builder but spend no supplies.
+Food routes have distinct repeatable projects, each reserving one builder:
 
-Coordinated hunting reduces its crew from 3 to 2; Fishing nets reduce theirs from 2 to 1. The Expedition overseer becomes available at Organization milestone 5; purchasing it unlocks a separate repeat toggle for every Food route. Repetition removes dispatch clicks but retains the whole crew during every cycle. Orders wait when workers are unavailable, and pause near full storage.
+- **Explore farther afield** (`gather-tools`): each level multiplies gathering time by 1.2 and yield by 1.5 with the same one-person crew. Work starts at 14 and scales by 1.35 per level.
+- **Hunt bigger game** (`hunt-tools`): each level multiplies the crew by 1.5, rounding up after each level, and doubles yield. Duration stays 25 seconds. The next tier requires 1 + current level lifetime Organization (not spent); work stays 14. Coordinated hunting applies before scaling: crews grow 2, 3, 5, 8 instead of 3, 5, 8, 12.
+- **Weave river traps** (`fish-tools`): each level doubles the catch with the same crew and 18-second trip. Craft costs start at 1 and double per level; work stays 14. Craft is spent when construction starts, with no refund on cancellation or lost construction at prestige. Spending Craft also reduces its shared tool bonus, making traps a route specialization choice.
+- **Farming tools** retain their +35% base yield and faster-cycle effect; work scales by 1.35 per level.
+
+Provisioning improves all Food routes by 15% of base yield per level. Food baskets add 40 storage. These and exploration/farming spend work only. Improvements affect newly dispatched trips. Repeat orders wait for sufficient workers for the new crew size; Autonomous food production still removes the final scaled crew requirement.
+
+Coordinated hunting reduces the base crew from 3 to 2 before bigger-game scaling; Fishing nets reduce theirs from 2 to 1. The Expedition overseer becomes available at Organization milestone 5; purchasing it unlocks a separate repeat toggle for every Food route. Repetition removes dispatch clicks but retains the whole crew during every cycle. Orders wait when workers are unavailable, and pause near full storage.
 
 Cultivated fields become available at Organization milestone 7, cost Food, Water, Craft and Organization and unlock longer farming cycles. The overseer repeats those cycles with 3 workers. Autonomous food production unlocks at Organization milestone 10 and is a later purchase requiring 8 Knowledge, 12 Craft, 120 Money and 10 Time: subsequent Food actions need zero workers. Purchased repeat orders still control which routes run. These costs are game abstractions, not historical dates.
 
@@ -56,7 +63,7 @@ There are no building slots and no Shelter milestone track.
 
 Domestic work starts at 0.12 workers per person and cannot become negative. Remaining labor supports dispatches, construction, trade and free Time. The derived ledger counts domestic labor, every active crew and the builder once. Only whole available workers can join a crew. Trade/rest immediately yield their discretionary labor when an action begins.
 
-One construction project runs at a time, reserving one builder while active; population loss may pause it with its progress intact. Progress is measured in work; Organization and Construction tools increase work per second. Canceling releases the builder and clears project progress. Housing cannot be destroyed or respecified through these controls.
+One construction project runs at a time, reserving one builder while active; population loss may pause it with its progress intact. Progress is measured in work; Organization and Construction tools increase work per second. Canceling releases the builder and clears project progress; spent Craft is not refunded. Housing cannot be destroyed or respecified through these controls.
 
 ## Prestige and later resources
 
@@ -76,12 +83,12 @@ Each foundation begins with exactly one available one-time Craft upgrade: Food h
 | 4 | Water keeper and Emergency cistern | Reservoirs |
 | 5 | Expedition overseer and Emergency rations | Food baskets |
 | 6 | Gravity-fed spring | Well improvements |
-| 7 | Cultivated fields | Gathering baskets |
-| 8 | Construction tools and Mutual aid | Hunting equipment |
-| 9 | Automatic sluice | Fishing equipment |
+| 7 | Cultivated fields | Explore farther afield |
+| 8 | Construction tools and Mutual aid | Hunt bigger game |
+| 9 | Automatic sluice | Weave river traps |
 | 10 | Autonomous food production; auto-building toggle | Huts |
 
-Retention is evaluated by the exact buyable ID, not its resource layer. Reservoir records do not retain wells; gathering records do not retain hunting equipment. Provisioning, farming tools and domestic home improvements continue to reset through milestone 10. Later rewards can extend that progression.
+Retention is evaluated by the exact buyable ID, not its resource layer. Reservoir records do not retain wells; gathering records do not retain bigger-game levels. Provisioning, farming tools and domestic home improvements continue to reset through milestone 10. Later rewards can extend that progression.
 
 Milestones use lifetime Organization earnings, never the spendable balance. Newly earned unlocks and specific retention apply immediately on that Organization prestige. Both Craft and Organization use the same retention rules. The UI preview and native confirmation share the command's prospective reset plan.
 
@@ -98,3 +105,5 @@ The canonical owner is createCivilizationRules in js/civilization.js. The regist
 Current version 0.5 accepts earlier Civ saves through the same codec. The 0.2 additions to 0.1 saves supply missing route levels, comfort, improvements and action contracts. Existing Population, stocks, infrastructure and construction progress are retained on load; the new buyable rules apply on the next prestige. Organization's existing lifetime total supplies its ten milestones without a second saved milestone ledger. New upgrade fields hydrate to false, and shortage progress starts at zero. Existing keeper toggles from pre-0.5 saves migrate off once because they did not reserve a worker; their in-flight crews and stored progress remain. New saves count the keeper and reject overbooked worker contracts. Paused construction uses a saved zero-worker state with retained work. Previously purchased upgrades remain owned and functional; new purchases obey current lifetime gates. Earlier whole-layer retention rewards are replaced by the current specific-buyable rules on the next prestige. All reads and writes use the one current model; malformed or overcommitted action contracts fail before activation. The original ptr game's data stays untouched.
 
 The base dark theme, monospace type, circular nodes and native upg/tabButton treatments are retained. Tests cover parallel crews, overbooking, recall, timed yields, the separate automation stages, irrigation, Shelter, prestige retention, saves and offline chunk parity. Balance profiles use real commands: active decisions every 5 seconds; regular decisions every 20 seconds until overseer, gravity flow and the milestone-10 auto-builder are earned, then every 300 seconds. This cadence change is owner-requested. Synthetic pacing is not human enjoyment evidence.
+
+Existing route IDs and levels remain in `player.food.routes` and use the current formulas immediately. In-flight trips retain saved contracts. Previously started construction completes without a retroactive Craft charge or Organization gate; new starts use current requirements. The save representation and single runtime are unchanged.

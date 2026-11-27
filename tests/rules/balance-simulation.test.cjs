@@ -6,6 +6,42 @@ const {simulate}=require('../../scripts/balance/simulate.cjs');
 const {compareReference}=require('../../scripts/balance/report.cjs');
 const {createRuntime}=require('../support/game-runtime.cjs');
 
+test('legal active and regular settlements can develop all three distinct Food routes',t=>{
+ for(const strategy of ['active-balanced','regular']){
+  const engine=createBalanceEngine();t.after(engine.dispose);
+  const economy=engine.session.modRules.civilization,p=engine.player;
+  const policy=createPolicy(engine,strategies[strategy]);
+  const cadence=strategy==='regular'?20:5;
+  let time=0;
+  // Reach the scenario by ordinary play; no granted currencies or route levels.
+  for(;time<7200;time+=cadence){
+   policy.act(time);
+   if(p.organization.total.gte(1)&&p.craft.points.gte(2)&&p.points.gte(8)&&!p.civ.project)break;
+   engine.advance(cadence);
+  }
+  assert.ok(time<7200,'Legally reached pre-buyable settlement');
+  const enteredAt=time;
+  const builds=['gather-tools','hunt-tools','fish-tools'];
+  const started=new Set();
+  for(;time<enteredAt+600;time+=cadence){
+   if(!p.civ.project){
+    const next=builds.find(id=>!started.has(id));
+    if(next&&economy.startProject(next))started.add(next);
+   }
+   for(const id of ['water','gather','fish','hunt'])economy.dispatch(id);
+   engine.advance(cadence);
+   if(builds.every(id=>p.food.routes[id.split('-')[0]]>=1))break;
+  }
+  assert.equal(started.size,3);
+  assert.ok(builds.every(id=>p.food.routes[id.split('-')[0]]>=1));
+  assert.ok(p.points.gte(8),'Supplies sustain the settlement through the investment');
+  assert.equal(economy.actionDefinition('gather').duration,12);
+  assert.equal(economy.actionDefinition('hunt').workers,p.civ.improvements.hunting?3:5);
+  assert.equal(economy.actionDefinition('fish').duration,18);
+  console.log(strategy+' legal Food route scenario: entered '+enteredAt+'s; all three completed by '+(time+cadence)+'s (synthetic, no pacing target).');
+ }
+});
+
 test('native balance loader matches the VM through real construction, growth and prestige',t=>{
  const native=createBalanceEngine();t.after(native.dispose);
  const r=createRuntime({bridge:false});t.after(r.dispose);

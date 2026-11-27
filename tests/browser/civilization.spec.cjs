@@ -7,6 +7,43 @@ async function open(page){
     return errors;
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
+
+test('Food buyables show distinct tradeoffs and enforce Craft and lifetime Organization costs',async({page})=>{
+    const errors=await open(page);
+    const explore=page.getByRole('button',{name:/^Explore farther afield/});
+    const hunt=page.getByRole('button',{name:/^Hunt bigger game/});
+    const traps=page.getByRole('button',{name:/^Weave river traps/});
+    await expect(explore).toContainText('trip time by 1.2 and yield by 1.5');
+    await expect(hunt).toContainText('Requires 1 lifetime Organization');
+    await expect(hunt).toBeDisabled();
+    await expect(traps).toContainText('1 Craft');
+    await expect(traps).toBeDisabled();
+    await page.evaluate(()=>{
+        const s=gameUI.session,p=s.saveState.player;
+        p.craft.points=new Decimal(1);p.organization.total=new Decimal(1);
+        s.derivedState.updateTemp();
+    });
+    await expect(hunt).toBeEnabled();
+    await expect(traps).toBeEnabled();
+    await traps.click();
+    await expect(page.locator('.event-log')).toContainText('Spent 1 Craft');
+    await expect(traps).toBeDisabled();
+    await page.evaluate(()=>gameUI.session.advance(14));
+    await expect(traps).toContainText('River trap level 1');
+    await expect(traps).toContainText('2 Craft');
+    await expect(traps).toBeDisabled();
+    await hunt.click();
+    await page.evaluate(()=>gameUI.session.advance(14));
+    await expect(hunt).toContainText('Requires 2 lifetime Organization');
+    await expect(hunt).toBeDisabled();
+    for(const width of [1280,320]){
+        await page.setViewportSize({width,height:800});
+        await expect(traps).toBeVisible();
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        await page.screenshot({path:'test-results/food-buyables-'+width+'.png',fullPage:true});
+    }
+    expect(errors).toEqual([]);
+});
 test('fresh game renders the resource tree, shared labor and current growth constraint',async({page})=>{
     const errors=await open(page);
     await expect(page.getByTestId('population')).toHaveText('5');
@@ -44,7 +81,7 @@ test('prestige preview, cancellation and confirmation match retained game state'
     // Synthetic prepared economy isolates the destructive-action UI contract.
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(12);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.food.routes.gather=2;p.shelter.homes=1;p.shelter.points=new Decimal(12);});
     await node(page,'Craft').click();
-    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Gathering baskets');
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Explore farther afield');
     await expect(page.getByTestId('prestige-keep-preview')).toContainText('permanent upgrades; repeat orders');
     page.once('dialog',dialog=>dialog.dismiss());
     await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
@@ -67,7 +104,7 @@ test('Organization previews exact buyable protection earned by the next mileston
     await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
     await expect(page.getByTestId('prestige-keep-preview')).toContainText('Reservoirs');
     await expect(page.getByTestId('prestige-keep-preview')).not.toContainText('Well improvements');
-    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Gathering baskets');
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Explore farther afield');
     await expect(page.getByText('4 Organization · Reservoir records · Locked',{exact:true})).toBeVisible();
     page.once('dialog',dialog=>dialog.accept());
     await page.getByRole('button',{name:'Develop Organization',exact:true}).click();

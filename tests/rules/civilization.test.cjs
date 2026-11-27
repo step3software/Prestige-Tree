@@ -61,7 +61,7 @@ test('route equipment improves only its route and active crews keep their dispat
     assert.equal(r.run('e.buyUpgrade("hunting")'),true);
     assert.equal(r.run('p.civ.actions.hunt.workers'),3);
     r.run('s.advance(11);e.dispatch("hunt")');
-    assert.equal(r.run('p.civ.actions.hunt.workers'),2);
+    assert.equal(r.run('p.civ.actions.hunt.workers'),3,'Coordinated base crew of two scales to three for bigger game');
     assert.ok(r.run('p.civ.actions.hunt.reward>oldYield'));
 });
 
