@@ -1,3 +1,7 @@
+// Shared engine tabs retain their original first registration positions in this standalone example.
+addLayer("info-tab", createInfoTabLayer());
+addLayer("options-tab", createOptionsTabLayer());
+
 // treeLayout will override the default tree's layout if used
 var layoutInfo = {
     startTab: "c",

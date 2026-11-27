@@ -1,10 +1,10 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
+const { historicalSources } = require('../support/historical-sources.cjs');
 const { test } = require('node:test');
 const { createHash } = require('node:crypto');
-const { createRuntime, loadedRuntime, root, scripts } = require('../support/game-runtime.cjs');
+const { createRuntime, loadedRuntime, root } = require('../support/game-runtime.cjs');
 
 const listenerCount = r => [...r.listeners.values()].reduce((sum, set) => sum + set.size, 0);
 const callbacks = r => [...r.callbacks.map(item => item.fn), ...[...r.listeners.values()].flatMap(set => [...set])];
@@ -211,13 +211,12 @@ test('independent contexts retain separate lifecycle, clock and save ownership',
 });
 
 const parent = '199b14e622f2fdf7c2d1d2363874b0e38744121a';
-const beforeSources = Object.fromEntries(scripts.map(file => [file, file === 'js/game-runtime.js' ? ''
-  : execFileSync('git',['show',`${parent}:${file}`],{cwd:root,encoding:'utf8'})]));
+const beforeOptions = historicalSources(parent);
 for (const scenario of ['progression-reset','offline-return','huge-decimals']) {
   test(`before/after ${scenario} preserves complete player state for the same ordered actions/time`, t => {
     const outcomes = [];
-    for (const sources of [beforeSources,{}]) {
-      const r = loadedRuntime({sources}); t.after(r.dispose);
+    for (const options of [beforeOptions,{}]) {
+      const r = loadedRuntime(options); t.after(r.dispose);
       prepareProgress(r);
       if (scenario === 'huge-decimals') {
         const fixture = require('../fixtures/representative-save.json');

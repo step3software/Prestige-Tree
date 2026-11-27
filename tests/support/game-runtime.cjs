@@ -8,7 +8,7 @@ const scripts = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)]
   .map(match => match[1]).filter(source => !source.startsWith('http'));
 
 /** Fresh real-script engine. Adapters model only browser I/O, never game rules. */
-function createRuntime({ storage = {}, sources = {} } = {}) {
+function createRuntime({ storage = {}, sources = {}, scriptOrder = scripts } = {}) {
   const data = new Map(Object.entries(storage));
   const intervals = new Map();
   const alerts = [];
@@ -61,7 +61,7 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
     prompt: () => io.prompt, confirm: () => io.confirm,
     alert: message => alerts.push(message),
   });
-  for (const script of scripts) {
+  for (const script of scriptOrder) {
     vm.runInContext(sources[script] ?? fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
   }
   const run = code => vm.runInContext(code, context, { timeout: 10000 });

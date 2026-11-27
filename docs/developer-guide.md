@@ -44,7 +44,7 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 | --- | --- | --- |
 | Page startup and script order | `index.html` → `load()` in `js/saves.js` | [Main mod info](main-mod-info.md) |
 | Game identity, version, point rules | `js/mod.js` | [Main mod info](main-mod-info.md) |
-| Layer costs, rewards, upgrades and progression | `js/layers.js`; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
+| Layer costs, rewards, upgrades and progression | `js/layers/manifest.js` → named `js/layers/` factories; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
 | Explicit advancement and resets | `advanceGame(session, elapsedSeconds)` in `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
 | Runtime clock, offline budget, timers and listeners | `js/game-runtime.js` → `startGameRuntime` / `createGameRuntime` | [Lifecycle below](#simulation-and-runtime-lifecycle) |
 | Save commands, active state and recovery UI | `js/saves.js` (`save`, `load`, `exportSave`, `importSave`, menu commands) | [Save boundaries below](#save-boundaries-and-recovery) |
@@ -58,6 +58,95 @@ The feature reference is engine guidance, not proof of current implementation.
 `demo.html` and `js/Demo/` are engine examples, not an automated regression suite.
 No generated source is identified in the baseline; preserve vendored library
 attribution in both [licenses](../LICENSE) and [Prestige Tree license](../Prestige-tree-license).
+
+## Layer content and registration
+
+Start at [the registration manifest](../js/layers/manifest.js). `index.html`
+loads the named factory scripts, then this manifest calls the existing `addLayer`
+or `addNode` in its explicit order. The VM harness reads the same HTML and executes
+the same manifest; it has no separate test registry. Script-tag order loads factory
+definitions; the manifest alone determines registration order. Add a factory script
+to the page and one manifest entry to add content. No asynchronous loader, discovery,
+plugin system or second maintained definition is involved. `js/tree.js` retains
+layout configuration; the former `js/layers.js` monolith has been removed.
+
+There are **34 active layers/tabs and one node**: 31 former monolith entries,
+`info-tab`, `options-tab`, `tree-tab` and `blank`. Every entry has a named file:
+
+| ID | Content owner | Direct cross-layer reads/calls (static references) |
+| --- | --- | --- |
+| `info-tab` | [info-tab.js](../js/layers/info-tab.js) | — |
+| `options-tab` | [options-tab.js](../js/layers/options-tab.js) | — |
+| `blank` | [blank.js](../js/layers/blank.js) | — |
+| `tree-tab` | [tree-tab.js](../js/layers/tree-tab.js) | — |
+| `p` | [prestige.js](../js/layers/prestige.js) | `a`, `b`, `e`, `g`, `h`, `hn`, `i`, `ma`, `o`, `ps`, `s`, `t` |
+| `b` | [boosters.js](../js/layers/boosters.js) | `a`, `e`, `g`, `h`, `i`, `m`, `ma`, `p`, `q`, `s`, `sb`, `t` |
+| `g` | [generators.js](../js/layers/generators.js) | `a`, `b`, `e`, `h`, `hn`, `hs`, `i`, `ma`, `mc`, `n`, `p`, `q`, `s`, `sg`, `t` |
+| `t` | [time.js](../js/layers/time.js) | `a`, `b`, `ba`, `e`, `en`, `h`, `hn`, `hs`, `i`, `m`, `ma`, `n`, `o`, `p`, `ps`, `q`, `s` |
+| `e` | [enhance.js](../js/layers/enhance.js) | `a`, `b`, `g`, `h`, `hn`, `hs`, `i`, `ma`, `q`, `s`, `sb`, `sg`, `t` |
+| `s` | [space.js](../js/layers/space.js) | `a`, `ba`, `e`, `g`, `h`, `hn`, `hs`, `i`, `m`, `ma`, `n`, `o`, `p`, `q`, `ss`, `t` |
+| `sb` | [super-boosters.js](../js/layers/super-boosters.js) | `b`, `c`, `e`, `en`, `h`, `hs`, `i`, `ma`, `n`, `o`, `q`, `s`, `ss`, `t` |
+| `sg` | [super-generators.js](../js/layers/super-generators.js) | `ba`, `e`, `g`, `h`, `hn`, `i`, `m`, `ma`, `mc`, `ne`, `o`, `q`, `ss` |
+| `h` | [hindrance.js](../js/layers/hindrance.js) | `a`, `b`, `ba`, `i`, `m`, `ma`, `n`, `p`, `ps`, `q`, `s`, `sb`, `ss`, `t` |
+| `q` | [quirks.js](../js/layers/quirks.js) | `a`, `b`, `ba`, `e`, `g`, `h`, `hn`, `i`, `m`, `ma`, `o`, `p`, `ps`, `s`, `sb`, `sg` |
+| `o` | [solarity.js](../js/layers/solarity.js) | `a`, `ba`, `en`, `h`, `hn`, `m`, `ma`, `n`, `p`, `ps`, `q`, `sb`, `ss`, `t` |
+| `ss` | [subspace.js](../js/layers/subspace.js) | `a`, `ba`, `e`, `h`, `hn`, `i`, `m`, `ma`, `ne`, `o`, `q`, `s`, `t` |
+| `m` | [magic.js](../js/layers/magic.js) | `a`, `ba`, `h`, `hn`, `i`, `ma`, `n`, `o`, `ps`, `t` |
+| `ba` | [balance.js](../js/layers/balance.js) | `a`, `h`, `hn`, `ma`, `mc`, `p`, `q`, `ss` |
+| `ps` | [phantom-souls.js](../js/layers/phantom-souls.js) | `ba`, `c`, `h`, `hn`, `i`, `m`, `ma`, `n`, `q`, `s` |
+| `hn` | [honour.js](../js/layers/honour.js) | `a`, `ba`, `g`, `hs`, `i`, `m`, `ma`, `n`, `o`, `p`, `ps`, `q`, `s`, `t` |
+| `n` | [nebula.js](../js/layers/nebula.js) | `a`, `ai`, `g`, `ge`, `hn`, `i`, `ma`, `o`, `q`, `s` |
+| `hs` | [hyperspace.js](../js/layers/hyperspace.js) | `a`, `ba`, `c`, `e`, `g`, `hn`, `i`, `ma`, `n`, `o`, `s`, `sg`, `ss`, `t` |
+| `i` | [imperium.js](../js/layers/imperium.js) | `hn`, `hs`, `ma`, `n`, `ss` |
+| `ma` | [mastery.js](../js/layers/mastery.js) | `a`, `hs`, `i`, `n`, `ps` |
+| `ge` | [gears.js](../js/layers/gears.js) | `a`, `ai`, `en`, `id`, `ma`, `mc`, `n`, `r` |
+| `mc` | [machines.js](../js/layers/machines.js) | `a`, `ai`, `c`, `ge`, `hs`, `i`, `id`, `ma`, `ne`, `o`, `ps` |
+| `en` | [energy.js](../js/layers/energy.js) | `a`, `ai`, `ma`, `mc`, `ne`, `o`, `r` |
+| `ne` | [neurons.js](../js/layers/neurons.js) | `a`, `ai`, `c`, `en`, `id`, `m`, `mc`, `r`, `ss` |
+| `id` | [ideas.js](../js/layers/ideas.js) | `a`, `ai`, `en`, `mc`, `ne` |
+| `r` | [robots.js](../js/layers/robots.js) | `a`, `ai`, `en`, `id`, `ma` |
+| `ai` | [artificial-intelligence.js](../js/layers/artificial-intelligence.js) | `a`, `ge`, `id`, `ma`, `mc`, `r` |
+| `c` | [civilizations.js](../js/layers/civilizations.js) | `a`, `ai`, `i` |
+| `a` | [achievements.js](../js/layers/achievements.js) | `ai`, `b`, `ba`, `c`, `e`, `en`, `g`, `ge`, `h`, `hn`, `hs`, `i`, `id`, `m`, `ma`, `mc`, `n`, `ne`, `o`, `p`, `ps`, `q`, `r`, `s`, `sb`, `sg`, `ss`, `t` |
+| `sc` | [softcaps.js](../js/layers/softcaps.js) | `a` |
+| `ab` | [autobuyers.js](../js/layers/autobuyers.js) | `ai`, `b`, `ba`, `e`, `en`, `g`, `ge`, `hn`, `hs`, `i`, `id`, `m`, `ma`, `mc`, `ne`, `ps`, `q`, `s`, `sb`, `sg`, `ss`, `t` |
+
+This dependency column is a navigation aid; dynamic `this.layer`, reset arguments,
+tree branches and helper-driven dependencies remain in the actual definitions.
+Do not reorder registrations or change serialized IDs while editing a factory.
+`js/technical/layerSupport.js` still owns registry normalization/hotkeys;
+`js/technical/temp.js` evaluates derived values; `js/game.js` owns ordered reset
+and progression rules. `js/utils.js` owns purchase/effect helpers. Existing shared
+softcaps and static-cost scaling stay in `js/sc.js` (`softcap`, `reverse_softcap`,
+`scaleStaticCost`, `softcapStaticGain`); global point generation stays in `js/mod.js`.
+`js/help.js` retains authored help text. No formula helper was extracted merely
+because two expressions look similar.
+
+For example, **Boosters (`b`)** live in `boosters.js`. Upgrade 12 reads Generator
+points (`g`) through `upgradeEffect`; the manifest registers `b` after Prestige
+and before Generators, and `updateTemp` evaluates the effect before `buyUpg`/the
+upgrade UI uses it. Time milestone 3 enables its auto prestige; milestone 4 keeps
+lower progress. To verify a bounded change, from this worktree run:
+
+```powershell
+node --test tests/rules/layer-content.test.cjs
+```
+
+Expected result: all tests pass. The early fixture changes Generator points and
+Time milestones and observes Booster effect/automation; middle Balance → Solarity
+and late AI → Neurons/Robots fixtures exercise other real formulas with shipped
+Decimals. All moved contracts and nine complete player checkpoints compare to
+immutable SIM01. Registry omission/duplication fixtures mutate only memory and
+must fail the completeness check or reject registration. This representative
+evidence does not prove full late-game balance. Final delivery runs `npm test`.
+
+Historical regression/checkpoint tests use
+`tests/support/historical-sources.cjs`: each pinned Git revision supplies its own
+HTML and complete script list. Never overlay current moved files onto an older
+graph or count an import/missing-file error as a behavioral regression failure.
+The standalone demo reuses the same utility-tab factories from its own tree entry;
+its broader rendering and pre-existing lowercase `js/demo/` URLs on case-sensitive
+servers remain outside this content refactor's verified browser journeys.
 
 ## Verify a focused change
 
@@ -88,6 +177,7 @@ the final required suite must run without filtering, skips or retries.
 | Prestige, purchases, resets, Decimal round-trips | [progression.test.cjs](../tests/rules/progression.test.cjs): real `load` → `doReset` → `buyUpg` → tick → `save`/reload |
 | Import validation, atomic persistence, save menu | [save-safety.test.cjs](../tests/rules/save-safety.test.cjs) and [save-boundary.test.cjs](../tests/rules/save-boundary.test.cjs): `importSave` → pure codec → storage adapter → activation → reload; rejection keeps active/durable state |
 | Lifecycle, races, replay and before/after equivalence | [runtime-lifecycle.test.cjs](../tests/rules/runtime-lifecycle.test.cjs) and [runtime-lifecycle.spec.cjs](../tests/browser/runtime-lifecycle.spec.cjs): explicit advance → stop/restart/stale callbacks → fault/reload; real page and unchanged game formulas |
+| Layer registration/content preservation | [layer-content.test.cjs](../tests/rules/layer-content.test.cjs): complete contracts/order and real early/middle/late reset/cost/effect/unlock/automation comparisons against immutable SIM01 |
 | Offline elapsed time and bank consumption | [clock.test.cjs](../tests/rules/clock.test.cjs): `load` accumulation → the actual 50ms tick; bank units are seconds, `offlineLimit` is hours |
 | Rendered controls and recovery | [game.spec.cjs](../tests/browser/game.spec.cjs) and [save-recovery.spec.cjs](../tests/browser/save-recovery.spec.cjs): actual page, Options/Import, prestige/save menu, live error status and blocked startup recovery |
 
@@ -117,7 +207,7 @@ actual-user usability. Native import-error alerts use the browser's keyboard and
 responsive dialog behavior. A tick exception pauses ticking and **all save writes**
 until reload, preserving the last durable save; reload is the recovery action.
 
-For an upgrade change, trace `js/layers.js` → the upgrade UI in
+For an upgrade change, trace `js/layers/prestige.js` → `js/layers/manifest.js` → the upgrade UI in
 `js/components.js` → `buyUpg()` in `js/utils.js` → `player[layer].upgrades` and
 currency state. Use an existing nearby layer as the implementation example.
 In a disposable session check locked and insufficient-funds states, one valid
@@ -278,3 +368,11 @@ which depends on PR #2 above. Preserve both parents while unmerged; final
 integration remains `master`. [SIM01 preparation](milestones/SIM01.preparation.json)
 and [verification](milestones/SIM01.verification.md) bind the exact file scope,
 source and standards observation. No native stage acceptance is inferred.
+
+LAY01 continues this stack: `codex/lay01-layer-content` targets
+`codex/sim01-runtime-lifecycle` ([PR #4](https://github.com/step3software/Prestige-Tree/pull/4)),
+then PR #3 and PR #2. Keep all parents intact while unmerged; final integration
+remains `master`. [LAY01 preparation](milestones/LAY01.preparation.json) and
+[verification](milestones/LAY01.verification.md) retain scope, all moves, standards,
+representative before/after evidence and limitations. No native milestone
+acceptance, enrollment, merge, deployment or activation is inferred.
