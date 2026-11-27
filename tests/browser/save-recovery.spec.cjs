@@ -42,6 +42,8 @@ test('a TST01 prototype save loads, survives failed saving and can be renamed af
   await expect(page.locator('#p')).toBeVisible();
   await menu(page);
   await expect(page.locator('.activeSave')).toHaveText('prototype');
+  await page.locator('.popupBlocker').click({position:{x:1,y:1}});
+  await expect(page.getByRole('button', {name:'New Save',exact:true})).toBeHidden();
   await options(page);
   await failWrites(page, true);
   await page.getByRole('button', {name:'Save',exact:true}).click();
