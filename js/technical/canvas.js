@@ -1,12 +1,12 @@
-var canvas;
-var ctx;
+// Session-bound treeCanvas owner; composition supplies only the named ports.
+function createTreeCanvas({ derivedState, effects, gameRules, layerRegistry }) {
+let canvas;
+let ctx;
 
-window.addEventListener("resize", (_=>resizeCanvas()));
-window.addEventListener('wheel', (_=>resizeCanvas()));
 
 function retrieveCanvasData() {
-	let treeCanv = document.getElementById("treeCanvas")
-	let treeTab = document.getElementById("treeTab")
+	let treeCanv = effects.document.getElementById("treeCanvas")
+	let treeTab = effects.document.getElementById("treeTab")
 	if (treeCanv===undefined||treeCanv===null) return false;
 	if (treeTab===undefined||treeTab===null) return false;
 	canvas = treeCanv;
@@ -15,15 +15,15 @@ function retrieveCanvasData() {
 }
 
 function resizeCanvas() {
-	if (!retrieveCanvasData()) return
+	if (!treeCanvas.retrieveCanvasData()) return
 	canvas.width = 0;
     canvas.height = 0;
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	drawTree();
+	canvas.width = effects.window.innerWidth;
+	canvas.height = effects.window.innerHeight;
+	treeCanvas.drawTree();
 }
 
-var colors = {
+let colors = {
 	default: {
 		1: "#ffffff",
 		2: "#bfbfbf",
@@ -35,20 +35,21 @@ var colors = {
 		3: "#5f6f7f",
 	},
 }
-var colors_theme
+let colors_theme
 
 function drawTree() {
-	if (!retrieveCanvasData()) return;
+	let branch, layer;
+	if (!treeCanvas.retrieveCanvasData()) return;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	for (layer in layers){
-		if (tmp[layer].layerShown == true && tmp[layer].branches){
-			for (branch in tmp[layer].branches)
+	for (layer in layerRegistry.layers){
+		if (derivedState.tmp[layer].layerShown == true && derivedState.tmp[layer].branches){
+			for (branch in derivedState.tmp[layer].branches)
 				{
-					drawTreeBranch(layer, tmp[layer].branches[branch]);
+					treeCanvas.drawTreeBranch(layer, derivedState.tmp[layer].branches[branch]);
 				}
 		}
 	}
-	needCanvasUpdate = false;
+	gameRules.needCanvasUpdate = false;
 }
 
 function drawTreeBranch(num1, data) { // taken from Antimatter Dimensions & adjusted slightly
@@ -62,9 +63,9 @@ function drawTreeBranch(num1, data) { // taken from Antimatter Dimensions & adju
 
 	if (typeof color_id == "number") color_id = colors_theme[color_id]
 
-	let el1 = document.getElementById(num1);
-	let el2 = document.getElementById(num2);
-	let tab = document.body;
+	let el1 = effects.document.getElementById(num1);
+	let el2 = effects.document.getElementById(num2);
+	let tab = effects.document.body;
 
 	if (el1 == null || el2 == null)
 		return
@@ -81,4 +82,18 @@ function drawTreeBranch(num1, data) { // taken from Antimatter Dimensions & adju
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
+}
+
+const treeCanvas = {
+ get canvas() { return canvas; },
+ get ctx() { return ctx; },
+ retrieveCanvasData,
+ resizeCanvas,
+ get colors() { return colors; },
+ get colors_theme() { return colors_theme; },
+ set colors_theme(value) { colors_theme = value; },
+ drawTree,
+ drawTreeBranch,
+};
+return treeCanvas;
 }

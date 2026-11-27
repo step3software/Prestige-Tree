@@ -1,4 +1,5 @@
-// treeLayout will override the default tree's layout if used
+// Shared-engine adapter only; demo definitions/order retain their original meaning.
+function createDemoTree({}) {
 var layoutInfo = {
     startTab: "c",
 	showTree: true,
@@ -7,9 +8,16 @@ var layoutInfo = {
 
     
 }
+function register({ layerRegistry, saveState }) {
+// Shared engine tabs retain their original first registration positions in this standalone example.
+layerRegistry.addLayer("info-tab", createInfoTabLayer({}));
+layerRegistry.addLayer("options-tab", createOptionsTabLayer({}));
+
+// treeLayout will override the default tree's layout if used
+
 
 // A "ghost" layer which offsets f in the tree
-addNode("spook", {
+layerRegistry.addNode("spook", {
     row: 1,
     layerShown: "ghost",
 }, 
@@ -17,32 +25,39 @@ addNode("spook", {
 
 
 // A "ghost" layer which offsets f in the tree
-addNode("g", {
+layerRegistry.addNode("g", {
     symbol: "TH",
     branches: ["c"],
     color: '#6d3678',
     layerShown: true,
-    canClick() {return player.points.gte(10)},
+    canClick() {return saveState.player.points.gte(10)},
     tooltip: "Thanos your points",
     tooltipLocked: "Thanos your points",
-    onClick() {player.points = player.points.div(2)}
+    onClick() {saveState.player.points = saveState.player.points.div(2)}
 
 }, 
 )
 
 
 // A "ghost" layer which offsets f in the tree
-addNode("h", {
+layerRegistry.addNode("h", {
     branches: ["g"],
     layerShown: true,
     tooltip: "Restore your points to 10",
     tooltipLocked: "Restore your points to 10",
 
-    canClick() {return player.points.lt(10)},
-    onClick() {player.points = new Decimal(10)}
+    canClick() {return saveState.player.points.lt(10)},
+    onClick() {saveState.player.points = new Decimal(10)}
 }, 
 )
 
-addLayer("tree-tab", {
-    tabFormat: [["tree", function() {return (layoutInfo.treeLayout ? layoutInfo.treeLayout : TREE_LAYERS)}]]
+layerRegistry.addLayer("tree-tab", {
+    tabFormat: [["tree", function() {return (layoutInfo.treeLayout ? layoutInfo.treeLayout : layerRegistry.TREE_LAYERS)}]]
 })
+}
+return {layoutInfo,register};
+}
+function registerDemoContent(layerRegistry, ports) {
+    ports.treeLayout.register(ports);
+    registerDemoLayers(ports);
+}

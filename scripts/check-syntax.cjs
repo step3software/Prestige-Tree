@@ -11,6 +11,7 @@ function testScripts(directory) {
 }
 const files = [...scripts.map(file => path.join(root, file)),
   ...testScripts(path.join(root, 'tests')), ...testScripts(path.join(root, 'scripts')),
-  path.join(root, 'playwright.config.cjs')];
+  path.join(root, 'playwright.config.cjs'), path.join(root, 'eslint.config.cjs'),
+  ...['demoTree.js','demoLayers.js','demoMod.js'].map(file=>path.join(root,'js/Demo',file))];
 for (const file of files) execFileSync(process.execPath, ['--check', file], { stdio: 'inherit' });
-console.log(`Syntax passed: ${scripts.length} shipped scripts and ${files.length - scripts.length} test/config scripts`);
+console.log(`Syntax passed: ${scripts.length} shipped scripts and ${files.length - scripts.length} test/config/demo scripts`);

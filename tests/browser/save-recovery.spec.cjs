@@ -73,7 +73,7 @@ for (const width of [1280, 320]) {
     await importSave(page, fixture);
     await options(page);
     const before = await page.evaluate(() => localStorage.getItem('ptr'));
-    await page.evaluate(() => { player.points = new Decimal('ee1001'); });
+    await page.evaluate(() => { gameUI.session.saveState.player.points = new Decimal('ee1001'); });
     await failWrites(page, true);
     await page.getByRole('button', {name:'Save',exact:true}).focus();
     await page.keyboard.press('Enter');
@@ -84,7 +84,7 @@ for (const width of [1280, 320]) {
     await page.screenshot({path:testInfo.outputPath('unsaved-status.png')});
     await expect(page.getByRole('status')).toHaveAttribute('aria-live','polite');
     expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(before);
-    expect(await page.evaluate(() => player.points.eq('ee1001'))).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq('ee1001'))).toBe(true);
     const dialogs = [];
     page.on('dialog', async dialog => {
       dialogs.push(dialog.type());
@@ -94,14 +94,14 @@ for (const width of [1280, 320]) {
     await page.getByRole('button', {name:'Import',exact:true}).click();
     expect(dialogs).toEqual(['prompt','alert']);
     expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(before);
-    expect(await page.evaluate(() => player.points.eq('ee1001') && allSaves[allSaves.set] === player)).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq('ee1001') && gameUI.session.saveState.allSaves[gameUI.session.saveState.allSaves.set] === gameUI.session.saveState.player)).toBe(true);
     await expect(page.getByRole('button', {name:'Import',exact:true})).toBeVisible();
     await failWrites(page, false);
     await page.getByRole('button', {name:'Save',exact:true}).click();
     await expect(page.getByRole('status')).toHaveText('Saved in this browser.');
     await page.reload();
     await expect(page.locator('#p')).toBeVisible();
-    expect(await page.evaluate(() => player.points.eq('ee1001'))).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq('ee1001'))).toBe(true);
   });
 }
 
@@ -117,11 +117,11 @@ test('rendered save menu creates, renames, selects and deletes without stale col
   const second = page.locator('.upgRow').filter({has:page.locator('.activeSave')});
   await second.getByRole('button', {name:'Rename',exact:true}).click();
   await expect(page.locator('.activeSave')).toHaveText('renamed');
-  expect(await page.evaluate(() => app.allSaves === allSaves && app.player === player)).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.gameView.app.allSaves === gameUI.session.saveState.allSaves && gameUI.session.gameView.app.player === gameUI.session.saveState.player)).toBe(true);
   const original = page.locator('.upgRow').filter({has:page.locator('.widthLock', {hasText:/^save1$/})});
   await Promise.all([page.waitForEvent('load'), original.getByRole('button', {name:'Load',exact:true}).click()]);
   await expect(page.locator('#p')).toBeVisible();
-  expect(await page.evaluate(() => player.points.eq(123) && hasUpgrade('p',11))).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(123) && gameUI.session.gameHelpers.hasUpgrade('p',11))).toBe(true);
   await menu(page);
   const inactive = page.locator('.upgRow').filter({has:page.locator('.widthLock', {hasText:/^renamed$/})});
   await failWrites(page, true);
@@ -136,13 +136,13 @@ test('rendered save menu creates, renames, selects and deletes without stale col
   await expect(page.locator('.activeSave')).toHaveText('save1');
   await page.reload();
   await expect(page.locator('#p')).toBeVisible();
-  expect(await page.evaluate(() => Object.keys(allSaves).join(',') === 'set,save1' && player.points.eq(123))).toBe(true);
+  expect(await page.evaluate(() => Object.keys(gameUI.session.saveState.allSaves).join(',') === 'set,save1' && gameUI.session.saveState.player.points.eq(123))).toBe(true);
 });
 
 test('export control produces a validated import round trip and repeated imports retain a sibling', async ({ page }) => {
   await options(page);
   await importSave(page, fixture);
-  await page.evaluate(() => { allSaves.sibling = getStartPlayer(); allSaves.sibling.points = new Decimal('1e500'); save(); });
+  await page.evaluate(() => { gameUI.session.saveState.allSaves.sibling = gameUI.session.saveCommands.getStartPlayer(); gameUI.session.saveState.allSaves.sibling.points = new Decimal('1e500'); gameUI.session.saveCommands.save(); });
   await options(page);
   // Capture only the browser clipboard I/O adapter; the real export command,
   // DOM textarea selection and encoded payload are exercised by the control.
@@ -161,7 +161,7 @@ test('export control produces a validated import round trip and repeated imports
     page.once('dialog', dialog => dialog.accept(exported));
     await Promise.all([page.waitForEvent('load'), page.getByRole('button', {name:'Import',exact:true}).click()]);
     await expect(page.locator('#p')).toBeVisible();
-    expect(await page.evaluate(() => player.points.eq('ee1000') && allSaves.sibling.points.eq('1e500'))).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq('ee1000') && gameUI.session.saveState.allSaves.sibling.points.eq('1e500'))).toBe(true);
     await options(page);
   }
 });
@@ -177,7 +177,7 @@ test('unsupported startup exposes the original, blocks replacement autosaves and
   await page.screenshot({path:testInfo.outputPath('startup-recovery.png')});
   await page.clock.runFor(5000);
   expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(original);
-  expect(await page.evaluate(() => player === undefined)).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.saveState.player === undefined)).toBe(true);
   await page.getByRole('button', {name:'Retry loading',exact:true}).focus();
   await page.keyboard.press('Enter');
   await expect(page.getByLabel('Original saved data')).toHaveValue(original);
@@ -190,7 +190,7 @@ test('unsupported startup exposes the original, blocks replacement autosaves and
   await page.getByRole('button', {name:'Import recovery save',exact:true}).click();
   await expect(page.locator('#p')).toBeVisible();
   await expect(page.locator('#save-recovery')).toBeHidden();
-  expect(await page.evaluate(() => player.points.eq(456))).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(456))).toBe(true);
 });
 
 test('interrupted historical conversion shows original and succeeds after storage is restored', async ({ page }) => {
@@ -207,8 +207,8 @@ test('interrupted historical conversion shows original and succeeds after storag
   await expect(page.getByLabel('Original saved data')).toHaveValue(original);
   await expect(page.getByRole('status')).toContainText('full or blocked');
   expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(original);
-  await page.evaluate(() => { window.allowRecoveryWrite = true; load(); });
+  await page.evaluate(() => { window.allowRecoveryWrite = true; gameUI.session.saveCommands.load(); });
   await expect(page.locator('#p')).toBeVisible();
   await expect(page.locator('#save-recovery')).toBeHidden();
-  expect(await page.evaluate(() => player.points.eq('1e1000') && player.ge.clickables[11].eq(0))).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq('1e1000') && gameUI.session.saveState.player.ge.clickables[11].eq(0))).toBe(true);
 });

@@ -2,7 +2,7 @@ name: Game regressions
 on:
   pull_request:
   push:
-    branches: [master, codex/tst01-testing-milestone, codex/sav01-save-boundaries]
+    branches: [master, codex/tst01-testing-milestone, codex/sav01-save-boundaries, codex/sim01-runtime-lifecycle, codex/lay01-layer-content, codex/dev01-state-contracts, codex/ui01-vue-interface]
 permissions:
   contents: read
 jobs:
@@ -13,12 +13,19 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0 # Sensitivity checks read the immutable pre-fix game revision.
+      - name: Fetch immutable DEV01 regression baseline
+        # A squash merge can leave the comparison commit outside branch ancestry.
+        run: git fetch --no-tags origin 51a9b96c9949e6d0f96a65d5650ecac575fb9da8
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
+      - run: npm run build
+      - run: npm run test:package
       - run: npm run test:syntax
+      - run: npm run test:static
+      - run: npm run test:static-sensitivity
       - run: npm run test:rules
       - run: npm run test:sensitivity
       - run: npx playwright install --with-deps chromium
