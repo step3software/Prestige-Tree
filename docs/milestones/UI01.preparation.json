@@ -83,7 +83,7 @@
     {
       "path": "style.css",
       "operation": "modify",
-      "implementation": "Preserve visual design while adding bounded keyboard focus and narrow Options/save-menu reflow needed for accepted journeys and migrated navigation semantics.",
+      "implementation": "Retain original theme bytes; move UI01-added shared focus/cloak/native-control/narrow rules to interface.css so selecting oldStyle cannot disable them.",
       "verification": [
         "npm run test:package",
         "npm run test:static",
@@ -321,6 +321,17 @@
         "npm run test:rules",
         "npm run test:browser"
       ]
+    },
+    {
+      "path": "interface.css",
+      "operation": "create",
+      "implementation": "Own the migrated shared native-control, focus/cloak and narrow pane/menu rules independently of the selected styleStuff stylesheet. Move only UI01-added rules from style.css, preserving both original theme files; include/link the new stylesheet in the static artifact.",
+      "verification": [
+        "npm run build",
+        "npm run test:package",
+        "npx playwright test tests/browser/vue-interface.spec.cjs",
+        "Keyboard/visible-focus/narrow controls must pass after selecting both NEW and v1.0 styles through actual controls"
+      ]
     }
   ],
   "validation_commands": [
@@ -500,5 +511,18 @@
     "improvement": "Reconcile in this handoff and update only current package/navigation guidance; no duplicate spec or new lifecycle ledger",
     "measurement": "Qualitative source review, no discovery-efficiency claim"
   },
-  "validation": "development_flow.validate_plan and validate_preparation executed before source/test edits; canonical LF Git bytes used for hashes; no native receipt or owner answer fabricated."
+  "validation": "development_flow.validate_plan and validate_preparation executed before source/test edits; canonical LF Git bytes used for hashes; no native receipt or owner answer fabricated.",
+  "preparation_refinements": [
+    {
+      "reason": "Review traced the real styleStuff swap to oldStyle.css. The rendered 320px style-control journey proved focus outline changed to none when shared UI migration rules lived only in style.css. A style-independent integration stylesheet is required for the already accepted settings/keyboard/responsive criteria.",
+      "prior_pre_code_commit": "ceba73a",
+      "prior_preparation_sha256": "dd237e14239c294d629ac8a1440609432a866f37a1cb06d2b5e22cf8096b222a",
+      "scope_delta": [
+        "create interface.css"
+      ],
+      "criteria_or_source_change": false,
+      "authority": "Original explicit authorization covers bounded preparation refinement and implementation for UI01; no new scope/owner answer/native acceptance is inferred.",
+      "timing": "Validated and writer scope extended before creating interface.css. Historical 30-file pre-code contract remains immutable in ceba73a."
+    }
+  ]
 }
