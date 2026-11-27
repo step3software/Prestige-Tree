@@ -17,7 +17,8 @@ const server = http.createServer((request, response) => {
         .replace('https://cdn.jsdelivr.net/npm/vue@2.6.12', '/test-vue.js')
         .replace(/<link[^>]+fonts.googleapis.com[^>]*>/g, ''));
     }
-    response.writeHead(200, { 'Content-Type': mime[path.extname(file)] ?? 'application/octet-stream', 'Cache-Control': 'no-store' });
+    const type = mime[path.extname(file)] ?? 'application/octet-stream';
+    response.writeHead(200, { 'Content-Type': type.startsWith('text/') ? type + '; charset=utf-8' : type, 'Cache-Control': 'no-store' });
     response.end(bytes);
   });
 });

@@ -388,30 +388,39 @@ function hardReset() {
 }
 
 var ticking = false
+// A failed tick may leave partial mutations. Only a reload restores a safe state.
+var tickFaulted = false
 
 var interval = setInterval(function() {
 	if (player===undefined||tmp===undefined) return;
-	if (ticking) return;
+	if (ticking || tickFaulted) return;
 	if (gameEnded&&!player.keepGoing) return;
 	ticking = true
-	let now = Date.now()
-	let diff = Math.max((now - player.time) / 1e3, 0)
-	if (player.offTime !== undefined && player.offTime !== null) {
-		if (player.offTime.remain > modInfo.offlineLimit * 3600000) player.offTime.remain = modInfo.offlineLimit * 3600000
-		if (player.offTime.remain > 0) {
-			let offlineDiff = Math.max(player.offTime.remain / 10, diff)
-			player.offTime.remain -= offlineDiff
-			diff += Math.max(offlineDiff, 0)
+	try {
+		let now = Date.now()
+		let diff = Math.max((now - player.time) / 1e3, 0)
+		if (!player.offlineProd) player.offTime = null;
+		if (player.offTime !== undefined && player.offTime !== null) {
+			player.offTime.remain = Math.min(Math.max(player.offTime.remain, 0), modInfo.offlineLimit * 3600);
+			if (player.offTime.remain > 0) {
+				let offlineDiff = Math.min(player.offTime.remain, Math.max(player.offTime.remain / 10, diff))
+				player.offTime.remain -= offlineDiff
+				diff += Math.max(offlineDiff, 0)
+			}
+			if (player.offTime.remain <= 0) player.offTime = null;
 		}
-		if (!player.offlineProd || player.offTime.remain <= 0) player.offTime = null;
+		if (player.devSpeed) diff *= player.devSpeed
+		player.time = now
+		if (needCanvasUpdate) resizeCanvas();
+		updateTemp();
+		gameLoop(diff)
+		fixNaNs()
+	} catch (error) {
+		tickFaulted = true;
+		alert("The game could not finish a tick. Progression and saving are paused to protect your saved progress. Reload the page to recover your last save.");
+	} finally {
+		ticking = false;
 	}
-	if (player.devSpeed) diff *= player.devSpeed
-	player.time = now
-	if (needCanvasUpdate) resizeCanvas();
-	updateTemp();
-	gameLoop(diff)
-	fixNaNs()
-	ticking = false
 }, 50)
 
 setInterval(function() {needCanvasUpdate = true}, 500)

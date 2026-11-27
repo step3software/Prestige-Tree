@@ -89,10 +89,12 @@ function toPlaces(x, precision, maxAccepted) {
 const saveRegexCode = /[^\w ]|_/g // \w = word library (i.e. all numbers & letters, not case-specific)
 
 function setLocalStorage() {
+	if (tickFaulted) return;
 	localStorage.setItem(modInfo.id, btoa(JSON.stringify(allSaves)));
 }
 
 function save(name=allSaves.set) {
+	if (tickFaulted) return; // A failed tick may have only partially changed the player.
 	allSaves[name] = player;
 	setLocalStorage();
 }
@@ -211,22 +213,22 @@ function getStartChallenges(layer){
 	return data
 }
 
-function fixSave() {
-	defaultData = getStartPlayer()
-	fixData(defaultData, player)
+function fixSave(data=player) {
+	let defaultData = getStartPlayer()
+	fixData(defaultData, data)
 
 	for(layer in layers)
 	{
-		if (player[layer].best !== undefined) player[layer].best = new Decimal (player[layer].best)
-		if (player[layer].total !== undefined) player[layer].total = new Decimal (player[layer].total)
+		if (data[layer].best !== undefined) data[layer].best = new Decimal (data[layer].best)
+		if (data[layer].total !== undefined) data[layer].total = new Decimal (data[layer].total)
 
 		if (layers[layer].tabFormat && !Array.isArray(layers[layer].tabFormat)) {
 		
-			if(!Object.keys(layers[layer].tabFormat).includes(player.subtabs[layer].mainTabs)) player.subtabs[layer].mainTabs = Object.keys(layers[layer].tabFormat)[0]
+			if(!Object.keys(layers[layer].tabFormat).includes(data.subtabs[layer].mainTabs)) data.subtabs[layer].mainTabs = Object.keys(layers[layer].tabFormat)[0]
 		}
 		if (layers[layer].microtabs) {
 			for (item in layers[layer].microtabs)
-				if(!Object.keys(layers[layer].microtabs[item]).includes(player.subtabs[layer][item])) player.subtabs[layer][item] = Object.keys(layers[layer].microtabs[item])[0]
+				if(!Object.keys(layers[layer].microtabs[item]).includes(data.subtabs[layer][item])) data.subtabs[layer][item] = Object.keys(layers[layer].microtabs[item])[0]
 		}
 	}
 }
@@ -269,24 +271,13 @@ function loadSave(name) {
 }
 
 function renameSave(name) {
-	let newName = prompt("Enter save name: ")
-	newName = newName.replace(saveRegexCode, ""); // Removes all non-alphanumeric characters
-	if (newName=="set") {
-		alert("Sorry, that name is used in the game's data, so you can't use it personally or it will cause terrible glitches!");
-		return;
-	} else if (allSaves[newName] !== undefined) {
-		alert("That name is taken already, sorry!");
-		return;
-	} else if (newName.length>20) {
-		alert("This name is too long!");
-		return;
-	} else {
-		if (name==allSaves.set) save();
-		allSaves[newName] = allSaves[name];
-		allSaves[name] = undefined;
-		if (name==allSaves.set) loadSave(newName);
-		else setLocalStorage();
-	}
+	let newName = promptSaveName();
+	if (newName === null) return;
+	if (name==allSaves.set) save();
+	allSaves[newName] = allSaves[name];
+	allSaves[name] = undefined;
+	if (name==allSaves.set) loadSave(newName);
+	else setLocalStorage();
 	resetSaveMenu();
 }
 
@@ -307,21 +298,29 @@ function deleteSave(name) {
 }
 
 function newSave() {
-	let newName = prompt("Enter save name: ");
-	newName = newName.replace(saveRegexCode, ""); // Removes all non-alphanumeric characters
-	if (newName=="set") {
-		alert("Sorry, that name is used in the game's data, so you can't use it personally or it will cause terrible glitches!");
-		return;
-	} else if (allSaves[newName] !== undefined) {
-		alert("That name is taken already, sorry!");
-		return;
-	} else if (newName.length>20) {
-		alert("This name is too long!");
-		return;
+	let newName = promptSaveName();
+	if (newName === null) return;
+	allSaves[newName] = getStartPlayer();
+	loadSave(newName);
+}
+
+// Cancellation and rejected names must not change selection or create partial saves.
+function promptSaveName() {
+	let entered = prompt("Enter save name: ");
+	if (entered === null) return null;
+	let name = entered.replace(saveRegexCode, "").trim();
+	if (!name) {
+		alert("Please enter a save name using letters or numbers.");
+	} else if (name === "set" || name in Object.prototype) {
+		alert("That name is reserved for game data. Please choose another name.");
+	} else if (allSaves[name] !== undefined) {
+		alert("That name is taken already. Please choose another name.");
+	} else if (name.length > 20) {
+		alert("This name is too long! Use at most 20 characters.");
 	} else {
-		allSaves[newName] = getStartPlayer();
-		loadSave(newName);
+		return name;
 	}
+	return null;
 }
 
 function moveSave(name, dir) {
@@ -375,8 +374,10 @@ function load() {
 
 	if (player.offlineProd) {
 		if (player.offTime === undefined || player.offTime === null) player.offTime = { remain: 0 }
-		player.offTime.remain += (Date.now() - player.time) / 1000
-	}
+		// Elapsed time and the saved bank are seconds; configuration is hours.
+		let elapsedSeconds = Math.max((Date.now() - player.time) / 1000, 0);
+		player.offTime.remain = Math.min(Math.max(player.offTime.remain, 0) + elapsedSeconds, modInfo.offlineLimit * 3600);
+	} else player.offTime = null;
 	player.time = Date.now();
 	versionCheck();
 	changeTheme();
@@ -437,20 +438,85 @@ function exportSave() {
 	document.body.removeChild(el);
 }
 
-function importSave(imported=undefined, forced=false) {
-	if (imported===undefined) imported = prompt("Paste your save here")
-	try {
-		let tempPlr = Object.assign(getStartPlayer(), JSON.parse(atob(imported)))
-		if(tempPlr.versionType != modInfo.id && !forced && !confirm("This save appears to be for a different mod! Are you sure you want to import?")) // Wrong save (use "Forced" to force it to accept.)
-			return
-		player = tempPlr;
-		player.versionType = modInfo.id
-		fixSave()
-		save()
-		loadSave(allSaves.set)
-	} catch(e) {
-		return;
+function isSaveObject(value) {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+// Validate present fields against actual engine defaults before fixData fills
+// missing fields. Empty ID lists and dynamic records retain their current format.
+function validateSaveValue(value, template) {
+	if (template instanceof Decimal) {
+		if (typeof value !== "string" && typeof value !== "number") throw new Error("Invalid Decimal");
+		// The vendored parser converts arbitrary text (including NaN) to zero.
+		// Serialized saves contain numeric/e notation, never display labels.
+		if (typeof value === "string") {
+			let numeric = "[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:e[+-]?[0-9]+)?";
+			let serializedDecimal = new RegExp("^(?:" + numeric + "|[+-]?e{2,}" + numeric + "|[+-]?\\(e\\^[0-9]+\\)" + numeric + ")$", "i");
+			if (!serializedDecimal.test(value)) throw new Error("Invalid Decimal text");
+		}
+		let decimal = new Decimal(value);
+		if (![decimal.sign, decimal.layer, decimal.mag].every(Number.isFinite)) throw new Error("Invalid Decimal");
+	} else if (Array.isArray(template)) {
+		if (!Array.isArray(value)) throw new Error("Invalid list");
+		for (let index = 0; index < value.length; index++) {
+			if (template.length) validateSaveValue(value[index], template[Math.min(index, template.length - 1)]);
+			else if (typeof value[index] !== "string" && !(typeof value[index] === "number" && Number.isFinite(value[index]))) throw new Error("Invalid list entry");
+		}
+	} else if (isSaveObject(template)) {
+		if (!isSaveObject(value)) throw new Error("Invalid record");
+		for (let key of Object.keys(template)) {
+			if (Object.prototype.hasOwnProperty.call(value, key)) validateSaveValue(value[key], template[key]);
+		}
+	} else if (template !== null && template !== undefined) {
+		if (typeof value !== typeof template || (typeof value === "number" && !Number.isFinite(value))) throw new Error("Invalid field");
+	} else if (value !== null && typeof value === "object") throw new Error("Invalid nullable field");
+}
+
+function validateImportedSave(data) {
+	if (!isSaveObject(data) || !Object.prototype.hasOwnProperty.call(data, "points")) throw new Error("Invalid save");
+	// Reject prototype keys anywhere, including in dynamic/unknown records.
+	function validateKeys(value) {
+		if (value === null || typeof value !== "object") return;
+		for (let key of Object.keys(value)) {
+			if (["__proto__", "prototype", "constructor"].includes(key)) throw new Error("Invalid save key");
+			validateKeys(value[key]);
+		}
 	}
+	validateKeys(data);
+	// Existing versionCheck accepts numeric versions; Gear reset actions write an
+	// empty-string zero sentinel. Normalize those authored forms before validation.
+	if (typeof data.version === "number" && Number.isFinite(data.version)) data.version = String(data.version);
+	if (isSaveObject(data.ge) && isSaveObject(data.ge.clickables)) {
+		for (let id of [11, 12, 13]) if (data.ge.clickables[id] === "") data.ge.clickables[id] = "0";
+	}
+	validateSaveValue(data, getStartPlayer());
+	if (data.offTime !== undefined && data.offTime !== null) {
+		if (!isSaveObject(data.offTime) || !Number.isFinite(data.offTime.remain) || data.offTime.remain < 0) throw new Error("Invalid offline time");
+	}
+}
+
+function importSave(imported=undefined, forced=false) {
+	if (imported === undefined) imported = prompt("Paste your save here");
+	if (imported === null) return false;
+	try {
+		let parsed = JSON.parse(atob(imported));
+		validateImportedSave(parsed);
+		let candidate = Object.assign(getStartPlayer(), parsed);
+		if (candidate.versionType !== modInfo.id && !forced && !confirm("This save appears to be for a different mod! Are you sure you want to import?")) return false;
+		candidate.versionType = modInfo.id;
+		fixSave(candidate);
+		let candidateSaves = Object.assign({}, allSaves, { [allSaves.set]: candidate });
+		// localStorage replaces one key atomically. Publish active state only after
+		// encoding and durable replacement succeed, preserving every sibling save.
+		localStorage.setItem(modInfo.id, btoa(JSON.stringify(candidateSaves)));
+		allSaves = candidateSaves;
+		player = candidate;
+	} catch (error) {
+		alert("Could not import this save. Your current progress and saved files are unchanged. Check the save text and browser storage, then try again.");
+		return false;
+	}
+	window.location.reload();
+	return true;
 }
 
 function versionCheck() {
@@ -471,6 +537,7 @@ function versionCheck() {
 
 var saveInterval = setInterval(function() {
 	if (player===undefined || allSaves===undefined) return;
+	if (tickFaulted) return;
 	if (gameEnded&&!player.keepGoing) return;
 	if (player.autosave) save();
 }, 5000)

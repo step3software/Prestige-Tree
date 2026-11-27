@@ -7,6 +7,8 @@ For development, start with [AGENTS.md](AGENTS.md), the
 [development guide](docs/developer-guide.md). Project source is `master`;
 shared Orcha standards follow current published `main`.
 
+Run locked regression checks from the [development guide](docs/developer-guide.md#verify-a-focused-change).
+
 Proposed delivery milestones (documentation proposals; dependencies are technical sequencing, not runtime status):
 
 | Milestone | Outcome | Depends on |

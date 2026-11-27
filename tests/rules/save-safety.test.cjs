@@ -11,7 +11,13 @@ const invalid = [
   btoa('{"offTime":{"remain":"oops"}}'),
   btoa('{"p":{"__proto__":{"polluted":true}}}'),
 ];
-for (const [index, encoded] of invalid.entries()) {
+for (const [index, input] of invalid.entries()) {
+  // Present-field shape checks use a valid root, so a root check cannot mask them.
+  let encoded = input;
+  try {
+    const parsed = JSON.parse(atob(input));
+    if (parsed && !Array.isArray(parsed) && typeof parsed === 'object') encoded = btoa(JSON.stringify({points:'10', ...parsed}));
+  } catch {}
   test(`F1 invalid import ${index + 1} preserves active and durable valid progress through autosave`, t => {
     const r = loadedRuntime(); t.after(r.dispose);
     r.run('doReset("p"); buyUpg("p",11); updateTemp(); save(); var originalPlayer=player;');
@@ -74,6 +80,8 @@ test('F1 a failed tick clears its guard and latches mutations/autosave until rel
   assert.equal(r.run('player.points === pointsAfterFailure'), true);
   assert.equal(r.data.get('ptr'), before);
   r.run('save();'); // Manual save cannot persist partially mutated tick state either.
+  assert.equal(r.data.get('ptr'), before);
+  r.run('setLocalStorage(); loadSave("save1");');
   assert.equal(r.data.get('ptr'), before);
 });
 

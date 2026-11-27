@@ -52,3 +52,11 @@ test('separate runtimes do not share globals, saves, clocks or timers', t => {
   assert.equal(b.data.size, 0);
   assert.notEqual(a.clock.now, b.clock.now);
 });
+
+test('existing numeric versions and Gear empty-zero sentinels retain current load semantics', t => {
+  const r = loadedRuntime(); t.after(r.dispose);
+  r.run('var legacyFixture = getStartPlayer(); legacyFixture.version=1.2; legacyFixture.ge.clickables[11]=""; legacyFixture.ge.clickables[12]=""; legacyFixture.points=new Decimal("1e1000"); importSave(btoa(JSON.stringify(legacyFixture)));');
+  assert.equal(r.io.reloads, 1);
+  const reload = loadedRuntime({storage: Object.fromEntries(r.data)}); t.after(reload.dispose);
+  assert.equal(reload.run('player.points.eq("1e1000") && player.ge.clickables[11].eq(0) && player.ge.clickables[12].eq(0)'), true);
+});

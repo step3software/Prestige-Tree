@@ -22,7 +22,7 @@ test.afterEach(async ({ page }) => {
 });
 
 async function openOptions(page) {
-  await page.locator('#options-tab').click();
+  await page.locator('#optionWheel').click();
   await expect(page.getByRole('button', {name: 'Import', exact: true})).toBeVisible();
 }
 
