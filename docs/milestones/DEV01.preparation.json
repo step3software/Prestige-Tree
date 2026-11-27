@@ -1,0 +1,3592 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#DEV01",
+  "plan_sha256": "116421bd7d3ac595b1888f16b87bd76017e468be50fac676ab6e56ad780d83d8",
+  "base_revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+  "implementation_branch": "codex/dev01-state-contracts",
+  "validation_commands": [
+    "npm ci",
+    "npm run test:static",
+    "npm run test:static-sensitivity",
+    "npm test",
+    "git diff --check",
+    "py -3 -B ../verify-dev01.py"
+  ],
+  "handoff_instructions": [
+    "Validate and commit this preparation before production/test edits. Verify the owned branch/checkout fence before mutations.",
+    "Publish a separate draft stacked PR to codex/lay01-layer-content, preserving PR #5, #4, #3 and #2; final integration remains master; no retarget or parent writes.",
+    "Current owner scheduled continuation separately authorizes the full DEV01 cycle; original proposal/plan remain docs-only historical evidence, legacy lifecycle authority preserved. No enrollment, native receipt, human acceptance, merge, deployment, service, paid use or policy changes."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "js/technical/layerSupport.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "bb159f48d474dca414439046bba53fff959b71fa88ece1f177ca72e348b4f6c9",
+        "blob": "72556b8cb0f56bdebbaf8221a856e959eb2d6d61"
+      }
+    },
+    {
+      "path": "js/tree.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "67c59dbbc555bf7448dcdebc0adf38f1cf768352f3496d2798f7079d948139d3",
+        "blob": "4a6602ee9baf1970f882a49ac54519d95619ff65"
+      }
+    },
+    {
+      "path": "js/sc.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "2bcc9f0dffe5c1dbebda90446ee39e36ac1e444032b83d6debe37baba573b44f",
+        "blob": "e7181c11f269395ca8abbc209d61286e04e3eccf"
+      }
+    },
+    {
+      "path": "js/help.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "39f246b52cda43832b6f4009db416e8ccb0f8304e883774c57dbec7d577861c5",
+        "blob": "75b270357d779a36170fefd67ff2f55a6d640408"
+      }
+    },
+    {
+      "path": "js/layers/info-tab.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "fc9bcc5b5eeab15ca92c2b1bd5cfc9c07d76c69ca7f2fc7072f6532d039930f9",
+        "blob": "caa51d5800fffc9f3964866ddff18c2bba1a9530"
+      }
+    },
+    {
+      "path": "js/layers/options-tab.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "831b44a955b7822ada48700216dc656bd8438bd08ab4e836dbad4eb376b5fe3a",
+        "blob": "fe1fbfba7a98a90df0b5d33f271287e122bc06b2"
+      }
+    },
+    {
+      "path": "js/layers/blank.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "c931ea71a06313b24f41a75504a43ff3372dde00c0771d6045129a0150391db4",
+        "blob": "e2908dd9238cae945843d578bb9303f5df2deb56"
+      }
+    },
+    {
+      "path": "js/layers/tree-tab.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "2f5d31f366dd05aef93467beb45cd1bcc128e7f199b2dd14db73cf5a7cf1af27",
+        "blob": "502e62a6189d129fcb9b471ca3ad7d2ad69ea0a2"
+      }
+    },
+    {
+      "path": "js/layers/prestige.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "98beaeb38e50abb25e05f729f7d4147a82062355c31297631698a4042cab443b",
+        "blob": "a23ea4572613128ba1ec218936f4da6d44b0d829"
+      }
+    },
+    {
+      "path": "js/layers/boosters.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "18b3d2c800533c40e912a588b98d5a0f3f3cd3340ffd23b50e8b72144079de6a",
+        "blob": "240d22331b9925fc5c66e4849434de8e632e45c1"
+      }
+    },
+    {
+      "path": "js/layers/generators.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "3351e26827ecfced1e6b4b8b6e71c2737e0c6fb99e5dbacb6358eb24a9618c96",
+        "blob": "fde4f4004668f1e0cc77a46434507692eb23209f"
+      }
+    },
+    {
+      "path": "js/layers/time.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "7215611612b460fa141e63b96549b6affd9051f55815f3f0ab5a4d541e2d2649",
+        "blob": "7b610bb846dbdd77dd9ea2d3a09d888629595840"
+      }
+    },
+    {
+      "path": "js/layers/enhance.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "8abbbdb8a5e46408ee58260828d9d94d5f7f1d228cca1162350aeac3f2e2eff7",
+        "blob": "67182d47e83d12d9e65d27c0a5ca12acd8898e60"
+      }
+    },
+    {
+      "path": "js/layers/space.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "0edcce25b3bf7515aa618f2e730f27cc36d0970c1ccf925eca9d005d88a84de7",
+        "blob": "bfeb7cbba626036638625f8697656ceede62ad1b"
+      }
+    },
+    {
+      "path": "js/layers/super-boosters.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "174bb50b8dfa623ccf0f873bc6a9794cbd29d2ebf35965ab16ea9a4c6910a916",
+        "blob": "bae932ab57b947960f441de03cc5785cbed6876c"
+      }
+    },
+    {
+      "path": "js/layers/super-generators.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "c918e8e22e85ebaa872b86fb2ba42beddfb72a069119b0b07b39fff80304facd",
+        "blob": "0bbae3656fa469d3bed4f9565ecedca1ff84ce58"
+      }
+    },
+    {
+      "path": "js/layers/hindrance.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "2e1d2dc1705d42c1129fa361152360786a2a6636c529b4171a88f4f3f3997714",
+        "blob": "725d055e658bd93876d16908b1c5c117d4ce66e4"
+      }
+    },
+    {
+      "path": "js/layers/quirks.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a9375a1bec4487b23e808c9c44221e3056b3788f55e52826aee6948ab5bbef8d",
+        "blob": "4c672424b57305d4a62f9cc7bdeb7adf43b49218"
+      }
+    },
+    {
+      "path": "js/layers/solarity.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "68792f1a2998109fdcf867a1f0c68533ffe342067b986850780b3799b02a84f9",
+        "blob": "b5511993461b838bc9bbd811a65bfb7fc55780f2"
+      }
+    },
+    {
+      "path": "js/layers/subspace.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "3de9b86cb00b247b8aec1700775bafb9dc35448f7f68b6b2f04654412e587300",
+        "blob": "02a773f119692ecbb716255dc4319187d75faf59"
+      }
+    },
+    {
+      "path": "js/layers/magic.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "5a09e89093da654762aee3840eb047e6269cf574d2af5bfad9af34b0975982b0",
+        "blob": "d8fe5d0ef18732f474d4ebca084e3d8487b6340d"
+      }
+    },
+    {
+      "path": "js/layers/balance.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "e9def7ed4e341eec7663aef42871fefedc2a54dec30c5b9c73dc1d1309adcc6a",
+        "blob": "7250a445582e88de15b125af707cf06e481e992b"
+      }
+    },
+    {
+      "path": "js/layers/phantom-souls.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "3a868f3c9eab356224b1fdac62279d3189425a053d5c6aa6008f6c4ddd6d3166",
+        "blob": "afa30d267b0125d75d0d58dbb66941b0e9534c59"
+      }
+    },
+    {
+      "path": "js/layers/honour.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "64eaba24de4f7efa8acb971dd367996809b6da7c5f0a445127fa3dbe4c1412c6",
+        "blob": "896479e944c85f941ef81b8a9785765561a445c4"
+      }
+    },
+    {
+      "path": "js/layers/nebula.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a8c880551f5c7df728567572077d589266a8d9117edb4265a7dd5ba574eef0d6",
+        "blob": "b26c432c142d22f26e556e9e1228b6f07b8185fe"
+      }
+    },
+    {
+      "path": "js/layers/hyperspace.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "d5ce5eaa35a97d79fcff96361644df57c4bb8fd20f4cc308b575fec342b23774",
+        "blob": "dd5e50d498ef6abcc2d931a99d30bd7b9bb5c535"
+      }
+    },
+    {
+      "path": "js/layers/imperium.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a4e93b16c5e7bec29c12e9f590dffb675eeff4308e948a4cb45419f697a7153f",
+        "blob": "48d4be58a6e186b23df70442bf9577f13c8d6d3f"
+      }
+    },
+    {
+      "path": "js/layers/mastery.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "ccfa7175f43bcb4c72c4eca0d8874058682a97b8ce7b2dd7e0724dc49c3cf565",
+        "blob": "6d52301fe5cf2bd8658a12bef70ced855109a033"
+      }
+    },
+    {
+      "path": "js/layers/gears.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "e1777b948b9d7fe3ea0a7764b5b8fd4570999ddf767ed6dd7d2ca5b8cafa423d",
+        "blob": "ea69ec1c6921b9d252f76dca6da81267cefb5b02"
+      }
+    },
+    {
+      "path": "js/layers/machines.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "77b942fd6c420230c33e2569c6ccc24f4b844e57244b9697a1a772af9126f546",
+        "blob": "447d701d80b8350d3176a4e762baa9e5dc6764c2"
+      }
+    },
+    {
+      "path": "js/layers/energy.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "5f306f5a45f935856a4adbad642c81729ec64f3eeb12e90eedc46aea687baa78",
+        "blob": "f6b6f76094955b629d8725f4bcbd059ac92287a8"
+      }
+    },
+    {
+      "path": "js/layers/neurons.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "b511f067efd69509d5a6c404960ff3aae11a561e1411a13575e5305095076842",
+        "blob": "390fba689f2e89d3aa2bad3570a4939b7062067c"
+      }
+    },
+    {
+      "path": "js/layers/ideas.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a2015b87e04f0bfe9a8b9c66ce3bf6c54cfd7650079b78795de82e5322646f14",
+        "blob": "206840afb62b5e298b7b6a7bd71af459a3e1ee10"
+      }
+    },
+    {
+      "path": "js/layers/robots.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "5f1d2914d0f0cc7a8a0e43060388ce65fc66b3c58e359e6915743b509fc34759",
+        "blob": "f44b2a9a44ee5d4d0d2346f6ce676c60c7fbbe66"
+      }
+    },
+    {
+      "path": "js/layers/artificial-intelligence.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "9671ebe8b84699aab5e1f613646d09f16f2b5ccb1f3c25c71ad34e312bff02db",
+        "blob": "da902118fd9fa54c8a01d9ca9c60e1bdbf1cb45d"
+      }
+    },
+    {
+      "path": "js/layers/civilizations.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "88a1281263652282ce2fa0e67ed79cd2c0a83c2aef789e2a4b89187ab2bc9f1e",
+        "blob": "9e35fef922c90dd64b49b3ce2dc36e51d455c5d7"
+      }
+    },
+    {
+      "path": "js/layers/achievements.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "e4633989a3a56ccf69af3d7052690ac62adc88589aa26b913e0209ba170f1a04",
+        "blob": "e91fc357ed6e39fc4e46a4fe36b087652da65a9f"
+      }
+    },
+    {
+      "path": "js/layers/softcaps.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "38fc91df90aa4073fd9ef61cf2e3633da19ea76f453427801e84c3916c5bdb78",
+        "blob": "949304e7472564c0a2a9994b9096f0604fe7710e"
+      }
+    },
+    {
+      "path": "js/layers/autobuyers.js",
+      "operation": "modify",
+      "implementation": "Accept only the state/derived/rule/helper/config ports used by this named factory. Bind temporary writes lexically. Preserve complete content AST apart from owner qualifications and lexical declarations; keep IDs, hooks, formulas, order and this semantics.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "0e2cf58e97b4f150ca05d021c4f1000446b9ad8684e82ed6a4d5ca81df2ed93c",
+        "blob": "21138d2e57c7dd1280b3e23df0659b12c072b163"
+      }
+    },
+    {
+      "path": "js/layers/manifest.js",
+      "operation": "modify",
+      "implementation": "Retain the one frozen ordered manifest and preflight; register fresh session-bound definitions into the supplied existing registry APIs. Remove evaluation-time registration and call explicitly from composition.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "9ae8d6e12ad6216dd29de528e734f8f49e2400a64419279ba6050f37626feec5",
+        "blob": "34ca579d23a7251a36f23720aa32b707e09e9e75"
+      }
+    },
+    {
+      "path": "js/mod.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "f8201f134dbba44c2c67987c355f6d6813ae527cc6daa366b85a0aa43e003824",
+        "blob": "85944d23fd2c2b1d095b6a47689d7068efc2a22e"
+      }
+    },
+    {
+      "path": "js/technical/temp.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "f813aafc64f03e838e27dd71bfadd9eb4fa25412a83275d4b52cf2e594ee110e",
+        "blob": "11860f8655d2183e367375aed2b67c842472d4c0"
+      }
+    },
+    {
+      "path": "js/game.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "84130244505aa4a4bfe0b19effc9879ed1d98a5eab878ccefa7832facdf2f6f9",
+        "blob": "9fbe352771f11a8920bff1e88a74d2a999917131"
+      }
+    },
+    {
+      "path": "js/utils.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order. Remove the no-op player=orig alias assignment (orig already aliases player); do not redesign multi-currency rollback or other gameplay behavior.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "6d20865eb7cc6aaad6ec55544b1fff4125dff91c4b947ae63f509b6a552c6cfe",
+        "blob": "edad416343c3785a0e718afcf059ca74d8f5e6db"
+      }
+    },
+    {
+      "path": "js/save-codec.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "73c8eb085748954f24f7eb2385f39947f7bff530482cb7fcbbcc1844039f24d5",
+        "blob": "debdee76939cc2b09307f3737f0d0aaf8dc444b8"
+      }
+    },
+    {
+      "path": "js/save-storage.js",
+      "operation": "modify",
+      "implementation": "Document/check the existing storage port and canonical success/error outcomes, preserving one-key atomicity, adapter reads/writes, codec validation and all failure behavior.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "daaf0bcfe5f6b76e92533c7ca996535e71000c708bc632128530f04f4f2940fb",
+        "blob": "715b8aa2ff3b36ede7de8e012fb767fa5792b443"
+      }
+    },
+    {
+      "path": "js/saves.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order. State activation goes through the save-state owner and rebinding through the UI port; preserve atomic validation/persistence-before-activation, reload and recovery behavior. No second model or writer.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a15f7ceb20f8b1c6049e67faf259ec7f65b8004a381969b4dfe5c8f4630886f7",
+        "blob": "bf32db59aaaa7176b985b10808ce9c1778ef567a"
+      }
+    },
+    {
+      "path": "js/technical/systemComponents.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "5f7845862830c46fe526f70b560e1f6fe8b2806be8b5f71f2bf2fdc3d43fe37e",
+        "blob": "2d7c674c2828bd9d19221e0d96d357f1a98908e6"
+      }
+    },
+    {
+      "path": "js/components.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order. Bind all registered component templates and root Vue to supplied canonical session ports through explicit computed bindings; no global template lookup or copied player/cache model. Rebind selection/import to the same UI owner.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "67bef181e15c486e97086be5dbba885fbfb9f195d9e30e045e8d690e4f44e18a",
+        "blob": "7aee054671cb19134271aba0e4673624185699c6"
+      }
+    },
+    {
+      "path": "js/technical/canvas.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "fd1ca2f6e2c2598e393f7ad42de4a677897803b3dccc2b22f40704c2b971e708",
+        "blob": "dd06ec82772937fe6788a8ab73ebb153e0316d32"
+      }
+    },
+    {
+      "path": "js/game-runtime.js",
+      "operation": "modify",
+      "implementation": "Expose this existing responsibility as a session-bound factory with explicit dependencies; replace free state/cache/command references with their owning ports and bind authored temporary/loop names lexically. Preserve formulas, serialized fields, function receiver semantics and order. Preserve generation/session identity fences, scheduler intervals/listeners, fault latch, clock/offline policy and no evaluation-time effects. Separate capture of a runtime identity from independent session construction.",
+      "verification": [
+        "npm run test:static over the shipped authored graph; source/free-reference inventory review.",
+        "npm test; complete normalized content contracts and unchanged numerical checkpoints against immutable predecessors."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "dda6111597608146853ffae5b8597ed3ad97fef2f0528609aa35b70a96353c30",
+        "blob": "390484d5f7221daa53600e0f191de66ee850e80d"
+      }
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Load factory definitions before explicit composition. Bind page handlers to the documented small gameUI adapter; keep Vue/templates/controls/styles/behavior. Demo receives only the necessary shared-engine composition adaptation; no demo formula/lint/style cleanup.",
+      "verification": [
+        "Actual main Chromium journeys and console checks; script graph/syntax checks; focused demo registration comparison."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "5a33968f24511bd498826dfde8b172708c3fb9fb371ae8e205946e65d05118fb",
+        "blob": "62799cd4ce42e137c778c3ee5123385d41e020f9"
+      }
+    },
+    {
+      "path": "demo.html",
+      "operation": "modify",
+      "implementation": "Load factory definitions before explicit composition. Bind page handlers to the documented small gameUI adapter; keep Vue/templates/controls/styles/behavior. Demo receives only the necessary shared-engine composition adaptation; no demo formula/lint/style cleanup.",
+      "verification": [
+        "Actual main Chromium journeys and console checks; script graph/syntax checks; focused demo registration comparison."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "cc00e94cadcf026c15c23441b5e60818f4d9472e228a7e0997e0802e7c0350a8",
+        "blob": "2803f582069a1de54858d77f9706ef2427c472dc"
+      }
+    },
+    {
+      "path": "js/Demo/demoTree.js",
+      "operation": "modify",
+      "implementation": "Adapt only shared-engine loading to session-bound factories and explicit dependencies; preserve authored demo bodies/registration contracts. No demo lint debt cleanup or unrelated behavior fix.",
+      "verification": [
+        "Focused historical demo tree/utility registry comparison; syntax check; source review. Full demo rendering remains unverified."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "36c79bfe8499cd7b8fe218d68ff0496ad585e038d63b4c39b9732c6c5a79c5e8",
+        "blob": "e97f8680483e33252615e8c5a0ff1b9bb6cdfe93"
+      }
+    },
+    {
+      "path": "js/Demo/demoLayers.js",
+      "operation": "modify",
+      "implementation": "Adapt only shared-engine loading to session-bound factories and explicit dependencies; preserve authored demo bodies/registration contracts. No demo lint debt cleanup or unrelated behavior fix.",
+      "verification": [
+        "Focused historical demo tree/utility registry comparison; syntax check; source review. Full demo rendering remains unverified."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "cdbbe904e95daf85bbc124e83e692e2d0a4a8afc428123eeba2f5238c3075bee",
+        "blob": "eb6e40851df81d66375e38ec8905d07e1e1ab92f"
+      }
+    },
+    {
+      "path": "js/Demo/demoMod.js",
+      "operation": "modify",
+      "implementation": "Adapt only shared-engine loading to session-bound factories and explicit dependencies; preserve authored demo bodies/registration contracts. No demo lint debt cleanup or unrelated behavior fix.",
+      "verification": [
+        "Focused historical demo tree/utility registry comparison; syntax check; source review. Full demo rendering remains unverified."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "fad8273ec85f9035d2ccc432fab2333e9555c1d44186fff6ed29caef10ceaf11",
+        "blob": "7bd8517677e48ba2566f8ccb05930ab38c11dc20"
+      }
+    },
+    {
+      "path": "tests/browser/game.spec.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "15caea9d47c0a4a5dbed84941f5a790810bbae02667a03ab40e99f54f496dfdf",
+        "blob": "e69018eca8be583360a0dbad9f2a28332b2ab04c"
+      }
+    },
+    {
+      "path": "tests/browser/runtime-lifecycle.spec.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "7d5875508e41fc118e6b57d89ec57aec67523e5f86fa76df2afb0ad0293f927c",
+        "blob": "94420dc1b22546b50a9dc856bcdbca7f4b09f904"
+      }
+    },
+    {
+      "path": "tests/browser/save-recovery.spec.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "73f51c11e62334bdbde051c71d45e0e6829ad6c602539ba62cc14cc7233122bf",
+        "blob": "d9fe1d4e70b62b14822e6ce7d8c71afc0999593e"
+      }
+    },
+    {
+      "path": "tests/rules/clock.test.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "6176460b4b08e6d062bbdbd29a4b3f6e02c415b495d6fd6a62f66fa2821c922b",
+        "blob": "09a2561807bdb3c03a00264cb6fa471df8d58abe"
+      }
+    },
+    {
+      "path": "tests/rules/layer-content.test.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "ce85cff41c5479e44b7514800e84435f9316f848e6bf1ad621d420726490a517",
+        "blob": "e778111385cefe554d034e97b352ffb9e2e23800"
+      }
+    },
+    {
+      "path": "tests/rules/progression.test.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "c88ceea74ed2a63ef0ea773f9b95de1e378273f257984083437105a4d335182c",
+        "blob": "383bb9f429a596e6d393a2773ce9ad29f2b3c70d"
+      }
+    },
+    {
+      "path": "tests/rules/runtime-lifecycle.test.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "87d422dff231899d5ad66a0b0b2b5a629fd2e0230e7a5f0c12b5df1a58927f01",
+        "blob": "aa388a363e8d326cb6caa0396df9f0a3516943b3"
+      }
+    },
+    {
+      "path": "tests/rules/save-boundary.test.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "5e8ec75cbf4c884f38ef615f1808d5947295e5aa7119edefb7ede8f0455ece0e",
+        "blob": "fa09aae0aed9025bc4bf9298d0163842b80e0532"
+      }
+    },
+    {
+      "path": "tests/rules/save-safety.test.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "1288cd99c3eb05411b61048396842df0e355330b41964e9d3328d6379f367483",
+        "blob": "43b92fe7ee10324ac1b2d8a25386ce0db5a7a730"
+      }
+    },
+    {
+      "path": "tests/support/game-runtime.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a86d15a6cd39eb09c697f10cdd4ff45ec5804ee819c04cf6bd9618e83703c107",
+        "blob": "3b69e1c30e3d5e198f00b0e862e7c70583d35c6c"
+      }
+    },
+    {
+      "path": "tests/support/historical-sources.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "0feb5c43758af1d4334f608cb026bc58a22f49b76653cf2c8e91bd103406ee07",
+        "blob": "cd4880793f646e71f013cdd3383bd1de9813ea37"
+      }
+    },
+    {
+      "path": "tests/support/server.cjs",
+      "operation": "modify",
+      "implementation": "Preserve inherited behavioral fixtures/assertions. Adapt only explicit session API/loading/test bridge as required; historical revisions execute their own complete immutable graphs. Layer byte/function-source checks normalize only reviewed ownership qualifiers and lexical declarations; retain full contract/order and numerical checkpoint assertions.",
+      "verification": [
+        "npm test without filters/skips/retries; every historical graph loads successfully before expected behavioral failure. Review changed assertions and unchanged consumers."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "cd130f535c2e6994f02ef9e0831f3be020061c21209f6a49f165b944c2a53221",
+        "blob": "fc3d507bc823398f365c6deaa735ff6ba73d65f6"
+      }
+    },
+    {
+      "path": "scripts/check-syntax.cjs",
+      "operation": "modify",
+      "implementation": "Include new shipped graph and adapt only changed API/mutation anchors; every original controlled regression must fail behaviorally after successful loading. Do not accept import/missing-file failures.",
+      "verification": [
+        "npm test; inspect every controlled mutation anchor/result."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "0fc26d0b0cf9cd85f5264cd7f589894587ff2ec08ed77d5a21053d0ae2dc762e",
+        "blob": "50075358cd04e53a30d037f97a0d055ecee317ec"
+      }
+    },
+    {
+      "path": "scripts/verify-regressions.cjs",
+      "operation": "modify",
+      "implementation": "Include new shipped graph and adapt only changed API/mutation anchors; every original controlled regression must fail behaviorally after successful loading. Do not accept import/missing-file failures.",
+      "verification": [
+        "npm test; inspect every controlled mutation anchor/result."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "6e05a936cb7042293352da5b1b889bcac59b690083160c1a768d00c51aa06beb",
+        "blob": "25d8ccfd955d48660683a60669d6ea0a8fa816b5"
+      }
+    },
+    {
+      "path": "package.json",
+      "operation": "modify",
+      "implementation": "Pin ESLint 10.15.0 and TypeScript 7.0.2 (Node 24 compatible); generate lock with npm. Add mandatory scoped static and sensitivity checks locally/CI and new push branch; preserve locked regression tools/actions/read-only permissions, full history and artifacts.",
+      "verification": [
+        "npm ci; npm test; exact-head CI. Review lock consistency and dependency engine compatibility."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a3cdc15eb1aa5e0ca15b2419805a9dd659d1168960f67fce7a285e69d5aed477",
+        "blob": "5898b2dfd0086600430e9a3e93613ac3a60b2db4"
+      }
+    },
+    {
+      "path": "package-lock.json",
+      "operation": "modify",
+      "implementation": "Pin ESLint 10.15.0 and TypeScript 7.0.2 (Node 24 compatible); generate lock with npm. Add mandatory scoped static and sensitivity checks locally/CI and new push branch; preserve locked regression tools/actions/read-only permissions, full history and artifacts.",
+      "verification": [
+        "npm ci; npm test; exact-head CI. Review lock consistency and dependency engine compatibility."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "a035691edc678d1f1c29c9321b8eea03a4033fbc0cb94bb8264ef4271cc5520f",
+        "blob": "02d3b7e8f186c85d52edaeb3309b2408e334f6c1"
+      }
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "modify",
+      "implementation": "Pin ESLint 10.15.0 and TypeScript 7.0.2 (Node 24 compatible); generate lock with npm. Add mandatory scoped static and sensitivity checks locally/CI and new push branch; preserve locked regression tools/actions/read-only permissions, full history and artifacts.",
+      "verification": [
+        "npm ci; npm test; exact-head CI. Review lock consistency and dependency engine compatibility."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "15736ea52459f0e0f7143e9941e1226dc308ad2437fe6282b5944949a283326c",
+        "blob": "51206e40295db50532c1632e22b61abc69edd5e6"
+      }
+    },
+    {
+      "path": "README.md",
+      "operation": "modify",
+      "implementation": "Repair affected source/navigation routes in place. Document state/cache/runtime owners, representative command/test, small browser boundary, independent sessions and static commands/scope/negative checks; keep truthful historical and evidence limits.",
+      "verification": [
+        "Trace README to purchase owner and focused test; validate links/commands and all seven criteria."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "d46ebc2c73af0cff498a39b2d4f8c4f664dc024017c51bc28b0e381b9fae8893",
+        "blob": "28bde69bb6f4e3d443160aa9ca6db9fe71795152"
+      }
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Repair affected source/navigation routes in place. Document state/cache/runtime owners, representative command/test, small browser boundary, independent sessions and static commands/scope/negative checks; keep truthful historical and evidence limits.",
+      "verification": [
+        "Trace README to purchase owner and focused test; validate links/commands and all seven criteria."
+      ],
+      "source": {
+        "revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
+        "sha256": "34703763cd5eadefd4c09e6c757af1c69f86eb1c9e56d15872b24b78ee5c2333",
+        "blob": "9db9c665937528b6f6dcba7914429fc9c146f5ba"
+      }
+    },
+    {
+      "path": "js/game-session.js",
+      "operation": "create",
+      "implementation": "Compose independent state, registry, derived state, commands, layer closures and optional effects from the existing factories; no giant mutable global bag, dynamic eval/context switching, timers or I/O on construction. Expose explicit advance/purchase/load interfaces and session disposal.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "js/browser-entry.js",
+      "operation": "create",
+      "implementation": "The single browser composition/selection adapter owns active session and UI attachment. Keep global surface limited to gameUI plus named constructor/advancement factories; no writable player/tmp global aliases or obsolete caller path.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "js/contracts.js",
+      "operation": "create",
+      "implementation": "Canonical JSDoc boundary types reuse inferred/default-state and codec outcomes rather than duplicating runtime schemas. Cover state, derived values, elapsed-second units, optional/error outcomes and layer/runtime/UI ports.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "eslint.config.cjs",
+      "operation": "create",
+      "implementation": "Lint exactly the authored scripts loaded by real HTML, excluding only identified vendor code; enforce no-undef/no-global-assign and lexical bindings with explicit immutable browser/library/factory declarations. Never allow accidental mutable identifiers.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "jsconfig.json",
+      "operation": "create",
+      "implementation": "Configure checked JavaScript boundary contracts and exact shipped graph with compatible pinned compiler; no broad ignores, ts-nocheck, unchecked casts concealing invalid interfaces or unexplained suppressions.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "scripts/check-static.cjs",
+      "operation": "create",
+      "implementation": "Resolve the actual shipped graph and run mandatory scoped lint/static checks with exact tools. Fail if any authored shipped file is missing/excluded or an invalid port use is accepted.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "scripts/check-static-sensitivity.cjs",
+      "operation": "create",
+      "implementation": "In disposable temporary/memory fixtures, require invalid interface use and an undeclared write to fail their respective checks after valid baseline passes; retain source unchanged.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "tests/support/session-bridge.cjs",
+      "operation": "create",
+      "implementation": "Test-only bridge maps inherited rule assertions to the explicit active-session modules; never ship this old-name test convenience. Historical globals remain supplied only by historical graphs.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "tests/support/ownership-contract.cjs",
+      "operation": "create",
+      "implementation": "Normalize only specific explicit owner qualifications and lexical declarations for full inherited content contract comparisons; do not erase formula tokens, field keys/order or hook behavior. Include a formula mutation rejection.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "tests/rules/session-ownership.test.cjs",
+      "operation": "create",
+      "implementation": "Construct two independent sessions in one script context; interleave advances, purchases, imports/loads, caches, runtime disposal and callbacks, assert no shared mutable identity/effects and no construction-time timers/I/O. Test invalid interfaces/state and negative static checks.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "tests/browser/session-ownership.spec.cjs",
+      "operation": "create",
+      "implementation": "Use actual page/locked local Vue and synthetic storage to prove canonical player/cache observation through purchases, selection/import and return to play; verify independent same-context sessions do not affect rendered active progress.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "docs/milestones/DEV01.preparation.json",
+      "operation": "create",
+      "implementation": "This validated exact-file handoff; preserve original docs-only plan/spec bytes and separate current owner development authority.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    },
+    {
+      "path": "docs/milestones/DEV01.verification.md",
+      "operation": "create",
+      "implementation": "Record standards-to-evidence/criteria/risk and every changed path/unchanged affected consumer, checks, source/base/head, limitations, publication and continuation. No fabricated receipts/acceptance.",
+      "verification": [
+        "Schema/source/path/criterion review as applicable; npm test including static negative checks; inspect complete final diff."
+      ]
+    }
+  ],
+  "authority": {
+    "channel": "Owner-authorized scheduled continuation from Codex chat 01a21bb9-6425-7f20-8a60-efe1f095b934",
+    "scope": "Review/fix, refine plan, exact-file preparation, implementation, tests, review/fix, publish unmerged draft stacked PR, next milestone chat",
+    "native_lifecycle_transition": "none"
+  },
+  "standards": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "document_sha256": {
+      "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+      "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+      "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+      "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+      "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+      "docs/agent-workflows/prepare.md": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255",
+      "docs/agent-workflows/implement.md": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51",
+      "docs/agent-workflows/refactor.md": "6c736d463a7ca9d3f0410220b41429d76433d41b721a734940262486627d3e42",
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+      "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+    },
+    "purpose": "Fresh DEV01 run evidence, not a consumer pin"
+  },
+  "source_reconciliation": {
+    "canonical_source": {
+      "branch": "master",
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "note": "Canonical master has no AGENTS/manifest/developer guide; stack documents remain proposed. Explicit owner instructions govern this continuation."
+    },
+    "dependencies": {
+      "LAY01": "04dc620c1e0dee90340e3e133fec89d081735ede",
+      "SIM01": "7ee437d2101a507e5c610406f059e4df682cf692",
+      "SAV01": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+      "TST01": "379241bd94cf50ca6423e07f1ad68c567edcb6a0"
+    },
+    "obsolete_plan_paths": "js/layers.js is deleted. Use the 35 named factories and sole manifest. Keep original plan bytes/provenance and all seven criteria.",
+    "plan_validation": "development_flow.validate_plan passed for original plan; no criteria changes or consequential owner questions."
+  },
+  "global_inventory": [
+    {
+      "file": "js/technical/layerSupport.js",
+      "declarations": [
+        "layers",
+        "decimalZero",
+        "decimalOne",
+        "decimalNaN",
+        "layerShown",
+        "LAYERS",
+        "hotkeys",
+        "maxRow",
+        "updateHotkeys",
+        "ROW_LAYERS",
+        "TREE_LAYERS",
+        "OTHER_LAYERS",
+        "updateLayers",
+        "addLayer",
+        "addNode",
+        "readData",
+        "someLayerUnlocked",
+        "UP",
+        "DOWN",
+        "LEFT",
+        "RIGHT"
+      ],
+      "references": [
+        "Decimal",
+        "NaN",
+        "Object",
+        "layer",
+        "hk",
+        "id",
+        "thing",
+        "isNaN",
+        "undefined",
+        "data",
+        "row",
+        "x",
+        "player",
+        "canCompleteChallenge",
+        "hasChallenge"
+      ],
+      "writes": [
+        {
+          "name": "layer",
+          "line": 20
+        },
+        {
+          "name": "hk",
+          "line": 21
+        },
+        {
+          "name": "id",
+          "line": 23
+        },
+        {
+          "name": "layer",
+          "line": 40
+        },
+        {
+          "name": "thing",
+          "line": 43
+        },
+        {
+          "name": "thing",
+          "line": 53
+        },
+        {
+          "name": "thing",
+          "line": 63
+        },
+        {
+          "name": "thing",
+          "line": 73
+        },
+        {
+          "name": "thing",
+          "line": 87
+        },
+        {
+          "name": "thing",
+          "line": 99
+        },
+        {
+          "name": "thing",
+          "line": 111
+        },
+        {
+          "name": "thing",
+          "line": 120
+        },
+        {
+          "name": "data",
+          "line": 129
+        },
+        {
+          "name": "row",
+          "line": 156
+        },
+        {
+          "name": "layer",
+          "line": 158
+        },
+        {
+          "name": "row",
+          "line": 161
+        },
+        {
+          "name": "layer",
+          "line": 163
+        },
+        {
+          "name": "x",
+          "line": 167
+        },
+        {
+          "name": "x",
+          "line": 167
+        },
+        {
+          "name": "layer",
+          "line": 206
+        }
+      ]
+    },
+    {
+      "file": "js/tree.js",
+      "declarations": [
+        "layoutInfo"
+      ],
+      "references": [],
+      "writes": []
+    },
+    {
+      "file": "js/sc.js",
+      "declarations": [
+        "SOFTCAPS",
+        "STATIC_SCALE_DATA",
+        "softcapActive",
+        "getSoftcapData",
+        "softcap",
+        "reverse_softcap",
+        "getStaticScaleStart",
+        "getStaticScaleExp",
+        "scaleStaticCost",
+        "softcapStaticGain"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "format",
+        "hasUpgrade",
+        "upgradeEffect",
+        "hasChallenge",
+        "Array",
+        "tmp",
+        "formatWhole",
+        "buyableEffect",
+        "challengeEffect",
+        "Infinity",
+        "hasAchievement",
+        "inChallenge",
+        "isFunction",
+        "String"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/help.js",
+      "declarations": [
+        "help_data"
+      ],
+      "references": [
+        "player"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/info-tab.js",
+      "declarations": [
+        "createInfoTabLayer"
+      ],
+      "references": [],
+      "writes": []
+    },
+    {
+      "file": "js/layers/options-tab.js",
+      "declarations": [
+        "createOptionsTabLayer"
+      ],
+      "references": [],
+      "writes": []
+    },
+    {
+      "file": "js/layers/blank.js",
+      "declarations": [
+        "createBlankLayer"
+      ],
+      "references": [],
+      "writes": []
+    },
+    {
+      "file": "js/layers/tree-tab.js",
+      "declarations": [
+        "createTreeTabLayer"
+      ],
+      "references": [
+        "layoutInfo",
+        "TREE_LAYERS"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/prestige.js",
+      "declarations": [
+        "createPrestigeLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasAchievement",
+        "hasUpgrade",
+        "upgradeEffect",
+        "buyableEffect",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "layers",
+        "layerDataReset",
+        "inChallenge",
+        "hasChallenge",
+        "softcap",
+        "format",
+        "Number"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 15
+        },
+        {
+          "name": "mult",
+          "line": 16
+        },
+        {
+          "name": "mult",
+          "line": 17
+        },
+        {
+          "name": "mult",
+          "line": 18
+        },
+        {
+          "name": "mult",
+          "line": 19
+        },
+        {
+          "name": "mult",
+          "line": 20
+        },
+        {
+          "name": "mult",
+          "line": 21
+        },
+        {
+          "name": "mult",
+          "line": 22
+        },
+        {
+          "name": "mult",
+          "line": 23
+        },
+        {
+          "name": "mult",
+          "line": 24
+        },
+        {
+          "name": "mult",
+          "line": 25
+        },
+        {
+          "name": "mult",
+          "line": 26
+        },
+        {
+          "name": "mult",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "file": "js/layers/boosters.js",
+      "declarations": [
+        "createBoostersLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "hasUpgrade",
+        "upgradeEffect",
+        "buyableEffect",
+        "hasMilestone",
+        "canReset",
+        "doReset",
+        "layers",
+        "inChallenge",
+        "unl",
+        "format",
+        "hasAchievement",
+        "layerDataReset",
+        "formatWhole",
+        "Number"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/generators.js",
+      "declarations": [
+        "createGeneratorsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "hasUpgrade",
+        "upgradeEffect",
+        "buyableEffect",
+        "hasMilestone",
+        "canReset",
+        "doReset",
+        "layers",
+        "inChallenge",
+        "unl",
+        "format",
+        "formatWhole",
+        "hasAchievement",
+        "layerDataReset",
+        "Math",
+        "Number"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/time.js",
+      "declarations": [
+        "createTimeLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasMilestone",
+        "hasUpgrade",
+        "upgradeEffect",
+        "buyableEffect",
+        "challengeEffect",
+        "unl",
+        "format",
+        "softcap",
+        "reverse_softcap",
+        "inChallenge",
+        "canReset",
+        "doReset",
+        "formatWhole",
+        "hasAchievement",
+        "layers",
+        "layerDataReset",
+        "Number",
+        "String",
+        "cost"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 26
+        },
+        {
+          "name": "cost",
+          "line": 359
+        }
+      ]
+    },
+    {
+      "file": "js/layers/enhance.js",
+      "declarations": [
+        "createEnhanceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasUpgrade",
+        "upgradeEffect",
+        "hasMilestone",
+        "inChallenge",
+        "canReset",
+        "doReset",
+        "hasAchievement",
+        "layers",
+        "layerDataReset",
+        "format",
+        "softcap",
+        "formatWhole",
+        "Number",
+        "unl",
+        "String",
+        "cost"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 24
+        },
+        {
+          "name": "mult",
+          "line": 25
+        },
+        {
+          "name": "cost",
+          "line": 239
+        }
+      ]
+    },
+    {
+      "file": "js/layers/space.js",
+      "declarations": [
+        "createSpaceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "hasUpgrade",
+        "mult",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "hasAchievement",
+        "layers",
+        "layerDataReset",
+        "inChallenge",
+        "upgradeEffect",
+        "formatWhole",
+        "format",
+        "buyableEffect",
+        "Object",
+        "toNumber",
+        "unl",
+        "hasChallenge",
+        "challengeEffect",
+        "softcap",
+        "Number",
+        "resetBuyables",
+        "cost",
+        "getBuyableAmount",
+        "setBuyableAmount"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 26
+        },
+        {
+          "name": "cost",
+          "line": 364
+        },
+        {
+          "name": "cost",
+          "line": 417
+        },
+        {
+          "name": "cost",
+          "line": 471
+        },
+        {
+          "name": "cost",
+          "line": 528
+        },
+        {
+          "name": "cost",
+          "line": 578
+        },
+        {
+          "name": "cost",
+          "line": 628
+        },
+        {
+          "name": "cost",
+          "line": 678
+        },
+        {
+          "name": "cost",
+          "line": 728
+        },
+        {
+          "name": "cost",
+          "line": 778
+        },
+        {
+          "name": "cost",
+          "line": 827
+        }
+      ]
+    },
+    {
+      "file": "js/layers/super-boosters.js",
+      "declarations": [
+        "createSuperBoostersLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "hasUpgrade",
+        "hasMilestone",
+        "canReset",
+        "doReset",
+        "hasChallenge",
+        "buyableEffect",
+        "upgradeEffect",
+        "unl",
+        "format",
+        "layers",
+        "layerDataReset",
+        "formatWhole"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/super-generators.js",
+      "declarations": [
+        "createSuperGeneratorsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "hasUpgrade",
+        "hasMilestone",
+        "canReset",
+        "doReset",
+        "upgradeEffect",
+        "buyableEffect",
+        "clickableEffect",
+        "unl",
+        "challengeEffect",
+        "format",
+        "layers",
+        "layerDataReset",
+        "formatWhole"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/hindrance.js",
+      "declarations": [
+        "createHindranceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasUpgrade",
+        "upgradeEffect",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "layers",
+        "layerDataReset",
+        "hasAchievement",
+        "unl",
+        "softcap",
+        "hasChallenge",
+        "format",
+        "inChallenge",
+        "Math",
+        "challengeCompletions",
+        "resetBuyables",
+        "buyableEffect",
+        "Infinity",
+        "isFinite",
+        "formatWhole",
+        "isNaN",
+        "updateTemp"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 23
+        },
+        {
+          "name": "mult",
+          "line": 24
+        },
+        {
+          "name": "mult",
+          "line": 25
+        },
+        {
+          "name": "mult",
+          "line": 26
+        }
+      ]
+    },
+    {
+      "file": "js/layers/quirks.js",
+      "declarations": [
+        "createQuirksLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasUpgrade",
+        "upgradeEffect",
+        "improvementEffect",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "layers",
+        "layerDataReset",
+        "buyableEffect",
+        "unl",
+        "softcap",
+        "formatWhole",
+        "format",
+        "hasChallenge",
+        "hasAchievement",
+        "cost",
+        "Math",
+        "Number",
+        "getImprovements"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 26
+        },
+        {
+          "name": "mult",
+          "line": 27
+        },
+        {
+          "name": "mult",
+          "line": 28
+        },
+        {
+          "name": "mult",
+          "line": 29
+        },
+        {
+          "name": "mult",
+          "line": 30
+        },
+        {
+          "name": "mult",
+          "line": 31
+        },
+        {
+          "name": "cost",
+          "line": 149
+        }
+      ]
+    },
+    {
+      "file": "js/layers/solarity.js",
+      "declarations": [
+        "createSolarityLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "Array",
+        "tmp",
+        "hasAchievement",
+        "hasUpgrade",
+        "upgradeEffect",
+        "buyableEffect",
+        "mult",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "unl",
+        "softcap",
+        "improvementEffect",
+        "format",
+        "hasMilestone",
+        "formatWhole"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 43
+        }
+      ]
+    },
+    {
+      "file": "js/layers/subspace.js",
+      "declarations": [
+        "createSubspaceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "hasAchievement",
+        "Array",
+        "tmp",
+        "mult",
+        "hasMilestone",
+        "hasUpgrade",
+        "upgradeEffect",
+        "buyableEffect",
+        "improvementEffect",
+        "unl",
+        "format",
+        "canReset",
+        "doReset",
+        "formatWhole",
+        "layers",
+        "layerDataReset",
+        "hasChallenge"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 25
+        },
+        {
+          "name": "mult",
+          "line": 26
+        }
+      ]
+    },
+    {
+      "file": "js/layers/magic.js",
+      "declarations": [
+        "createMagicLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasAchievement",
+        "challengeEffect",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "layers",
+        "layerDataReset",
+        "unl",
+        "buyableEffect",
+        "softcap",
+        "format",
+        "formatWhole",
+        "hasUpgrade",
+        "formatTime",
+        "cost"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 42
+        },
+        {
+          "name": "mult",
+          "line": 43
+        },
+        {
+          "name": "cost",
+          "line": 158
+        },
+        {
+          "name": "cost",
+          "line": 196
+        },
+        {
+          "name": "cost",
+          "line": 233
+        },
+        {
+          "name": "cost",
+          "line": 269
+        },
+        {
+          "name": "cost",
+          "line": 305
+        },
+        {
+          "name": "cost",
+          "line": 341
+        }
+      ]
+    },
+    {
+      "file": "js/layers/balance.js",
+      "declarations": [
+        "createBalanceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasAchievement",
+        "challengeEffect",
+        "clickableEffect",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "layers",
+        "layerDataReset",
+        "hasUpgrade",
+        "upgradeEffect",
+        "softcap",
+        "inChallenge",
+        "format",
+        "RIGHT",
+        "Math",
+        "hasChallenge"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 26
+        },
+        {
+          "name": "mult",
+          "line": 27
+        },
+        {
+          "name": "mult",
+          "line": 28
+        }
+      ]
+    },
+    {
+      "file": "js/layers/phantom-souls.js",
+      "declarations": [
+        "createPhantomSoulsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "improvementEffect",
+        "mult",
+        "buyableEffect",
+        "hasMilestone",
+        "canReset",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "format",
+        "formatWhole",
+        "Object",
+        "cost",
+        "hasUpgrade",
+        "upgradeEffect",
+        "getImprovements"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 32
+        },
+        {
+          "name": "mult",
+          "line": 33
+        },
+        {
+          "name": "cost",
+          "line": 177
+        },
+        {
+          "name": "cost",
+          "line": 222
+        }
+      ]
+    },
+    {
+      "file": "js/layers/honour.js",
+      "declarations": [
+        "createHonourLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "Array",
+        "tmp",
+        "buyableEffect",
+        "hasAchievement",
+        "hasUpgrade",
+        "upgradeEffect",
+        "softcap",
+        "reverse_softcap",
+        "hasMilestone",
+        "format",
+        "undefined",
+        "formatWhole",
+        "doReset",
+        "layers",
+        "layerDataReset"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/nebula.js",
+      "declarations": [
+        "createNebulaLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "Array",
+        "tmp",
+        "hasAchievement",
+        "mult",
+        "hasUpgrade",
+        "upgradeEffect",
+        "hasMilestone",
+        "doReset",
+        "layers",
+        "JSON",
+        "layerDataReset",
+        "format",
+        "buyableEffect",
+        "Math",
+        "formatWhole",
+        "cost",
+        "Object"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 36
+        },
+        {
+          "name": "mult",
+          "line": 37
+        },
+        {
+          "name": "mult",
+          "line": 38
+        },
+        {
+          "name": "mult",
+          "line": 39
+        },
+        {
+          "name": "mult",
+          "line": 40
+        },
+        {
+          "name": "mult",
+          "line": 41
+        },
+        {
+          "name": "mult",
+          "line": 42
+        },
+        {
+          "name": "mult",
+          "line": 43
+        },
+        {
+          "name": "cost",
+          "line": 173
+        }
+      ]
+    },
+    {
+      "file": "js/layers/hyperspace.js",
+      "declarations": [
+        "createHyperspaceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "hasAchievement",
+        "buyableEffect",
+        "mult",
+        "hasUpgrade",
+        "upgradeEffect",
+        "tmp",
+        "Array",
+        "canReset",
+        "doReset",
+        "hasMilestone",
+        "layers",
+        "layerDataReset",
+        "formatWhole",
+        "format",
+        "unl",
+        "resetBuyables",
+        "cost",
+        "softcap"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 31
+        },
+        {
+          "name": "mult",
+          "line": 32
+        },
+        {
+          "name": "mult",
+          "line": 33
+        },
+        {
+          "name": "mult",
+          "line": 34
+        },
+        {
+          "name": "mult",
+          "line": 35
+        },
+        {
+          "name": "mult",
+          "line": 36
+        },
+        {
+          "name": "mult",
+          "line": 37
+        },
+        {
+          "name": "cost",
+          "line": 138
+        }
+      ]
+    },
+    {
+      "file": "js/layers/imperium.js",
+      "declarations": [
+        "createImperiumLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "Array",
+        "tmp",
+        "mult",
+        "hasMilestone",
+        "canReset",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "formatWhole",
+        "format",
+        "unl",
+        "cost"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 25
+        },
+        {
+          "name": "cost",
+          "line": 106
+        },
+        {
+          "name": "cost",
+          "line": 157
+        },
+        {
+          "name": "cost",
+          "line": 201
+        },
+        {
+          "name": "cost",
+          "line": 245
+        }
+      ]
+    },
+    {
+      "file": "js/layers/mastery.js",
+      "declarations": [
+        "createMasteryLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "tmp",
+        "format",
+        "mult",
+        "hasAchievement",
+        "canReset",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "hasMilestone",
+        "formatWhole",
+        "confirm",
+        "Object",
+        "ROW_LAYERS",
+        "undefined",
+        "Math",
+        "resetBuyables"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 35
+        },
+        {
+          "name": "mult",
+          "line": 36
+        },
+        {
+          "name": "mult",
+          "line": 37
+        },
+        {
+          "name": "mult",
+          "line": 38
+        },
+        {
+          "name": "mult",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "file": "js/layers/gears.js",
+      "declarations": [
+        "createGearsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "tmp",
+        "mult",
+        "clickableEffect",
+        "buyableEffect",
+        "hasMilestone",
+        "hasUpgrade",
+        "upgradeEffect",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "format",
+        "formatWhole",
+        "softcap",
+        "hasAchievement",
+        "Math",
+        "unl",
+        "Object",
+        "confirm"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 36
+        },
+        {
+          "name": "mult",
+          "line": 37
+        },
+        {
+          "name": "mult",
+          "line": 38
+        },
+        {
+          "name": "mult",
+          "line": 39
+        },
+        {
+          "name": "mult",
+          "line": 40
+        },
+        {
+          "name": "mult",
+          "line": 41
+        },
+        {
+          "name": "mult",
+          "line": 42
+        },
+        {
+          "name": "mult",
+          "line": 43
+        }
+      ]
+    },
+    {
+      "file": "js/layers/machines.js",
+      "declarations": [
+        "createMachinesLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "mult",
+        "buyableEffect",
+        "hasMilestone",
+        "hasUpgrade",
+        "upgradeEffect",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "tmp",
+        "clickableEffect",
+        "format",
+        "hasAchievement",
+        "Object",
+        "getStartClickables",
+        "formatWhole",
+        "resetBuyables",
+        "unl"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 33
+        },
+        {
+          "name": "mult",
+          "line": 34
+        },
+        {
+          "name": "mult",
+          "line": 35
+        },
+        {
+          "name": "mult",
+          "line": 36
+        }
+      ]
+    },
+    {
+      "file": "js/layers/energy.js",
+      "declarations": [
+        "createEnergyLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "Array",
+        "tmp",
+        "hasMilestone",
+        "format",
+        "undefined",
+        "formatWhole",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "hasUpgrade",
+        "hasAchievement"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/neurons.js",
+      "declarations": [
+        "createNeuronsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "mult",
+        "canReset",
+        "doReset",
+        "layers",
+        "hasMilestone",
+        "layerDataReset",
+        "format",
+        "tmp",
+        "hasAchievement",
+        "hasUpgrade",
+        "upgradeEffect",
+        "formatWhole",
+        "updateTemp",
+        "Math",
+        "unl"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "file": "js/layers/ideas.js",
+      "declarations": [
+        "createIdeasLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "tmp",
+        "hasAchievement",
+        "hasUpgrade",
+        "hasMilestone",
+        "format",
+        "mult",
+        "canReset",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "addPoints",
+        "formatWhole"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 32
+        },
+        {
+          "name": "mult",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "file": "js/layers/robots.js",
+      "declarations": [
+        "createRobotsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "tmp",
+        "hasUpgrade",
+        "canReset",
+        "hasMilestone",
+        "upgradeEffect",
+        "format",
+        "undefined",
+        "formatWhole",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "addPoints",
+        "formatTime",
+        "hasAchievement"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/artificial-intelligence.js",
+      "declarations": [
+        "createArtificialIntelligenceLayer"
+      ],
+      "references": [
+        "Decimal",
+        "player",
+        "canReset",
+        "tmp",
+        "mult",
+        "hasUpgrade",
+        "upgradeEffect",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "format",
+        "formatWhole",
+        "canAffordUpgrade",
+        "hasAchievement",
+        "unl",
+        "confirm"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 33
+        },
+        {
+          "name": "mult",
+          "line": 34
+        },
+        {
+          "name": "mult",
+          "line": 35
+        },
+        {
+          "name": "mult",
+          "line": 36
+        },
+        {
+          "name": "mult",
+          "line": 37
+        }
+      ]
+    },
+    {
+      "file": "js/layers/civilizations.js",
+      "declarations": [
+        "createCivilizationsLayer"
+      ],
+      "references": [
+        "Decimal",
+        "hasAchievement",
+        "player",
+        "mult",
+        "canReset",
+        "doReset",
+        "layers",
+        "layerDataReset",
+        "tmp",
+        "formatWhole",
+        "format",
+        "unl"
+      ],
+      "writes": [
+        {
+          "name": "mult",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "file": "js/layers/achievements.js",
+      "declarations": [
+        "createAchievementsLayer"
+      ],
+      "references": [
+        "player",
+        "hasAchievement",
+        "Number",
+        "tmp",
+        "inChallenge",
+        "hasMilestone",
+        "format",
+        "Decimal",
+        "formatWhole",
+        "Object",
+        "adjustNotificationTime"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/softcaps.js",
+      "declarations": [
+        "createSoftcapsLayer"
+      ],
+      "references": [
+        "hasAchievement",
+        "player",
+        "SOFTCAPS"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/autobuyers.js",
+      "declarations": [
+        "createAutobuyersLayer"
+      ],
+      "references": [
+        "player",
+        "hasMilestone"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/layers/manifest.js",
+      "declarations": [
+        "gameLayerManifest",
+        "registerGameLayers"
+      ],
+      "references": [
+        "Object",
+        "createInfoTabLayer",
+        "createOptionsTabLayer",
+        "createBlankLayer",
+        "createTreeTabLayer",
+        "createPrestigeLayer",
+        "createBoostersLayer",
+        "createGeneratorsLayer",
+        "createTimeLayer",
+        "createEnhanceLayer",
+        "createSpaceLayer",
+        "createSuperBoostersLayer",
+        "createSuperGeneratorsLayer",
+        "createHindranceLayer",
+        "createQuirksLayer",
+        "createSolarityLayer",
+        "createSubspaceLayer",
+        "createMagicLayer",
+        "createBalanceLayer",
+        "createPhantomSoulsLayer",
+        "createHonourLayer",
+        "createNebulaLayer",
+        "createHyperspaceLayer",
+        "createImperiumLayer",
+        "createMasteryLayer",
+        "createGearsLayer",
+        "createMachinesLayer",
+        "createEnergyLayer",
+        "createNeuronsLayer",
+        "createIdeasLayer",
+        "createRobotsLayer",
+        "createArtificialIntelligenceLayer",
+        "createCivilizationsLayer",
+        "createAchievementsLayer",
+        "createSoftcapsLayer",
+        "createAutobuyersLayer",
+        "Set",
+        "Error",
+        "layers",
+        "addNode",
+        "addLayer"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/mod.js",
+      "declarations": [
+        "modInfo",
+        "VERSION",
+        "doNotCallTheseFunctionsEveryTick",
+        "alwaysKeepTheseVariables",
+        "getStartPoints",
+        "canGenPoints",
+        "getPointGen",
+        "getRow1to6Speed",
+        "addedPlayerData",
+        "displayThings",
+        "isEndgame",
+        "maxTickLength",
+        "activeNotifications",
+        "notificationID",
+        "addNotification",
+        "adjustNotificationTime"
+      ],
+      "references": [
+        "Decimal",
+        "hasUpgrade",
+        "upgradeEffect",
+        "player",
+        "Array",
+        "tmp",
+        "hasAchievement",
+        "inChallenge",
+        "buyableEffect",
+        "notificationTitle",
+        "notificationType",
+        "notificationMessage",
+        "notificationTimer",
+        "notification"
+      ],
+      "writes": [
+        {
+          "name": "notificationTitle",
+          "line": 102
+        },
+        {
+          "name": "notificationType",
+          "line": 103
+        },
+        {
+          "name": "notificationTitle",
+          "line": 106
+        },
+        {
+          "name": "notificationType",
+          "line": 107
+        },
+        {
+          "name": "notificationTitle",
+          "line": 110
+        },
+        {
+          "name": "notificationType",
+          "line": 111
+        },
+        {
+          "name": "notificationTitle",
+          "line": 114
+        },
+        {
+          "name": "notificationType",
+          "line": 115
+        },
+        {
+          "name": "notificationTitle",
+          "line": 118
+        },
+        {
+          "name": "notificationMessage",
+          "line": 119
+        },
+        {
+          "name": "notificationTimer",
+          "line": 120
+        },
+        {
+          "name": "notification",
+          "line": 129
+        }
+      ]
+    },
+    {
+      "file": "js/technical/temp.js",
+      "declarations": [
+        "tmp",
+        "activeFunctions",
+        "noCall",
+        "setupTemp",
+        "setupTempData",
+        "updateTemp",
+        "updateTempData",
+        "updateChallengeTemp",
+        "updateBuyableTemp",
+        "updateClickableTemp",
+        "DIR_MARGINS",
+        "constructBarStyles",
+        "setupBarStyles"
+      ],
+      "references": [
+        "doNotCallTheseFunctionsEveryTick",
+        "item",
+        "NaN",
+        "Decimal",
+        "layers",
+        "layer",
+        "help_data",
+        "Array",
+        "Object",
+        "isFunction",
+        "undefined",
+        "getResetGain",
+        "getNextAt",
+        "canReset",
+        "shouldNotify",
+        "prestigeNotify",
+        "prestigeButtonText",
+        "getPointGen",
+        "getRow1to6Speed",
+        "thing",
+        "displayThings",
+        "player",
+        "decimalNaN",
+        "Error",
+        "Vue",
+        "id",
+        "Math",
+        "UP",
+        "DOWN",
+        "RIGHT",
+        "LEFT"
+      ],
+      "writes": [
+        {
+          "name": "item",
+          "line": 11
+        },
+        {
+          "name": "layer",
+          "line": 25
+        },
+        {
+          "name": "item",
+          "line": 39
+        },
+        {
+          "name": "layer",
+          "line": 65
+        },
+        {
+          "name": "layer",
+          "line": 67
+        },
+        {
+          "name": "thing",
+          "line": 81
+        },
+        {
+          "name": "item",
+          "line": 94
+        },
+        {
+          "name": "id",
+          "line": 135
+        },
+        {
+          "name": "id",
+          "line": 170
+        }
+      ]
+    },
+    {
+      "file": "js/game.js",
+      "declarations": [
+        "player",
+        "allSaves",
+        "needCanvasUpdate",
+        "gameEnded",
+        "TMT_VERSION",
+        "getResetGain",
+        "getNextAt",
+        "shouldNotify",
+        "canReset",
+        "rowReset",
+        "layerDataReset",
+        "resetBuyables",
+        "addPoints",
+        "generatePoints",
+        "prevOnReset",
+        "doReset",
+        "resetRow",
+        "startChallenge",
+        "canCompleteChallenge",
+        "completeChallenge",
+        "gameLoop",
+        "hardReset",
+        "ticking",
+        "tickFaulted",
+        "advanceGame"
+      ],
+      "references": [
+        "tmp",
+        "Decimal",
+        "softcapStaticGain",
+        "softcap",
+        "layers",
+        "Infinity",
+        "scaleStaticCost",
+        "reverse_softcap",
+        "id",
+        "isNaN",
+        "canAffordUpgrade",
+        "hasUpgrade",
+        "Number",
+        "hasMilestone",
+        "Object",
+        "lr",
+        "ROW_LAYERS",
+        "alwaysKeepTheseVariables",
+        "thing",
+        "undefined",
+        "JSON",
+        "layOver",
+        "getStartChallenges",
+        "getStartClickables",
+        "getStartBuyables",
+        "updateMilestones",
+        "updateAchievements",
+        "lrs",
+        "layerResetting",
+        "getStartPoints",
+        "updateTemp",
+        "prompt",
+        "resizeCanvas",
+        "updateChallengeTemp",
+        "app",
+        "readData",
+        "VERSION",
+        "styleCooldown",
+        "Math",
+        "isEndgame",
+        "maxTickLength",
+        "addTime",
+        "x",
+        "maxRow",
+        "item",
+        "TREE_LAYERS",
+        "unl",
+        "row",
+        "OTHER_LAYERS",
+        "layer",
+        "confirm",
+        "currentSaveCollection",
+        "getStartPlayer",
+        "persistSaveCollection",
+        "window",
+        "isCurrentGameSession",
+        "Error",
+        "fixNaNs"
+      ],
+      "writes": [
+        {
+          "name": "id",
+          "line": 70
+        },
+        {
+          "name": "id",
+          "line": 78
+        },
+        {
+          "name": "lr",
+          "line": 127
+        },
+        {
+          "name": "thing",
+          "line": 145
+        },
+        {
+          "name": "thing",
+          "line": 160
+        },
+        {
+          "name": "lrs",
+          "line": 210
+        },
+        {
+          "name": "lr",
+          "line": 211
+        },
+        {
+          "name": "layerResetting",
+          "line": 222
+        },
+        {
+          "name": "styleCooldown",
+          "line": 322
+        },
+        {
+          "name": "x",
+          "line": 340
+        },
+        {
+          "name": "x",
+          "line": 340
+        },
+        {
+          "name": "item",
+          "line": 341
+        },
+        {
+          "name": "row",
+          "line": 351
+        },
+        {
+          "name": "item",
+          "line": 352
+        },
+        {
+          "name": "x",
+          "line": 359
+        },
+        {
+          "name": "x",
+          "line": 359
+        },
+        {
+          "name": "item",
+          "line": 360
+        },
+        {
+          "name": "row",
+          "line": 368
+        },
+        {
+          "name": "item",
+          "line": 369
+        },
+        {
+          "name": "layer",
+          "line": 376
+        }
+      ]
+    },
+    {
+      "file": "js/utils.js",
+      "declarations": [
+        "exponentialFormat",
+        "commaFormat",
+        "regularFormat",
+        "fixValue",
+        "sumValues",
+        "format",
+        "formatWhole",
+        "formatTime",
+        "toPlaces",
+        "fixNaNs",
+        "NaNcheck",
+        "themes",
+        "theme_names",
+        "changeTheme",
+        "getThemeName",
+        "switchTheme",
+        "toggleOpt",
+        "adjustGlow",
+        "styleCooldown",
+        "updateStyle",
+        "changeTreeQuality",
+        "toggleAuto",
+        "adjustMSDisp",
+        "milestoneShown",
+        "respecBuyables",
+        "canAffordUpgrade",
+        "hasUpgrade",
+        "hasMilestone",
+        "hasAchievement",
+        "hasChallenge",
+        "maxedChallenge",
+        "challengeCompletions",
+        "getBuyableAmount",
+        "setBuyableAmount",
+        "getClickableState",
+        "setClickableState",
+        "upgradeEffect",
+        "challengeEffect",
+        "buyableEffect",
+        "clickableEffect",
+        "achievementEffect",
+        "getImprovements",
+        "getNextImpr",
+        "improvementEffect",
+        "canAffordPurchase",
+        "buyUpgrade",
+        "buyUpg",
+        "unlockUpg",
+        "pseudoUnl",
+        "buyMaxBuyable",
+        "buyBuyable",
+        "clickClickable",
+        "inChallenge",
+        "onTreeTab",
+        "showTab",
+        "showNavTab",
+        "goBack",
+        "prestigeNotify",
+        "notifyLayer",
+        "subtabShouldNotify",
+        "subtabResetNotify",
+        "nodeShown",
+        "unl",
+        "layerunlocked",
+        "keepGoing",
+        "toNumber",
+        "updateMilestones",
+        "updateAchievements",
+        "addTime",
+        "layOver",
+        "minusHeld",
+        "gameKeyDown",
+        "gameKeyUp",
+        "onFocused",
+        "focused",
+        "gainFormulaNormal",
+        "costFormulaStatic",
+        "prestigeButtonText",
+        "isFunction"
+      ],
+      "references": [
+        "Number",
+        "Decimal",
+        "undefined",
+        "Object",
+        "isNaN",
+        "player",
+        "Math",
+        "item",
+        "Array",
+        "decimalNaN",
+        "Error",
+        "colors_theme",
+        "colors",
+        "document",
+        "resizeCanvas",
+        "needCanvasUpdate",
+        "complete",
+        "auto",
+        "layers",
+        "confirm",
+        "tmp",
+        "updateBuyableTemp",
+        "updateClickableTemp",
+        "LAYERS",
+        "updateTempData",
+        "layoutInfo",
+        "parseFloat",
+        "id",
+        "addNotification",
+        "console",
+        "gameEnded",
+        "hotkeys",
+        "STATIC_SCALE_DATA",
+        "getStaticScaleStart",
+        "row",
+        "getStaticScaleExp"
+      ],
+      "writes": [
+        {
+          "name": "item",
+          "line": 92
+        },
+        {
+          "name": "colors_theme",
+          "line": 121
+        },
+        {
+          "name": "needCanvasUpdate",
+          "line": 195
+        },
+        {
+          "name": "complete",
+          "line": 218
+        },
+        {
+          "name": "auto",
+          "line": 219
+        },
+        {
+          "name": "player",
+          "line": 398
+        },
+        {
+          "name": "needCanvasUpdate",
+          "line": 491
+        },
+        {
+          "name": "needCanvasUpdate",
+          "line": 501
+        },
+        {
+          "name": "needCanvasUpdate",
+          "line": 563
+        },
+        {
+          "name": "id",
+          "line": 574
+        },
+        {
+          "name": "id",
+          "line": 587
+        }
+      ]
+    },
+    {
+      "file": "js/save-codec.js",
+      "declarations": [
+        "createSaveCodec",
+        "startPlayerBase",
+        "createSavePlayer",
+        "getStartBuyables",
+        "getStartClickables",
+        "getStartChallenges"
+      ],
+      "references": [
+        "Object",
+        "String",
+        "Array",
+        "RegExp",
+        "Error",
+        "Set",
+        "undefined",
+        "Number",
+        "Decimal",
+        "JSON",
+        "atob",
+        "btoa",
+        "layoutInfo",
+        "modInfo",
+        "VERSION",
+        "addedPlayerData",
+        "layers",
+        "isNaN"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/save-storage.js",
+      "declarations": [
+        "createSaveStorage"
+      ],
+      "references": [
+        "Object"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/saves.js",
+      "declarations": [
+        "saveStorage",
+        "saveRecovery",
+        "saveStatus",
+        "saveRegexCode",
+        "getStartPlayer",
+        "saveCodec",
+        "reportSaveStatus",
+        "saveCommandsAvailable",
+        "currentSaveCollection",
+        "activateSaveCollection",
+        "persistSaveCollection",
+        "setLocalStorage",
+        "save",
+        "showAllSaves",
+        "resetSaveMenu",
+        "loadSave",
+        "promptSaveName",
+        "newSave",
+        "renameSave",
+        "deleteSave",
+        "moveSave",
+        "showMoveSaveBtn",
+        "blockSaveLoading",
+        "load",
+        "exportSave",
+        "importSave",
+        "rejectedSaveImport"
+      ],
+      "references": [
+        "createSaveStorage",
+        "localStorage",
+        "modInfo",
+        "undefined",
+        "Date",
+        "createSavePlayer",
+        "createSaveCodec",
+        "layers",
+        "VERSION",
+        "document",
+        "tickFaulted",
+        "allSaves",
+        "player",
+        "Object",
+        "gameRuntime",
+        "app",
+        "window",
+        "prompt",
+        "alert",
+        "hardReset",
+        "confirm",
+        "Math",
+        "changeTheme",
+        "changeTreeQuality",
+        "updateLayers",
+        "setupTemp",
+        "updateTemp",
+        "tmp",
+        "loadVue",
+        "startGameRuntime",
+        "reportRuntimeFault"
+      ],
+      "writes": [
+        {
+          "name": "allSaves",
+          "line": 45
+        },
+        {
+          "name": "player",
+          "line": 46
+        }
+      ]
+    },
+    {
+      "file": "js/technical/systemComponents.js",
+      "declarations": [
+        "systemComponents"
+      ],
+      "references": [],
+      "writes": []
+    },
+    {
+      "file": "js/components.js",
+      "declarations": [
+        "app",
+        "loadVue"
+      ],
+      "references": [
+        "Vue",
+        "player",
+        "layer",
+        "data",
+        "systemComponents",
+        "allSaves",
+        "tmp",
+        "Decimal",
+        "format",
+        "formatWhole",
+        "formatTime",
+        "focused",
+        "getThemeName",
+        "layerunlocked",
+        "doReset",
+        "buyUpg",
+        "canAffordUpgrade",
+        "hasUpgrade",
+        "hasAchievement",
+        "hasMilestone",
+        "hasChallenge",
+        "challengeCompletions",
+        "startChallenge",
+        "milestoneShown",
+        "keepGoing",
+        "maxedChallenge",
+        "subtabShouldNotify",
+        "subtabResetNotify",
+        "VERSION",
+        "LAYERS",
+        "hotkeys"
+      ],
+      "writes": []
+    },
+    {
+      "file": "js/technical/canvas.js",
+      "declarations": [
+        "canvas",
+        "ctx",
+        "retrieveCanvasData",
+        "resizeCanvas",
+        "colors",
+        "colors_theme",
+        "drawTree",
+        "drawTreeBranch"
+      ],
+      "references": [
+        "document",
+        "undefined",
+        "window",
+        "layer",
+        "layers",
+        "tmp",
+        "branch",
+        "needCanvasUpdate",
+        "Array"
+      ],
+      "writes": [
+        {
+          "name": "layer",
+          "line": 41
+        },
+        {
+          "name": "branch",
+          "line": 43
+        },
+        {
+          "name": "needCanvasUpdate",
+          "line": 49
+        }
+      ]
+    },
+    {
+      "file": "js/game-runtime.js",
+      "declarations": [
+        "gameRuntime",
+        "createGameSession",
+        "isCurrentGameSession",
+        "observeGameTime",
+        "bankOfflineTime",
+        "budgetGameTime",
+        "createGameRuntime",
+        "reportRuntimeFault",
+        "startGameRuntime"
+      ],
+      "references": [
+        "player",
+        "tmp",
+        "Number",
+        "Error",
+        "Math",
+        "undefined",
+        "tickFaulted",
+        "ticking",
+        "reportSaveStatus",
+        "alert",
+        "Date",
+        "setInterval",
+        "clearInterval",
+        "modInfo",
+        "gameEnded",
+        "needCanvasUpdate",
+        "resizeCanvas",
+        "advanceGame",
+        "save",
+        "document",
+        "gameKeyDown",
+        "gameKeyUp",
+        "window",
+        "minusHeld"
+      ],
+      "writes": [
+        {
+          "name": "tickFaulted",
+          "line": 121
+        },
+        {
+          "name": "ticking",
+          "line": 122
+        },
+        {
+          "name": "needCanvasUpdate",
+          "line": 145
+        },
+        {
+          "name": "minusHeld",
+          "line": 151
+        }
+      ]
+    }
+  ],
+  "ownership": {
+    "save_state": "game-session.js state owner: selected collection/player identity; saves.js is the sole validated persistence/activation command owner",
+    "derived": "technical/temp.js instance per session; fresh caches and fresh registered closures; never serialized",
+    "rules": "game.js progression/reset rules, utils.js helpers/purchases, mod.js and sc.js formulas, named layer factories; explicit narrowly selected ports",
+    "runtime": "game-runtime.js resource/generation owner per session; clock/scheduler/listeners explicit; unchanged SIM01 policy",
+    "ui": "browser-entry.js chooses canonical session; components/canvas bind explicit session ports, same player/cache identities",
+    "external": "Browser effects injected separately; Decimal is the immutable vendor library boundary. No global state/context swapping."
+  },
+  "criteria": {
+    "DEV01-AC01": {
+      "requirement": "The active application has documented single owners for player/save state, derived values and runtime services. Commands/selectors reference that owner through explicit module/context interfaces; no second persistent mutable model or hidden global player/tmp write authority remains.",
+      "checks": [
+        "Explicit module/port source review, full inherited regression suites, static and controlled negative checks, current guidance."
+      ],
+      "status": "planned"
+    },
+    "DEV01-AC02": {
+      "requirement": "Two independently created session contexts can advance, purchase and load saves without changing each other, sharing timers or leaking derived caches. Browser UI observes the same canonical active session and continues updating after save selection/import.",
+      "checks": [
+        "Two sessions created/interleaved in the same script context; independent state, caches, registered closures and runtimes.",
+        "Actual Chromium purchase/select/import binding."
+      ],
+      "status": "planned"
+    },
+    "DEV01-AC03": {
+      "requirement": "All active authored production scripts/modules have explicit lexical bindings for loop and temporary variables. A small documented browser integration/debug surface may remain only through an explicit adapter; the lint global allowlist must not whitelist accidental mutable identifiers to conceal leaks.",
+      "checks": [
+        "Explicit module/port source review, full inherited regression suites, static and controlled negative checks, current guidance."
+      ],
+      "status": "planned"
+    },
+    "DEV01-AC04": {
+      "requirement": "JSDoc and static checking cover GameState, derived state, elapsed-second units, save outcomes and layer/runtime/UI command ports, including optional/error states. Reuse canonical definitions; do not hand-maintain conflicting schemas. A controlled invalid interface use and undeclared write cause their required checks to fail.",
+      "checks": [
+        "Explicit module/port source review, full inherited regression suites, static and controlled negative checks, current guidance."
+      ],
+      "status": "planned"
+    },
+    "DEV01-AC05": {
+      "requirement": "Pinned scoped lint/static commands run locally and in CI on the actual shipped authored graph, with no broad ignores or unexplained suppressions. Existing debt in the active scope is resolved or a specific consequential exception is surfaced before declaring completion; style-only churn outside that scope is excluded.",
+      "checks": [
+        "Explicit module/port source review, full inherited regression suites, static and controlled negative checks, current guidance."
+      ],
+      "status": "planned"
+    },
+    "DEV01-AC06": {
+      "requirement": "TST01 rule/browser tests and SAV01/SIM01/LAY01 boundary tests pass for the integrated source. Fresh fixtures prove Decimal behavior, upgrade/reset effects, save selection/reload and unchanged dependency ordering; no constructor/import starts unmanaged runtime effects.",
+      "checks": [
+        "Explicit module/port source review, full inherited regression suites, static and controlled negative checks, current guidance."
+      ],
+      "status": "planned"
+    },
+    "DEV01-AC07": {
+      "requirement": "The existing developer guide shows the state/effect ownership map, a representative layer command and its test, local checking commands and the explicit external/global boundary. All normal callers use the new path and obsolete global bindings/adapters are removed.",
+      "checks": [
+        "Explicit module/port source review, full inherited regression suites, static and controlled negative checks, current guidance."
+      ],
+      "status": "planned"
+    }
+  },
+  "risks": [
+    "Reference/reactivity drift: assert canonical identity and rendered update after selection/import.",
+    "Free references/formula drift: compare full normalized contracts plus immutable numerical checkpoints.",
+    "Loop lexicalization may expose reliance on accidental globals: investigate exact behavior; do not hide balance drift.",
+    "Historical byte/function-source checks must adapt to reference changes without weakening formula assertions.",
+    "Shared demo consumers require only explicit loading/port adaptation, no unrelated demo lint or gameplay work."
+  ],
+  "documentation_assessment": {
+    "organization": "README -> existing developer guide -> owning module and focused tests; engine index remains historical feature reference.",
+    "confirmed_gaps": [
+      "DEV01 plan mentions removed monolith; reconciled here.",
+      "Current guide accurately labels single script-context session limitation; replace that section only after verified cutover.",
+      "README upstream monolith pointer is stale."
+    ],
+    "strengths": [
+      "Existing save/runtime/module/test owners and immutable graphs reused."
+    ],
+    "measurement": "Qualitative assessment; no performance/time claims."
+  }
+}
