@@ -1,0 +1,148 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#TST01",
+  "objective": "Give developers repeatable local and CI evidence for core progression and save safety, with green regressions for F1-F3.",
+  "scope": {
+    "include": [
+      "Pinned minimal Node/package/lockfile setup and real-script deterministic rule tests",
+      "Core progression, purchase, reset, save/import/export, naming and offline-boundary coverage",
+      "Isolated Chromium/Playwright journeys against the actual locally served page",
+      "Bounded F1 invalid-import/autosave/tick-safety, F2 offline-time and F3 prompt-cancellation corrections",
+      "CI using the same commands, failure artifacts, test-local matching Vue asset and existing permitted capacity",
+      "Narrow test seams and updates to current development guidance"
+    ],
+    "exclude": [
+      "Broad layer/global-state restructuring, new state frameworks and TypeScript conversion",
+      "Vue migration, balancing, new game content and unrelated bug fixes",
+      "Broad save-format migration or changing layer IDs, save key, licenses or Decimal semantics",
+      "Branch-protection/ruleset changes, runner provisioning, paid services, deployment and automatic merge"
+    ]
+  },
+  "acceptance_criteria": [
+    "TST01-AC01: A clean checkout can install locked dependencies with `npm ci` and run documented syntax, rule-test and browser-test commands on Windows and the selected CI runner. Runtime/browser/dependency versions are pinned and setup prerequisites and expected exits are documented in the existing guide.",
+    "TST01-AC02: Tests exercise the shipped Decimal implementation and game functions with a controllable clock, timers and isolated storage; each test gets fresh state. No test reads real browser saves, uses live user data, waits on real time for game progression, or leaves timers/servers/browser contexts running.",
+    "TST01-AC03: Rule tests cover fresh initialization; first prestige and reset effects; locked, insufficient-funds, valid and repeated upgrade purchases; tick progression; and save/load plus export/import round-trips retaining representative large Decimal values, upgrades, milestones and multiple saves.",
+    "TST01-AC04: Import tests cover invalid base64/JSON, invalid nested shapes, valid current-format saves, foreign-mod confirmation denial, cancellation and storage-write failure. Rejection preserves active and durable valid progress, reports a recoverable error and prevents invalid autosave. A failed tick cannot leave the runtime falsely marked as actively ticking; error handling must not silently resume unsafe mutations. Valid imports remain usable after reload.",
+    "TST01-AC05: Clock tests cover no elapsed time, backwards clock movement, below/at/above the configured offline cap, offline production disabled and repeated catch-up ticks. All elapsed-time inputs use documented units. The one-hour case caps accumulated time at 3,600 seconds before consumption and does not grant excess or duplicate progression.",
+    "TST01-AC06: Save-menu tests cover cancelling New Save and Rename, empty, reserved, duplicate and overlength names. Cancellation changes neither active selection nor save contents and throws no error; rejected names create no partial save. Valid creation, rename and selection persist after reload.",
+    "TST01-AC07: Chromium journeys verify page startup without unexpected console errors; prestige → upgrade → progression; save/reload; successful and rejected import with retained progress and visible recovery feedback; and cancelled New Save/Rename. Browser assertions inspect rendered controls and durable state, rather than only calling global functions. Changed recovery feedback is readable and keyboard-operable. Other browser engines and full late-game balance remain explicitly unverified, rather than implied by a Chromium pass.",
+    "TST01-AC08: CI runs syntax checks, rule tests and the required Chromium journeys with read-only repository permissions and no application secrets or deployment steps. A failing required test makes the job fail. Failures retain bounded reports/traces/screenshots with synthetic data. Tests use a pinned local Vue asset matching the shipped version and avoid CDN availability as a test dependency; this does not claim that the shipped game works offline.",
+    "TST01-AC09: Final required checks are green with no skipped, focused-only, expected-failure or retry-masked cases for the acceptance paths. F1–F3 each have recorded failing-baseline/passing-fixed evidence, using isolated safe fixtures or immutable baseline checkouts. Test sensitivity is shown by a controlled temporary regression/mutation for save preservation and the offline cap; no broken application changes are left in the deliverable.",
+    "TST01-AC10: The implementation PR maps each criterion to exact tests and fresh results at its head/base, documents commands and remaining limits, retains upstream licenses and existing valid saves, and passes a final source/diff review. No milestone acceptance, merge or release is inferred from green tests."
+  ],
+  "constraints": [
+    "Follow AGENTS.md and freshly verified Orcha main standards",
+    "The current request authorizes milestone documentation only; implementation_authorization remains null",
+    "Preserve existing lifecycle mode and writer protection; no enrollment or fabricated stage receipts",
+    "Use synthetic saves and disposable contexts; protect recoverable original data on failure",
+    "Required criteria cannot be skipped, expected-failed, focused-only or masked by retries",
+    "Do not infer actual-user usability, other browser engines or late-game correctness from a synthetic/Chromium pass"
+  ],
+  "dependencies": [],
+  "open_questions": [],
+  "decisions": [
+    {
+      "id": "TST01-D1",
+      "question": "How should rule tests reuse this script-based engine?",
+      "answer": "Use the Node test runner with a controlled runtime that executes the shipped script graph and Decimal library.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/index.html",
+      "rationale": "The baseline has no test framework; the review demonstrated a small actual-script harness can exercise real game functions without a production architecture rewrite."
+    },
+    {
+      "id": "TST01-D2",
+      "question": "What initial browser scope gives executable UI coverage?",
+      "answer": "Use Playwright with Chromium and isolated synthetic saves; pin tool versions during preparation and record other engines as unverified.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/docs/developer-guide.md",
+      "rationale": "The shipped UI is Vue/browser based; a single real browser journey closes the rendering/control gap left by VM probes while keeping initial scope bounded."
+    }
+  ],
+  "source_specification": "https://github.com/step3software/Prestige-Tree/blob/codex/tst01-testing-milestone/docs/milestones/TST01.md",
+  "source_specification_sha256": "6f023a3746e25c36cd8f1592474550ffd73d036eedcaa1ad8c1dd12e68c2fe69",
+  "implementation_authorization": null,
+  "plan_approval": null,
+  "source_document_status": "proposed_plan_not_runtime_enrolled",
+  "owner_origin": {
+    "channel": "Codex chat 01a21b20-b179-7f43-ba61-534a9ca8c7a3",
+    "date": "2026-11-26",
+    "request": "Write a milestone to implement testing.",
+    "scope": "Milestone specification and matching planning artifact only"
+  },
+  "source_context": {
+    "repository": "step3software/Prestige-Tree",
+    "branch": "master",
+    "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "authority_mode": "legacy",
+    "local_contract_sha256": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/developer-guide.md": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    },
+    "standards": {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "branch": "main",
+      "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+      "document_sha256": {
+        "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+        "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+        "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+        "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+        "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+        "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+        "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+        "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+        "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+        "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+      },
+      "purpose": "Observed planning-run evidence, not a consumer version pin"
+    },
+    "registry_observation": "Orcha dev registry includes step3software/Prestige-Tree, source master, aliases prestige-tree and prestige"
+  },
+  "baseline_evidence": {
+    "syntax": "All 13 shipped scripts passed Node syntax checks in preceding read-only review",
+    "normal_path": "Synthetic fresh start/prestige/upgrade/tick/save/reload passed",
+    "failures": [
+      "F1 invalid p:null import replaced active state, broke ticking and was autosaved",
+      "F2 one-hour setting retained 6480 of 7200 offline seconds after first tick",
+      "F3 cancelled New Save threw on null.replace"
+    ],
+    "limitations": "Browser DOM was stubbed and storage was in-memory; these are prior diagnostics, not the delivered suite"
+  },
+  "documentation_assessment": {
+    "organization": "README -> AGENTS/manifest -> existing developer guide; engine index for feature-specific reference",
+    "strengths": [
+      "Single current development guide and canonical repository manifest",
+      "Explicit separation of game reward milestones from delivery specifications"
+    ],
+    "defects": [
+      "No durable test commands/CI before implementation; historical engine tutorials retain old paths/setup semantics"
+    ],
+    "planned_repair": "Update the existing development guide with installed test commands and limits; README links this one source milestone; no second test guide or status ledger",
+    "measurement": "Qualitative navigation assessment; no timing/token-efficiency claim"
+  },
+  "verification_strategy": {
+    "rule_tests": "Deterministic real-script/Decimal tests with isolated state and clock/storage/timer adapters",
+    "browser_tests": "Actual locally served page with rendered-control journeys, synthetic saves and pinned test-local Vue",
+    "sensitivity": "Failing baseline then passing fixed F1-F3; controlled temporary save-preservation and offline-cap regressions",
+    "ci": "Same required suites on PR/push; deliberate test failure blocks job; no deployment or account-policy edits",
+    "current_status": "Planned; application implementation and its acceptance checks have not run"
+  },
+  "preparation_prerequisites": [
+    "Fresh source and writer scope; exact file-level handoff",
+    "Pinned supported Node, Playwright/browser and matching test-local Vue versions",
+    "Repository write access and existing permitted CI capacity; no runner provisioning"
+  ],
+  "risks": [
+    "Mocks bypass actual game functions",
+    "Timers/globals leak state across cases",
+    "Fixture conversions lose Decimal values",
+    "Negative tests touch real saves",
+    "CDN or CI availability hides product failures"
+  ]
+}

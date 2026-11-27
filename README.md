@@ -7,6 +7,8 @@ For development, start with [AGENTS.md](AGENTS.md), the
 [development guide](docs/developer-guide.md). Project source is `master`;
 shared Orcha standards follow current published `main`.
 
+Proposed delivery work: [TST01 — Repeatable game regression testing](docs/milestones/TST01.md).
+
 ## Upstream engine introduction
 
 ### The-Modding-Tree
