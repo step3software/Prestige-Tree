@@ -1,0 +1,35 @@
+name: Game regressions
+on:
+  pull_request:
+  push:
+    branches: [master, codex/tst01-testing-milestone]
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0 # Sensitivity checks read the immutable pre-fix game revision.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run test:syntax
+      - run: npm run test:rules
+      - run: npm run test:sensitivity
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: chromium-failure-${{ github.run_id }}
+          path: |
+            rule-results.xml
+            playwright-report/
+            test-results/
+          retention-days: 3
+          if-no-files-found: ignore

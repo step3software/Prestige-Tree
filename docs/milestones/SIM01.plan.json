@@ -1,0 +1,144 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#SIM01",
+  "objective": "A developer can advance a game session by controlled elapsed time without starting browser timers, while the shipped page starts and stops one well-defined runtime and handles errors safely.",
+  "scope": {
+    "include": [
+      "Separate explicit elapsed-seconds advancement from wall-clock observation, timers, browser events, rendering and persistence scheduling.",
+      "Create one runtime composition/lifecycle owner with injected clock/scheduler and explicit start, stop and disposal.",
+      "Keep existing game rule order, offline cap, settings, reset hooks and Decimal semantics; integrate existing autosave through a narrow port.",
+      "Test repeated start/stop, stale callbacks, exceptions and replay of identical input/action/time sequences."
+    ],
+    "exclude": [
+      "A new simulation algorithm, worker-thread deployment, performance optimization, game balancing or changes to advancement order.",
+      "Save subsystem restructuring owned by SAV01, global-state migration owned by DEV01, or UI framework migration.",
+      "Claiming arbitrary tick-chunk equivalence for nonlinear game rules without an explicit gameplay requirement."
+    ]
+  },
+  "acceptance_criteria": [
+    "SIM01-AC01: A documented advancement entry point takes explicit session/context and elapsed seconds. Its calculation path does not read Date.now, access localStorage/DOM, create timers or present dialogs. Supplying the same fixture and ordered actions/time steps produces the same meaningful game state.",
+    "SIM01-AC02: Clock conversion and online/offline budgeting have a single owner with named units. Zero/backwards time, below/at/above offline cap, disabled offline production and repeated catch-up preserve TST01 expectations; one elapsed period is never credited twice.",
+    "SIM01-AC03: Evaluating/loading game code creates no ticking or autosave intervals and attaches no unmanaged runtime listeners. The real page explicitly starts the runtime once after a validated state is ready, with timer IDs and listeners owned by that runtime.",
+    "SIM01-AC04: Start is idempotent, stop/dispose clears owned timers/listeners, and pending callbacks cannot mutate a stopped/disposed or superseded session. Tests demonstrate start twice, stop twice, restart, stale callback delivery and independent isolated contexts.",
+    "SIM01-AC05: A calculation/derived-state/render callback exception cannot leave the ticking guard stuck or continue unsafe autosaves. Cleanup happens reliably; the runtime enters an explicit stopped/error condition with a recoverable original save and clear recovery behavior. Tests exercise the exception and subsequent lifecycle operation.",
+    "SIM01-AC06: Before/after fixtures for representative progression/reset/offline paths preserve established rule ordering, Decimal values and settings for the same time/action sequence. Test adapters control clocks and scheduling; they do not replace game formulas.",
+    "SIM01-AC07: Browser startup, prestige/purchase, save/reload and controlled offline return use the new runtime and pass TST01 journeys without duplicate progression or timers. Update the existing guide with advancement/lifecycle owners and targeted checks; no unsupported latency claim is made."
+  ],
+  "constraints": [
+    "Planning/documentation only; no implementation, enrollment, merge or deployment authority",
+    "Follow AGENTS.md, current-main Orcha standards and existing lifecycle/permissions/writer controls",
+    "Preserve licenses, valid saves, layer IDs, save key and Decimal semantics",
+    "Hard dependencies require verified delivered source/tests and fresh exact-file preparation",
+    "No permanent legacy runtime modes, duplicate canonical models or silent failure fallback",
+    "No paid services, runner provisioning or account/policy changes"
+  ],
+  "dependencies": [
+    {
+      "id": "step3software/Prestige-Tree#TST01",
+      "kind": "hard",
+      "reason": "Deterministic progression/offline tests and the F2 fix must be available before moving tick/lifecycle ownership."
+    }
+  ],
+  "open_questions": [],
+  "decisions": [
+    {
+      "id": "SIM01-D1",
+      "question": "Which bounded technical direction implements this review recommendation?",
+      "answer": "Use explicit advancement plus a small runtime owner with clock/scheduler ports.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/js/game.js",
+      "rationale": "The existing callback mixes calculations and effects; separating those boundaries makes deterministic testing and lifecycle cleanup possible without a new engine."
+    }
+  ],
+  "source_specification": "https://github.com/step3software/Prestige-Tree/blob/codex/tst01-testing-milestone/docs/milestones/SIM01.md",
+  "source_specification_sha256": "b8da082e6533cfce944c17cbbc933ee92d18c25331c1b4b14d153b0e625ee529",
+  "implementation_authorization": null,
+  "plan_approval": null,
+  "source_document_status": "proposed_plan_not_runtime_enrolled",
+  "owner_origin": {
+    "channel": "Codex chat 01a21b20-b179-7f43-ba61-534a9ca8c7a3",
+    "date": "2026-11-26",
+    "request": "Write milestones for the remaining work on the same branch.",
+    "scope": "Remaining review-recommendation milestone documents on the existing PR #2 branch"
+  },
+  "source_context": {
+    "repository": "step3software/Prestige-Tree",
+    "canonical_branch": "master",
+    "planning_branch": "codex/tst01-testing-milestone",
+    "planning_revision": "608b7c42875c6b697a345027ab788004183ba9ee",
+    "application_baseline": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "authority_mode": "legacy",
+    "standards": {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "branch": "main",
+      "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+      "document_sha256": {
+        "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+        "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+        "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+        "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+        "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+        "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+        "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+        "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+        "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+        "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+      },
+      "purpose": "Fresh planning-run evidence; not a consumer pin"
+    },
+    "source_blobs": {
+      "js/game.js": "18bc1a69359fb9ceaeb22a7081895280e2372047",
+      "js/utils.js": "a3f8734fcf17689e2d78b0b4f9a6b0a9dec8d763",
+      "js/mod.js": "85944d23fd2c2b1d095b6a47689d7068efc2a22e",
+      "js/technical/temp.js": "9395fddd35473e7047e4dc3bfb4f70dc1c348f30",
+      "js/technical/canvas.js": "c5f2aca3f9561bc6e7cdb2327b429f11f5aeaf4a",
+      "index.html": "a4c8195da85954f713c06024ff23dcef519c77fd",
+      "AGENTS.md": "bc1331477d12bea3ddabac766afc9550348a6b0b",
+      ".orcha/repository.json": "039cae6a2b9b0596c20394d2278246c7ca96d7cb",
+      "docs/developer-guide.md": "cda3d726c8dbd52dc41d4b2e84965acbd10434ac"
+    },
+    "dependency_specification_blobs": {
+      "TST01": "1c9793842da0cefc0b0737befe612a5d459fdde4"
+    }
+  },
+  "baseline": "js/game.js defines the game loop and starts intervals during script evaluation; js/utils.js independently starts autosave and attaches input handlers. Clock, canvas refresh, derived-state updates and advancement share the same callback. TST01 owns the offline-unit defect repair and its regression baseline.",
+  "implementation_sequence": [
+    "Pin TST01 behavior and inventory current tick/autosave/listener entry points, clock conversions and error paths.",
+    "Introduce the advancement boundary, then move scheduling/startup/cleanup to the single runtime owner while keeping a single active calculation path.",
+    "Exercise deterministic replay, lifecycle races and errors, run real-page journeys, and publish an unmerged implementation PR with before/after evidence."
+  ],
+  "verification_strategy": {
+    "criterion_checks": [
+      "SIM01-AC01: A documented advancement entry point takes explicit session/context and elapsed seconds. Its calculation path does not read Date.now, access localStorage/DOM, create timers or present dialogs. Supplying the same fixture and ordered actions/time steps produces the same meaningful game state.",
+      "SIM01-AC02: Clock conversion and online/offline budgeting have a single owner with named units. Zero/backwards time, below/at/above offline cap, disabled offline production and repeated catch-up preserve TST01 expectations; one elapsed period is never credited twice.",
+      "SIM01-AC03: Evaluating/loading game code creates no ticking or autosave intervals and attaches no unmanaged runtime listeners. The real page explicitly starts the runtime once after a validated state is ready, with timer IDs and listeners owned by that runtime.",
+      "SIM01-AC04: Start is idempotent, stop/dispose clears owned timers/listeners, and pending callbacks cannot mutate a stopped/disposed or superseded session. Tests demonstrate start twice, stop twice, restart, stale callback delivery and independent isolated contexts.",
+      "SIM01-AC05: A calculation/derived-state/render callback exception cannot leave the ticking guard stuck or continue unsafe autosaves. Cleanup happens reliably; the runtime enters an explicit stopped/error condition with a recoverable original save and clear recovery behavior. Tests exercise the exception and subsequent lifecycle operation.",
+      "SIM01-AC06: Before/after fixtures for representative progression/reset/offline paths preserve established rule ordering, Decimal values and settings for the same time/action sequence. Test adapters control clocks and scheduling; they do not replace game formulas.",
+      "SIM01-AC07: Browser startup, prestige/purchase, save/reload and controlled offline return use the new runtime and pass TST01 journeys without duplicate progression or timers. Update the existing guide with advancement/lifecycle owners and targeted checks; no unsupported latency claim is made."
+    ],
+    "user_outcome": "The affected workflow is opening/resuming a saved game: startup, ordinary progression, offline return, failure feedback and safe reload must work in Chromium. Preserve context and keyboard access for changed recovery controls; measure only when making a performance claim.",
+    "status": "Planned; no application changes or implementation checks performed for this documentation request"
+  },
+  "risks": [
+    "Moving tick order can change balances or resets; compare identical ordered input sequences rather than only final point totals.",
+    "Old queued callbacks can mutate a replacement session; bind each callback to its owning live generation/context.",
+    "Catching an error and silently continuing can persist corruption; define and verify stop/recovery semantics."
+  ],
+  "documentation_assessment": {
+    "organization": "README links each canonical milestone; matching plan artifacts carry machine-readable evidence",
+    "strengths": [
+      "Existing AGENTS/manifest source authority",
+      "Existing development guide and TST01 testing owner"
+    ],
+    "defects": [
+      "Current large/shared-state source owners make navigation and change verification harder; specific repairs stay with this milestone scope"
+    ],
+    "improvement": "Update the existing development guide alongside each implementation; do not add competing specifications or status ledgers",
+    "measurement": "Qualitative source-backed assessment; no token/time savings claimed"
+  },
+  "external_references": []
+}
