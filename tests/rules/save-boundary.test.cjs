@@ -238,3 +238,37 @@ test('clipboard denial or failure reports export failure and permits retry witho
   assert.equal(r.run('exportSave()'), true);
   assert.equal(JSON.parse(atob(r.io.clipboard)).points, '10');
 });
+
+
+test('the TST01 writer prototype slot retains selection, siblings and progress through save/reload', t => {
+  const fixture = require('../fixtures/tst01-prototype-collection.json');
+  const original = fixture.storage.ptr;
+  const r = loadedRuntime({storage: fixture.storage}); t.after(r.dispose);
+  assert.equal(r.run('allSaves.set'), 'prototype');
+  assert.equal(r.run('player.points.eq(456) && allSaves.save1.points.eq(123) && allSaves[allSaves.set] === player'), true);
+  r.io.storageError = true;
+  const before = snapshot(r);
+  assert.equal(r.run('save()'), false);
+  preserved(r, before);
+  assert.equal(r.data.get('ptr'), original);
+  r.io.storageError = false;
+  assert.equal(r.run('save()'), true);
+  const again = loadedRuntime({storage: Object.fromEntries(r.data)}); t.after(again.dispose);
+  assert.equal(again.run('allSaves.set === "prototype" && player.points.eq(456) && allSaves.save1.points.eq(123)'), true);
+  again.io.prompt = 'renamed';
+  assert.equal(again.run('renameSave("prototype")'), true);
+  assert.equal(again.run('allSaves.set === "renamed" && player.points.eq(456) && !Object.hasOwn(allSaves,"prototype")'), true);
+});
+
+test('collection names remain separate from prototype-pollution keys inside player data', t => {
+  const r = loadedRuntime(); t.after(r.dispose);
+  for (const name of ['__proto__','constructor','toString']) {
+    const raw = JSON.parse('{"set":'+JSON.stringify(name)+','+JSON.stringify(name)+':{"points":"1","versionType":"ptr"}}');
+    assert.equal(r.run(`saveCodec(0).decodeCollection(${JSON.stringify(raw)}).ok`), false, name);
+  }
+  for (const key of ['__proto__','constructor','prototype']) {
+    const raw = '{"set":"prototype","prototype":{"points":"1","versionType":"ptr","notify":{'+JSON.stringify(key)+':true}}}';
+    assert.equal(r.run(`saveCodec(0).decodeCollection(JSON.parse(${JSON.stringify(raw)})).ok`), false, key);
+  }
+  assert.equal(r.run('Object.getPrototypeOf(allSaves) === Object.prototype && Object.prototype.polluted === undefined'), true);
+});

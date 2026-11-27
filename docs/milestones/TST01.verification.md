@@ -139,3 +139,25 @@ migration, policy change or purchase was made.
 Final remote results and the exact PR head/base are in the PR description/checks.
 Leave PR #2 unmerged for human review. Successful checks deliver TST01 evidence;
 they do not accept the milestone or authorize the follow-on proposals.
+
+## Stack review correction R4 — 27 November 2026
+
+The owner requested correction of all four findings in the full-stack review.
+This commit reconciles only TST01's preparation binding. `plan_sha256` now hashes
+the canonical Git plan payload (`e56f3ca7f153cceccce98b047bab7cc5e053cec1c68c6ac7a8ea3ac7457142d8`).
+The original CRLF digest, original preparation commit/blob digest and reason are
+retained in `plan_hash_reconciliation`. Plan/specification bytes, criteria, source,
+file scope and lifecycle authority are unchanged; no accepted receipt is rewritten.
+
+Current published Orcha main was freshly fetched at
+`cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78`; resolver-verified shared fix/review/code
+standards and canonical/stack project-document hashes are recorded in
+[the standards observation](stack-review-fix-standards.json). The bounded fix
+procedure and existing fenced branch writer authorize this repair, not acceptance.
+
+`development_flow.validate_preparation` rejects the old binding against Git bytes
+and accepts the correction with both LF and CRLF checkout representations. Parsed
+plans are identical and every other preparation field compares unchanged.
+This artifact-only fix needs no player journey or application behavior change.
+The existing PR remains draft and unmerged; descendants receive this commit through
+their existing stack. Historical checks above apply to their recorded revisions.

@@ -1,0 +1,32 @@
+{
+  "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+  "documents": {
+    "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+    "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+    "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+    "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+    "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+    "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+    "docs/standards/typescript.md": "5efc74bde61d376689d806c27aa386df09100c9a371e213e4c2ad393878d3cb7",
+    "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+    "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+    "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+    "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651"
+  },
+  "project_documents": {
+    "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "README.md": "d4feeb1c1f9d7a0fc299c00ab46db02079065a5ed32247282ead4b29b057aff4",
+      "docs/developer-guide.md": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    },
+    "d53825295d898ba22b9fec91a54598d7e247ac68": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "README.md": "c615e7b264754a554fc76293503ec0e9c883ec31b84f1c7eed4e6af152f76531",
+      "docs/developer-guide.md": "2aa7b833f47626e12851c2d2336c1ccef6fc55532b3f5f6eac141023b72c09a8",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    }
+  }
+}
