@@ -6,7 +6,7 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Use available workers to improve a route or build housing. Hunt and Fish can run alongside Gather and each other when enough workers are free. Dispatching a busy route or overbooking workers fails without spending anything.
 
-Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. An independent abundance bonus for Food, Water and Shelter can raise the rate to 10 times normal. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. There is no duplicated continuous Food production system.
+Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. An independent abundance bonus for Food, Water and Shelter can raise the rate to 10 times normal. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
 
 ## Abundance growth curves
 
@@ -108,7 +108,7 @@ Well projects also improve manual trip yield and speed. Earthenware jar projects
 There are no building slots and no Shelter milestone track.
 
 - **Build a new hut** is a repeatable, labor-only project adding 4 housing.
-- **Shared hearths** add 25 Food storage.
+- **Shared hearths** costs 20 Food, 15 Water and 1 Craft. Every full 10 current Population adds 5 Food storage and 1 continuous Food per game minute for the entire settlement, using no extra workers. At 9 people both bonuses are zero; at 10 they are +5/+1; at 20, +10/+2. Food benefits do not multiply by huts or tools, and housing is unaffected. Population losses reduce both bonuses immediately. Existing stocks above the smaller capacity remain available for consumption; new production cannot add overflow. The permanent upgrade survives both prestiges, but the five-person restart gives zero bonuses until Population reaches ten again. [Research rationale](research/reference-guide.md#shared-hearths).
 - **Timber frames** increase all purchased homes from 4 to 6 housing, including existing homes.
 - **Construction tools** double project speed while retaining the builder requirement.
 

@@ -64,6 +64,12 @@ historical claim that shortages never harmed existing populations.
 
 ## Food water and reserves
 
+### Shared hearths
+
+The [USDA National Agricultural Library's BARC archaeology exhibit](https://www.nal.usda.gov/exhibits/speccoll/exhibits/show/barc/what-did-people-do-here-/food-preparation), read 2026-11-27, interprets pottery around a hearth as evidence for communal meal preparation and describes sharing food beyond the immediate hunting group. This supports the game's shared-cooking theme. It does not establish an empirical Food yield, storage volume or housing benefit. Hearth income represents pooling and preparation efficiency within the existing Food abstraction, rather than an additional harvest route or a new worker reservation.
+
+The [GDC 2009 Game Design Workshop handout, page 3](https://media.gdcvault.com/gdc09/slides/Handout.pdf), read the same day, describes positive feedback as reinforcing a system's direction. Apply that lens to Population producing more Food: keep the income below upkeep so growth still needs staffed routes. The selected game rule is +5 storage and +1 Food/min per full ten current people, settlement-wide. Its coefficients are design choices, with legal pacing observations in the [balance guide](../balance-testing.md#shared-hearths-observations). Housing effects were excluded by the owner's final scope.
+
 Separate four questions in descriptions and balancing: how much can the site
 produce, how much labor is available, how much stock fits, and how long the
 reserve lasts at current demand. The useful game measure is a supply buffer

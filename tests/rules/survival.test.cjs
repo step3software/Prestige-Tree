@@ -105,43 +105,46 @@ test('population losses pause construction without losing work and resume when l
     engine.advance(1);assert.ok(p.civ.projectWork>work);
 });
 
-test('Water Keeper reserves a dedicated worker at full storage and cannot overbook',t=>{
+test('Overseer reserves one worker for all enabled Food sliders and cannot overbook',t=>{
     const {engine,p,e}=game(t);
-    p.civ.improvements.waterOrders=true;p.water.points=new Decimal(50);
-    const available=e.supply().availableWorkers;
-    assert.equal(e.toggleRepeat('water'),true);
-    assert.equal(e.supply().keeperWorkers,1);
-    assert.equal(e.supply().availableWorkers,available-1);
-    engine.advance(1);assert.equal(p.civ.actions.water.remaining,0);
-    assert.equal(e.toggleRepeat('water'),true);
-    assert.equal(e.supply().keeperWorkers,0);
+    p.civ.improvements.overseer=true;p.food.points=new Decimal(50);
+    assert.equal(e.setRepeat('gather',5),true);
+    assert.equal(e.supply().overseerWorkers,1);
+    assert.equal(e.supply().availableWorkers,4);
+    assert.equal(e.setRepeat('hunt',3),true);
+    assert.equal(e.supply().overseerWorkers,1);
+    engine.advance(1);assert.equal(p.civ.actions.gather.remaining,0);
+    assert.equal(e.setRepeat('gather',0),true);
+    assert.equal(e.supply().overseerWorkers,1);
+    assert.equal(e.setRepeat('hunt',0),true);
+    assert.equal(e.supply().overseerWorkers,0);
     e.dispatch('hunt');e.dispatch('gather');e.startProject('food-site');
-    assert.equal(e.toggleRepeat('water'),false);
+    assert.equal(e.setRepeat('gather',1),false);
 });
 
-test('a shortage can release the keeper before recalling a critical supply crew',t=>{
+test('a shortage releases the Overseer before recalling a critical Food crew',t=>{
     const {engine,p,e}=game(t);shortage(p,'food',6);
-    p.civ.improvements.waterOrders=true;
-    e.toggleRepeat('water');e.dispatch('hunt');e.dispatch('fish');
+    p.civ.improvements.overseer=true;
+    e.setRepeat('hunt',1);e.dispatch('hunt');e.dispatch('fish');
     engine.advance(10);
     assert.equal(p.points.toNumber(),5);
-    assert.equal(p.civ.actions.water.repeat,false);
+    assert.equal(p.civ.actions.hunt.repeat,0);
     assert.ok(p.civ.actions.hunt.remaining>0);
     assert.ok(e.supply().laborUsed<=5);
 });
 
-test('both prestiges reset Population to five, seed ten supplies and switch Water Keeper off',t=>{
+test('both prestiges reset Population to five, seed ten supplies and switch Food and hut orders off',t=>{
     for(const id of ['craft','organization']){
         const {engine,p,e}=game(t);
-        p.points=new Decimal(16);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
+        p.points=new Decimal(52);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
         p.shelter.homes=11;p.shelter.points=new Decimal(52);
         p.organization.total=new Decimal(10);
-        p.civ.improvements.waterOrders=true;p.civ.actions.water.repeat=true;
+        p.civ.improvements.overseer=true;p.civ.actions.gather.repeat=1;p.civ.improvements.hutForeman=true;p.civ.hutRepeat=1;
         p.civ.shortage={elapsed:9,losses:2};p.civ.growth=0.5;
         assert.equal(e.prestige(id),true);
         assert.equal(p.points.toNumber(),5);
         assert.equal(p.food.points.toNumber(),10);assert.equal(p.water.points.toNumber(),10);
-        assert.equal(p.civ.actions.water.repeat,false);
+        assert.equal(p.civ.actions.gather.repeat,0);assert.equal(p.civ.hutRepeat,0);
         assert.deepEqual(p.civ.shortage,{elapsed:0,losses:0});
         assert.equal(e.prestige(id),false);
         assert.equal(engine.session.saveCommands.saveCodec().encodePlayer(p).ok,true);
@@ -155,16 +158,17 @@ test('Craft requires only Population, granting one at twelve then one per two mo
     }
 });
 
-test('Organization requires only housing, advances by four lifetime housing per point and never grants bulk',t=>{
+test('Organization requires only Population, advances by four lifetime people and never grants bulk',t=>{
     const {p,e}=game(t);shortage(p,'both',1);
     for(let earned=0;earned<3;earned++){
         p.organization.points=new Decimal(0);
         const required=12+4*earned;
-        assert.equal(e.organizationHousingRequirement(),required);
-        p.shelter.points=new Decimal(required-1);assert.equal(e.prestigeGain('organization'),0);
-        p.shelter.points=new Decimal(required);assert.equal(e.prestigeGain('organization'),1);
-        p.shelter.points=new Decimal(1000);assert.equal(e.prestigeGain('organization'),1);
-        p.shelter.homes=248;
+        assert.equal(e.organizationPopulationRequirement(),required);
+        p.shelter.homes=248;p.shelter.points=new Decimal(1000);
+        p.points=new Decimal(required-1);assert.equal(e.prestigeGain('organization'),0);
+        p.shelter.homes=0;p.shelter.points=new Decimal(8);
+        p.points=new Decimal(required);assert.equal(e.prestigeGain('organization'),1);
+        p.points=new Decimal(1000);assert.equal(e.prestigeGain('organization'),1);
         assert.equal(e.prestige('organization'),true);
         assert.equal(p.organization.total.toNumber(),earned+1);
         p.points=new Decimal(1);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
@@ -183,17 +187,20 @@ test('shortage countdown and paused construction survive the current codec',t=>{
     countdown.advance(1);assert.equal(countdown.player.points.toNumber(),9);
 });
 
-test('older keeper toggles migrate off without discarding active crews, while current overbooking is rejected',t=>{
-    const {engine,p}=game(t);
-    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.4';raw.points='4';
-    raw.civ.improvements.waterOrders=true;raw.civ.actions.water.repeat=true;delete raw.civ.shortage;
+test('historical Water keeper purchases become Hut foreman without starting new jobs',t=>{
+    const {engine}=game(t);
+    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6';raw.points='4';
+    raw.civ.improvements.waterOrders=true;raw.civ.actions.water.repeat=true;
     raw.civ.actions.hunt={remaining:15,duration:25,workers:3,reward:24,completed:0,repeat:false};
     raw.civ.actions.gather={remaining:5,duration:10,workers:1,reward:6,completed:0,repeat:false};
     assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,true);
-    assert.equal(engine.player.civ.actions.water.repeat,false);
+    assert.equal(engine.player.civ.improvements.hutForeman,true);
+    assert.equal('waterOrders' in engine.player.civ.improvements,false);
+    assert.equal(engine.player.civ.hutRepeat,0);
+    assert.equal(engine.player.civ.actions.water.repeat,0);
     assert.equal(engine.player.civ.actions.hunt.remaining,15);
-    assert.deepEqual(engine.player.civ.shortage,{elapsed:0,losses:0});
-    raw.version='0.5';raw.civ.shortage={elapsed:0,losses:0};
+    assert.equal(engine.player.civ.actions.hunt.jobs,1);
+    raw.version='0.7';
     assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,false);
     assert.equal(engine.player.civ.actions.hunt.remaining,15);
 });

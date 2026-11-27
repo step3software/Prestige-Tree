@@ -56,7 +56,7 @@ test('each retention milestone immediately keeps its exact buyable and protected
     const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
     for(const [id,threshold] of retained){
         const {p,e}=game(t);
-        p.points=new Decimal(8);
+        p.points=new Decimal(12+4*(threshold-1));
         p.shelter.homes=threshold;p.shelter.points=new Decimal(8+threshold*4);p.shelter.comfort=1;
         p.food.sites=1;p.food.storage=1;p.water.sites=1;p.water.storage=1;
         for(const route of Object.keys(p.food.routes))p.food.routes[route]=1;
