@@ -1,10 +1,10 @@
+const { installPausedClock } = require('../support/paused-clock.cjs');
 const { test, expect } = require('@playwright/test');
 const fixture = require('../fixtures/representative-save.json');
 
 test.beforeEach(async ({ page }) => {
   // Browser clock advances are explicit; progression never waits for wall-clock time.
-  await page.clock.install({ time: new Date(1700000000000) });
-  await page.clock.pauseAt(new Date(1700000000000));
+  await installPausedClock(page);
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
     return url.hostname === '127.0.0.1' ? route.continue() : route.abort();

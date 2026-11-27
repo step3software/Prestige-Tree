@@ -2,6 +2,8 @@
 
 This is `step3software/Prestige-Tree`, forked from
 [Jacorb90/Prestige-Tree](https://github.com/Jacorb90/Prestige-Tree).
+For game-time pacing estimates, use the [offline balance tests](docs/balance-testing.md)
+(`npm run balance`), including five-minute regular play and rough/fixed comparisons.
 For development, start with [AGENTS.md](AGENTS.md), the
 [Orcha manifest](.orcha/repository.json) and the
 [development guide](docs/developer-guide.md). Project source is `master`;

@@ -415,6 +415,16 @@ do not establish full late-game balance, other engines, actual-user usability,
 assistive-technology behavior or the OS clipboard. The demonstration page's broader
 rendering and pre-existing lowercase `js/demo/` portability remain unverified.
 
+## Game-time balance tests
+
+Run `npm run balance` from the worktree root to compare rough section-entry times
+for active strategies and five-minute regular play. The report records simulated
+game time, wall-time budgets, incomplete sections and fixed-step calibration.
+See [balance testing](balance-testing.md) for options, saved section inputs,
+precision/performance limits and `npm run test:balance`. These opt-in measurements
+do not change gameplay or impose new target completion times. The focused contract
+tests run in the normal rule suite; generated `balance-results/` is ignored.
+
 ## Simulation and runtime lifecycle
 
 Follow README → this source map → `gameUI.commands.load()` → session-bound
