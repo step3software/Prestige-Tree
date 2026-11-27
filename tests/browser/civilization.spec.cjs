@@ -8,6 +8,40 @@ async function open(page){
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
 
+test('abundance shows independent supply and Shelter bonuses and still pauses for shortages',async({page})=>{
+    const errors=await open(page);
+    await page.evaluate(()=>{
+        const s=gameUI.session,p=s.saveState.player;
+        p.shelter.homes=11;p.shelter.points=new Decimal(52);
+        p.food.points=new Decimal(50);p.water.points=new Decimal(50);
+        s.derivedState.updateTemp();
+    });
+    await expect(page.getByTestId('abundance-growth')).toHaveText('Abundance: 10× growth');
+    await page.getByTestId('abundance-details').locator('summary').click();
+    await expect(page.getByTestId('abundance-details')).toContainText('Food: +300%');
+    await expect(page.getByTestId('abundance-details')).toContainText('Water: +300%');
+    await expect(page.getByTestId('abundance-details')).toContainText('Shelter: +300%');
+    await page.evaluate(()=>{const s=gameUI.session;s.saveState.player.food.points=new Decimal(5);s.derivedState.updateTemp();});
+    await expect(page.getByTestId('abundance-growth')).toHaveText('Abundance: 7× growth');
+    await expect(page.getByTestId('abundance-details')).toContainText('Food: +0%');
+    await expect(page.getByTestId('abundance-details')).toContainText('Water: +300%');
+    await page.evaluate(()=>{const s=gameUI.session;s.saveState.player.food.points=new Decimal(0);s.advance(1);});
+    await expect(page.getByTestId('abundance-growth')).toContainText('paused');
+    await expect(page.getByTestId('population')).toHaveText('5');
+    await page.evaluate(()=>{
+        const s=gameUI.session,p=s.saveState.player;
+        p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.civ.growth=0;
+        s.advance(12);
+    });
+    await expect(page.getByTestId('population')).toHaveText('15');
+    for(const width of [1280,320]){
+        await page.setViewportSize({width,height:800});
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        await page.screenshot({path:'test-results/abundance-'+width+'.png',fullPage:true});
+    }
+    expect(errors).toEqual([]);
+});
+
 test('Water storage is crafted earthenware with one Craft and a timed builder requirement',async({page})=>{
     const errors=await open(page);
     await node(page,'Water').click();

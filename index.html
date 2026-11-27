@@ -58,6 +58,14 @@
             <div class="growth-overview"><div class="growth-heading"><span>{{civ.growing ? 'A community taking root' : 'Growth paused'}}</span><span>{{number(player.civ.growth * 100,0)}}%</span></div>
                 <progress :value="player.civ.growth" max="1" aria-label="Progress toward the next person"></progress>
                 <p v-if="civ.growing">{{civ.advice}}</p><p v-else><button class="text-button" @click="select(civ.next)">{{civ.bottleneck}}</button> is limiting growth. {{civ.advice}}</p>
+                <p class="small-note" data-testid="abundance-growth">Abundance: {{number(civ.abundance.multiplier,2)}}× growth<span v-if="!civ.growing"> · paused</span></p>
+                <details class="small-note" data-testid="abundance-details"><summary>Abundance breakdown</summary>
+                    <p>Food: +{{number(civ.abundance.food.bonus * 100,0)}}% · {{number(civ.abundance.food.coverageSeconds,0)}}s in reserve. Bonus starts above {{number(civ.abundance.food.thresholdSeconds,0)}}s of current upkeep.</p>
+                    <p>Water: +{{number(civ.abundance.water.bonus * 100,0)}}% · {{number(civ.abundance.water.coverageSeconds,0)}}s in reserve. Bonus starts above {{number(civ.abundance.water.thresholdSeconds,0)}}s of current upkeep.</p>
+                    <p>Shelter: +{{number(civ.abundance.shelter.bonus * 100,0)}}% · room for {{number(civ.abundance.shelter.freePlaces,0)}} more people.</p>
+                    <p>Supply bonuses peak near full storage. Shelter bonuses start above {{number(civ.abundance.shelter.thresholdSeconds,0)}}s of normal growth headroom and peak at {{number(civ.abundance.shelter.fullSeconds,0)}}s.</p>
+                    <p>Bonuses add to normal {{number(civ.abundance.secondsPerPerson,0)}}s-per-person growth, up to {{number(civ.abundance.maximumMultiplier,0)}}×. Housing and supply limits still pause growth.</p>
+                </details>
             </div>
         </section>
         <section v-if="civ.shortage.active" class="shortage-warning" role="alert" aria-labelledby="shortage-title" data-testid="shortage-warning"><h2 id="shortage-title">{{civ.shortage.resources.join(' and ')}} depleted</h2>

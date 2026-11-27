@@ -25,6 +25,14 @@ function createCivilizationRules({ saveState }) {
         education: "M3 4c4-1 7 0 9 2 2-2 5-3 9-2v15c-4-1-7 0-9 2-2-2-5-3-9-2V4Zm9 2v15",
         culture: "M12 3c-6 0-10 4-10 10s5 9 8 9c3 0 1-5 4-5h3c6 0 6-14-5-14ZM7 8h.01M13 6h.01M18 10h.01M6 14h.01"};
     const startingSettlement = Object.freeze({population: 5, food: 10, water: 10});
+    // Each input has its own cap/range/shape. Bonuses add to normal growth;
+    // using baseline fill time avoids a feedback loop between their curves.
+    const growthSettings = Object.freeze({
+        secondsPerPerson: 12,
+        food: Object.freeze({maxBonus: 3, reserveSeconds: 60, fullSurplusFraction: 0.9, exponent: 1}),
+        water: Object.freeze({maxBonus: 3, reserveSeconds: 60, fullSurplusFraction: 0.9, exponent: 1}),
+        shelter: Object.freeze({maxBonus: 3, thresholdSeconds: 60, fullSeconds: 300, exponent: 1}),
+    });
     const player = () => saveState.player;
     const amount = id => player()[id].points.toNumber();
     const housing = () => amount("shelter");
@@ -278,8 +286,33 @@ function createCivilizationRules({ saveState }) {
         player().civ.actions[id].repeat = !player().civ.actions[id].repeat;
         return true;
     }
-    /** A single derived labor ledger accounts for every reserved crew. Idle
-     * workers are available immediately when dispatched. */
+    /** A bounded smoothstep, with an independently tunable input exponent. */
+    function abundanceCurve(value, threshold, full, exponent) {
+        if (full <= threshold) return 0;
+        const normalized = Math.max(0, Math.min(1, (value - threshold) / (full - threshold)));
+        const shaped = Math.pow(normalized, exponent);
+        return shaped * shaped * (3 - 2 * shaped);
+    }
+    function growthAbundance(population, demand, storage) {
+        function supplyBonus(id) {
+            const curve = growthSettings[id];
+            const threshold = demand * curve.reserveSeconds / 60;
+            const full = threshold + (storage[id] - threshold) * curve.fullSurplusFraction;
+            return {bonus: curve.maxBonus * abundanceCurve(amount(id), threshold, full, curve.exponent),
+                threshold, full, maxBonus: curve.maxBonus, thresholdSeconds: curve.reserveSeconds,
+                coverageSeconds: demand > 0 ? amount(id) / demand * 60 : Infinity};
+        }
+        const food = supplyBonus("food"), water = supplyBonus("water");
+        const curve = growthSettings.shelter;
+        const freePlaces = Math.max(0, housing() - population);
+        const fillSeconds = Math.max(0, freePlaces - player().civ.growth) * growthSettings.secondsPerPerson;
+        const shelter = {bonus: curve.maxBonus * abundanceCurve(fillSeconds, curve.thresholdSeconds, curve.fullSeconds, curve.exponent),
+            freePlaces, fillSeconds, maxBonus: curve.maxBonus, thresholdSeconds: curve.thresholdSeconds, fullSeconds: curve.fullSeconds};
+        return {food, water, shelter, multiplier: 1 + food.bonus + water.bonus + shelter.bonus,
+            maximumMultiplier: 1 + growthSettings.food.maxBonus + growthSettings.water.maxBonus + curve.maxBonus,
+            secondsPerPerson: growthSettings.secondsPerPerson};
+    }
+    /** One derived ledger owns current upkeep, labor and abundance inputs. */
     function supply() {
         const p = player(), population = p.points.toNumber(), labor = occupiedWorkers();
         const upkeep = 1 / (1 + amount("organization") * 0.06 + amount("culture") * 0.04);
@@ -294,6 +327,7 @@ function createCivilizationRules({ saveState }) {
         else if (p.food.points.lt(reserve)) bottleneck = "Food reserves";
         else if (p.water.points.lt(reserve)) bottleneck = "Water reserves";
         return {population, upkeep, demand, ...labor, production, storage, reserve, bottleneck,
+            abundance: growthAbundance(population, demand, storage),
             growing: bottleneck === "Growing", support: housing(), capacity: production,
             efficiency: {food: 3 * toolEffect(), water: 3.2 * toolEffect()},
             idle: labor.spare, laborUsed: labor.workers.food + labor.workers.water + labor.builders};
@@ -426,6 +460,26 @@ function createCivilizationRules({ saveState }) {
         const order = p.civ.priority === "food" ? ["farm", "hunt", "fish", "gather"] : ["gather", "fish", "hunt", "farm"];
         for (const id of order) if (p.civ.actions[id].repeat && amount("food") < storageCapacity().food - 1) dispatch(id);
     }
+    /** Spend only eligible growth time. Birth boundaries recheck the curves and
+     * limits, so later tuning can exceed one person per simulation second. */
+    function advanceGrowth(seconds) {
+        const p = player();
+        let remaining = seconds;
+        while (remaining > 1e-9) {
+            const growth = supply();
+            if (!growth.growing) return;
+            const rate = growth.abundance.multiplier / growthSettings.secondsPerPerson;
+            const untilBirth = (1 - p.civ.growth) / rate;
+            if (remaining + 1e-9 < untilBirth) {
+                p.civ.growth += remaining * rate;
+                return;
+            }
+            remaining = Math.max(0, remaining - untilBirth);
+            p.points = p.points.add(1);
+            p.civ.growth = 0;
+            p.civ.message = "Your population has grown to " + p.points.toString() + ".";
+        }
+    }
     function step(seconds) {
         const p = player();
         advanceActions(seconds);
@@ -436,19 +490,11 @@ function createCivilizationRules({ saveState }) {
             p[id].points = p[id].points.sub(before.demand * minutes).max(0);
         }
         advanceShortage(seconds);
-        const s = supply();
         if (p.civ.project && p.civ.projectWorkers) {
             p.civ.projectWork += seconds * p.civ.projectWorkers * (1 + amount("organization") * 0.15) * (owns("builderTools") ? 2 : 1);
             if (p.civ.projectWork >= projectDefinition(p.civ.project).work) completeProject(p.civ.project);
         }
-        if (supply().growing) {
-            p.civ.growth += seconds / 12;
-            if (p.civ.growth >= 1) {
-                p.points = p.points.add(1);
-                p.civ.growth -= 1;
-                p.civ.message = "Your population has grown to " + p.points.toString() + ".";
-            }
-        }
+        advanceGrowth(seconds);
         p.civ.irrigation = Math.max(0, p.civ.irrigation - seconds);
         automaticOrders();
         resumeConstruction();
@@ -623,7 +669,7 @@ function createCivilizationRules({ saveState }) {
         }
         if (crews > data.points.toNumber() + 1e-9) throw new Error("Overcommitted workers");
     }
-    return {startingSettlement, defaults, supply, summary, node, projects, canStartProject, startProject, cancelProject, advance, shortageStatus,
+    return {startingSettlement, growthSettings, defaults, supply, summary, node, projects, canStartProject, startProject, cancelProject, advance, shortageStatus,
         actionDefinition, canDispatch, dispatch, recall, toggleRepeat, upgrades, buyUpgrade, irrigate,
         prestige, prestigeGain, prestigeRequirements, prestigePreview, organizationMilestones, organizationHousingRequirement, investments, canInvest, invest, validateData};
 }

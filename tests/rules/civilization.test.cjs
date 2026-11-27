@@ -73,6 +73,8 @@ test('Water automation progresses from fewer workers to repeat orders to worker-
     assert.equal(r.run('e.actionDefinition("water").workers'),1);
     r.run('e.buyUpgrade("waterOrders");e.toggleRepeat("water");p.water.points=new Decimal(0);s.advance(40)');
     assert.ok(r.run('p.civ.actions.water.completed')>=2);
+    assert.equal(r.run('e.supply().keeperWorkers'),1,'Keeper remains reserved between trips');
+    r.run('p.water.points=new Decimal(0);s.advance(1)');
     assert.equal(r.run('p.civ.actions.water.workers'),1);
     r.run('p.food.points=new Decimal(50);e.buyUpgrade("gravity");s.advance(10)');
     assert.equal(r.run('e.supply().workers.water'),0);

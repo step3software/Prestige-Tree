@@ -6,7 +6,59 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Use available workers to improve a route or build housing. Hunt and Fish can run alongside Gather and each other when enough workers are free. Dispatching a busy route or overbooking workers fails without spending anything.
 
-Food and Water are consumed continuously. A new person takes 12 supported game seconds and needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. There is no duplicated continuous Food production system.
+Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. An independent abundance bonus for Food, Water and Shelter can raise the rate to 10 times normal. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. There is no duplicated continuous Food production system.
+
+## Abundance growth curves
+
+`growthSettings` in `js/civilization.js` owns the base period and each input's
+independent weight, thresholds and shape exponent. All three currently contribute
+0 to +300% of the base rate, added as `M = 1 + FoodBonus + WaterBonus + ShelterBonus`.
+Thus zero bonus is normal 1x growth; all three full bonuses give 10x. One weak
+input does not erase another input's bonus. Existing growth eligibility still
+stops growth when housing or minimum supply reserves are missing.
+
+For a normalized input `t` clamped between 0 and 1, the response is:
+
+```text
+u = t^exponent
+S(t) = u*u*(3 - 2*u)
+bonus = maxBonus * S(t)
+```
+
+Default exponents are 1. This smoothstep has gentle, flat ends, rather than
+switching abruptly at a single stock or housing threshold. At 25%, 50% and 75%
+of an input's range, its +300% maximum contributes +46.875%, +150% and +253.125%.
+Each exponent can be tuned separately: above 1 delays the reward toward abundance;
+between 0.5 and 1 brings it forward. Weights/ranges are also separate source settings.
+
+**Food and Water:** for each supply independently, let `R` be 60 seconds of the
+current population's actual upkeep and `C` its own storage capacity. The bonus is
+zero at or below `R`; it reaches full at `R + 0.9*(C-R)`. Between these points,
+`t = (stock-R)/(0.9*(C-R))`. This rewards near-full storage *after* protecting a
+one-minute buffer. If capacity cannot hold that buffer (`C <= R`), that supply
+provides no bonus. Coverage uses stored stock and gross upkeep, without counting
+future crew deliveries or assuming passive production will continue. Organization
+and Culture upkeep modifiers are included. Increasing Food changes neither the
+Water score nor the housing input at a fixed population/progress state.
+
+For example, at five people, ordinary upkeep and 50 capacity, each supply's
+zero point is 5 units; full bonus starts at 45.5 units. Holding 25.25 units is the
+midpoint and gives +150% from that supply alone.
+
+**Shelter:** measure the remaining time to fill housing at the unbuffed 12 seconds
+per person, including the current fractional growth progress:
+`T = max(0, housing - population - growthProgress) * 12`. The housing bonus is
+zero through 60 seconds, full at 300 seconds, and uses `t = (T-60)/240` between
+them. With no partial progress, that means zero through five vacant places and
+full at 25. This baseline clock avoids a circular calculation in which supply
+bonuses change housing's own threshold.
+
+Each one-second economy step consumes actual supplies and reevaluates growth.
+`advanceGrowth()` also reevaluates at each birth, retaining fractional progress
+while stopping at housing/supply limits. This supports later tuning above one
+birth per second without invalid saved progress or banking ineligible growth.
+Abundance itself is derived, not saved; existing partial progress remains valid.
+The Population panel exposes the multiplier and all three independent contributions.
 
 ## Shortages and recovery
 
@@ -14,7 +66,7 @@ Zero Food or zero Water starts one shared shortage episode. With no protection, 
 
 Restore both supplies above zero to reset the episode's elapsed time and loss count. The current missing supplies determine the stricter grace period. Emergency rations (Organization 5, then a Craft purchase) double Food grace and related intervals to 20 seconds; Emergency cistern (Organization 4) does the same for Water. An unprotected missing supply still controls a combined shortage. Mutual aid (Organization 8) changes interval decay from 0.8 to 0.9 and raises the minimum interval to 4 seconds. These permanent upgrades change the actual calculation, not only the displayed countdown.
 
-Population cannot fall below one survivor. Domestic work leaves that survivor one usable worker. At very low Population, manual Water collection can use a solo carrier at a slower pace; Gather remains available. Recovery can grow the community again.
+Population cannot fall below one survivor. That survivor retains one usable worker. At very low Population, manual Water collection can use a solo carrier at a slower pace; Gather remains available. Recovery can grow the community again.
 
 Each loss recalculates the shared labor budget. Construction pauses without losing progress if its builder must be released; the keeper can switch off, then only enough active crews return to restore a valid budget. Crews bringing the missing supply are preferred over noncritical trips, with slower trips returned first. Paused construction resumes when both supplies and one worker are available. The global shortage panel shows the current countdown, episode losses and recovery instructions. State survives saves and offline advancement.
 

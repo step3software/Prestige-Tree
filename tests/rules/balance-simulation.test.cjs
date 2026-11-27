@@ -6,6 +6,44 @@ const {simulate}=require('../../scripts/balance/simulate.cjs');
 const {compareReference}=require('../../scripts/balance/report.cjs');
 const {createRuntime}=require('../support/game-runtime.cjs');
 
+test('abundance rebuilds legally reached high shelter after actual starvation with only restored repeat orders',t=>{
+ for(const strategy of ['active-balanced','regular']){
+  const run=simulate({strategy,horizonSeconds:14400,stopAt:'organization-10'});
+  assert.equal(run.status,'checkpoint');
+  const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
+  const p=engine.player,e=engine.session.modRules.civilization;
+  p.civ.autoBuild=false; // The existing user toggle freezes the reached housing target.
+  if(p.civ.project)e.cancelProject();
+  for(const id of ['gather','fish','hunt','farm']){
+   if(p.civ.actions[id].remaining)e.recall(id);
+   if(p.civ.actions[id].repeat)e.toggleRepeat(id);
+  }
+  let shortageSeconds=0;
+  while(p.points.gt(1)&&shortageSeconds<600){engine.advance(1);shortageSeconds++;}
+  assert.equal(p.points.toNumber(),1,'Actual Food depletion reaches one survivor without state grants');
+  assert.ok(p.food.points.lte(0));
+  const target=p.shelter.points.toNumber();
+  const baselineMinimum=(target-p.points.toNumber()-p.civ.growth)*e.growthSettings.secondsPerPerson;
+  assert.ok(target>=48);
+  let orders=0;
+  for(const id of ['gather','fish','hunt','farm']){
+   const action=e.actionDefinition(id);
+   if(action.unlocked&&action.repeatAvailable&&!action.repeat&&e.toggleRepeat(id))orders++;
+  }
+  assert.ok(orders>=3);
+  let recoverySeconds=0,peak=1;
+  while(p.points.lt(target)&&recoverySeconds<300){
+   engine.advance(1);recoverySeconds++;
+   peak=Math.max(peak,e.supply().abundance.multiplier);
+  }
+  assert.equal(p.points.toNumber(),target);
+  assert.ok(recoverySeconds<baselineMinimum/3,'Recovery is materially quicker than even uninterrupted old growth');
+  assert.ok(peak>=7&&peak<=10);
+  assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
+  console.log(strategy+' actual-starvation recovery: 1 -> '+target+' in '+recoverySeconds+'s after '+orders+' repeat orders; old unbuffed minimum '+baselineMinimum+'s; peak '+peak.toFixed(2)+'x (synthetic).');
+ }
+});
+
 test('legal active and regular play can fund and complete earthenware storage after the opening',t=>{
  for(const strategy of ['active-balanced','regular']){
   const run=simulate({strategy,horizonSeconds:14400});
@@ -14,18 +52,18 @@ test('legal active and regular play can fund and complete earthenware storage af
   const p=engine.player,e=engine.session.modRules.civilization;
   const policy=createPolicy(engine,strategies[strategy]);
   const cadence=strategy==='regular'?300:5;
+  const startingStorage=p.water.storage;
   let started=false,time=0;
   for(;time<3600;time+=cadence){
    if(!started && e.canStartProject('water-storage'))started=e.startProject('water-storage');
    policy.act(time);
    engine.advance(cadence);
-   if(started && p.water.storage>=1)break;
+   if(p.water.storage>startingStorage)break;
   }
-  assert.equal(started,true);
-  assert.ok(p.water.storage>=1);
+  assert.ok(p.water.storage>startingStorage,'Manual or earned automatic construction must finish a paid jar purchase');
   assert.ok(p.points.gte(5));
   assert.ok(e.supply().storage.water>=90);
-  console.log(strategy+' legal earthenware jars: opening '+run.simulatedSeconds+'s; crafted within '+(time+cadence)+' additional seconds (synthetic).');
+  console.log(strategy+' legal earthenware jars: opening '+run.simulatedSeconds+'s; crafted within '+(time+cadence)+' additional seconds ('+(started?'manual start':'earned auto-builder')+', synthetic).');
  }
 });
 

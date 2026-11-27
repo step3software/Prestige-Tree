@@ -1,6 +1,6 @@
 # Civ Prestige Tree
 
-Grow a civilization from five people. Population supplies shared labor; Food and Water sustain growth; Shelter creates room. Develop Craft and Organization. Later resource branches are locked and hidden for now.
+Grow a civilization from five people. Population supplies shared labor; Food and Water sustain growth; Shelter creates room. Abundant Food, Water and spare housing independently accelerate growth up to 10×, helping rebuild after starvation. [Growth curves](docs/civilization.md#abundance-growth-curves) explain the one-minute thresholds. Develop Craft and Organization. Later resource branches are locked and hidden for now.
 
 For the civilization's historical grounding, start at the [research index](docs/research/README.md) and [game reference guide](docs/research/reference-guide.md). Build balance coverage alongside content using the [balance workflow](docs/balance-testing.md#add-balance-coverage-with-content).
 

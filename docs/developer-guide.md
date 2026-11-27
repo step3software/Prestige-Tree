@@ -45,6 +45,8 @@ For Craft unlocks: follow organizationRewards -> upgradeRequirement() -> upgrade
 
 For prestige retention: follow `organizationRewards` -> `organizationMilestones()` (lifetime `organization.total`) -> `prestigePreview()` -> `prestige()`. The node panel and native confirmation consume that same plan. Retention keys are exact buyable/project IDs. The economy suite covers exact earning thresholds, spending, the five-person restart, seeded supplies, crew safety and protected/unprotected construction; the browser suite exercises preview, cancellation, confirmation and earned milestone display.
 
+For abundance: `growthSettings` -> `abundanceCurve()` / `growthAbundance()` -> `supply().abundance` -> `advanceGrowth()` is the shared simulation/UI path. The component ranges, weights and exponents are source settings; the UI derives their live contributions. `tests/rules/abundance-growth.test.cjs` covers boundaries, independence, a source-only 28x tuning experiment, paused growth and chunk/save parity. The legal starvation/repeat-order recovery scenario lives in the balance suite. See [the curve contract](civilization.md#abundance-growth-curves).
+
 For survival: follow shortageStatus() -> advanceShortage() -> releaseUnavailableWorkers() in js/civilization.js and the focused survival rule suite. It checks deadlines, accelerating loss, recovery, upgrade effects, solo-survivor play, keeper reservations, prestige eligibility/restarts, migration and chunk parity. Shortage state belongs to player.civ; the UI derives its warning from the same calculation.
 
 ## State and simulation contracts
