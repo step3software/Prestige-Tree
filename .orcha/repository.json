@@ -1,0 +1,25 @@
+{
+  "schema": "orcha.repository/v1",
+  "repository": {
+    "id": 1473946570,
+    "full_name": "step3software/Prestige-Tree"
+  },
+  "canonical_source": {
+    "branch": "master"
+  },
+  "standards": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "catalog_path": "standards/catalog.json"
+  },
+  "milestones": {
+    "root": "docs/milestones"
+  },
+  "local_contracts": [
+    "AGENTS.md",
+    "docs/developer-guide.md"
+  ],
+  "applicability": {},
+  "exceptions": [],
+  "authority_mode": "legacy"
+}
