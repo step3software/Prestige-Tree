@@ -7,6 +7,24 @@ function game(t,save) {
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 
+test('holding or spending Craft never changes expedition yields or gravity flow',t=>{
+    const {p,e}=game(t);
+    p.civ.improvements.gravity=true;
+    const routes=['gather','hunt','fish','farm','water'];
+    const yields=routes.map(id=>e.actionDefinition(id).reward);
+    const flow=e.supply().production.water;
+    for(const craft of [1,10,100,0]){
+        p.craft.points=new Decimal(craft);
+        assert.deepEqual(routes.map(id=>e.actionDefinition(id).reward),yields);
+        assert.equal(e.supply().production.water,flow);
+    }
+    p.craft.points=new Decimal(1);
+    assert.equal(e.startProject('food-storage'),true);
+    assert.equal(p.craft.points.toNumber(),0);
+    assert.deepEqual(routes.map(id=>e.actionDefinition(id).reward),yields);
+    assert.equal(e.supply().production.water,flow);
+});
+
 test('Food sliders reject invalid targets atomically and share one dedicated Overseer',t=>{
     const {p,e}=game(t);
     assert.equal(e.setRepeat('gather',1),false);
@@ -25,67 +43,86 @@ test('Food sliders reject invalid targets atomically and share one dedicated Ove
     assert.equal(e.supply().availableWorkers,5);
 });
 
-test('five concurrent gathering jobs pay once per job and slider changes apply to the next batch',t=>{
+test('five queued Food repeats decrement once per successful start and stop at zero',t=>{
     const {engine,p,e}=game(t);
     p.points=new Decimal(8);p.civ.improvements.overseer=true;
-    p.food.points=new Decimal(0);p.water.points=new Decimal(50);
+    p.food.points=new Decimal(10);p.water.points=new Decimal(50);
     e.setRepeat('gather',5);engine.advance(1);
-    assert.equal(p.civ.actions.gather.jobs,5);
-    assert.equal(p.civ.actions.gather.workers,5);
-    assert.equal(e.supply().workers.food,6);
-    e.setRepeat('gather',2);
-    assert.equal(p.civ.actions.gather.jobs,5);
-    assert.equal(e.dispatch('gather'),false);
+    assert.equal(p.civ.actions.gather.jobs,1);
+    assert.equal(p.civ.actions.gather.workers,1);
+    assert.equal(p.civ.actions.gather.repeat,4);
+    assert.equal(e.supply().workers.food,2);
+    engine.advance(9);
+    assert.equal(p.civ.actions.gather.repeat,4,'A busy route does not spend another repeat');
+    for(let remaining=3;remaining>=0;remaining--){
+        engine.advance(1);
+        assert.equal(p.civ.actions.gather.repeat,remaining);
+        assert.equal(p.civ.actions.gather.jobs,1);
+        if(remaining>0)engine.advance(9);
+    }
+    assert.equal(p.civ.actions.gather.completed,4);
+    assert.equal(e.supply().overseerWorkers,0,'The queue is exhausted; the last crew still finishes');
     engine.advance(10);
     assert.equal(p.civ.actions.gather.completed,5);
-    assert.equal(p.civ.actions.gather.jobs,2);
-    assert.equal(p.food.total.toNumber(),40);
-    e.setRepeat('gather',0);
-    assert.equal(e.supply().overseerWorkers,0);
-    assert.equal(p.civ.actions.gather.workers,2);
-    engine.advance(10);
-    assert.equal(p.civ.actions.gather.completed,7);
     assert.equal(p.civ.actions.gather.jobs,0);
-    assert.equal(p.food.total.toNumber(),52);
+    assert.equal(p.food.total.toNumber(),40);
+    engine.advance(10);
+    assert.equal(p.civ.actions.gather.completed,5,'No sixth automatic start');
 });
 
-test('repeating hunting batches use every full crew and wait when there are too few workers',t=>{
+test('full stores, missing crews and active manual jobs never consume queued Food repeats',t=>{
     const {engine,p,e}=game(t);
-    p.points=new Decimal(8);p.civ.improvements.overseer=true;
+    p.civ.improvements.overseer=true;p.food.points=new Decimal(50);
     e.setRepeat('hunt',5);engine.advance(1);
-    assert.equal(p.civ.actions.hunt.jobs,2);
-    assert.equal(p.civ.actions.hunt.workers,6);
-    assert.equal(e.supply().availableWorkers,1);
-    e.setRepeat('fish',5);engine.advance(1);
-    assert.equal(p.civ.actions.fish.jobs,0);
+    assert.equal(p.civ.actions.hunt.repeat,5,'Full storage waits');
+    e.dispatch('water');e.startProject('food-site');
+    p.food.points=new Decimal(10);engine.advance(1);
+    assert.equal(p.civ.actions.hunt.repeat,5,'Only one worker is free; hunting needs three');
+    e.recall('water');e.cancelProject();
+    assert.equal(e.dispatch('hunt'),true,'Manual dispatch is separate from queued repeats');
+    engine.advance(1);
+    assert.equal(p.civ.actions.hunt.repeat,5,'The existing manual job is still busy');
+    e.setRepeat('hunt',0);
+    assert.equal(p.civ.actions.hunt.jobs,1,'Clearing the queue preserves active work');
     assert.equal(e.recall('hunt'),true);
-    assert.equal(p.civ.actions.hunt.jobs,0);
-    assert.equal(p.civ.actions.hunt.repeat,0);
     assert.equal(p.civ.actions.hunt.completed,0);
 });
 
-test('Hut foreman reserves a worker and five builders pay all five escalating hut work costs',t=>{
+test('five queued huts use one builder, decrement on start and stop even with general auto-build enabled',t=>{
     const {engine,p,e}=game(t);
     assert.equal(e.setHutRepeat(1),false);
-    p.points=new Decimal(12);p.food.points=new Decimal(50);p.water.points=new Decimal(50);
+    p.points=new Decimal(12);p.food.storage=10;p.water.storage=10;
+    p.food.points=new Decimal(450);p.water.points=new Decimal(450);
     p.civ.improvements.hutForeman=true;
     for(const target of [-1,6,1.2])assert.equal(e.setHutRepeat(target),false);
     assert.equal(e.setHutRepeat(5),true);
-    assert.equal(e.supply().foremanWorkers,1);
     engine.advance(1);
-    assert.equal(p.civ.projectJobs,5);assert.equal(p.civ.projectWorkers,5);
-    const required=Array.from({length:5},(_,i)=>16*1.35**i).reduce((a,b)=>a+b,0);
-    assert.equal(e.summary().project.work,required);
-    e.setHutRepeat(0);
-    assert.equal(e.supply().foremanWorkers,0);
-    engine.advance(Math.ceil(required/5)-1);
-    assert.equal(p.shelter.homes,0);
-    engine.advance(1);
-    assert.equal(p.shelter.homes,5);
-    assert.equal(e.supply().support,28);
-    assert.equal(p.civ.project,'');
+    assert.equal(p.civ.hutRepeat,4);assert.equal(p.civ.projectWorkers,1);
     assert.equal(p.civ.projectJobs,1);
-    assert.equal(e.startProject('food-site',5),false);
+    assert.equal(e.summary().project.work,16);
+    for(let i=0;i<300&&p.shelter.homes<5;i++)engine.advance(1);
+    assert.equal(p.shelter.homes,5);assert.equal(p.civ.hutRepeat,0);
+    assert.equal(e.supply().foremanWorkers,0);assert.equal(p.civ.project,'');
+    p.organization.total=new Decimal(10);p.civ.autoBuild=true;
+    engine.advance(30);
+    assert.equal(p.shelter.homes,5,'General auto-build cannot bypass an empty hut queue');
+    assert.notEqual(p.civ.project,'shelter-home');
+});
+
+test('busy construction preserves hut repeats and the saved queue resumes without charging twice',t=>{
+    const {engine,p,e}=game(t);
+    p.civ.improvements.hutForeman=true;
+    assert.equal(e.startProject('food-site'),true);
+    e.setHutRepeat(5);engine.advance(1);
+    assert.equal(p.civ.hutRepeat,5);
+    e.cancelProject();engine.advance(1);
+    assert.equal(p.civ.hutRepeat,4);
+    const restored=game(t,engine.exportPlayer());
+    assert.equal(restored.p.civ.hutRepeat,4);
+    restored.engine.advance(1);
+    assert.equal(restored.p.civ.hutRepeat,4,'Reloading active work is not another start');
+    restored.e.setHutRepeat(0);
+    assert.ok(restored.p.civ.projectWork>0);
 });
 
 test('shortages preserve hut batch work and never overcommit managers or crews',t=>{

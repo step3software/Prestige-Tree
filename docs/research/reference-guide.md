@@ -114,7 +114,7 @@ numbers are balancing decisions. See [Water rules](../civilization.md#water-haul
 
 ## Craft and shared work
 
-The prototype combines Craft and Education into a general tool bonus. For the
+Craft is spent on explicit improvements; holding Craft no longer supplies a general production bonus. Education retains its existing effect. For the
 current simple game, describe this as improved working practices and equipment.
 If later content becomes more specific, name the task and input: better baskets
 reduce handling losses; a mill reduces processing work; a powered device trades
