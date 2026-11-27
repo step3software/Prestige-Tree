@@ -14,9 +14,11 @@ The game uses plain JavaScript, HTML and CSS, Vue **2.6.12** loaded by
 There is no package manifest, dependency installation, build step, automated test
 runner or CI workflow in the onboarding baseline. Keep those limitations explicit.
 
-From an isolated worktree root, open `index.html` in a current browser as described
-in [getting started](getting-started.md). For a consistent local HTTP origin, with
-Python 3 installed, run:
+From an isolated worktree root, open `index.html` in a current browser. The
+[upstream tutorial](getting-started.md) describes that file-opening step, but its
+fork creation, mod ID changes and direct commits/pushes to `master` do not apply
+to development in this existing fork. Follow this guide and `AGENTS.md` instead.
+For a consistent local HTTP origin, with Python 3 installed, run:
 
 ```powershell
 python -m http.server 8000 --bind 127.0.0.1
@@ -74,10 +76,13 @@ and inspect the browser console. UI changes need browser evidence. Documentation
 and manifest changes need content, link and schema checks; do not claim game
 verification from those checks.
 
-With a verified Orcha checkout available, validate the bootstrap with:
+With Python 3 and the Windows Python launcher installed, set `$orchaCheckout`
+to the absolute path of a verified Orcha checkout. From this game's worktree
+root, validate the bootstrap with:
 
 ```powershell
-python <orcha-checkout>/standards_check.py --repository . --orcha <orcha-checkout>
+$orchaCheckout = 'C:\path\to\verified\orcha-checkout'
+py -3 -B "$orchaCheckout\standards_check.py" --repository . --orcha "$orchaCheckout"
 ```
 
 This observes remote Orcha `main` and checks manifest/reference integrity. Success
