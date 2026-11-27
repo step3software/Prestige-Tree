@@ -301,7 +301,7 @@ function createCivilizationRules({ saveState }) {
     }
     function setHutRepeat(jobs) {
         if (!Number.isInteger(jobs) || jobs < 0 || jobs > 5) return false;
-        if (jobs > 0 && (!owns("hutForeman") || (!player().civ.hutRepeat && occupiedWorkers().availableWorkers < 1))) return false;
+        if (jobs > 0 && (!owns("hutForeman") || player().points.lte(1) || (!player().civ.hutRepeat && occupiedWorkers().availableWorkers < 1))) return false;
         player().civ.hutRepeat = jobs;
         return true;
     }
@@ -655,6 +655,9 @@ function createCivilizationRules({ saveState }) {
         const civ = data.civ;
         if (!civ || typeof civ !== "object" || Array.isArray(civ)) return;
         const improvements = civ.improvements;
+        const waterRepeat = civ.actions?.water?.repeat === true;
+        const oldKeeper = waterRepeat && improvements?.waterOrders && Number(data.version) >= 0.5 ? 1 : 0;
+        if (waterRepeat && (!improvements?.waterOrders || improvements.gravity)) throw new Error("Invalid historical Water orders");
         if (improvements && Object.hasOwn(improvements, "waterOrders")) {
             if (typeof improvements.waterOrders !== "boolean") throw new Error("Invalid historical Water keeper");
             if (improvements.waterOrders) improvements.hutForeman = true;
@@ -672,6 +675,7 @@ function createCivilizationRules({ saveState }) {
             if (id === "water") action.repeat = 0;
             if (!Object.hasOwn(action, "jobs")) action.jobs = action.remaining > 0 ? 1 : 0;
         }
+        if (crews + oldKeeper > Number(data.points)) throw new Error("Overcommitted historical workers");
         const repeating = ["gather", "hunt", "fish", "farm"].some(id => civ.actions[id]?.repeat > 0);
         if (repeating && crews + 1 > Number(data.points)) {
             for (const id of ["gather", "hunt", "fish", "farm"]) if (civ.actions[id]) civ.actions[id].repeat = 0;

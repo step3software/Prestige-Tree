@@ -131,3 +131,21 @@ test('hearth growth, threshold loss and Food accrual match across online and off
     assert.equal(JSON.stringify(one.p), JSON.stringify(chunks.p));
     assert.ok(one.p.points.lt(20), 'The run crosses growth and shortage thresholds');
 });
+
+test('hearth storage feeds the Food abundance curve while passive income cannot fake stored reserves', t => {
+    const {p,e} = game(t);
+    p.points = new Decimal(20); p.food.points = new Decimal(50); p.water.points = new Decimal(50);
+    p.shelter.homes = 12; p.shelter.points = new Decimal(56);
+    const before = e.supply().abundance;
+    p.civ.improvements.hearth = true;
+    const after = e.supply();
+    assert.equal(after.storage.food, 60);
+    assert.equal(after.passiveProduction.food, 2);
+    assert.equal(after.abundance.water.bonus, before.water.bonus);
+    assert.equal(after.abundance.shelter.bonus, before.shelter.bonus);
+    assert.ok(after.abundance.food.bonus < before.food.bonus, 'More capacity raises the near-full target at the same stock');
+    p.food.points = new Decimal(0);
+    assert.equal(e.supply().abundance.food.bonus, 0);
+    assert.equal(e.supply().growing, false);
+    assert.equal(e.supply().passiveProduction.food, 2);
+});

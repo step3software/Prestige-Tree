@@ -189,7 +189,7 @@ test('shortage countdown and paused construction survive the current codec',t=>{
 
 test('historical Water keeper purchases become Hut foreman without starting new jobs',t=>{
     const {engine}=game(t);
-    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6';raw.points='4';
+    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6';raw.points='5';
     raw.civ.improvements.waterOrders=true;raw.civ.actions.water.repeat=true;
     raw.civ.actions.hunt={remaining:15,duration:25,workers:3,reward:24,completed:0,repeat:false};
     raw.civ.actions.gather={remaining:5,duration:10,workers:1,reward:6,completed:0,repeat:false};

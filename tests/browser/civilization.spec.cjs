@@ -58,7 +58,7 @@ test('Shared hearths displays and produces population-scaled Food without changi
     await hearths.focus();await page.keyboard.press('Enter');
     await expect(hearths).toContainText('Owned');
     await expect(page.getByTestId('hearth-benefits')).toContainText('+0 Food storage');
-    await page.evaluate(()=>gameUI.session.advance(12));
+    await page.evaluate(()=>{const s=gameUI.session;for(let i=0;i<12&&s.saveState.player.points.lt(10);i++)s.advance(1);});
     await expect(page.getByTestId('hearth-benefits')).toContainText('+5 Food storage');
     await expect(page.getByTestId('hearth-benefits')).toContainText('+1 Food/min');
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().support)).toBe(12);
