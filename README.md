@@ -6,9 +6,11 @@ For the civilization's historical grounding, start at the [research index](docs/
 
 Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into a reservoir; carrying upgrades and a gravity-fed spring free the hauling crew. Food overseers repeat trips with workers, farming adds longer cycles, and worker-free Food comes later. Build new huts for capacity or improve existing homes to free domestic labor.
 
-Each foundation starts with one available Craft upgrade. Organization milestones 1–3 unlock Fishing nets, Well lining and Timber frames. Milestones 4–10 reveal later Craft upgrades and retain named buyables individually; auto-building arrives at 10. Other buyables reset on prestige. Population and purchased one-time upgrades stay; the preview lists exact losses and retained progress.
+Each foundation starts with one available Craft upgrade. Organization milestones 1–3 unlock Fishing nets, Well lining and Timber frames. Milestones 4–10 reveal later Craft upgrades and retain named buyables individually; auto-building arrives at 10. Other buyables reset on prestige. Purchased one-time upgrades stay. Both prestiges restart with 5 Population and 10 of each supply. Craft starts at 12 Population and adds one per two more; Organization starts at 12 housing and raises its one-point requirement by four each time. The preview lists exact losses and retained progress.
 
 This game replaces the fork's original Prestige Tree Rewritten content. It runs on the retained session-bound Modding Tree engine with Vue 3 and Decimal arithmetic. Original attribution and both licenses are retained. The game retains the base project's dark theme, monospace typography, colored circular nodes and action-button styling.
+
+Empty Food or Water causes population loss after a ten-second grace period, then accelerating losses. Survival upgrades extend grace or slow acceleration. One survivor remains able to rebuild. Water Keeper reserves a dedicated worker while enabled and starts off after prestige.
 
 ## Play locally
 
@@ -22,7 +24,7 @@ npm run serve
 
 Open http://127.0.0.1:8000/. The static `dist/` package contains its own Vue runtime; gameplay makes no external requests. Stop the local server with Ctrl+C.
 
-Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime/balance rules and Chromium journeys. Run `npm run balance -- --hours 4 --calibrate-minutes 60` for active and regular pacing observations: regular checks every 20 seconds in the opening, then every five minutes after Food repeat orders and worker-free Water. See the [balance guide](docs/balance-testing.md). Playwright requires its matching Chromium installation (`npx playwright install chromium`).
+Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime/balance rules and Chromium journeys. Run `npm run balance -- --hours 4 --calibrate-minutes 60` for active and regular pacing observations: regular checks every 20 seconds in the opening, then every five minutes after Food repeat orders, worker-free Water and milestone-10 auto-building. See the [balance guide](docs/balance-testing.md). Playwright requires its matching Chromium installation (`npx playwright install chromium`).
 
 ## Find and change the rules
 

@@ -41,13 +41,18 @@ test('both active branch orders and adaptive regular play reach the opening usin
  }
 });
 
-test('earned repeat orders and Water flow support five-minute idle play from a legally reached checkpoint',()=>{
+test('earned automation supports idle survival and rebuilding after a legally reached tenth Organization',t=>{
  let input;
- const active=simulate({strategy:'active-balanced',horizonSeconds:3600,stopAt:'farming',onCheckpoint:row=>{if(row.id==='farming')input=row.encodedPlayer;}});
+ const active=simulate({strategy:'active-balanced',horizonSeconds:14400,stopAt:'organization-10',onCheckpoint:row=>{if(row.id==='organization-10')input=row.encodedPlayer;}});
  assert.equal(active.status,'checkpoint');
- const idle=simulate({strategy:'regular',horizonSeconds:3600,encodedPlayer:input});
- assert.equal(idle.status,'endgame');
- assert.ok(idle.recentActions.every(action=>action.time%300===0));
+ const engine=createBalanceEngine(input);t.after(engine.dispose);
+ const policy=createPolicy(engine,strategies.regular);policy.act(0);
+ const start=engine.player.points.toNumber();
+ for(let second=0;second<600;second++){engine.advance(1);assert.ok(engine.player.points.gte(start));}
+ assert.ok(engine.player.points.gt(start));
+ assert.ok(engine.player.food.points.gt(0)&&engine.player.water.points.gt(0));
+ assert.equal(engine.player.civ.autoBuild,true);
+ assert.equal(engine.session.modRules.civilization.summary().autoAvailable,true);
 });
 
 test('continuous legal play reaches worker-free Food after worker-free Water and staffed farming',t=>{

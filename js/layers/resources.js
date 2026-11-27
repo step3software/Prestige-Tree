@@ -2,7 +2,7 @@
 function createResourceLayer(id, {modRules, saveState}) {
     const foundation = ["food", "water", "shelter"].includes(id);
     const row = foundation ? 0 : ["craft", "organization"].includes(id) ? 1 : ["money", "freeTime"].includes(id) ? 2 : 3;
-    const starts = {food: 20, water: 20, shelter: 8};
+    const starts = {food: modRules.civilization.startingSettlement.food, water: modRules.civilization.startingSettlement.water, shelter: 8};
     const layer = {
         name: id.charAt(0).toUpperCase() + id.slice(1), row, type: "none", layerShown: true,
         startData() {

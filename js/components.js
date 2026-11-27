@@ -38,7 +38,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         prestige(id) {
             if (gameRules.tickFaulted || !modRules.civilization.prestigeGain(id)) return false;
             const plan = modRules.civilization.prestigePreview(id);
-            if (!effects.confirm('Gain ' + plan.gain + ' ' + modRules.civilization.node(id).name + '? Reset ' + plan.resetText + '. Keep ' + plan.keepText + '.')) return false;
+            if (!effects.confirm('Gain ' + plan.gain + ' ' + modRules.civilization.node(id).name + '? Restart ' + plan.resetText + '. Keep ' + plan.keepText + '.')) return false;
             return actionable(() => modRules.civilization.prestige(id));
         },
         setPriority(event) { return actionable(() => { binding.player.civ.priority = event.target.value; }); },

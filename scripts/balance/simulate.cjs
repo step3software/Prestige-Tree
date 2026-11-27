@@ -50,7 +50,7 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
       if (reached.has('endgame')) {status='endgame';break;}
       if (time>=nextDecision) {
         policy.act(time);decisions++;observe(true);
-        const staffedOpening=settings.earlyDecisionSeconds && !(engine.player.civ.improvements.overseer && engine.player.civ.improvements.gravity);
+        const staffedOpening=settings.earlyDecisionSeconds && !(engine.player.civ.improvements.overseer && engine.player.civ.improvements.gravity && engine.session.modRules.civilization.summary().autoAvailable);
         const cadence=decisionSeconds??(staffedOpening?settings.earlyDecisionSeconds:settings.decisionSeconds);
         if(cadenceChanges.at(-1)?.seconds!==cadence)cadenceChanges.push({time,seconds:cadence});
         const currentSettings={...settings,decisionSeconds:cadence};
@@ -88,7 +88,7 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
       wallSeconds:(performance.now()-start)/1000,
       policyCapabilities:{construction:true,prestige:true,earnedAutomation:true,investments:true,workerPriority:true},
       interpretation:mode==='rough'?'Rough checkpoint observation with coalesced outer calls; the actual economy uses one-second internal steps. Manual cadence is unchanged. Compare entry windows with a fixed reference. Unreached sections are censored.':
-        'Fixed-step legal policy simulation, not measured human play or a proven optimum. Regular uses 20-second opening checks, then five-minute checks after overseer and gravity flow; cadenceChanges records the transition.'};
+        'Fixed-step legal policy simulation, not measured human play or a proven optimum. Regular uses 20-second opening checks, then five-minute checks after overseer, gravity flow and auto-building; cadenceChanges records the transition.'};
 
   } finally {engine.dispose();}
 }

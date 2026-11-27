@@ -44,7 +44,7 @@
     <a class="skip-link" href="#resource-panel">Skip to selected resource</a>
     <header class="masthead">
         <h2 class="game-title">Civ Prestige Tree</h2>
-        <div class="chapter"><span class="chapter-dot"></span> ORGANIZED CRAFT <span class="version">v0.4</span></div>
+        <div class="chapter"><span class="chapter-dot"></span> SURVIVAL AND RENEWAL <span class="version">v0.5</span></div>
         <nav aria-label="Game controls"><button class="tabButton" @click="save">Save</button><button class="tabButton" @click="openSaves">Settlements</button><button class="tabButton" :aria-expanded="ui.settings" aria-controls="settings" @click="ui.settings = !ui.settings">Settings</button></nav>
     </header>
     <section v-if="ui.settings" id="settings" class="settings">
@@ -59,6 +59,12 @@
                 <progress :value="player.civ.growth" max="1" aria-label="Progress toward the next person"></progress>
                 <p v-if="civ.growing">{{civ.advice}}</p><p v-else><button class="text-button" @click="select(civ.next)">{{civ.bottleneck}}</button> is limiting growth. {{civ.advice}}</p>
             </div>
+        </section>
+        <section v-if="civ.shortage.active" class="shortage-warning" role="alert" aria-labelledby="shortage-title" data-testid="shortage-warning"><h2 id="shortage-title">{{civ.shortage.resources.join(' and ')}} depleted</h2>
+            <p v-if="civ.shortage.lastSurvivor">One survivor remains protected. Gather Food and collect Water to rebuild.</p>
+            <p v-else>{{civ.shortage.losses === 0 ? 'Grace period' : 'Next population loss'}}: {{number(civ.shortage.remaining)}}s. {{civ.shortage.losses}} lost during this shortage.</p>
+            <progress v-if="!civ.shortage.lastSurvivor" :value="civ.shortage.progress" max="1" aria-label="Shortage countdown"></progress>
+            <p>Restore both supplies above zero to reset the countdown. Losses accelerate during a continuing shortage.</p>
         </section>
         <div class="game-layout">
             <section class="tree-section" aria-labelledby="tree-heading">
@@ -86,6 +92,7 @@
                         <div class="storage-line"><span>{{selected.id === 'water' ? 'Reservoir' : 'Food reserves'}} {{number(selected.value)}} / {{number(civ.storage[selected.id])}}</span><span>{{civ.workers[selected.id]}} busy workers</span></div><progress :value="Number(selected.value)" :max="civ.storage[selected.id]" :aria-label="selected.name + ' storage'"></progress>
                         <p class="small-note">Growth needs {{number(civ.reserve)}} in reserve. Trips deliver their yield when they finish; excess above storage is lost.</p>
                         <p class="small-note" data-testid="available-workers">{{civ.availableWorkers}} workers available. Busy crews return automatically; recall forfeits the unfinished yield.</p>
+                        <p v-if="selected.id === 'water' && player.civ.improvements.waterOrders && !player.civ.improvements.gravity" class="small-note">Water Keeper reserves 1 dedicated worker while on, plus any carrying crew. Reserved now: {{civ.keeperWorkers}}. Prestige switches it off.</p>
                         <h3>{{selected.id === 'food' ? 'Expeditions & harvests' : 'Water collection'}}</h3>
                         <div v-for="action in selected.actions" :key="action.id" class="action-row">
                             <h4>{{action.name}} <small v-if="action.level">· route {{action.level}}</small></h4>
@@ -97,7 +104,7 @@
                                 <progress v-if="action.active" :value="action.progress" max="1" :aria-label="action.name + ' progress'"></progress>
                                 <div class="action-controls"><button v-if="!action.active" class="upg" :class="{can:action.canDispatch,locked:!action.canDispatch}" :style="{backgroundColor:action.canDispatch ? selected.color : undefined}" :disabled="!action.canDispatch" @click="dispatch(action.id)">Send {{action.name}}</button>
                                     <button v-else class="tabButton" @click="recall(action.id)">Recall {{action.name}}</button>
-                                    <button v-if="action.repeatAvailable && !action.automatic" class="tabButton" :aria-pressed="action.repeat" @click="toggleRepeat(action.id)">{{action.name}} repeat: {{action.repeat ? 'on' : 'off'}}</button></div>
+                                    <button v-if="action.repeatAvailable && !action.automatic" class="tabButton" :disabled="!action.repeatCanToggle" :aria-pressed="action.repeat" @click="toggleRepeat(action.id)">{{action.id === 'water' ? 'Water Keeper' : action.name + ' repeat'}}: {{action.repeat ? 'on' : 'off'}}</button></div>
                                 <p v-if="!action.active && !action.canDispatch" class="small-note">Needs {{action.workers}} available workers. Wait for a crew or recall an action.</p>
                             </template>
                         </div>
@@ -123,9 +130,9 @@
                 </template>
             </section>
         </div>
-        <section class="workbench" aria-labelledby="work-heading"><div><p class="eyebrow">SHARED LABOR</p><h2 id="work-heading">{{civ.project ? civ.project.name : 'What will you build next?'}}</h2><p>{{civ.project ? 'One builder is reserved until this project finishes.' : 'Choose an improvement in Food, Water or Shelter.'}}</p></div>
+        <section class="workbench" aria-labelledby="work-heading"><div><p class="eyebrow">SHARED LABOR</p><h2 id="work-heading">{{civ.project ? civ.project.name : 'What will you build next?'}}</h2><p>{{civ.project ? (civ.project.paused ? 'Construction paused for lack of workers. Progress is kept; it resumes after supplies and labor recover.' : 'One builder is reserved until this project finishes.') : 'Choose an improvement in Food, Water or Shelter.'}}</p></div>
             <div v-if="civ.project" class="construction-progress"><div><span>{{number(player.civ.projectWork)}} / {{number(civ.project.work)}} work</span><button class="text-button" @click="cancelProject">Cancel project</button></div><progress :value="civ.project.progress" max="1" aria-label="Construction progress"></progress></div>
-            <p class="worker-ledger" data-testid="worker-ledger">{{civ.availableWorkers}} workers available · {{civ.workers.food + civ.workers.water}} on trips · {{civ.builders}} building · {{number(civ.domestic)}} domestic</p><div class="labor-controls"><label for="priority">Repeat order priority</label><select id="priority" :value="player.civ.priority" @change="setPriority"><option value="balanced">Short trips first</option><option value="food">Large harvests first</option></select><button v-if="civ.autoAvailable" :aria-pressed="player.civ.autoBuild" @click="toggleAutomation">Auto-build: {{player.civ.autoBuild ? 'on' : 'off'}}</button></div>
+            <p class="worker-ledger" data-testid="worker-ledger">{{civ.availableWorkers}} workers available · {{civ.workers.food + civ.workers.water - civ.keeperWorkers}} on trips · {{civ.keeperWorkers}} Water Keeper · {{civ.builders}} building · {{number(civ.domestic)}} domestic</p><div class="labor-controls"><label for="priority">Repeat order priority</label><select id="priority" :value="player.civ.priority" @change="setPriority"><option value="balanced">Short trips first</option><option value="food">Large harvests first</option></select><button v-if="civ.autoAvailable" :aria-pressed="player.civ.autoBuild" @click="toggleAutomation">Auto-build: {{player.civ.autoBuild ? 'on' : 'off'}}</button></div>
         </section>
         <p class="event-log" role="status">{{player.civ.message}}</p>
         <p class="offline-note" v-if="player.offTime && player.offTime.remain > 0">Applying {{number(player.offTime.remain)}} seconds of offline progress.</p>

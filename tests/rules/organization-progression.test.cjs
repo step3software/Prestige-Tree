@@ -57,7 +57,7 @@ test('each retention milestone immediately keeps its exact buyable and protected
     for(const [id,threshold] of retained){
         const {p,e}=game(t);
         p.points=new Decimal(8);
-        p.shelter.homes=1;p.shelter.points=new Decimal(12);p.shelter.comfort=1;
+        p.shelter.homes=threshold;p.shelter.points=new Decimal(8+threshold*4);p.shelter.comfort=1;
         p.food.sites=1;p.food.storage=1;p.water.sites=1;p.water.storage=1;
         for(const route of Object.keys(p.food.routes))p.food.routes[route]=1;
         p.food.points=new Decimal(50);p.water.points=new Decimal(50);
@@ -68,10 +68,10 @@ test('each retention milestone immediately keeps its exact buyable and protected
         const plan=e.prestigePreview('organization');
         assert.equal(plan.kept[id],true);
         assert.equal(e.prestige('organization'),true);
-        for(const buyable of all)assert.equal(get(p,buyable),plan.kept[buyable]?1:0,id+' / '+buyable);
+        for(const buyable of all)assert.equal(get(p,buyable),plan.kept[buyable]?(buyable==='shelter-home'?threshold:1):0,id+' / '+buyable);
         assert.equal(p.civ.project,id);
         assert.equal(p.civ.projectWork,2);
-        assert.equal(p.points.toNumber(),8);
+        assert.equal(p.points.toNumber(),5);
         assert.equal(p.organization.total.toNumber(),threshold);
     }
 });

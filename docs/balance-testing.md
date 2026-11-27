@@ -23,7 +23,7 @@ formulas in their existing owners; the balance tool calls those rules.
    condition and intended timing range, if the content design supplies one.
    Specify simulated seconds, the starting state and the policy assumptions.
    Preserve the owner-selected regular cadence: 20-second opening checks, then
-   five-minute checks after overseer plus gravity flow. Describe the active
+   five-minute checks after overseer, gravity flow and auto-building. Describe the active
    strategy. Record an undecided target as undecided; an observed time alone does
    not become a design requirement.
 2. **Register the actual progression.** Add or revise section predicates and the
@@ -120,7 +120,7 @@ times into a campaign total or call the best tested strategy a proven optimum.
 npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60
 ```
 
-The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 20 seconds until both the Expedition overseer and Gravity-fed spring are earned, then every 300 seconds). This opening cadence was requested by the owner because five-minute fresh checks could not sustain manual expeditions. `cadenceChanges` records the actual transition. `active-organization` reverses the early prestige priority. Policies dispatch real crews, buy equipment and automation, construct housing/storage, earn Craft/Organization and invest through the shipped guards. No resources, workers or unlocks are granted.
+The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 20 seconds until Expedition overseer, Gravity-fed spring and milestone-10 auto-building are earned, then every 300 seconds). This opening cadence was requested by the owner because five-minute fresh checks could not sustain manual expeditions. `cadenceChanges` records the actual transition. `active-organization` reverses the early prestige priority. Policies dispatch real crews, buy equipment and automation, construct housing/storage, earn Craft/Organization and invest through the shipped guards. No resources, workers or unlocks are granted.
 
 The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simulated game-time horizon, not a claim that the opening takes that long. `--save` loads a codec-validated synthetic checkpoint and measures time since that input. Reports include actual source hashes, actions, layer unlocks, completion/censoring and rough/fixed calibration. `balance-results/` is ignored; its saves are generated synthetic inputs, not player data.
 
@@ -130,7 +130,7 @@ The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simul
 
 `policy.cjs` uses one construction project at a time, restarts available expeditions, buys automation and enables separate repeat orders. It funds later Food autonomy through Education and retained Craft. The observed best policy is not a proven optimum or actual-user timing. No manual choices occur between configured checks; batch jobs, construction and earned automation continue normally.
 
-Policies exercise all ten Organization milestones through legal commands. First obtain the opening Craft, then prioritize Organization while maintaining enough Craft to buy unlocked upgrades. Only named buyables survive their individual milestones (reservoirs 4, Food baskets 5, wells 6, gathering equipment 7, hunting equipment 8, fishing equipment 9, huts 10). Auto-building requires 10 lifetime Organization. Provisioning, farming tools and home improvements still reset. Each opening completion must reach every Organization checkpoint and purchase farming; a shorter run cannot imply ten-milestone coverage. The active/regular policies also exercise the single initial Craft choice per node and the first three unlock gates.
+Policies exercise all ten Organization milestones through legal commands. First reach 12 Population for the opening Craft, then build toward the next housing-only Organization requirement while banking enough Craft for upgrades. Organization pays one point at 12 housing and raises that requirement by four lifetime housing each time; Craft pays one at 12 people and another per two more. Both restart at five people with ten Food/Water. Policies buy survival upgrades and legally re-enable Water Keeper after resets; its dedicated worker counts in the same budget. Only named buyables survive their individual milestones (reservoirs 4, Food baskets 5, wells 6, gathering equipment 7, hunting equipment 8, fishing equipment 9, huts 10). Auto-building requires 10 lifetime Organization. Provisioning, farming tools and home improvements still reset. Each opening completion must reach every Organization checkpoint and purchase farming; a shorter run cannot imply ten-milestone coverage. The active/regular policies also exercise the single initial Craft choice per node and the first three unlock gates.
 
 ## Rough and fixed calibration
 
@@ -150,3 +150,5 @@ The focused suite checks native/VM parity through actual construction, growth an
 The old layer catalog, old challenge/mastery policies, inverse-cost forecasts and immutable original-game formula comparisons were retired because that content was intentionally replaced. The reusable engine loader, session isolation, codec, wall budget, reporting and checkpoint mechanisms remain. Save/runtime safety is exercised by the Civ-specific rules and browser suites; old `ptr` data is never read or modified. See [the save boundary contract](developer-guide.md#save-boundaries-and-recovery).
 
 README -> developer guide -> this document -> `scripts/balance/run.cjs` -> `simulate.cjs` / `policy.cjs` -> `createGameSession` -> the actual civilization rules. The verification record reports measured synthetic results and unmeasured limits separately.
+
+Survival regressions exercise zero Food/Water, combined shortages, exact grace deadlines, acceleration, recovery upgrades, one-survivor rebuilding and deterministic online/offline chunks. A legally reached tenth Organization checkpoint verifies ten minutes of idle rebuilding without additional manual actions. The prestige sensitivity check detects accidentally retaining Population.

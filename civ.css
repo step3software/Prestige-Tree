@@ -169,3 +169,7 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .organization-milestones { margin: 24px 0; }
 .organization-milestones .milestone { height: auto; min-height: 70px; width: auto; max-width: 100%; padding: 12px; margin: 12px 0; box-sizing: border-box; }
 .organization-milestones .milestone p { margin-top: 8px; font-size: 12px; line-height: 1.5; }
+
+.shortage-warning { margin: 0 0 20px; padding: 16px; border: 2px solid #ff7070; }
+.shortage-warning h2 { display: block; font-size: 20px; margin: 8px 0; }
+.shortage-warning p { font-size: 13px; line-height: 1.6; margin: 12px 0; }

@@ -15,15 +15,16 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','waterOrders','overseer','gravity','farming','builderTools','sluice','autonomousFood']){
+    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','waterOrders','waterReserves','overseer','rationing','gravity','farming','builderTools','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];
     const sequence=p.craft.total.gte(1)?['organization','craft']:opening;
     for(const id of sequence){
       const needsRetention=p.organization.total.lt(10);
-      const wanted=id==='organization'?p.organization.points.lt(3)||needsRetention:
-        p.craft.points.lt(needsRetention?3:15);
+      const canOrganize=p.craft.total.gte(1)||(settings.first==='organization'&&p.organization.total.lt(1));
+      const wanted=id==='organization'?canOrganize&&(p.organization.points.lt(3)||needsRetention):
+        p.craft.points.lt(needsRetention?3:15)&&(needsRetention||p.points.gte(20));
       if(wanted && economy.prestigeGain(id)>0 && economy.prestige(id))record('prestige',id,time);
     }
     if(economy.summary().autoAvailable && !p.civ.autoBuild){p.civ.autoBuild=true;record('automation','organization',time);}
@@ -37,7 +38,8 @@ function createPolicy(engine,settings,onAction=()=>{}){
       if(action.unlocked && action.repeatAvailable && !action.automatic && !action.repeat && economy.toggleRepeat(id))record('automation',id,time);
     }
     if(!p.civ.project){
-      let next=p.shelter.homes<2?'shelter-home':p.food.storage<2?'food-storage':p.water.sites<1?'water-site':null;
+      const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationHousingRequirement()):24;
+      let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2?'food-storage':p.water.sites<1?'water-site':null;
       if(!next && p.shelter.comfort<2)next='shelter-comfort';
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);
     }

@@ -21,38 +21,39 @@ test('fresh game renders the resource tree, shared labor and current growth cons
     await expect(page.locator('#resource-title')).toHaveText('Shelter');
     expect(errors).toEqual([]);
 });
-test('real construction controls recover the foundation and improve capacity',async({page})=>{
+test('construction and timely supply crews grow a settlement without exhausting reserves',async({page})=>{
     const errors=await open(page);
+    await page.getByRole('button',{name:'Send Gather',exact:true}).click();
     await page.getByRole('button',{name:/Improve provisioning/}).click();
-    await expect(page.getByRole('button',{name:/Weave food baskets/})).toBeDisabled();
-    await page.evaluate(()=>gameUI.session.advance(60));
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.sites)).toBe(1);
-    await node(page,'Water').click();await page.getByRole('button',{name:/Improve the well/}).click();
-    await page.evaluate(()=>gameUI.session.advance(60));
-    await node(page,'Shelter').click();await page.getByRole('button',{name:/Build a new hut/}).click();
-    await page.evaluate(()=>gameUI.session.advance(90));
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.points.toNumber())).toBe(12);
-    await node(page,'Food').click();await page.getByRole('button',{name:'Send Hunt',exact:true}).click();
     await node(page,'Water').click();await page.getByRole('button',{name:'Send Collect water',exact:true}).click();
+    await page.evaluate(()=>gameUI.session.advance(20));
+    await page.getByRole('button',{name:/Improve the well/}).click();
+    await page.getByRole('button',{name:'Send Collect water',exact:true}).click();
+    await node(page,'Food').click();await page.getByRole('button',{name:'Send Gather',exact:true}).click();
+    await page.evaluate(()=>gameUI.session.advance(20));
+    await node(page,'Shelter').click();await page.getByRole('button',{name:/Build a new hut/}).click();
     await page.evaluate(()=>gameUI.session.advance(40));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.points.toNumber())).toBe(12);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBeGreaterThan(8);
+    await expect(page.getByTestId('shortage-warning')).toHaveCount(0);
     expect(errors).toEqual([]);
 });
+
 test('prestige preview, cancellation and confirmation match retained game state',async({page})=>{
     const errors=await open(page);
     // Synthetic prepared economy isolates the destructive-action UI contract.
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.food.routes.gather=2;p.shelter.homes=1;p.shelter.points=new Decimal(12);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(12);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.food.routes.gather=2;p.shelter.homes=1;p.shelter.points=new Decimal(12);});
     await node(page,'Craft').click();
     await expect(page.getByTestId('prestige-reset-preview')).toContainText('Gathering baskets');
-    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Population; permanent upgrades; repeat orders');
+    await expect(page.getByTestId('prestige-keep-preview')).toContainText('permanent upgrades; repeat orders');
     page.once('dialog',dialog=>dialog.dismiss());
     await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(50);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(2);
-    page.once('dialog',async dialog=>{expect(dialog.message()).toContain('Keep Population');await dialog.accept();});
+    page.once('dialog',async dialog=>{expect(dialog.message()).toContain('Population returns to 5');await dialog.accept();});
     await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBe(8);
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(0);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBe(5);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(10);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(0);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(0);
     await expect(page.getByRole('button',{name:'Develop Craft',exact:true})).toBeDisabled();
@@ -61,7 +62,7 @@ test('prestige preview, cancellation and confirmation match retained game state'
 
 test('Organization previews exact buyable protection earned by the next milestone',async({page})=>{
     const errors=await open(page);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.routes.gather=2;p.water.sites=2;p.water.storage=2;p.organization.total=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.shelter.homes=4;p.shelter.points=new Decimal(24);p.food.routes.gather=2;p.water.sites=2;p.water.storage=2;p.organization.total=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await node(page,'Organization').click();
     await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
     await expect(page.getByTestId('prestige-keep-preview')).toContainText('Reservoirs');
@@ -214,5 +215,38 @@ test('overseer controls repeat staffed trips and Water upgrades remove hauling w
     await page.getByRole('button',{name:/^Gravity-fed spring/}).click();
     await expect(page.getByText('Gravity-fed flow is fully automatic and uses 0 workers.',{exact:true})).toBeVisible();
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.water)).toBe(0);
+    expect(errors).toEqual([]);
+});
+
+test('shortage warning counts down grace, shows accelerating loss and clears on resupply',async({page})=>{
+    const errors=await open(page);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(10);p.food.points=new Decimal(0);p.water.points=new Decimal(50);gameUI.session.advance(9);});
+    await expect(page.getByTestId('shortage-warning')).toContainText('Grace period: 1s');
+    await page.evaluate(()=>gameUI.session.advance(1));
+    await expect(page.getByTestId('population')).toHaveText('9');
+    await expect(page.getByTestId('shortage-warning')).toContainText('Next population loss: 8s');
+    await page.evaluate(()=>{gameUI.session.saveState.player.food.points=new Decimal(50);gameUI.session.advance(1);});
+    await expect(page.getByTestId('shortage-warning')).toHaveCount(0);
+    expect(errors).toEqual([]);
+});
+
+test('Water Keeper reserves a worker immediately and starts off after prestige',async({page})=>{
+    const errors=await open(page);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.civ.improvements.waterOrders=true;p.water.points=new Decimal(50);});
+    await node(page,'Water').click();
+    await page.getByRole('button',{name:'Water Keeper: off',exact:true}).click();
+    await expect(page.getByRole('button',{name:'Water Keeper: on',exact:true})).toHaveAttribute('aria-pressed','true');
+    await expect(page.getByText(/Reserved now: 1/)).toBeVisible();
+    expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().keeperWorkers)).toBe(1);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(12);});
+    await node(page,'Craft').click();
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Water Keeper switches off');
+    page.once('dialog',dialog=>dialog.accept());
+    await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
+    await expect(page.getByTestId('population')).toHaveText('5');
+    await node(page,'Water').click();
+    await expect(page.getByRole('button',{name:'Water Keeper: off',exact:true})).toHaveAttribute('aria-pressed','false');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber())).toBe(10);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.points.toNumber())).toBe(10);
     expect(errors).toEqual([]);
 });
