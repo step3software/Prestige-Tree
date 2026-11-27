@@ -45,7 +45,7 @@ test('every later Craft upgrade rejects affordable purchases below its lifetime 
             assert.equal(JSON.stringify(p),before,id+' must not spend');
             p.organization.total=new Decimal(milestone.requirement);
             assert.equal(p.civ.improvements[id],false);
-            assert.equal(e.buyUpgrade(id),true,id+' at gate');
+            assert.equal(e.buyUpgrade(id),!['sluice','autonomousFood'].includes(id),id+' at gate; later resource purchases stay locked');
             assert.equal(e.buyUpgrade(id),false,id+' cannot buy twice');
         }
     }
@@ -53,7 +53,7 @@ test('every later Craft upgrade rejects affordable purchases below its lifetime 
 
 test('each retention milestone immediately keeps its exact buyable and protected construction',t=>{
     const retained=[['water-storage',4],['food-storage',5],['water-site',6],['gather-tools',7],['hunt-tools',8],['fish-tools',9],['shelter-home',10]];
-    const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home','shelter-comfort'];
+    const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
     for(const [id,threshold] of retained){
         const {p,e}=game(t);
         p.points=new Decimal(8);

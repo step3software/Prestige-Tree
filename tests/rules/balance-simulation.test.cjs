@@ -69,7 +69,7 @@ test('both active branch orders and adaptive regular play reach the opening usin
   const run=simulate({strategy,horizonSeconds:14400,wallBudgetSeconds:15});
   assert.equal(run.status,'endgame',strategy);
   assert.equal(run.sections.find(row=>row.id==='endgame').status,'reached');
-  assert.ok(run.actions.prestige>=2&&run.actions.investment>=2&&run.actions.construction>=3);
+  assert.ok(run.actions.prestige>=2&&run.actions.construction>=3);
   assert.ok(run.actions.automation>=1);
   for(const id of Array.from({length:10},(_,index)=>'organization-'+(index+1)))assert.equal(run.sections.find(row=>row.id===id).status,'reached',strategy+' '+id);
   assert.ok(run.sections.every(row=>row.sectionSeconds===null||row.sectionSeconds>=0));
@@ -91,20 +91,22 @@ test('earned automation supports idle survival and rebuilding after a legally re
  assert.equal(engine.session.modRules.civilization.summary().autoAvailable,true);
 });
 
-test('continuous legal play reaches worker-free Food after worker-free Water and staffed farming',t=>{
- const engine=createBalanceEngine();t.after(engine.dispose);
- const policy=createPolicy(engine,strategies['active-balanced']);
- let waterAt,foodAt,farmAt;
- for(let time=0;time<=7200;time+=5){
-  policy.act(time);engine.advance(5);
-  if(engine.player.civ.improvements.gravity && waterAt===undefined)waterAt=time;
-  if(engine.player.civ.improvements.farming && farmAt===undefined)farmAt=time;
-  if(engine.player.civ.improvements.autonomousFood){foodAt=time;break;}
+test('continuous legal play keeps Food staffed and later currencies locked after the opening',t=>{
+ const run=simulate({strategy:'active-balanced',horizonSeconds:14400});
+ assert.equal(run.status,'endgame');
+ const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
+ const p=engine.player,e=engine.session.modRules.civilization;
+ assert.ok(p.civ.improvements.gravity&&p.civ.improvements.farming);
+ assert.ok(e.actionDefinition('farm').workers>0);
+ assert.equal(p.civ.improvements.autonomousFood,false);
+ engine.advance(300);
+ for(const id of ['money','freeTime','education','culture']){
+  assert.equal(p[id].unlocked,false);
+  assert.equal(p[id].points.toNumber(),0);
+  assert.equal(e.summary().nodes.some(node=>node.id===id),false);
  }
- assert.ok(waterAt!==undefined && farmAt!==undefined && foodAt>farmAt && foodAt>waterAt+60);
- assert.equal(engine.session.modRules.civilization.actionDefinition('farm').workers,0);
- console.log('Legal worker-free Water at '+waterAt+'s; farming at '+farmAt+'s; worker-free Food at '+foodAt+'s (synthetic).');
 });
+
 test('rough and fixed runs have matching progression coverage and bounded observation drift',()=>{
  for(const strategy of ['active-balanced','regular']){
   const options={strategy,horizonSeconds:3600,wallBudgetSeconds:15};

@@ -88,16 +88,16 @@ test('one survivor retains solo recovery actions and can grow again',t=>{
 });
 
 test('population losses pause construction without losing work and resume when labor and supplies recover',t=>{
-    const {engine,p,e}=game(t);shortage(p,'food',5);
+    const {engine,p,e}=game(t);shortage(p,'food',4);
     p.food.sites=4;
     assert.equal(e.startProject('food-site'),true);
     assert.equal(e.dispatch('hunt'),true);
     engine.advance(9);const work=p.civ.projectWork;
     engine.advance(1);
-    assert.equal(p.points.toNumber(),4);
+    assert.equal(p.points.toNumber(),3);
     assert.equal(p.civ.projectWorkers,0);
     assert.equal(p.civ.projectWork,work);
-    assert.ok(e.supply().laborUsed<=4);
+    assert.ok(e.supply().laborUsed<=3);
     p.food.points=new Decimal(50);p.water.points=new Decimal(50);
     e.recall('hunt');engine.advance(1);
     assert.equal(p.civ.projectWorkers,1);
@@ -115,19 +115,19 @@ test('Water Keeper reserves a dedicated worker at full storage and cannot overbo
     engine.advance(1);assert.equal(p.civ.actions.water.remaining,0);
     assert.equal(e.toggleRepeat('water'),true);
     assert.equal(e.supply().keeperWorkers,0);
-    e.dispatch('hunt');e.dispatch('gather');
+    e.dispatch('hunt');e.dispatch('gather');e.startProject('food-site');
     assert.equal(e.toggleRepeat('water'),false);
 });
 
 test('a shortage can release the keeper before recalling a critical supply crew',t=>{
-    const {engine,p,e}=game(t);shortage(p,'food',5);
+    const {engine,p,e}=game(t);shortage(p,'food',6);
     p.civ.improvements.waterOrders=true;
-    e.toggleRepeat('water');e.dispatch('hunt');
+    e.toggleRepeat('water');e.dispatch('hunt');e.dispatch('fish');
     engine.advance(10);
-    assert.equal(p.points.toNumber(),4);
+    assert.equal(p.points.toNumber(),5);
     assert.equal(p.civ.actions.water.repeat,false);
     assert.ok(p.civ.actions.hunt.remaining>0);
-    assert.ok(e.supply().laborUsed<=4);
+    assert.ok(e.supply().laborUsed<=5);
 });
 
 test('both prestiges reset Population to five, seed ten supplies and switch Water Keeper off',t=>{
@@ -172,7 +172,7 @@ test('Organization requires only housing, advances by four lifetime housing per 
 });
 
 test('shortage countdown and paused construction survive the current codec',t=>{
-    const {engine,p,e}=game(t);shortage(p,'food',5);
+    const {engine,p,e}=game(t);shortage(p,'food',4);
     p.food.sites=4;e.startProject('food-site');e.dispatch('hunt');engine.advance(10);
     const restored=createBalanceEngine(engine.exportPlayer());t.after(restored.dispose);
     assert.equal(restored.player.civ.projectWorkers,0);
@@ -185,7 +185,7 @@ test('shortage countdown and paused construction survive the current codec',t=>{
 
 test('older keeper toggles migrate off without discarding active crews, while current overbooking is rejected',t=>{
     const {engine,p}=game(t);
-    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.4';
+    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.4';raw.points='4';
     raw.civ.improvements.waterOrders=true;raw.civ.actions.water.repeat=true;delete raw.civ.shortage;
     raw.civ.actions.hunt={remaining:15,duration:25,workers:3,reward:24,completed:0,repeat:false};
     raw.civ.actions.gather={remaining:5,duration:10,workers:1,reward:6,completed:0,repeat:false};

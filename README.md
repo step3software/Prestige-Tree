@@ -1,12 +1,12 @@
 # Civ Prestige Tree
 
-Grow a civilization from five people. Population supplies shared labor; Food and Water sustain growth; Shelter creates room. Develop Craft and Organization, then Money, free Time, Education and Culture.
+Grow a civilization from five people. Population supplies shared labor; Food and Water sustain growth; Shelter creates room. Develop Craft and Organization. Later resource branches are locked and hidden for now.
 
 For the civilization's historical grounding, start at the [research index](docs/research/README.md) and [game reference guide](docs/research/reference-guide.md). Build balance coverage alongside content using the [balance workflow](docs/balance-testing.md#add-balance-coverage-with-content).
 
-Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into a reservoir; carrying upgrades and a gravity-fed spring free the hauling crew. Food overseers repeat trips with workers, farming adds longer cycles, and worker-free Food comes later. Build new huts for capacity or improve existing homes to free domestic labor.
+Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into a reservoir; carrying upgrades and a gravity-fed spring free the hauling crew. Food overseers repeat trips with workers, farming adds longer cycles, and every Food cycle still uses its crew. Build new huts for capacity. Every person is available for expeditions or construction; there is no domestic labor reservation.
 
-Food buyables have distinct tradeoffs: explore farther for longer, richer gathering trips; organize larger hunting parties for bigger game; or spend Craft on river traps for larger catches with the same fishing crew. See [Food routes](docs/civilization.md#worker-actions-and-food-routes) for costs and scaling.
+Food baskets each cost 1 Craft and add 40 storage; their work requirement still scales with the number owned. Food buyables have distinct tradeoffs: explore farther for longer, richer gathering trips; organize larger hunting parties for bigger game; or spend Craft on river traps for larger catches with the same fishing crew. See [Food routes](docs/civilization.md#worker-actions-and-food-routes) for costs and scaling.
 
 Each foundation starts with one available Craft upgrade. Organization milestones 1–3 unlock Fishing nets, Well lining and Timber frames. Milestones 4–10 reveal later Craft upgrades and retain named buyables individually; auto-building arrives at 10. Other buyables reset on prestige. Purchased one-time upgrades stay. Both prestiges restart with 5 Population and 10 of each supply. Craft starts at 12 Population and adds one per two more; Organization starts at 12 housing and raises its one-point requirement by four each time. The preview lists exact losses and retained progress.
 

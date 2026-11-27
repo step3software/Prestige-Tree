@@ -13,6 +13,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         return command();
     }
     const computed = {
+        version() { return modRules.VERSION; },
         player() { return binding.player; }, allSaves() { return binding.allSaves; },
         civ() { return binding.player && modRules.civilization.summary(); },
         selected() { return modRules.civilization.node(binding.player.tab); },
@@ -25,7 +26,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
             return Number.isFinite(amount) ? amount.toLocaleString('en-US', {maximumFractionDigits: digits}) : gameHelpers.format(value);
         },
         signed(value) { return (value >= 0 ? '+' : '') + this.number(value); },
-        select(id) { if (layerRegistry.layers[id]) binding.player.tab = id; },
+        select(id) { if (layerRegistry.layers[id] && modRules.civilization.summary().nodes.some(node => node.id === id)) binding.player.tab = id; },
         build(id) { return actionable(() => modRules.civilization.startProject(id)); },
         dispatch(id) { return actionable(() => modRules.civilization.dispatch(id)); },
         recall(id) { return actionable(() => modRules.civilization.recall(id)); },

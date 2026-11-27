@@ -8,6 +8,42 @@ async function open(page){
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
 
+test('the opening uses every worker, sells baskets for one Craft each and hides later resources',async({page})=>{
+    const errors=await open(page);
+    await expect(page.locator('.chapter')).toContainText('v0.6');
+    await expect(page.getByTestId('available-workers')).toContainText('5 workers available');
+    await expect(page.getByTestId('worker-ledger')).not.toContainText('domestic');
+    for(const name of ['Money','Time','Education','Culture'])await expect(node(page,name)).toHaveCount(0);
+    const baskets=page.getByRole('button',{name:/^Weave food baskets/});
+    await expect(baskets).toContainText('1 Craft');
+    await expect(baskets).toBeDisabled();
+    await page.evaluate(()=>{
+        const s=gameUI.session,p=s.saveState.player;
+        p.craft.points=new Decimal(2);p.organization.points=new Decimal(2);
+        s.derivedState.updateTemp();
+    });
+    await baskets.click();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.craft.points.toNumber())).toBe(1);
+    await page.evaluate(()=>gameUI.session.advance(14));
+    await expect(baskets).toBeEnabled();
+    await expect(baskets).toContainText('1 Craft per basket');
+    await baskets.click();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.craft.points.toNumber())).toBe(0);
+    await page.evaluate(()=>gameUI.session.advance(20));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.storage)).toBe(2);
+    await expect(baskets).toBeDisabled();
+    await node(page,'Shelter').click();
+    await expect(page.getByText('Domestic work',{exact:true})).toHaveCount(0);
+    await expect(page.getByRole('button',{name:/Improve existing homes/})).toHaveCount(0);
+    for(const name of ['Money','Time','Education','Culture'])await expect(node(page,name)).toHaveCount(0);
+    for(const width of [1280,320]){
+        await page.setViewportSize({width,height:800});
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        await page.screenshot({path:'test-results/opening-economy-'+width+'.png',fullPage:true});
+    }
+    expect(errors).toEqual([]);
+});
+
 test('Food buyables show distinct tradeoffs and enforce Craft and lifetime Organization costs',async({page})=>{
     const errors=await open(page);
     const explore=page.getByRole('button',{name:/^Explore farther afield/});
@@ -47,7 +83,7 @@ test('Food buyables show distinct tradeoffs and enforce Craft and lifetime Organ
 test('fresh game renders the resource tree, shared labor and current growth constraint',async({page})=>{
     const errors=await open(page);
     await expect(page.getByTestId('population')).toHaveText('5');
-    await expect(page.getByRole('button',{name:/^Money, locked/})).toBeVisible();
+    for(const name of ['Money','Time','Education','Culture'])await expect(node(page,name)).toHaveCount(0);
     await node(page,'Water').click();
     await expect(page.locator('#resource-title')).toHaveText('Water');
     await expect(page.getByText('Population upkeep',{exact:true})).toBeVisible();
@@ -221,7 +257,7 @@ test('runtime faults disable the visible economy and retain the last durable sav
 
 test('expedition controls reserve parallel crews, block overbooking and release workers',async({page})=>{
     const errors=await open(page);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(7);});
     await page.getByRole('button',{name:'Send Gather',exact:true}).click();
     await page.getByRole('button',{name:'Send Hunt',exact:true}).click();
     await page.getByRole('button',{name:'Send Fish',exact:true}).click();

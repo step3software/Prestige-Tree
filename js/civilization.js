@@ -7,7 +7,7 @@ function createCivilizationRules({ saveState }) {
     const descriptions = {
         food: "Send gathering, hunting and fishing expeditions. Develop each route, then cultivate fields.",
         water: "Carry water into your reservoir, then replace hauling with reliable worker-free flow.",
-        shelter: "Build more homes or improve domestic life to free workers. Organization can eventually preserve your huts.",
+        shelter: "Build more homes to make room for growth. Organization can eventually preserve your huts.",
         craft: "Turn a well-supplied community into better tools and more productive work.",
         organization: "Coordinate shared labor. Keep useful knowledge and automate rebuilding.",
         money: "Exchange the output of specialized work and invest in the settlement.",
@@ -53,7 +53,7 @@ function createCivilizationRules({ saveState }) {
         overseer: {resource: "food", name: "Expedition overseer", description: "Unlock separate repeat orders. Each expedition still reserves its crew.", costs: {food: 25, craft: 1, organization: 1}},
         farming: {resource: "food", name: "Cultivated fields", description: "Unlock long, high-yield farming cycles. Repeat with the overseer; 3 workers remain occupied per cycle.", costs: {food: 45, water: 25, craft: 3, organization: 2}},
         autonomousFood: {resource: "food", name: "Autonomous food production", description: "All Food crews become worker-free. Repeat orders keep production running.", costs: {money: 120, freeTime: 10, craft: 12, education: 8}},
-        hearth: {resource: "shelter", name: "Shared hearths", description: "Reduce domestic work by 25% and add 25 Food storage.", costs: {food: 20, water: 15, craft: 1}},
+        hearth: {resource: "shelter", name: "Shared hearths", description: "Add 25 Food storage.", costs: {food: 20, water: 15, craft: 1}},
         joinery: {resource: "shelter", name: "Timber frames", description: "Every purchased home provides 6 housing instead of 4, including existing homes.", costs: {food: 25, craft: 2}},
         builderTools: {resource: "shelter", name: "Construction tools", description: "Double construction speed. Projects still reserve a builder.", costs: {craft: 2, organization: 1}},
     };
@@ -62,7 +62,7 @@ function createCivilizationRules({ saveState }) {
         "gather-tools": "Explore farther afield", "hunt-tools": "Hunt bigger game", "fish-tools": "Weave river traps",
         "farm-tools": "Farming tools", "food-site": "Provisioning", "food-storage": "Food baskets",
         "water-site": "Well improvements", "water-storage": "Reservoirs",
-        "shelter-home": "Huts", "shelter-comfort": "Home improvements",
+        "shelter-home": "Huts",
     };
     // This one progression table owns unlock gates, specific retention and the
     // late auto-builder. Lifetime earnings survive spending Organization.
@@ -75,8 +75,8 @@ function createCivilizationRules({ saveState }) {
         {id: "well-records", requirement: 6, name: "Well records", upgrades: ["gravity"], retains: "water-site", reward: "Unlock Gravity-fed spring. Keep well improvements."},
         {id: "gathering-records", requirement: 7, name: "Gathering records", upgrades: ["farming"], retains: "gather-tools", reward: "Unlock Cultivated fields. Keep exploration levels only."},
         {id: "hunting-records", requirement: 8, name: "Hunting records", upgrades: ["builderTools", "relief"], retains: "hunt-tools", reward: "Unlock Construction tools and Mutual aid. Keep bigger-game levels only."},
-        {id: "fishing-records", requirement: 9, name: "Fishing records", upgrades: ["sluice"], retains: "fish-tools", reward: "Unlock Automatic sluice. Keep river trap levels only."},
-        {id: "settlement-orders", requirement: 10, name: "Settlement orders", upgrades: ["autonomousFood"], retains: "shelter-home", reward: "Unlock auto-building and Autonomous food production. Keep huts only."},
+        {id: "fishing-records", requirement: 9, name: "Fishing records", upgrades: ["sluice"], retains: "fish-tools", reward: "Keep river trap levels only."},
+        {id: "settlement-orders", requirement: 10, name: "Settlement orders", upgrades: ["autonomousFood"], retains: "shelter-home", reward: "Unlock auto-building. Keep huts only."},
     ];
     function organizationMilestones(total = amountTotal("organization")) {
         return organizationRewards.map(reward => ({...reward, earned: total >= reward.requirement}));
@@ -94,14 +94,12 @@ function createCivilizationRules({ saveState }) {
         const [resource, kind] = id.split("-");
         if (kind === "tools") return player().food.routes[resource];
         if (kind === "home") return player().shelter.homes;
-        if (kind === "comfort") return player().shelter.comfort;
         return player()[resource][kind === "site" ? "sites" : "storage"];
     }
     function resetBuyable(id) {
         const [resource, kind] = id.split("-");
         if (kind === "tools") player().food.routes[resource] = 0;
         else if (kind === "home") player().shelter.homes = 0;
-        else if (kind === "comfort") player().shelter.comfort = 0;
         else player()[resource][kind === "site" ? "sites" : "storage"] = 0;
     }
     function buyableRetentionText(resource) {
@@ -124,11 +122,6 @@ function createCivilizationRules({ saveState }) {
     const toolEffect = () => 1 + amount("craft") * 0.18 + amount("education") * 0.12;
     const waterFlow = () => (24 + player().water.sites * 10) * toolEffect() * (owns("wellLining") ? 1.25 : 1);
     const storageCapacity = () => ({food: 50 + player().food.storage * 40 + (owns("hearth") ? 25 : 0), water: 50 + player().water.storage * 40});
-    function domesticWork(population, comfort = player().shelter.comfort, hearth = owns("hearth")) {
-        // Preserve one available worker for recovery even at one survivor.
-        const work = Math.max(0, population * 0.12 - comfort * 0.5) * (hearth ? 0.75 : 1);
-        return Math.min(Math.max(0, population - 1), work);
-    }
     function shortageStatus() {
         const p = player(), state = p.civ.shortage;
         const resources = ["food", "water"].filter(id => p[id].points.lte(0));
@@ -145,7 +138,7 @@ function createCivilizationRules({ saveState }) {
         const p = player(), returned = [];
         const overbooked = () => {
             const labor = occupiedWorkers();
-            return labor.domestic + labor.workers.food + labor.workers.water + labor.builders > p.points.toNumber() + 1e-9;
+            return labor.workers.food + labor.workers.water + labor.builders > p.points.toNumber() + 1e-9;
         };
         let paused = false, keeperStopped = false;
         if (overbooked() && p.civ.project && p.civ.projectWorkers) {
@@ -220,7 +213,7 @@ function createCivilizationRules({ saveState }) {
         if (id === "fish" && owns("fishing")) workers = 1;
         if (base.resource === "food" && owns("autonomousFood")) workers = 0;
         const unlocked = id !== "farm" || owns("farming");
-        const soloWater = id === "water" && workers > Math.floor(p.points.toNumber() - domesticWork(p.points.toNumber()) + 1e-9);
+        const soloWater = id === "water" && workers > p.points.toNumber();
         const crewSpeed = soloWater ? workers : 1;
         if (soloWater) workers = 1;
         let duration = base.duration;
@@ -248,15 +241,14 @@ function createCivilizationRules({ saveState }) {
     }
     function occupiedWorkers() {
         const p = player();
-        const domestic = domesticWork(p.points.toNumber());
         const keeperWorkers = owns("waterOrders") && p.civ.actions.water.repeat ? 1 : 0;
         const workers = {food: 0, water: keeperWorkers};
         for (const [id, action] of Object.entries(p.civ.actions)) {
             if (action.remaining > 0) workers[actionBase[id].resource] += action.workers;
         }
         const builders = p.civ.project ? p.civ.projectWorkers : 0;
-        const spare = Math.max(0, p.points.toNumber() - domestic - workers.food - workers.water - builders);
-        return {domestic, workers, keeperWorkers, builders, spare, availableWorkers: Math.floor(spare + 1e-9)};
+        const spare = Math.max(0, p.points.toNumber() - workers.food - workers.water - builders);
+        return {workers, keeperWorkers, builders, spare, availableWorkers: Math.floor(spare + 1e-9)};
     }
     function canDispatch(id) {
         const action = actionDefinition(id);
@@ -287,7 +279,7 @@ function createCivilizationRules({ saveState }) {
         return true;
     }
     /** A single derived labor ledger accounts for every reserved crew. Idle
-     * workers can trade/rest, and become available immediately when dispatched. */
+     * workers are available immediately when dispatched. */
     function supply() {
         const p = player(), population = p.points.toNumber(), labor = occupiedWorkers();
         const upkeep = 1 / (1 + amount("organization") * 0.06 + amount("culture") * 0.04);
@@ -301,13 +293,10 @@ function createCivilizationRules({ saveState }) {
         if (population >= housing()) bottleneck = "Shelter";
         else if (p.food.points.lt(reserve)) bottleneck = "Food reserves";
         else if (p.water.points.lt(reserve)) bottleneck = "Water reserves";
-        const moneyWorkers = p.money.unlocked ? labor.spare * 0.5 : 0;
-        const timeWorkers = p.freeTime.unlocked ? labor.spare - moneyWorkers : 0;
         return {population, upkeep, demand, ...labor, production, storage, reserve, bottleneck,
             growing: bottleneck === "Growing", support: housing(), capacity: production,
             efficiency: {food: 3 * toolEffect(), water: 3.2 * toolEffect()},
-            moneyWorkers, timeWorkers, idle: labor.spare - moneyWorkers - timeWorkers,
-            laborUsed: labor.domestic + labor.workers.food + labor.workers.water + labor.builders + moneyWorkers + timeWorkers};
+            idle: labor.spare, laborUsed: labor.workers.food + labor.workers.water + labor.builders};
     }
     function projects(id) {
         const p = player(), work = (base, level) => base * Math.pow(1.35, level);
@@ -321,7 +310,7 @@ function createCivilizationRules({ saveState }) {
             ...(owns("farming") ? [{id: "farm-tools", name: buyableNames["farm-tools"],
                 description: "Route level " + p.food.routes.farm + ": +35% base yield and faster trips per level.", work: work(14, p.food.routes.farm)}] : []),
             {id: "food-site", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
-            {id: "food-storage", name: "Weave food baskets", description: "+40 Food storage.", work: work(12, p.food.storage)},
+            {id: "food-storage", name: "Weave food baskets", craftCost: 1, description: "+40 Food storage. Costs 1 Craft per basket, paid when construction starts.", work: work(12, p.food.storage)},
         ];
         if (id === "water") return [
             {id: "water-site", name: "Improve the well", description: "Improve collection yield and speed; +10 base Water/min once gravity-fed.", work: work(16, p.water.sites)},
@@ -329,7 +318,6 @@ function createCivilizationRules({ saveState }) {
         ];
         if (id === "shelter") return [
             {id: "shelter-home", name: "Build a new hut", description: "+" + (owns("joinery") ? 6 : 4) + " housing. Owned: " + p.shelter.homes + ".", work: work(16, p.shelter.homes)},
-            {id: "shelter-comfort", name: "Improve existing homes", description: "Free up to 0.5 workers from domestic work. Improvements: " + p.shelter.comfort + ".", work: work(20, p.shelter.comfort)},
         ];
         return [];
     }
@@ -365,8 +353,7 @@ function createCivilizationRules({ saveState }) {
         else if (kind === "home") {
             player().shelter.homes++;
             player().shelter.points = new Decimal(8 + player().shelter.homes * (owns("joinery") ? 6 : 4));
-        } else if (kind === "comfort") player().shelter.comfort++;
-        else if (kind === "site") player()[resource].sites++;
+        } else if (kind === "site") player()[resource].sites++;
         else player()[resource].storage++;
         player().civ.project = "";
         player().civ.projectWork = 0;
@@ -375,7 +362,7 @@ function createCivilizationRules({ saveState }) {
     }
     function upgrades(resource) {
         return Object.entries(improvementDefinitions).filter(([, item]) => item.resource === resource).map(([id, item]) => {
-            const available = owns(id) || amountTotal("organization") >= upgradeRequirement(id);
+            const available = owns(id) || (amountTotal("organization") >= upgradeRequirement(id) && Object.keys(item.costs).every(resourceAvailable));
             return {id, ...item, available, organizationRequired: upgradeRequirement(id), owned: owns(id),
                 canBuy: available && !owns(id) && Object.entries(item.costs).every(([key, cost]) => player()[key].points.gte(cost)),
                 costText: Object.entries(item.costs).map(([key, cost]) => cost + " " + names[key]).join(" · ")};
@@ -383,7 +370,7 @@ function createCivilizationRules({ saveState }) {
     }
     function buyUpgrade(id) {
         const definition = improvementDefinitions[id];
-        if (!definition || owns(id) || amountTotal("organization") < upgradeRequirement(id)) return false;
+        if (!definition || owns(id) || amountTotal("organization") < upgradeRequirement(id) || !Object.keys(definition.costs).every(resourceAvailable)) return false;
         if (!Object.entries(definition.costs).every(([resource, cost]) => player()[resource].points.gte(cost))) return false;
         for (const [resource, cost] of Object.entries(definition.costs)) player()[resource].points = player()[resource].points.sub(cost);
         player().civ.improvements[id] = true;
@@ -405,19 +392,9 @@ function createCivilizationRules({ saveState }) {
         if (p.points.toNumber() + 2 >= housing() && p.shelter.homes < 20) return startProject("shelter-home");
         if (p.food.sites < 2) return startProject("food-site");
         if (p.water.sites < 2) return startProject("water-site");
-        if (p.shelter.comfort < 4) return startProject("shelter-comfort");
-        if (p.food.storage < 3) return startProject("food-storage");
+        if (p.food.storage < 3 && canStartProject("food-storage")) return startProject("food-storage");
         if (p.water.storage < 3) return startProject("water-storage");
         return false;
-    }
-    function unlock() {
-        const p = player();
-        if (p.craft.points.gte(1) && p.organization.points.gte(1)) {
-            p.money.unlocked = true; p.freeTime.unlocked = true;
-        }
-        if (p.money.total.gte(5) && p.freeTime.total.gte(3)) {
-            p.education.unlocked = true; p.culture.unlocked = true;
-        }
     }
     function addResource(id, gain) {
         const data = player()[id];
@@ -472,10 +449,7 @@ function createCivilizationRules({ saveState }) {
                 p.civ.message = "Your population has grown to " + p.points.toString() + ".";
             }
         }
-        if (p.money.unlocked) addResource("money", s.moneyWorkers * 2 * (1 + amount("craft") * 0.15) * minutes);
-        if (p.freeTime.unlocked) addResource("freeTime", s.timeWorkers * minutes);
         p.civ.irrigation = Math.max(0, p.civ.irrigation - seconds);
-        unlock();
         automaticOrders();
         resumeConstruction();
     }
@@ -511,11 +485,8 @@ function createCivilizationRules({ saveState }) {
             if (action === "water") return !kept["water-site"] && p.water.sites > 0;
             return (!kept[action + "-tools"] && p.food.routes[action] > 0) || (!kept["food-site"] && p.food.sites > 0);
         });
-        // Losing domestic improvements can reclaim labor from otherwise retained
-        // trips. Return only enough additional crews to keep the ledger valid.
-        const comfort = kept["shelter-comfort"] ? p.shelter.comfort : 0;
-        const domestic = domesticWork(startingSettlement.population, comfort);
-        let committed = domestic + (p.civ.project && !resetConstruction ? p.civ.projectWorkers : 0);
+        // Return enough retained crews to fit the smaller founding workforce.
+        let committed = p.civ.project && !resetConstruction ? p.civ.projectWorkers : 0;
         const remaining = Object.keys(actionBase).filter(action => p.civ.actions[action].remaining > 0 && !recalledActions.includes(action));
         for (const action of remaining) committed += p.civ.actions[action].workers;
         for (const action of remaining.sort((a, b) => p.civ.actions[b].workers - p.civ.actions[a].workers)) {
@@ -553,7 +524,6 @@ function createCivilizationRules({ saveState }) {
         player().civ.growth = 0;
         p.civ.irrigation = 0;
         player().civ.message = names[id] + " increased by " + gain + ". " + (plan.resetBuyables.length ? "Unprotected buyables reset. " : "All buyables retained. ") + "Organization milestones use lifetime earnings.";
-        unlock();
         return true;
     }
     function investments(id) {
@@ -562,7 +532,7 @@ function createCivilizationRules({ saveState }) {
         return {};
     }
     function canInvest(id) {
-        if (!["education", "culture"].includes(id) || !player()[id].unlocked) return false;
+        if (!["education", "culture"].includes(id) || !resourceAvailable(id) || !player()[id].unlocked) return false;
         return Object.entries(investments(id)).every(([resource, cost]) => player()[resource].points.gte(cost));
     }
     function invest(id) {
@@ -572,9 +542,11 @@ function createCivilizationRules({ saveState }) {
         player().civ.message = id === "education" ? "Knowledge improves every worker's tools and techniques." : "Shared culture improves cooperation and reduces upkeep.";
         return true;
     }
+    // Later resource unlocks are intentionally not part of this opening yet.
+    const resourceAvailable = id => tier(id) <= 1;
     function node(id) {
         const p = player(), isPrestige = tier(id) === 1;
-        const unlocked = tier(id) === 0 || isPrestige || p[id].unlocked;
+        const unlocked = resourceAvailable(id) && (tier(id) === 0 || isPrestige || p[id].unlocked);
         const colors = {food:"#4BDC13",water:"#31aeb0",shelter:"#c79b58",craft:"#f5b942",organization:"#b16fd6",money:"#f2cf54",freeTime:"#64d4f0",education:"#698df0",culture:"#e776b4"};
         const symbols = {food:"F",water:"W",shelter:"S",craft:"C",organization:"O",money:"$",freeTime:"T",education:"E",culture:"Cu"};
         return {id, name: names[id], color:colors[id], symbol:symbols[id], tier: tier(id), icon: icons[id], description: descriptions[id], unlocked,
@@ -591,7 +563,7 @@ function createCivilizationRules({ saveState }) {
     function summary() {
         const p = player(), s = supply(), project = projectDefinition(p.civ.project);
         const next = s.bottleneck.startsWith("Water") ? "water" : s.bottleneck.startsWith("Food") || s.bottleneck === "Production" ? "food" : "shelter";
-        return {...s, shortage: shortageStatus(), irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).map(node),
+        return {...s, shortage: shortageStatus(), irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).filter(resourceAvailable).map(node),
             project: project ? {...project, paused: p.civ.projectWorkers === 0, progress: Math.min(1, p.civ.projectWork / project.work)} : null,
             next, advice: s.growing ? "Your supplies and housing support another person." :
                 s.bottleneck.includes("reserves") ? "Restore supplies before the shortage countdown runs out." :
@@ -610,6 +582,17 @@ function createCivilizationRules({ saveState }) {
         for (const id of Object.keys(names)) if (data[id].points.lt(0) || data[id].best.lt(0) || data[id].total.lt(0)) throw new Error("Negative " + names[id]);
         for (const id of ["food", "water"]) if (!count(data[id].sites) || !count(data[id].storage)) throw new Error("Invalid supply infrastructure");
         const civ = data.civ;
+        if (Number(data.version) < 0.6) {
+            // Preserve earned balances and retired improvement counts while
+            // retiring their automatic unlock and unfinished labor-only project.
+            for (const id of ["money", "freeTime", "education", "culture"]) data[id].unlocked = false;
+            if (civ.project === "shelter-comfort") {
+                civ.project = "";
+                civ.projectWork = 0;
+                civ.projectWorkers = 1;
+            }
+        }
+        if (!resourceAvailable(data.tab)) data.tab = "food";
         // Old repeat toggles did not reserve a keeper. Migrate them off before
         // validating current worker commitments; future writes use this model.
         if (Number(data.version) < 0.5) civ.actions.water.repeat = false;
@@ -621,7 +604,7 @@ function createCivilizationRules({ saveState }) {
             Object.values(civ.improvements).some(value => typeof value !== "boolean")) throw new Error("Invalid improvements");
         if (!count(data.shelter.homes) || !count(data.shelter.comfort) || !data.shelter.points.eq(8 + data.shelter.homes * (civ.improvements.joinery ? 6 : 4))) throw new Error("Invalid housing capacity");
         if (Object.keys(data.food.routes).sort().join() !== "farm,fish,gather,hunt" || !Object.values(data.food.routes).every(count)) throw new Error("Invalid Food routes");
-        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "shelter-comfort", "gather-tools", "hunt-tools", "fish-tools", "farm-tools"];
+        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "gather-tools", "hunt-tools", "fish-tools", "farm-tools"];
         if (!["balanced", "food"].includes(civ.priority) ||
             (civ.project !== "" && !projectIds.includes(civ.project)) || (civ.project === "farm-tools" && !civ.improvements.farming) ||
             !finite(civ.projectWork) || (![0, 1].includes(civ.projectWorkers) || (!civ.project && civ.projectWorkers !== 1)) || !finite(civ.growth) || civ.growth >= 1 ||
@@ -638,8 +621,7 @@ function createCivilizationRules({ saveState }) {
                 typeof state.repeat !== "boolean" || (state.repeat && !(id === "water" ? civ.improvements.waterOrders : civ.improvements.overseer))) throw new Error("Invalid action state");
             crews += state.workers;
         }
-        const domestic = domesticWork(data.points.toNumber(), data.shelter.comfort, civ.improvements.hearth);
-        if (crews + domestic > data.points.toNumber() + 1e-9) throw new Error("Overcommitted workers");
+        if (crews > data.points.toNumber() + 1e-9) throw new Error("Overcommitted workers");
     }
     return {startingSettlement, defaults, supply, summary, node, projects, canStartProject, startProject, cancelProject, advance, shortageStatus,
         actionDefinition, canDispatch, dispatch, recall, toggleRepeat, upgrades, buyUpgrade, irrigate,

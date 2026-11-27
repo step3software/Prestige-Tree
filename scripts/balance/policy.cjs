@@ -40,7 +40,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
     if(!p.civ.project){
       const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationHousingRequirement()):24;
       let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2?'food-storage':p.water.sites<1?'water-site':null;
-      if(!next && p.shelter.comfort<2)next='shelter-comfort';
+      if(next && !economy.canStartProject(next))next=p.water.sites<1?'water-site':null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);
     }
     for(const id of ['water','gather','hunt','fish','farm']){

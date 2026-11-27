@@ -85,7 +85,7 @@ test('malformed action contracts and overcommitted crews are rejected before act
         'raw.civ.actions.gather.remaining=11;raw.civ.actions.gather.duration=10',
         'raw.civ.actions.gather.repeat=true',
         'raw.civ.actions.gather.remaining=5;raw.civ.actions.gather.duration=10;raw.civ.actions.gather.reward=6',
-        'for(var id of ["hunt","fish"]){raw.civ.actions[id].remaining=5;raw.civ.actions[id].duration=10;raw.civ.actions[id].workers=id==="hunt"?3:2;raw.civ.actions[id].reward=10}'
+        'for(var id of ["hunt","fish","water"]){raw.civ.actions[id].remaining=5;raw.civ.actions[id].duration=10;raw.civ.actions[id].workers=id==="hunt"?3:2;raw.civ.actions[id].reward=10}'
     ]){
         r.run('var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));'+mutation+';var result=s.saveCommands.saveCodec().decodePlayer(raw)');
         assert.equal(r.run('result.ok'),false,mutation);

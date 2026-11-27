@@ -47,7 +47,9 @@ test('bigger game requires lifetime Organization and rounds up each successive c
     }
     p.food.routes.hunt = 1;
     assert.equal(e.startProject('hunt-tools'), false, 'Next level needs two lifetime Organization');
-    assert.equal(e.dispatch('hunt'), false, 'Five-person party exceeds the fresh available workforce');
+    assert.equal(e.dispatch('gather'), true);
+    assert.equal(e.dispatch('hunt'), false, 'The five-person party cannot start while a gatherer is away');
+    e.recall('gather');
     p.civ.improvements.hunting = true;
     for (const [level, workers] of [[0, 2], [1, 3], [2, 5], [3, 8]]) {
         p.food.routes.hunt = level;
