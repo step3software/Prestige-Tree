@@ -68,7 +68,7 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
     const state=JSON.stringify(engine.player);
     const report=sections.map((section,index)=>{
       const entry=reached.get(section.id);
-      const next=sections.slice(index+1).find(item=>reached.has(item.id));
+      const next=sections.slice(index+1).filter(item=>reached.has(item.id) && (!entry || reached.get(item.id).entrySeconds>=entry.entrySeconds)).sort((a,b)=>reached.get(a.id).entrySeconds-reached.get(b.id).entrySeconds)[0];
       const exit=next?reached.get(next.id).entrySeconds:null;
       return {id:section.id,name:section.name,status:entry?'reached':'not-reached',entrySeconds:entry?.entrySeconds??null,
         entryWindowSeconds:entry?.entryWindowSeconds??null,sectionSeconds:entry&&exit!==null?exit-entry.entrySeconds:null,
@@ -81,10 +81,10 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
         .filter(([_id,item])=>item && typeof item==='object' && item.pseudoUnl && !item.unlocked && !item.pseudoCan)
         .map(([id,item])=>({layer,id,requirement:item.pseudoReq}))),
       wallSeconds:(performance.now()-start)/1000,
-      policyCapabilities:{purchases:true,resets:true,earnedAutomation:true,hindranceChallenges:true,
-        masteryRuns:true,discoverableUpgradeBuildSearch:false,motherboardAllocation:true},
-      interpretation:mode==='rough'?'Rough event forecast with coarse offline-sized rule steps. Active checks may be deferred by the forecast; regular checks remain every five minutes. No accuracy/optimality claim without fixed-step comparison. Unreached sections are censored.':
-        'Fixed-step policy simulation, not a proven global optimum. Unreached sections are censored, not estimated. Five-minute regular cadence is active/AFK time; the browser absence bank is not applied.'};
+      policyCapabilities:{construction:true,prestige:true,earnedAutomation:true,investments:true,workerPriority:true},
+      interpretation:mode==='rough'?'Rough checkpoint observation with coalesced outer calls; the actual economy uses one-second internal steps. Manual cadence is unchanged. Compare entry windows with a fixed reference. Unreached sections are censored.':
+        'Fixed-step legal policy simulation, not a proven optimum or measured human play. Five-minute regular actions run while production and earned automation continue.'};
+
   } finally {engine.dispose();}
 }
 

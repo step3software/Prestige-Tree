@@ -6,7 +6,7 @@ Replace the original playable content with the resource design developed in this
 
 ## Scope and acceptance
 
-[The design](../civilization.md) owns gameplay meaning and initial coefficients. [Structured plan](CIV01.plan.json) owns explicit acceptance criteria and exclusions; [preparation](CIV01.preparation.json) owns the exact file scope and source `0098433b8a18dedbabca8605d96cd40f3e995371`. Retain session/save/runtime ownership, upstream attribution and original save data. No space/time-travel content, old-save destruction, merge, deployment or service activation.
+[The design](../civilization.md) owns gameplay meaning and initial coefficients. [Structured plan](CIV01.plan.json) owns explicit acceptance criteria and exclusions; [preparation](CIV01.preparation.json) owns the exact file scope and source `d7d260fa66b270aae228dec2183f4df9da508b5f` (reconciled from the original `0098433`). Retain session/save/runtime ownership, upstream attribution and original save data. No space/time-travel content, old-save destruction, merge, deployment or service activation.
 
 ## Verification and continuation
 

@@ -16,7 +16,7 @@ npm run serve
 
 Open http://127.0.0.1:8000/. The static `dist/` package contains its own Vue runtime; gameplay makes no external requests. Stop the local server with Ctrl+C.
 
-Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime rules and Chromium journeys. Playwright requires its matching Chromium installation (`npx playwright install chromium`).
+Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivity checks, deterministic economy/save/runtime/balance rules and Chromium journeys. Run `npm run balance -- --hours 4 --calibrate-minutes 60` for active and five-minute regular pacing observations; see the [balance guide](docs/balance-testing.md). Playwright requires its matching Chromium installation (`npx playwright install chromium`).
 
 ## Find and change the rules
 
@@ -27,6 +27,6 @@ Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivi
 
 Civ uses `civ-prestige-tree` browser storage. The previous game's `ptr` saves are neither read nor changed. Export Civ saves through Settings to back them up. Incompatible imports are rejected; malformed or inaccessible storage opens recovery without overwriting the original.
 
-The owner explicitly selected current `main` at `0098433` for this replacement. The retained manifest/AGENTS still name `master`; this direct-session source exception does not silently change Orcha's registry or native milestone authority.
+The owner selected current `main` for this replacement. The branch was reconciled with `d7d260f`, including its AGENTS source correction and balance-testing workflow. The retained manifest/Orcha registry still name `master`; no native lifecycle authority is changed.
 
 Based on [The Prestige Tree](https://github.com/Jacorb90/Prestige-Tree) by Jacorb and Aarex and The Modding Tree by Acamaeda; original idea by papyrus. See [LICENSE](LICENSE) and [Prestige-tree-license](Prestige-tree-license).

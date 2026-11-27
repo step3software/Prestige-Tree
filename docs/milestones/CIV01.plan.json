@@ -23,10 +23,11 @@
     "Prestige preview and actual reset preserve Population, housing, infrastructure and sibling progress.",
     "Money/Time unlock through Craft/Organization; Education/Culture consume resources and improve earlier production.",
     "Civ saves, import/export, denied storage and runtime-fault recovery preserve valid durable data; ptr is untouched.",
-    "Keyboard controls, desktop and narrow-screen journeys work with truthful status and no runtime errors."
+    "Keyboard controls, desktop and narrow-screen journeys work with truthful status and no runtime errors.",
+    "Balance policies legally reach the new resource stages under active and five-minute regular play, with focused regressions and matched rough/fixed observations."
   ],
   "constraints": [
-    "Source main explicitly approved by user at 0098433b8a18dedbabca8605d96cd40f3e995371",
+    "Source main explicitly approved by user; reconciled from 0098433b8a18dedbabca8605d96cd40f3e995371 to published d7d260fa66b270aae228dec2183f4df9da508b5f",
     "Preserve upstream licenses and session-bound state ownership.",
     "Validate direct-session artifacts without claiming native lifecycle acceptance."
   ],
@@ -59,5 +60,6 @@
   ],
   "dependencies": [],
   "source_specification": "docs/civilization.md and docs/milestones/CIV01.md on codex/civ-resource-opening",
-  "open_questions": []
+  "open_questions": [],
+  "source_reconciliation": "main advanced with AGENTS source correction and content balance workflow. Rebased the isolated feature branch, preserving the published engine runner and adapting its content-specific policy/catalog."
 }

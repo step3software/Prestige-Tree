@@ -1,6 +1,6 @@
 # Developing Civ Prestige Tree
 
-Start at [README](../README.md), [AGENTS](../AGENTS.md) and [the design](civilization.md). The owner authorized this content replacement from `main` at `0098433b8a18dedbabca8605d96cd40f3e995371`, overriding the retained `master` source declaration for this task. No registry, permission, native milestone acceptance or deployment change follows.
+Start at [README](../README.md), [AGENTS](../AGENTS.md) and [the design](civilization.md). The owner authorized this content replacement from `main` initially at `0098433b8a18dedbabca8605d96cd40f3e995371`, reconciled with published `d7d260fa66b270aae228dec2183f4df9da508b5f` and its source correction to `main`. No registry, permission, native milestone acceptance or deployment change follows.
 
 ## Run and verify
 
@@ -40,7 +40,11 @@ Population is `player.points` (Decimal). Food, Water, Shelter and the other reso
 
 All economic rates use game minutes; the runtime passes seconds. The economy persists a subsecond remainder and advances in one-second steps, reevaluating consumption, population support and construction each time. This avoids skipping growth limits during offline advancement. The existing capped offline bank and driver lifecycle are retained. Headless sessions start no timers or browser I/O.
 
-## Save protection
+## Game-time balance tests
+
+Build balance coverage alongside each content change. [Balance workflow](balance-testing.md#add-balance-coverage-with-content) owns the procedure. The retained runner uses the actual session and codec. Civ-specific sections, legal policies and bounded coarse scheduling live under `scripts/balance/`. Run `npm run test:balance` for loader parity, active/regular completion, cadence, calibration and isolation. Run `npm run balance -- --hours 4 --calibrate-minutes 60` for a source-hashed report in ignored `balance-results/`. No target duration is accepted yet; synthetic observations are not human pacing or future campaign estimates.
+
+## Save boundaries and recovery
 
 The new game has the distinct mod/storage identity `civ-prestige-tree`; it never reads, migrates, overwrites or clears the prior game's `ptr` value. Those old resources have no meaningful conversion to this new economy. An old save may still be used with the prior game artifact. There is one current Civ runtime and one current Civ save model, without a legacy game mode.
 

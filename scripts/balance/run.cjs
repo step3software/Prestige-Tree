@@ -9,7 +9,7 @@ const {compareReference,markdown,duration} = require('./report.cjs');
 const {root} = require('../../tests/support/game-runtime.cjs');
 
 function options(args) {
-  const result={hours:24,budget:15,step:5,maxStep:300,mode:'rough',out:'balance-results',profiles:['active-generators','regular'],calibrateMinutes:10};
+  const result={hours:24,budget:15,step:5,maxStep:300,mode:'rough',out:'balance-results',profiles:['active-balanced','regular'],calibrateMinutes:10};
   const names={'--hours':'hours','--budget':'budget','--step':'step','--max-step':'maxStep','--mode':'mode','--out':'out','--profiles':'profiles','--save':'save','--calibrate-minutes':'calibrateMinutes'};
   for(let i=0;i<args.length;i++) {
     if(args[i]==='--help') return {help:true};
@@ -27,7 +27,7 @@ function options(args) {
 function main(args=process.argv.slice(2)) {
   const config=options(args);
   if(config.help) {
-    console.log('npm run balance -- [--mode rough|fixed] [--hours 24] [--budget 15] [--step 5] [--max-step 300] [--profiles active-generators,regular] [--calibrate-minutes 10] [--save synthetic.save.txt] [--out balance-results]');return;
+    console.log('npm run balance -- [--mode rough|fixed] [--hours 24] [--budget 15] [--step 5] [--max-step 300] [--profiles active-balanced,regular] [--calibrate-minutes 10] [--save synthetic.save.txt] [--out balance-results]');return;
   }
   const directory=path.resolve(root,config.out);
   fs.mkdirSync(directory,{recursive:true});

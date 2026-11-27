@@ -1,12 +1,14 @@
 {
   "milestone_id": "step3software/Prestige-Tree#CIV01",
-  "plan_sha256": "0653d157c1fe5bd65c5cb2e542c21371c8eb1dcc88028d97c7d8170fce75a45b",
-  "base_revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+  "plan_sha256": "0f3ff6bb07bcf9e507f4045e9062594f602cd276c933b552cf616178c0b1b1c0",
+  "base_revision": "d7d260fa66b270aae228dec2183f4df9da508b5f",
   "implementation_branch": "codex/civ-resource-opening",
   "validation_commands": [
     "npm run build",
     "npm run test:static",
-    "npm test"
+    "npm test",
+    "npm run test:balance",
+    "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60"
   ],
   "handoff_instructions": [
     "Use only this dedicated branch and writer claim.",
@@ -780,9 +782,90 @@
         "Inspect retained action pins and contents:read permissions",
         "npm test"
       ]
+    },
+    {
+      "path": "scripts/balance/sections.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "scripts/balance/policy.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "scripts/balance/rough.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "scripts/balance/simulate.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "scripts/balance/run.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "scripts/balance/report.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "tests/rules/balance-simulation.test.cjs",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
+    },
+    {
+      "path": "docs/balance-testing.md",
+      "operation": "modify",
+      "implementation": "Adapt inherited content-specific balance entry points, policies, bounded step scheduling and evidence to the Civ economy, retaining the reusable runner and legal-action contract.",
+      "verification": [
+        "npm run test:balance",
+        "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
+        "npm test"
+      ]
     }
   ],
   "source_branch_owner_answer": "Use current main (recommended)",
   "authority": "Direct implementation request in this chat; no native lifecycle transition or approval is manufactured.",
-  "reconciliation_note": "Preparation refined to name the existing saveCommands codec-construction call site required by the planned content validation hook. No new behavior or external authority."
+  "reconciliation_note": "Preparation refined to name the existing saveCommands codec-construction call site required by the planned content validation hook. No new behavior or external authority.",
+  "initial_base_revision": "0098433b8a18dedbabca8605d96cd40f3e995371"
 }
