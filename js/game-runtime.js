@@ -89,18 +89,30 @@ function createGameRuntime({ session, clock, scheduler, listeners = [], resume, 
 			if (state !== "stopped" || !isCurrentGameSession(session)) return false;
 			state = "running";
 			let token = ++generation;
+			// Injected ports may synchronously stop, dispose, restart or replace us.
+			function ownsStart() {
+				if (state !== "running" || token !== generation) return false;
+				if (!isCurrentGameSession(session)) { runtime.dispose(); return false; }
+				return true;
+			}
 			try {
-				resume(clock.now());
+				const now = clock.now();
+				if (!ownsStart()) return false;
+				resume(now);
+				if (!ownsStart()) return false;
 				for (let [callback, milliseconds] of [[() => tick(clock.now()), 50], [refresh, 500], [autosave, 5000]]) {
-					timers.push(scheduler.setInterval(guarded(callback, token), milliseconds));
+					const id = scheduler.setInterval(guarded(callback, token), milliseconds);
+					if (!ownsStart()) { scheduler.clearInterval(id); return false; }
+					timers.push(id);
 				}
 				for (let [target, type, callback] of listeners) {
 					let bound = guarded(callback, token);
 					bindings.push([target, type, bound]);
 					target.addEventListener(type, bound);
+					if (!ownsStart()) { target.removeEventListener(type, bound); return false; }
 				}
 			} catch (error) { fault(error); }
-			return state === "running";
+			return ownsStart();
 		},
 		stop() {
 			if (state !== "running") return;
