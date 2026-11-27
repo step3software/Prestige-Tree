@@ -15,7 +15,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','hutForeman','waterReserves','overseer','rationing','gravity','farming','builderTools','relief','sluice','autonomousFood']){
+    for(const id of ['abundance','buckets','hunting','hearth','joinery','hutForeman','waterReserves','overseer','rationing','gravity','farming','builderTools','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];

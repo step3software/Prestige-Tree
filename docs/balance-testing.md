@@ -157,28 +157,30 @@ The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded sett
 
 ## Combined work orders and abundance balance
 
-The final branch is rebased on PR 9 at `0a7ecda8c23e53d7e2e860335c1a59f62291923b`. It retains the independent 1–10× abundance curves and adds the population-scaled hearth bonus, staffed finite Food/hut repeat counters, Population-based Organization and removal of the automatic Craft yield/flow bonus. Fixed and rough runs cover every milestone; cadence remains 5s for active play and 20s/300s for regular play. No enjoyment or target-duration threshold has been accepted.
+The v0.8 branch starts at current main `8333e6d535cad36361f261e8005861cfde6ed5c1`, carrying forward the missing PR 11 changes and the requested upgrade simplification. It gates the independent 1-10x abundance curves behind the free Shelter upgrade at Organization 1 and adds the population-scaled hearth bonus, staffed finite Food/hut repeat counters, Population-based Organization and removal of the automatic Craft yield/flow bonus. Fixed and rough runs cover every milestone; cadence remains 5s for active play and 20s/300s for regular play. No enjoyment or target-duration threshold has been accepted.
 
 | Legal opening policy | Latest PR 9 alone | Combined changes | Difference |
 | --- | ---: | ---: | ---: |
-| Active balanced | 1445s | 1625s | +180s (+12.46%) |
-| Active Organization first | 1535s | 1700s | +165s (+10.75%) |
-| Regular | 1660s | 1960s | +300s (+18.07%) |
+| Active balanced | 1445s | 1875s | +430s (+29.76%) |
+| Active Organization first | 1535s | 1850s | +315s (+20.52%) |
+| Regular | 1660s | 2140s | +480s (+28.92%) |
 
 Each row is a fresh run of the actual rules. The baseline keeps PR 9's original policy; the new policy uses Population requirements and reserves three Craft before optional baskets, so the table measures delivered play paths rather than isolating a single coefficient. The final policy replenishes counters through real commands only at scheduled checks; it does not grant infinite repeats. All runs reach ten Organization milestones, repeat Food, worker-free Water and staffed farming. These are synthetic observations, not optimal or human pacing.
 
-The Food-route scenario enters at 945s/2060s and completes all three investments by 975s/2120s for active/regular play. Earthenware storage is completed within another 60s/600s after the opening, counting earned automatic construction as well as direct purchases. A reached Organization-10 checkpoint survives ten idle minutes and continues rebuilding. Rough/fixed action counts and checkpoint coverage match within the existing 15-second observation drift bound.
+The Food-route scenario enters at 1230s/2120s and completes all three investments by 1265s/2180s for active/regular play. Earthenware storage is completed within another 55s/300s after the opening, counting earned automatic construction as well as direct purchases. After Organization 10, retained crews can initially occupy all five founders. Normal 20-second checks first let a crew return and enable the dedicated Overseer; from that staffed starting state, the reached checkpoint survives ten idle minutes and continues rebuilding. Rough/fixed action counts and checkpoint coverage match within the existing 15-second observation drift bound.
 
 A legal scenario continues each reached opening checkpoint and queues exactly five repeats on each Food route in turn. It leaves the selected queue alone until the counter reaches zero and the fifth job finishes, maintaining other Food queues only at the normal manual cadence. The hut queue then builds exactly five more huts and remains stopped even with general auto-build on. All jobs use real crews/builders and guards; no resources or Population are granted. This verifies finite exhaustion, not continuous five-job batches.
 
-The abundance recovery scenario disables orders and waits for actual starvation to one survivor in a legally reached settlement. A dedicated Overseer cannot share that one worker with a crew: one manual Gather first restores at least two people, then four earned Food orders are enabled once. Without further decisions, both active and regular reached states recover from 1 to 50 in 93 simulated seconds, including that manual trip, peaking at 9.56x. The old unbuffed minimum was 588s. This checks the staffing change together with abundance rather than assuming manager-free recovery.
+The abundance recovery scenario disables orders and waits for actual starvation to one survivor in a legally reached settlement. A dedicated Overseer cannot share that one worker with a crew: one manual Gather first restores at least two people, then four earned Food orders are enabled once. Without further decisions, both active and regular reached states recover from 1 to 50 in 97 simulated seconds, including that manual trip, peaking at 7.99x. The old unbuffed minimum was 588s. This checks the staffing change together with abundance rather than assuming manager-free recovery.
 
 ## Shared hearths observations
 
-A legal scenario purchases hearths, reaches ten people, then holds the settlement instead of prestiging and builds ordinary huts toward twenty. Active reaches ten by 190s and twenty by 235s; regular reaches ten by 180s and twenty by 240s. Both have positive Food/Water at twenty, with +10 storage and +2 Food/min. No workers, currencies or unlocks are granted.
+A legal scenario purchases hearths, reaches ten people, then holds the settlement instead of prestiging and builds ordinary huts toward twenty. Active reaches ten by 255s and twenty by 300s; regular reaches ten by 300s and twenty by 360s. Both have positive Food/Water at twenty, with +10 storage and +2 Food/min. No workers, currencies or unlocks are granted.
 
 At base upkeep the passive rate covers at most 10% of Food consumption; Organization's actual upkeep reduction increases that fraction. A base Gather route produces 36 Food/min versus +1 hearth Food/min at ten people. A basket still adds 40 capacity versus hearths' +5 at ten people. The old flat +25 capacity is matched at fifty people, trading some early burst buffer for recurring income. Price remains 20 Food, 15 Water and 1 Craft. Hearth income has no extra worker/tool/irrigation multiplier and never supplies housing.
 
 Combined regression: the Food abundance curve uses hearth-adjusted capacity, while Water and Shelter contributions stay independent at a fixed population/progress state. Passive income cannot count as an already stored reserve or bypass the existing shortage/growth gate. Tests exercise actual threshold crossings, staffing losses, prestige resets, batch payouts, codec reloads and deterministic online/offline chunks. The economic interaction is verified; long-run strategy optimality and enjoyment remain unmeasured.
 
 Finite queues are deliberately not unattended infinite production. The measured idle window and opening remain viable, but players must replenish counters for continued work. Craft balances, costs and active snapshots remain intact; changing a Craft balance does not alter new expedition yields or gravity flow.
+
+The v0.8 policy purchases free Abundance at milestone 1 and can purchase Expedition overseer at milestone 2. Fishing retains two workers and Water has no Well lining multiplier. The runner uses those real guards and prices; no pacing coefficient was changed to compensate. The updated scenario times and save migration are recorded in [v0.8 verification](v08-upgrades.verification.md).

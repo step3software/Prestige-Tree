@@ -219,7 +219,12 @@ test('earned automation supports idle survival and rebuilding after a legally re
  const active=simulate({strategy:'active-balanced',horizonSeconds:14400,stopAt:'organization-10',onCheckpoint:row=>{if(row.id==='organization-10')input=row.encodedPlayer;}});
  assert.equal(active.status,'checkpoint');
  const engine=createBalanceEngine(input);t.after(engine.dispose);
- const policy=createPolicy(engine,strategies.regular);policy.act(0);
+ const policy=createPolicy(engine,strategies.regular);
+ // Retained crews can occupy all five founding workers after prestige. Use
+ // normal 20-second checks until a crew returns and the Overseer can be staffed.
+ let warm=0;
+ for(;warm<=120;warm+=20){policy.act(warm);if(engine.session.modRules.civilization.supply().overseerWorkers===1)break;engine.advance(20);}
+ assert.ok(warm<=120);
  const start=engine.player.points.toNumber();
  for(let second=0;second<600;second++){engine.advance(1);assert.ok(engine.player.points.gte(start));}
  assert.ok(engine.player.points.gt(start));

@@ -6,9 +6,11 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Use available workers to improve a route or build housing. Hunt and Fish can run alongside Gather and each other when enough workers are free. Dispatching a busy route or overbooking workers fails without spending anything.
 
-Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. An independent abundance bonus for Food, Water and Shelter can raise the rate to 10 times normal. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
+Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. After purchasing Abundance, a free Shelter upgrade unlocked at Organization milestone 1, independent Food, Water and Shelter bonuses can raise the rate to 10 times normal. Before purchase, growth remains at the base rate. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
 
 ## Abundance growth curves
+
+Abundance is purchased once for no resources after one lifetime Organization; its ownership survives prestige.
 
 `growthSettings` in `js/civilization.js` owns the base period and each input's
 independent weight, thresholds and shape exponent. All three currently contribute
@@ -91,13 +93,13 @@ Food routes have distinct repeatable projects, each reserving one builder:
 
 Provisioning improves all Food routes by 15% of base yield per level. Each Food basket adds 40 storage and costs exactly 1 Craft up front, in addition to its existing scaling work requirement. Provisioning and exploration/farming spend work only. Improvements affect newly dispatched trips. Repeat orders wait for sufficient workers for the new crew size; Autonomous food production still removes the final scaled crew requirement.
 
-Coordinated hunting reduces the base crew from 3 to 2 before bigger-game scaling; Fishing nets reduce theirs from 2 to 1. Expedition overseer remains a Food upgrade at Organization milestone 5, costing 25 Food, 1 Craft and 1 Organization. It unlocks independent 0–5 sliders for Gather, Hunt, Fish and unlocked Farm jobs. Any enabled Food order reserves one dedicated shared Overseer, even while waiting at full storage. Every job also retains its full crew. Orders wait for workers/storage. Each successful single-job start consumes one queued repeat. When every queue reaches zero the Overseer is released; active crews finish normally. One survivor must Gather manually before there are enough people for an Overseer and a crew.
+Coordinated hunting reduces the base crew from 3 to 2 before bigger-game scaling. Fishing keeps its base crew of 2; Fishing nets is removed. Expedition overseer is a Food upgrade at Organization milestone 2, costing 25 Food, 1 Craft and 1 Organization. It unlocks independent 0–5 sliders for Gather, Hunt, Fish and unlocked Farm jobs. Any enabled Food order reserves one dedicated shared Overseer, even while waiting at full storage. Every job also retains its full crew. Orders wait for workers/storage. Each successful single-job start consumes one queued repeat. When every queue reaches zero the Overseer is released; active crews finish normally. One survivor must Gather manually before there are enough people for an Overseer and a crew.
 
 Cultivated fields become available at Organization milestone 7, cost Food, Water, Craft and Organization and unlock longer farming cycles. Each repeating farming job uses 3 workers, plus the single shared Overseer. Food autonomy and Automatic sluice require later resources and are unavailable in this opening; their previously purchased effects remain intact in older saves. Purchased repeat orders still control which routes run. These costs are game abstractions, not historical dates.
 
 ## Water: hauling, jars and flow
 
-Water starts with manual collection trips into 50-capacity reserves. **Craft earthenware jars** adds 40 Water storage per purchase for exactly 1 Craft plus the existing work requirement: 12 × 1.35^owned jars. Craft is spent at start, with the same cancellation/prestige no-refund rule as Food baskets. Existing jar projects finish without retroactive charges. [Research and material options](research/reference-guide.md#water-storage-materials) explain the early fired-clay name; later material upgrades have no current cost or unlock. Carrying yokes, the initially available Water Craft upgrade, reduce the crew from 2 to 1. Well lining unlocks at 2 lifetime Organization and improves collection and gravity-fed flow by 25%. There is no Water keeper upgrade or repeat toggle. Milestone 4 instead unlocks Hut foreman in Shelter; Water remains manual until Gravity-fed spring at milestone 6.
+Water starts with manual collection trips into 50-capacity reserves. **Craft earthenware jars** adds 40 Water storage per purchase for exactly 1 Craft plus the existing work requirement: 12 × 1.35^owned jars. Craft is spent at start, with the same cancellation/prestige no-refund rule as Food baskets. Existing jar projects finish without retroactive charges. [Research and material options](research/reference-guide.md#water-storage-materials) explain the early fired-clay name; later material upgrades have no current cost or unlock. Carrying yokes, the initially available Water upgrade, reduce the crew from 2 to 1. Well lining is removed; collection and gravity flow have no lining multiplier. There is no Water keeper upgrade or repeat toggle. Milestone 4 instead unlocks Hut foreman in Shelter; Water remains manual until Gravity-fed spring at milestone 6.
 
 A Gravity-fed spring unlocks at milestone 6 and requires 2 Craft, 1 Organization and 30 Food. It replaces hauling with continuous, unattended, worker-free Water flow: 24 base Water per minute plus 10 per improved well, scaled by tools and knowledge. An existing carrying crew finishes normally. New games currently retain staffed Food production.
 
@@ -107,6 +109,7 @@ Well projects also improve manual trip yield and speed. Earthenware jar projects
 
 There are no building slots and no Shelter milestone track.
 
+- **Abundance** is free to purchase after Organization milestone 1. Until purchased, surplus supplies and spare housing do not accelerate growth. Its curves and ownership gate are described above.
 - **Build a new hut** is a labor-only job adding 4 housing. **Hut foreman** (Organization 4, then 18 Food and 1 Craft) unlocks a 0-5 remaining-repeat slider. Queued orders reserve one foreman and each new hut uses one builder, paying its full `16 * 1.35^owned` work. A successful automatic start consumes exactly one repeat. Busy construction, shortages or missing builders do not consume it. At zero, no further hut starts and the foreman is released; current construction finishes. The general auto-builder cannot start huts outside this queue. Setting zero clears pending repeats; canceling stops current construction.
 
 There is no domestic work or household labor reservation. Every person can join a crew or build. The ledger counts active crews, the shared Food Overseer, the hut foreman and every reserved builder once. Only whole available workers can join a crew.
@@ -121,15 +124,15 @@ Organization requires only current Population: the next point needs `12 + 4 × l
 
 Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
 
-Each foundation begins with exactly one available one-time Craft upgrade: Food has Coordinated hunting, Water has Carrying yokes, and Shelter has Shared hearths. All three require Craft to buy. Organization reveals additional upgrades; reaching a milestone does not purchase them.
+Each foundation begins with exactly one available one-time upgrade: Food has Coordinated hunting, Water has Carrying yokes, and Shelter has Shared hearths. All three require Craft to buy. Organization reveals additional upgrades, including free Abundance; reaching a milestone does not purchase them.
 
-| Lifetime Organization | Craft upgrade unlocked | Specific buyable retained |
+| Lifetime Organization | upgrade unlocked | Specific buyable retained |
 | --- | --- | --- |
-| 1 | Fishing nets | None |
-| 2 | Well lining | None |
+| 1 | Abundance (free, Shelter) | None |
+| 2 | Expedition overseer (Food) | None |
 | 3 | Timber frames | None |
 | 4 | Hut foreman and Emergency cistern | Earthenware jars |
-| 5 | Expedition overseer and Emergency rations | Food baskets |
+| 5 | Emergency rations | Food baskets |
 | 6 | Gravity-fed spring | Well improvements |
 | 7 | Cultivated fields | Explore farther afield |
 | 8 | Construction tools and Mutual aid | Hunt bigger game |
@@ -150,7 +153,7 @@ Money, Time, Education and Culture are locked and hidden for now, with no in-gam
 
 The canonical owner is createCivilizationRules in js/civilization.js. The registered Food update advances the entire economy, once, in one-second internal steps. Population is player.points; the Time resource uses freeTime because player.time is the runtime timestamp.
 
-Current version 0.7 accepts earlier Civ saves through the same detached codec. Before hydration, Water keeper ownership becomes Hut foreman ownership; hut automation starts off. Historical Boolean Food orders become targets of one; active trips become one-job batch snapshots with unchanged crew, remaining time and yield. If the new dedicated Food Overseer cannot fit, orders pause while active crews/progress remain. Invalid historical/current overbooking is rejected. Current saves store integer targets and batch counts; no alternate legacy runtime remains. Earlier home-improvement retirement, hidden later-resource flags and missing 0.1 defaults still migrate at ingress. Stocks, Population, construction, bought upgrades and lifetime Organization remain meaningful; eligibility uses the new Population rule. Malformed records fail before activation, preserving prior live/durable bytes. Original ptr data remains untouched.
+Current version 0.8 accepts v0.6/v0.7 and earlier Civ saves through the same detached codec. Before hydration, retired Fishing nets and Well lining Boolean fields are validated and removed, and Water keeper ownership becomes Hut foreman ownership for pre-0.7 saves; hut automation starts off. Historical Boolean Food orders become targets of one; active trips become one-job batch snapshots with unchanged crew, remaining time and yield. If the new dedicated Food Overseer cannot fit, orders pause while active crews/progress remain. Invalid historical/current overbooking is rejected. Abundance defaults to unpurchased in migrated saves and is available free if milestone 1 is earned. Existing active rewards/crews retain their snapshots; new trips use the current full Fishing crew and unlined Water output. Current saves store integer targets and batch counts; no alternate legacy runtime remains. Earlier home-improvement retirement, hidden later-resource flags and missing 0.1 defaults still migrate at ingress. Stocks, Population, construction, bought upgrades and lifetime Organization remain meaningful; eligibility uses the new Population rule. Malformed records fail before activation, preserving prior live/durable bytes. Original ptr data remains untouched.
 
 The base dark theme, monospace type, circular nodes and native upg/tabButton treatments are retained. Tests cover parallel crews, overbooking, recall, timed yields, the separate automation stages, irrigation, Shelter, prestige retention, saves and offline chunk parity. Balance profiles use real commands: active decisions every 5 seconds; regular decisions every 20 seconds until overseer, gravity flow and the milestone-10 auto-builder are earned, then every 300 seconds. This cadence change is owner-requested. Synthetic pacing is not human enjoyment evidence.
 

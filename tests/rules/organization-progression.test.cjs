@@ -17,14 +17,14 @@ const get=(p,id)=>{
     return p[resource][kind==='site'?'sites':'storage'];
 };
 
-test('each foundation starts with exactly one Craft upgrade and the first three milestones unlock more',t=>{
+test('each foundation starts with exactly one upgrade and the first three milestones unlock more',t=>{
     const {p,e}=game(t);
     for(const [resource,id] of [['food','hunting'],['water','buckets'],['shelter','hearth']]){
         assert.deepEqual(e.upgrades(resource).map(upgrade=>upgrade.id),[id]);
         assert.ok(e.upgrades(resource)[0].costs.craft>=1);
     }
     rich(p);
-    for(const [total,resource,id] of [[1,'food','fishing'],[2,'water','wellLining'],[3,'shelter','joinery']]){
+    for(const [total,resource,id] of [[1,'shelter','abundance'],[2,'food','overseer'],[3,'shelter','joinery']]){
         p.organization.total=new Decimal(total);
         assert.ok(e.upgrades(resource).some(upgrade=>upgrade.id===id));
         assert.equal(p.civ.improvements[id],false,'Unlocking must not purchase '+id);
@@ -33,7 +33,7 @@ test('each foundation starts with exactly one Craft upgrade and the first three 
     }
 });
 
-test('every later Craft upgrade rejects affordable purchases below its lifetime gate',t=>{
+test('every later upgrade rejects affordable purchases below its lifetime gate',t=>{
     const {p,e}=game(t);rich(p);
     const milestones=e.organizationMilestones();
     assert.deepEqual(milestones.map(row=>row.requirement),[1,2,3,4,5,6,7,8,9,10]);
@@ -91,26 +91,25 @@ test('auto-building remains inactive through milestone nine, including a previou
     assert.notEqual(p.civ.project,'');
 });
 
-test('Well lining improves useful Water output for both carriers and worker-free flow',t=>{
-    const {p,e}=game(t);
-    const carried=e.actionDefinition('water').reward;
-    p.civ.improvements.gravity=true;
-    const flow=e.supply().production.water;
-    p.civ.improvements.wellLining=true;
-    assert.equal(e.actionDefinition('water').reward,carried*1.25);
-    assert.equal(e.supply().production.water,flow*1.25);
+test('retired upgrades cannot be purchased and Fishing keeps its full two-person crew',t=>{
+    const {p,e}=game(t);rich(p);p.organization.total=new Decimal(10);
+    assert.equal(e.buyUpgrade('fishing'),false);
+    assert.equal(e.buyUpgrade('wellLining'),false);
+    assert.equal(e.actionDefinition('fish').workers,2);
+    p.civ.improvements.gravity=true;p.education.points=new Decimal(0);
+    assert.equal(e.supply().production.water,24);
 });
 
 test('earlier owned upgrades remain usable on load while new purchases obey current gates',t=>{
     const {engine,p,e}=game(t);
     p.civ.improvements.gravity=true;
     const raw=JSON.parse(atob(engine.exportPlayer()));
-    raw.version='0.3';delete raw.civ.improvements.wellLining;
+    raw.version='0.3';
     const loaded=engine.session.loadPlayer(btoa(JSON.stringify(raw)));
     assert.equal(loaded.ok,true);
     const current=engine.player;
     assert.equal(current.civ.improvements.gravity,true);
-    assert.equal(current.civ.improvements.wellLining,false);
+    assert.equal('wellLining' in current.civ.improvements,false);
     assert.equal(e.buyUpgrade('overseer'),false);
     assert.equal(e.supply().workers.water,0);
 });

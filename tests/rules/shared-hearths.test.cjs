@@ -134,6 +134,7 @@ test('hearth growth, threshold loss and Food accrual match across online and off
 
 test('hearth storage feeds the Food abundance curve while passive income cannot fake stored reserves', t => {
     const {p,e} = game(t);
+    p.organization.total = new Decimal(1); e.buyUpgrade('abundance');
     p.points = new Decimal(20); p.food.points = new Decimal(50); p.water.points = new Decimal(50);
     p.shelter.homes = 12; p.shelter.points = new Decimal(56);
     const before = e.supply().abundance;

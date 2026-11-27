@@ -16,6 +16,14 @@ test('abundance shows independent supply and Shelter bonuses and still pauses fo
         p.food.points=new Decimal(50);p.water.points=new Decimal(50);
         s.derivedState.updateTemp();
     });
+    await expect(page.getByTestId('abundance-growth')).toHaveCount(0);
+    await node(page,'Shelter').click();
+    await expect(page.getByRole('button',{name:/^Abundance/})).toHaveCount(0);
+    await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(1);gameUI.session.derivedState.updateTemp();});
+    const abundance=page.getByRole('button',{name:/^Abundance/});
+    await expect(abundance).toContainText('Free');
+    await abundance.click();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.craft.points.toNumber())).toBe(0);
     await expect(page.getByTestId('abundance-growth')).toHaveText('Abundance: 10× growth');
     await page.getByTestId('abundance-details').locator('summary').click();
     await expect(page.getByTestId('abundance-details')).toContainText('Food: +300%');
@@ -112,7 +120,7 @@ test('Water storage is crafted earthenware with one Craft and a timed builder re
 
 test('the opening uses every worker, sells baskets for one Craft each and hides later resources',async({page})=>{
     const errors=await open(page);
-    await expect(page.locator('.chapter')).toContainText('v0.7');
+    await expect(page.locator('.chapter')).toContainText('v0.8');
     await expect(page.getByTestId('available-workers')).toContainText('5 workers available');
     await expect(page.getByTestId('worker-ledger')).not.toContainText('domestic');
     for(const name of ['Money','Time','Education','Culture'])await expect(node(page,name)).toHaveCount(0);
@@ -256,21 +264,25 @@ test('Organization previews exact buyable protection earned by the next mileston
     expect(errors).toEqual([]);
 });
 
-test('each foundation starts with one Craft upgrade and Organization reveals purchases',async({page})=>{
+test('upgrades use generic labels with Abundance at milestone one and Overseer at two',async({page})=>{
     const errors=await open(page);
-    const upgradePanel=()=>page.locator('.projects').filter({has:page.getByRole('heading',{name:'Craft upgrades · keep through prestige',exact:true})});
+    const upgradePanel=()=>page.locator('.projects').filter({has:page.getByRole('heading',{name:'Upgrades · keep through prestige',exact:true})});
     for(const [resource,name] of [['Food','Coordinated hunting'],['Water','Carrying yokes'],['Shelter','Shared hearths']]){
         await node(page,resource).click();
         await expect(upgradePanel().getByRole('button')).toHaveCount(1);
         await expect(upgradePanel().getByRole('button',{name:new RegExp('^'+name)})).toBeVisible();
     }
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(1);gameUI.session.derivedState.updateTemp();});
+    await expect(page.getByRole('button',{name:/^Abundance/})).toBeEnabled();
     await node(page,'Food').click();
+    await expect(page.getByRole('button',{name:/^Expedition overseer/})).toHaveCount(0);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(2);p.organization.points=new Decimal(1);p.craft.points=new Decimal(1);p.food.points=new Decimal(25);gameUI.session.derivedState.updateTemp();});
+    await expect(page.getByRole('button',{name:/^Expedition overseer/})).toBeEnabled();
     await expect(page.getByRole('button',{name:/^Fishing nets/})).toHaveCount(0);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(1);p.craft.points=new Decimal(1);p.food.points=new Decimal(20);});
-    await expect(page.getByRole('button',{name:/^Fishing nets/})).toBeEnabled();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.improvements.fishing)).toBe(false);
-    await page.getByRole('button',{name:/^Fishing nets/}).click();
-    await expect(page.getByRole('button',{name:/^Fishing nets · Owned/})).toBeDisabled();
+    await node(page,'Water').click();
+    await expect(page.getByRole('button',{name:/^Well lining/})).toHaveCount(0);
+    await expect(page.getByRole('button',{name:/^Water keeper/i})).toHaveCount(0);
+    await expect(page.getByText(/Craft upgrades/)).toHaveCount(0);
     expect(errors).toEqual([]);
 });
 
@@ -494,3 +506,18 @@ test('Craft panel describes spending without an automatic production bonus',asyn
     await expect(page.getByText(/Each Craft adds 18%/)).toHaveCount(0);
     expect(errors).toEqual([]);
 });
+
+
+for(const version of ['v06','v07']){
+ test('v0.8 browser startup accepts the historical '+version+' save',async({page})=>{
+    const input=require('../fixtures/civ-v08-migration.json')[version];
+    await page.addInitScript(encoded=>localStorage.setItem('civ-prestige-tree',encoded),input);
+    const errors=await open(page);
+    await expect(page.locator('.chapter')).toContainText('v0.8');
+    await expect(page.locator('#save-recovery')).toBeHidden();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.8');
+    expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
+    expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
+    expect(errors).toEqual([]);
+ });
+}

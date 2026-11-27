@@ -1,4 +1,7 @@
-# Shared work orders verification
+# Historical v0.7 verification
+
+This record applies to the PR 11 revisions named below. Current v0.8 behavior and validation are recorded in [v0.8 verification](v08-upgrades.verification.md).
+
 
 Owner scope: finite repeat counters and removal of the unrequested automatic Craft bonus, in addition to the original branch from PR 9; replace Shared hearths with Food bonuses only; keep Expedition overseer and add staffed 0-5 Food job sliders; replace Water keeper with similar hut construction; make Organization require Population; rebase on the latest PR 9 and check both changes together. Publication is authorized; merge, deployment and service activation are excluded.
 
