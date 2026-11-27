@@ -1,0 +1,160 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#UI01",
+  "objective": "Players retain the existing game and saves while developers work on a supported, reproducibly installed Vue interface whose reactive updates and packaged startup are covered by browser tests.",
+  "scope": {
+    "include": [
+      "Migrate the real application to a supported Vue 3 release, pinning exact dependencies during preparation and preserving static/local hosting.",
+      "Replace Vue 2 construction/global registration/reactivity APIs and affected template/event/lifecycle assumptions using the official migration guidance.",
+      "Serve/package the pinned runtime from the application artifact rather than fetching it from a runtime CDN; update real/test boot paths together.",
+      "Verify reactive game updates, save flows, keyboard interaction, layout and packaging against the existing browser baseline."
+    ],
+    "exclude": [
+      "A new visual design, progression/balance changes, new accounts/backend services or save-format/key changes.",
+      "Paid Vue support, hosting changes, production deployment or mandatory purchase of tools/services.",
+      "Keeping Vue 2 and Vue 3 as parallel production modes, a permanent compatibility build, or test-only substitution that conceals the shipped dependency."
+    ]
+  },
+  "acceptance_criteria": [
+    "UI01-AC01: Preparation inventories Vue 2 usage and affected templates/components, selects an exact supported Vue 3/runtime/toolchain combination from current official guidance and locks it. Document how the static/local artifact is produced and served without imposing a backend or changing hosting authority.",
+    "UI01-AC02: The shipped page uses Vue 3 application/component/lifecycle APIs and one canonical session owner. Vue.set and superseded Vue 2 boot/registration paths are removed; dynamic layer/upgrade arrays, save switching, tabs and derived-value changes remain visible through the actual reactive UI.",
+    "UI01-AC03: The built/served application includes its pinned Vue runtime and required game assets with attribution. A clean locked install produces the artifact, and startup works with the external Vue CDN blocked. Any remaining external fonts/assets are documented; this criterion is not a claim of universal offline/PWA support.",
+    "UI01-AC04: Browser fixtures cover fresh and representative early/middle/late saves, prestige/reset, purchase/automation, layer/tab selection, notifications, save/export/import/rename/select and error recovery. Values, controls, navigation context and valid saved progress match the behavioral baseline, with no unexpected console or migration warnings.",
+    "UI01-AC05: Rendered checks verify keyboard access/focus through changed controls, readable feedback, supported desktop and narrow layouts, and canvas/tree resizing after tab/window changes. Preserve existing interactions; record any unavailable accessibility/actual-user evidence without claiming synthetic tests prove usability.",
+    "UI01-AC06: Tests execute the same Vue version and boot path as the delivered artifact. Replace the TST01 Vue 2-specific local routing/fixtures where necessary, verify they cannot continue serving the old runtime, and run current rule/static/browser checks in CI against the integrated package.",
+    "UI01-AC07: Only one production UI runtime/boot path remains, with no permanent legacy fallback or dual state adapter. Existing save formats/key and Decimal semantics are unchanged; smoke-load recoverable baseline fixtures and document rollback to the prior code artifact without destructive data conversion.",
+    "UI01-AC08: The development guide identifies app/component owners, packaging/start/test commands, generated artifact sources and external dependencies. Record before/after representative startup/tick/render measurements for the same fixture and environment, without inventing a performance target or claiming improvement without data; publish an unmerged PR with known limits."
+  ],
+  "constraints": [
+    "Planning/documentation only; no implementation, enrollment, merge or deployment authority",
+    "Follow AGENTS.md, current-main Orcha standards and existing lifecycle/permissions/writer controls",
+    "Preserve licenses, valid saves, layer IDs, save key and Decimal semantics",
+    "Hard dependencies require verified delivered source/tests and fresh exact-file preparation",
+    "No permanent legacy runtime modes, duplicate canonical models or silent failure fallback",
+    "No paid services, runner provisioning or account/policy changes"
+  ],
+  "dependencies": [
+    {
+      "id": "step3software/Prestige-Tree#TST01",
+      "kind": "hard",
+      "reason": "Its rendered journeys provide the behavioral baseline, including the current test-local Vue asset behavior."
+    },
+    {
+      "id": "step3software/Prestige-Tree#DEV01",
+      "kind": "hard",
+      "reason": "Use the single explicit state and UI-command contracts after save/runtime/layer refactors."
+    }
+  ],
+  "open_questions": [],
+  "decisions": [
+    {
+      "id": "UI01-D1",
+      "question": "Which bounded technical direction implements this review recommendation?",
+      "answer": "Target supported Vue 3 while preserving the current static game, controls and canonical state contracts.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/index.html",
+      "rationale": "The owner requested milestones for the remaining review recommendations; official Vue guidance confirms Vue 2 is end of life. Exact compatible versions and packaging are bounded preparation choices, not a deployment grant."
+    }
+  ],
+  "source_specification": "https://github.com/step3software/Prestige-Tree/blob/codex/tst01-testing-milestone/docs/milestones/UI01.md",
+  "source_specification_sha256": "c59d54d35ccf9e9afd47077e14194fea53783493164c32e06826886ea3e44438",
+  "implementation_authorization": null,
+  "plan_approval": null,
+  "source_document_status": "proposed_plan_not_runtime_enrolled",
+  "owner_origin": {
+    "channel": "Codex chat 01a21b20-b179-7f43-ba61-534a9ca8c7a3",
+    "date": "2026-11-26",
+    "request": "Write milestones for the remaining work on the same branch.",
+    "scope": "Remaining review-recommendation milestone documents on the existing PR #2 branch"
+  },
+  "source_context": {
+    "repository": "step3software/Prestige-Tree",
+    "canonical_branch": "master",
+    "planning_branch": "codex/tst01-testing-milestone",
+    "planning_revision": "608b7c42875c6b697a345027ab788004183ba9ee",
+    "application_baseline": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "authority_mode": "legacy",
+    "standards": {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "branch": "main",
+      "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+      "document_sha256": {
+        "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+        "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+        "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+        "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+        "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+        "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+        "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+        "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+        "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+        "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+      },
+      "purpose": "Fresh planning-run evidence; not a consumer pin"
+    },
+    "source_blobs": {
+      "index.html": "a4c8195da85954f713c06024ff23dcef519c77fd",
+      "js/components.js": "61f3601d61fd79094774d7fd8f256ec120060ae8",
+      "js/technical/systemComponents.js": "2d7c674c2828bd9d19221e0d96d357f1a98908e6",
+      "js/technical/temp.js": "9395fddd35473e7047e4dc3bfb4f70dc1c348f30",
+      "js/technical/canvas.js": "c5f2aca3f9561bc6e7cdb2327b429f11f5aeaf4a",
+      "style.css": "e2a12476d80f1efd82eb3bf4258e3d6052b90d3e",
+      "AGENTS.md": "bc1331477d12bea3ddabac766afc9550348a6b0b",
+      ".orcha/repository.json": "039cae6a2b9b0596c20394d2278246c7ca96d7cb",
+      "docs/developer-guide.md": "cda3d726c8dbd52dc41d4b2e84965acbd10434ac"
+    },
+    "dependency_specification_blobs": {
+      "TST01": "1c9793842da0cefc0b0737befe612a5d459fdde4"
+    }
+  },
+  "baseline": "index.html currently loads Vue 2.6.12 from jsDelivr. components.js creates a Vue instance and registers global components; temp.js uses Vue.set. Vue 2 reached end of life on 2023-12-31, as confirmed by the official Vue notice. Existing template/global/reactivity assumptions must be inventoried before migration.",
+  "implementation_sequence": [
+    "Refresh official Vue guidance and the post-DEV01 source, inventory breaking API/template/reactivity assumptions and capture representative browser evidence.",
+    "Migrate the application boot/components and dependency packaging in bounded increments, keeping tests on the same actual runtime and retaining compatible save data.",
+    "Remove old UI paths, run package/browser/static/regression checks and comparative measurements, then publish the unmerged migration PR."
+  ],
+  "verification_strategy": {
+    "criterion_checks": [
+      "UI01-AC01: Preparation inventories Vue 2 usage and affected templates/components, selects an exact supported Vue 3/runtime/toolchain combination from current official guidance and locks it. Document how the static/local artifact is produced and served without imposing a backend or changing hosting authority.",
+      "UI01-AC02: The shipped page uses Vue 3 application/component/lifecycle APIs and one canonical session owner. Vue.set and superseded Vue 2 boot/registration paths are removed; dynamic layer/upgrade arrays, save switching, tabs and derived-value changes remain visible through the actual reactive UI.",
+      "UI01-AC03: The built/served application includes its pinned Vue runtime and required game assets with attribution. A clean locked install produces the artifact, and startup works with the external Vue CDN blocked. Any remaining external fonts/assets are documented; this criterion is not a claim of universal offline/PWA support.",
+      "UI01-AC04: Browser fixtures cover fresh and representative early/middle/late saves, prestige/reset, purchase/automation, layer/tab selection, notifications, save/export/import/rename/select and error recovery. Values, controls, navigation context and valid saved progress match the behavioral baseline, with no unexpected console or migration warnings.",
+      "UI01-AC05: Rendered checks verify keyboard access/focus through changed controls, readable feedback, supported desktop and narrow layouts, and canvas/tree resizing after tab/window changes. Preserve existing interactions; record any unavailable accessibility/actual-user evidence without claiming synthetic tests prove usability.",
+      "UI01-AC06: Tests execute the same Vue version and boot path as the delivered artifact. Replace the TST01 Vue 2-specific local routing/fixtures where necessary, verify they cannot continue serving the old runtime, and run current rule/static/browser checks in CI against the integrated package.",
+      "UI01-AC07: Only one production UI runtime/boot path remains, with no permanent legacy fallback or dual state adapter. Existing save formats/key and Decimal semantics are unchanged; smoke-load recoverable baseline fixtures and document rollback to the prior code artifact without destructive data conversion.",
+      "UI01-AC08: The development guide identifies app/component owners, packaging/start/test commands, generated artifact sources and external dependencies. Record before/after representative startup/tick/render measurements for the same fixture and environment, without inventing a performance target or claiming improvement without data; publish an unmerged PR with known limits."
+    ],
+    "user_outcome": "Players open an existing save, navigate layers/tabs, purchase/prestige, save/reload and recover from rejected import. Require rendered desktop/narrow and keyboard evidence, retained progress/context and source-matched runtime tests; actual-user usability remains a separately disclosed unknown.",
+    "status": "Planned; no application changes or implementation checks performed for this documentation request"
+  },
+  "risks": [
+    "Vue proxy identity or template behavior can desynchronize the UI from game state; verify real visible updates after mutations and state replacement.",
+    "Test-only Vue routing can yield a green suite for a different runtime; verify artifact and test dependency identity.",
+    "A framework migration can grow into redesign; preserve controls, saves and hosting and surface consequential deviations before expanding scope."
+  ],
+  "documentation_assessment": {
+    "organization": "README links each canonical milestone; matching plan artifacts carry machine-readable evidence",
+    "strengths": [
+      "Existing AGENTS/manifest source authority",
+      "Existing development guide and TST01 testing owner"
+    ],
+    "defects": [
+      "Current large/shared-state source owners make navigation and change verification harder; specific repairs stay with this milestone scope"
+    ],
+    "improvement": "Update the existing development guide alongside each implementation; do not add competing specifications or status ledgers",
+    "measurement": "Qualitative source-backed assessment; no token/time savings claimed"
+  },
+  "external_references": [
+    {
+      "title": "Vue 2 end-of-life notice",
+      "url": "https://v2.vuejs.org/eol/"
+    },
+    {
+      "title": "Vue 3 migration guide",
+      "url": "https://v3-migration.vuejs.org/"
+    }
+  ]
+}

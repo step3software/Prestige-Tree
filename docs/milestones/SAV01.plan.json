@@ -1,0 +1,143 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#SAV01",
+  "objective": "A developer can change save validation, conversion or storage without editing game progression or UI code, while players keep recoverable valid progress when an operation fails.",
+  "scope": {
+    "include": [
+      "Separate save decoding/encoding, shape validation, supported-format conversion and Decimal hydration from persistence and UI effects.",
+      "Route current save/autosave, import/export, create/rename/delete/select and startup loading through one storage adapter with explicit outcomes.",
+      "Keep one canonical current save model and convert supported historical representations at the boundary, preserving recoverable originals until validation succeeds.",
+      "Add focused rule and browser regressions around storage failure, recovery and multi-save operations; update existing developer guidance."
+    ],
+    "exclude": [
+      "New cloud saves, accounts, synchronization, encryption services or storage backends.",
+      "Changing the ptr save key, layer IDs, intended game state, game balance or broad save-format redesign.",
+      "Retaining permanent legacy runtime readers/writers, dual writes or a second save authority; TST01 defect scope is not reopened."
+    ]
+  },
+  "acceptance_criteria": [
+    "SAV01-AC01: A small documented codec/validator accepts raw save data and returns a validated candidate or an explicit error without reading storage, touching DOM/dialogs, scheduling work or replacing the active player. Round-trip tests retain Decimal values and current player/multi-save semantics.",
+    "SAV01-AC02: One storage adapter owns every normal durable save read/write. UI commands, autosave and startup use that adapter; tests/source checks account for and remove duplicate direct storage paths. Storage errors return actionable outcomes instead of being swallowed.",
+    "SAV01-AC03: Import validates and persists a complete candidate before activating it. Invalid payload, denied confirmation, cancelled input, failed conversion or storage write leaves prior active and durable progress recoverable. Ordinary save failure retains valid active progress, preserves the prior durable value and exposes an unsaved/error state.",
+    "SAV01-AC04: Inventory supported existing save versions/layouts using synthetic representative fixtures. Convert each supported old representation into the one current model with repeatable/resumable behavior; validate meaningful values and references, retain an original until verification, and reject unsupported or corrupt data without fallback or silent replacement.",
+    "SAV01-AC05: Tests cover current/historical round-trips, malformed nested data, storage denial/quota failure, interrupted/retried conversion, multiple save selection and rename/delete, repeated import, and F1 non-regression. A deliberately failed candidate validation cannot overwrite the previous save.",
+    "SAV01-AC06: Browser journeys start with valid synthetic progress, perform save/export/import and multi-save changes, reload and recover from rejected data/storage failure. Visible feedback is truthful, readable and keyboard-operable, and retry retains the user context. Browser failure must not be marked as a successful save.",
+    "SAV01-AC07: All callers use the extracted owners with one canonical active player/save collection; derived caches, timers and DOM objects are excluded from durable data. TST01 suites pass on the integrated source, and the development guide maps the new owners and commands."
+  ],
+  "constraints": [
+    "Planning/documentation only; no implementation, enrollment, merge or deployment authority",
+    "Follow AGENTS.md, current-main Orcha standards and existing lifecycle/permissions/writer controls",
+    "Preserve licenses, valid saves, layer IDs, save key and Decimal semantics",
+    "Hard dependencies require verified delivered source/tests and fresh exact-file preparation",
+    "No permanent legacy runtime modes, duplicate canonical models or silent failure fallback",
+    "No paid services, runner provisioning or account/policy changes"
+  ],
+  "dependencies": [
+    {
+      "id": "step3software/Prestige-Tree#TST01",
+      "kind": "hard",
+      "reason": "Its save/import regressions and named F1-F3 repairs must be available at the prepared source before extraction."
+    }
+  ],
+  "open_questions": [],
+  "decisions": [
+    {
+      "id": "SAV01-D1",
+      "question": "Which bounded technical direction implements this review recommendation?",
+      "answer": "Use one codec/validation boundary and one local storage adapter around the existing save model.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/js/utils.js",
+      "rationale": "This separates real changing concerns while preserving existing saves and avoids inventing another backend or authority."
+    }
+  ],
+  "source_specification": "https://github.com/step3software/Prestige-Tree/blob/codex/tst01-testing-milestone/docs/milestones/SAV01.md",
+  "source_specification_sha256": "5ce3ed149620638b901c9e01eeeb96b380789f1519da3e068b13aeda52f5fa96",
+  "implementation_authorization": null,
+  "plan_approval": null,
+  "source_document_status": "proposed_plan_not_runtime_enrolled",
+  "owner_origin": {
+    "channel": "Codex chat 01a21b20-b179-7f43-ba61-534a9ca8c7a3",
+    "date": "2026-11-26",
+    "request": "Write milestones for the remaining work on the same branch.",
+    "scope": "Remaining review-recommendation milestone documents on the existing PR #2 branch"
+  },
+  "source_context": {
+    "repository": "step3software/Prestige-Tree",
+    "canonical_branch": "master",
+    "planning_branch": "codex/tst01-testing-milestone",
+    "planning_revision": "608b7c42875c6b697a345027ab788004183ba9ee",
+    "application_baseline": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "authority_mode": "legacy",
+    "standards": {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "branch": "main",
+      "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+      "document_sha256": {
+        "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+        "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+        "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+        "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+        "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+        "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+        "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+        "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+        "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+        "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+      },
+      "purpose": "Fresh planning-run evidence; not a consumer pin"
+    },
+    "source_blobs": {
+      "js/utils.js": "a3f8734fcf17689e2d78b0b4f9a6b0a9dec8d763",
+      "js/game.js": "18bc1a69359fb9ceaeb22a7081895280e2372047",
+      "js/mod.js": "85944d23fd2c2b1d095b6a47689d7068efc2a22e",
+      "js/components.js": "61f3601d61fd79094774d7fd8f256ec120060ae8",
+      "js/technical/systemComponents.js": "2d7c674c2828bd9d19221e0d96d357f1a98908e6",
+      "AGENTS.md": "bc1331477d12bea3ddabac766afc9550348a6b0b",
+      ".orcha/repository.json": "039cae6a2b9b0596c20394d2278246c7ca96d7cb",
+      "docs/developer-guide.md": "cda3d726c8dbd52dc41d4b2e84965acbd10434ac"
+    },
+    "dependency_specification_blobs": {
+      "TST01": "1c9793842da0cefc0b0737befe612a5d459fdde4"
+    }
+  },
+  "baseline": "Save creation, selection, import/export, default repair and localStorage writes currently share js/utils.js. TST01 owns the already identified invalid-import/autosave defect repair; this milestone extracts and strengthens that repaired boundary rather than repeating it.",
+  "implementation_sequence": [
+    "Pin the post-TST01 source, enumerate all current save consumers and supported representations, and capture unchanged valid-save fixtures.",
+    "Extract pure codec/validation and the single storage adapter in small steps, move callers and remove superseded paths after each verified cutover.",
+    "Run failure/round-trip and browser journeys, compare meaningful pre/post state, review all writes and publish the bounded unmerged implementation PR."
+  ],
+  "verification_strategy": {
+    "criterion_checks": [
+      "SAV01-AC01: A small documented codec/validator accepts raw save data and returns a validated candidate or an explicit error without reading storage, touching DOM/dialogs, scheduling work or replacing the active player. Round-trip tests retain Decimal values and current player/multi-save semantics.",
+      "SAV01-AC02: One storage adapter owns every normal durable save read/write. UI commands, autosave and startup use that adapter; tests/source checks account for and remove duplicate direct storage paths. Storage errors return actionable outcomes instead of being swallowed.",
+      "SAV01-AC03: Import validates and persists a complete candidate before activating it. Invalid payload, denied confirmation, cancelled input, failed conversion or storage write leaves prior active and durable progress recoverable. Ordinary save failure retains valid active progress, preserves the prior durable value and exposes an unsaved/error state.",
+      "SAV01-AC04: Inventory supported existing save versions/layouts using synthetic representative fixtures. Convert each supported old representation into the one current model with repeatable/resumable behavior; validate meaningful values and references, retain an original until verification, and reject unsupported or corrupt data without fallback or silent replacement.",
+      "SAV01-AC05: Tests cover current/historical round-trips, malformed nested data, storage denial/quota failure, interrupted/retried conversion, multiple save selection and rename/delete, repeated import, and F1 non-regression. A deliberately failed candidate validation cannot overwrite the previous save.",
+      "SAV01-AC06: Browser journeys start with valid synthetic progress, perform save/export/import and multi-save changes, reload and recover from rejected data/storage failure. Visible feedback is truthful, readable and keyboard-operable, and retry retains the user context. Browser failure must not be marked as a successful save.",
+      "SAV01-AC07: All callers use the extracted owners with one canonical active player/save collection; derived caches, timers and DOM objects are excluded from durable data. TST01 suites pass on the integrated source, and the development guide maps the new owners and commands."
+    ],
+    "user_outcome": "Save/import recovery is an affected player workflow: verify retained progress and selection, visible errors, cancellation, keyboard access and retry through actual rendered controls. No new performance target is proposed.",
+    "status": "Planned; no application changes or implementation checks performed for this documentation request"
+  },
+  "risks": [
+    "A shallow copy or premature state swap recreates F1; validate a detached candidate and assert failure-side effects.",
+    "Storage errors and partial conversions can lose progress; keep recoverable originals and never claim cross-key transactions that the adapter cannot provide.",
+    "An unrecognized historical save could require a consequential migration choice; preserve it and stop that conversion rather than widening scope silently."
+  ],
+  "documentation_assessment": {
+    "organization": "README links each canonical milestone; matching plan artifacts carry machine-readable evidence",
+    "strengths": [
+      "Existing AGENTS/manifest source authority",
+      "Existing development guide and TST01 testing owner"
+    ],
+    "defects": [
+      "Current large/shared-state source owners make navigation and change verification harder; specific repairs stay with this milestone scope"
+    ],
+    "improvement": "Update the existing development guide alongside each implementation; do not add competing specifications or status ledgers",
+    "measurement": "Qualitative source-backed assessment; no token/time savings claimed"
+  },
+  "external_references": []
+}

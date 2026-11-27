@@ -1,0 +1,155 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#DEV01",
+  "objective": "A developer can follow who owns game state and which effects a function performs, with static checks catching accidental globals and documented JavaScript contracts at important boundaries.",
+  "scope": {
+    "include": [
+      "Give durable player/save state, derived tmp/cache state and runtime services explicit named owners with clear per-session lifetimes.",
+      "Pass/import narrowly scoped dependencies at module/layer/UI boundaries and replace undeclared temporary/loop variables with local bindings.",
+      "Add JSDoc contracts and checked JavaScript for state, units, command results and save/runtime/layer interfaces, plus scoped lint/static checks in local and CI commands.",
+      "Keep one source model and verify independent session contexts, UI observation and existing behavior after the ownership cutover."
+    ],
+    "exclude": [
+      "TypeScript conversion, a new state-management framework, schema duplication or a wholesale gameplay rewrite.",
+      "Changing save semantics, formulas, runtime policy or the settled SAV01/SIM01 contracts without separately reviewed scope.",
+      "Linting/reformatting historical Old Code, non-shipped demos or vendored Decimal implementation; blanket production-file exclusions."
+    ]
+  },
+  "acceptance_criteria": [
+    "DEV01-AC01: The active application has documented single owners for player/save state, derived values and runtime services. Commands/selectors reference that owner through explicit module/context interfaces; no second persistent mutable model or hidden global player/tmp write authority remains.",
+    "DEV01-AC02: Two independently created session contexts can advance, purchase and load saves without changing each other, sharing timers or leaking derived caches. Browser UI observes the same canonical active session and continues updating after save selection/import.",
+    "DEV01-AC03: All active authored production scripts/modules have explicit lexical bindings for loop and temporary variables. A small documented browser integration/debug surface may remain only through an explicit adapter; the lint global allowlist must not whitelist accidental mutable identifiers to conceal leaks.",
+    "DEV01-AC04: JSDoc and static checking cover GameState, derived state, elapsed-second units, save outcomes and layer/runtime/UI command ports, including optional/error states. Reuse canonical definitions; do not hand-maintain conflicting schemas. A controlled invalid interface use and undeclared write cause their required checks to fail.",
+    "DEV01-AC05: Pinned scoped lint/static commands run locally and in CI on the actual shipped authored graph, with no broad ignores or unexplained suppressions. Existing debt in the active scope is resolved or a specific consequential exception is surfaced before declaring completion; style-only churn outside that scope is excluded.",
+    "DEV01-AC06: TST01 rule/browser tests and SAV01/SIM01/LAY01 boundary tests pass for the integrated source. Fresh fixtures prove Decimal behavior, upgrade/reset effects, save selection/reload and unchanged dependency ordering; no constructor/import starts unmanaged runtime effects.",
+    "DEV01-AC07: The existing developer guide shows the state/effect ownership map, a representative layer command and its test, local checking commands and the explicit external/global boundary. All normal callers use the new path and obsolete global bindings/adapters are removed."
+  ],
+  "constraints": [
+    "Planning/documentation only; no implementation, enrollment, merge or deployment authority",
+    "Follow AGENTS.md, current-main Orcha standards and existing lifecycle/permissions/writer controls",
+    "Preserve licenses, valid saves, layer IDs, save key and Decimal semantics",
+    "Hard dependencies require verified delivered source/tests and fresh exact-file preparation",
+    "No permanent legacy runtime modes, duplicate canonical models or silent failure fallback",
+    "No paid services, runner provisioning or account/policy changes"
+  ],
+  "dependencies": [
+    {
+      "id": "step3software/Prestige-Tree#SAV01",
+      "kind": "hard",
+      "reason": "Use its settled save codec/storage ownership rather than introducing a competing persistence contract."
+    },
+    {
+      "id": "step3software/Prestige-Tree#SIM01",
+      "kind": "hard",
+      "reason": "Use its advancement/lifecycle ports as the runtime boundary."
+    },
+    {
+      "id": "step3software/Prestige-Tree#LAY01",
+      "kind": "hard",
+      "reason": "Apply explicit dependencies to the settled layer modules/registry rather than migrating the monolith twice."
+    }
+  ],
+  "open_questions": [],
+  "decisions": [
+    {
+      "id": "DEV01-D1",
+      "question": "Which bounded technical direction implements this review recommendation?",
+      "answer": "Keep JavaScript with shared JSDoc contracts, scoped static checking and one explicit session owner.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/js/game.js",
+      "rationale": "This makes dependencies and state visible while avoiding a second language/framework migration before the behavior baseline is secure."
+    }
+  ],
+  "source_specification": "https://github.com/step3software/Prestige-Tree/blob/codex/tst01-testing-milestone/docs/milestones/DEV01.md",
+  "source_specification_sha256": "b5e4862a6e9b5c38c5337da95e81503dc98746dd65ba0ed40e0166330a1765c0",
+  "implementation_authorization": null,
+  "plan_approval": null,
+  "source_document_status": "proposed_plan_not_runtime_enrolled",
+  "owner_origin": {
+    "channel": "Codex chat 01a21b20-b179-7f43-ba61-534a9ca8c7a3",
+    "date": "2026-11-26",
+    "request": "Write milestones for the remaining work on the same branch.",
+    "scope": "Remaining review-recommendation milestone documents on the existing PR #2 branch"
+  },
+  "source_context": {
+    "repository": "step3software/Prestige-Tree",
+    "canonical_branch": "master",
+    "planning_branch": "codex/tst01-testing-milestone",
+    "planning_revision": "608b7c42875c6b697a345027ab788004183ba9ee",
+    "application_baseline": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "authority_mode": "legacy",
+    "standards": {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "branch": "main",
+      "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+      "document_sha256": {
+        "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+        "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+        "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+        "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+        "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+        "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+        "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+        "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+        "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+        "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+      },
+      "purpose": "Fresh planning-run evidence; not a consumer pin"
+    },
+    "source_blobs": {
+      "js/game.js": "18bc1a69359fb9ceaeb22a7081895280e2372047",
+      "js/utils.js": "a3f8734fcf17689e2d78b0b4f9a6b0a9dec8d763",
+      "js/layers.js": "7e595e49824daf73925291193435c839110782ab",
+      "js/technical/temp.js": "9395fddd35473e7047e4dc3bfb4f70dc1c348f30",
+      "js/technical/layerSupport.js": "fa432698c80d64dd5c5acca289a3c586bf797e47",
+      "js/components.js": "61f3601d61fd79094774d7fd8f256ec120060ae8",
+      "js/technical/systemComponents.js": "2d7c674c2828bd9d19221e0d96d357f1a98908e6",
+      "AGENTS.md": "bc1331477d12bea3ddabac766afc9550348a6b0b",
+      ".orcha/repository.json": "039cae6a2b9b0596c20394d2278246c7ca96d7cb",
+      "docs/developer-guide.md": "cda3d726c8dbd52dc41d4b2e84965acbd10434ac"
+    },
+    "dependency_specification_blobs": {
+      "TST01": "1c9793842da0cefc0b0737befe612a5d459fdde4"
+    }
+  },
+  "baseline": "Active scripts share mutable player, allSaves and tmp plus undeclared loop/temporary names. For example js/layers.js:13 assigns mult without a declaration, and temp/game code uses shared iteration names. Naming and ownership are difficult to verify independently of script order.",
+  "implementation_sequence": [
+    "Prepare an inventory of active globals and actual callers after the three prerequisite refactors; pin one canonical state/contract map.",
+    "Migrate coherent boundaries to explicit context/imports and checked contracts in small test-backed steps; keep the UI bound to the same active owner.",
+    "Enforce checks, demonstrate independent contexts and controlled static failures, remove superseded bindings and publish the unmerged PR."
+  ],
+  "verification_strategy": {
+    "criterion_checks": [
+      "DEV01-AC01: The active application has documented single owners for player/save state, derived values and runtime services. Commands/selectors reference that owner through explicit module/context interfaces; no second persistent mutable model or hidden global player/tmp write authority remains.",
+      "DEV01-AC02: Two independently created session contexts can advance, purchase and load saves without changing each other, sharing timers or leaking derived caches. Browser UI observes the same canonical active session and continues updating after save selection/import.",
+      "DEV01-AC03: All active authored production scripts/modules have explicit lexical bindings for loop and temporary variables. A small documented browser integration/debug surface may remain only through an explicit adapter; the lint global allowlist must not whitelist accidental mutable identifiers to conceal leaks.",
+      "DEV01-AC04: JSDoc and static checking cover GameState, derived state, elapsed-second units, save outcomes and layer/runtime/UI command ports, including optional/error states. Reuse canonical definitions; do not hand-maintain conflicting schemas. A controlled invalid interface use and undeclared write cause their required checks to fail.",
+      "DEV01-AC05: Pinned scoped lint/static commands run locally and in CI on the actual shipped authored graph, with no broad ignores or unexplained suppressions. Existing debt in the active scope is resolved or a specific consequential exception is surfaced before declaring completion; style-only churn outside that scope is excluded.",
+      "DEV01-AC06: TST01 rule/browser tests and SAV01/SIM01/LAY01 boundary tests pass for the integrated source. Fresh fixtures prove Decimal behavior, upgrade/reset effects, save selection/reload and unchanged dependency ordering; no constructor/import starts unmanaged runtime effects.",
+      "DEV01-AC07: The existing developer guide shows the state/effect ownership map, a representative layer command and its test, local checking commands and the explicit external/global boundary. All normal callers use the new path and obsolete global bindings/adapters are removed."
+    ],
+    "user_outcome": "No intended player UX change. Browser checks verify state remains visible after purchases, imports and save switching; this is regression evidence, not a claim of new usability or performance.",
+    "status": "Planned; no application changes or implementation checks performed for this documentation request"
+  },
+  "risks": [
+    "Moving globals can change reference identity/reactivity; assert both UI updates and isolated contexts.",
+    "An enormous global context can merely rename coupling; pass the smallest meaningful ports and keep effects with their owners.",
+    "A linter allowlist can hide the original problem; inspect the real shipped graph and every suppression."
+  ],
+  "documentation_assessment": {
+    "organization": "README links each canonical milestone; matching plan artifacts carry machine-readable evidence",
+    "strengths": [
+      "Existing AGENTS/manifest source authority",
+      "Existing development guide and TST01 testing owner"
+    ],
+    "defects": [
+      "Current large/shared-state source owners make navigation and change verification harder; specific repairs stay with this milestone scope"
+    ],
+    "improvement": "Update the existing development guide alongside each implementation; do not add competing specifications or status ledgers",
+    "measurement": "Qualitative source-backed assessment; no token/time savings claimed"
+  },
+  "external_references": []
+}

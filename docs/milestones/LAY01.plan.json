@@ -1,0 +1,146 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#LAY01",
+  "objective": "A developer can locate and change one named layer in a focused file while preserving the existing registry, cross-layer effects and game/save behavior.",
+  "scope": {
+    "include": [
+      "Move each active layer definition to a named content file and provide an explicit deterministic registration manifest/entry point.",
+      "Preserve addLayer contracts, layer IDs, registration order, hooks and state shape; document cross-layer dependencies and narrow shared formula owners.",
+      "Remove duplicate old registrations and update real startup, tests and the current code map together.",
+      "Add registry completeness/uniqueness and representative content-preservation checks across early, middle and late game."
+    ],
+    "exclude": [
+      "Changing formulas, prices, unlocks, rewards, layer IDs, save schema or balancing.",
+      "A new plugin platform, automatic filesystem discovery, registry replacement, UI redesign or vendor library edits.",
+      "A full audit/proof of every late-game balance interaction or an unrelated archive cleanup."
+    ]
+  },
+  "acceptance_criteria": [
+    "LAY01-AC01: Every active baseline layer has one clearly named source owner; the current baseline inventory is 31 IDs and must be refreshed at preparation if source changed. The registration entry lists each exactly once in the established order, and duplicate/missing IDs fail a focused check.",
+    "LAY01-AC02: The real application entry and test loader consume the same authoritative registration manifest. Adding a layer does not require editing unrelated layer bodies or maintaining a separate test-only registry.",
+    "LAY01-AC03: All existing layer identifiers, serialized fields, hooks, hotkeys, tree positions, formulas and dependency semantics remain unchanged. A before/after registration/contract inventory accounts for every moved definition and consumer; any intentional behavior change needs separate scope.",
+    "LAY01-AC04: Synthetic representative early/middle/late fixtures exercise reset gains, upgrade costs/effects, unlocks, automation and cross-layer effects before and after moves using actual definitions and the shipped Decimal library. TST01 and registry tests remain green; report remaining balance coverage limits explicitly.",
+    "LAY01-AC05: The old monolithic definitions are removed from the active path after verified movement; no duplicate loader, fallback registry or second maintained content copy remains. Tests fail for an intentionally omitted/duplicated registration in an isolated temporary fixture.",
+    "LAY01-AC06: The existing development guide maps layer names/IDs to source files, shared helpers and relevant tests. Trace one layer change from guide to definition, registry, caller and check using repository content alone. The unmerged PR preserves attribution and records all moves and results."
+  ],
+  "constraints": [
+    "Planning/documentation only; no implementation, enrollment, merge or deployment authority",
+    "Follow AGENTS.md, current-main Orcha standards and existing lifecycle/permissions/writer controls",
+    "Preserve licenses, valid saves, layer IDs, save key and Decimal semantics",
+    "Hard dependencies require verified delivered source/tests and fresh exact-file preparation",
+    "No permanent legacy runtime modes, duplicate canonical models or silent failure fallback",
+    "No paid services, runner provisioning or account/policy changes"
+  ],
+  "dependencies": [
+    {
+      "id": "step3software/Prestige-Tree#TST01",
+      "kind": "hard",
+      "reason": "The real-script and browser regression suite must guard content movement before the monolith is split."
+    },
+    {
+      "id": "step3software/Prestige-Tree#SIM01",
+      "kind": "soft",
+      "reason": "Reuse its explicit loading/runtime boundary if available; otherwise preserve current startup semantics and reconcile later."
+    }
+  ],
+  "open_questions": [],
+  "decisions": [
+    {
+      "id": "LAY01-D1",
+      "question": "Which bounded technical direction implements this review recommendation?",
+      "answer": "Reuse addLayer and an explicit registration manifest with one source file per active layer.",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "evidence_reference": "https://github.com/step3software/Prestige-Tree/blob/077861d2d4479d77e6079fd5c8bdf5e4fe7821f8/js/layers.js",
+      "rationale": "The existing registry is a working extension point; this targets navigation and review cost without adding a plugin subsystem."
+    }
+  ],
+  "source_specification": "https://github.com/step3software/Prestige-Tree/blob/codex/tst01-testing-milestone/docs/milestones/LAY01.md",
+  "source_specification_sha256": "97eaae27813ad8892ce72db74fcbda49def72bff6251d91b510ae635ed1a07dd",
+  "implementation_authorization": null,
+  "plan_approval": null,
+  "source_document_status": "proposed_plan_not_runtime_enrolled",
+  "owner_origin": {
+    "channel": "Codex chat 01a21b20-b179-7f43-ba61-534a9ca8c7a3",
+    "date": "2026-11-26",
+    "request": "Write milestones for the remaining work on the same branch.",
+    "scope": "Remaining review-recommendation milestone documents on the existing PR #2 branch"
+  },
+  "source_context": {
+    "repository": "step3software/Prestige-Tree",
+    "canonical_branch": "master",
+    "planning_branch": "codex/tst01-testing-milestone",
+    "planning_revision": "608b7c42875c6b697a345027ab788004183ba9ee",
+    "application_baseline": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "authority_mode": "legacy",
+    "standards": {
+      "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+      "branch": "main",
+      "revision": "9dbea2b52cd076c8b52174edeb06ed807d3aa7d1",
+      "document_sha256": {
+        "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+        "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+        "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+        "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+        "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+        "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+        "config/repositories.json": "00f76eb618856b51f1c75ee191519a92b575e0231a4d1a2368693a5a76472056",
+        "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+        "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+        "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+      },
+      "purpose": "Fresh planning-run evidence; not a consumer pin"
+    },
+    "source_blobs": {
+      "js/layers.js": "7e595e49824daf73925291193435c839110782ab",
+      "js/technical/layerSupport.js": "fa432698c80d64dd5c5acca289a3c586bf797e47",
+      "js/tree.js": "998fc1720f73d9b7cc87de5aba4c18db00169d68",
+      "js/technical/temp.js": "9395fddd35473e7047e4dc3bfb4f70dc1c348f30",
+      "index.html": "a4c8195da85954f713c06024ff23dcef519c77fd",
+      "AGENTS.md": "bc1331477d12bea3ddabac766afc9550348a6b0b",
+      ".orcha/repository.json": "039cae6a2b9b0596c20394d2278246c7ca96d7cb",
+      "docs/developer-guide.md": "cda3d726c8dbd52dc41d4b2e84965acbd10434ac"
+    },
+    "dependency_specification_blobs": {
+      "TST01": "1c9793842da0cefc0b0737befe612a5d459fdde4"
+    }
+  },
+  "baseline": "The baseline js/layers.js has approximately 9,900 lines and 31 addLayer registrations. Registration already has a shared owner in js/technical/layerSupport.js, so content can be split without replacing the layer model.",
+  "implementation_sequence": [
+    "Inventory exact registered IDs/order and representative dependency fixtures at the post-TST01 source.",
+    "Move coherent batches through the current registry, updating the one registration manifest and real/test loading together; verify each batch.",
+    "Run completeness, sensitivity and progression/browser checks, remove superseded active definitions and publish the unmerged refactor PR."
+  ],
+  "verification_strategy": {
+    "criterion_checks": [
+      "LAY01-AC01: Every active baseline layer has one clearly named source owner; the current baseline inventory is 31 IDs and must be refreshed at preparation if source changed. The registration entry lists each exactly once in the established order, and duplicate/missing IDs fail a focused check.",
+      "LAY01-AC02: The real application entry and test loader consume the same authoritative registration manifest. Adding a layer does not require editing unrelated layer bodies or maintaining a separate test-only registry.",
+      "LAY01-AC03: All existing layer identifiers, serialized fields, hooks, hotkeys, tree positions, formulas and dependency semantics remain unchanged. A before/after registration/contract inventory accounts for every moved definition and consumer; any intentional behavior change needs separate scope.",
+      "LAY01-AC04: Synthetic representative early/middle/late fixtures exercise reset gains, upgrade costs/effects, unlocks, automation and cross-layer effects before and after moves using actual definitions and the shipped Decimal library. TST01 and registry tests remain green; report remaining balance coverage limits explicitly.",
+      "LAY01-AC05: The old monolithic definitions are removed from the active path after verified movement; no duplicate loader, fallback registry or second maintained content copy remains. Tests fail for an intentionally omitted/duplicated registration in an isolated temporary fixture.",
+      "LAY01-AC06: The existing development guide maps layer names/IDs to source files, shared helpers and relevant tests. Trace one layer change from guide to definition, registry, caller and check using repository content alone. The unmerged PR preserves attribution and records all moves and results."
+    ],
+    "user_outcome": "No player workflow is intentionally redesigned. Existing rendered progression/tree/purchase journeys are regression evidence; new UX studies or invented performance targets are not required for content moves.",
+    "status": "Planned; no application changes or implementation checks performed for this documentation request"
+  },
+  "risks": [
+    "Module evaluation order can alter closures/hooks; keep deterministic registration and compare actual derived values.",
+    "A visually tidy split can retain hidden dependencies; document specific cross-layer reads and avoid extracting helpers based only on similar text.",
+    "Text moves alone do not prove balance equivalence; retain representative fixtures and state explicit untested interactions."
+  ],
+  "documentation_assessment": {
+    "organization": "README links each canonical milestone; matching plan artifacts carry machine-readable evidence",
+    "strengths": [
+      "Existing AGENTS/manifest source authority",
+      "Existing development guide and TST01 testing owner"
+    ],
+    "defects": [
+      "Current large/shared-state source owners make navigation and change verification harder; specific repairs stay with this milestone scope"
+    ],
+    "improvement": "Update the existing development guide alongside each implementation; do not add competing specifications or status ledgers",
+    "measurement": "Qualitative source-backed assessment; no token/time savings claimed"
+  },
+  "external_references": []
+}

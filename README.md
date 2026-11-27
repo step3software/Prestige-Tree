@@ -7,7 +7,16 @@ For development, start with [AGENTS.md](AGENTS.md), the
 [development guide](docs/developer-guide.md). Project source is `master`;
 shared Orcha standards follow current published `main`.
 
-Proposed delivery work: [TST01 — Repeatable game regression testing](docs/milestones/TST01.md).
+Proposed delivery milestones (documentation proposals; dependencies are technical sequencing, not runtime status):
+
+| Milestone | Outcome | Depends on |
+| --- | --- | --- |
+| [TST01](docs/milestones/TST01.md) | Repeatable game regression testing | Foundation |
+| [SAV01](docs/milestones/SAV01.md) | Separate save validation and persistence | TST01 |
+| [SIM01](docs/milestones/SIM01.md) | Deterministic simulation and explicit runtime lifecycle | TST01 |
+| [LAY01](docs/milestones/LAY01.md) | Organize game content by layer | TST01, SIM01 (soft) |
+| [DEV01](docs/milestones/DEV01.md) | Explicit state ownership and enforceable JavaScript contracts | SAV01, SIM01, LAY01 |
+| [UI01](docs/milestones/UI01.md) | Migrate the interface to supported Vue | TST01, DEV01 |
 
 ## Upstream engine introduction
 
