@@ -30,13 +30,13 @@ The server exposes the exact generated `dist/` bytes on `http://127.0.0.1:8000/`
 | Rendered view and controls | `index.html`, `js/components.js`; unchanged `style.css` / `interface.css` with `civ.css` layout adaptations | `npx playwright test tests/browser/civilization.spec.cjs` |
 | Static build and package identity | `scripts/build.cjs`, `scripts/check-package.cjs` | `npm run build` then `npm run test:package` |
 
-For a Water change: follow `README` -> this table -> `supply()` and `projects()` in `js/civilization.js`; identify the one canonical player record, advance it through the actual registered Food update, then inspect the Water panel in `index.html`. Copy a nearby boundary case from the economy suite. Avoid maintaining a second UI copy of persistent state.
+For a Water change: follow `README` -> this table -> `actionDefinition()`, `dispatch()`, `advanceActions()` and `step()` in `js/civilization.js`. The same owner defines Water upgrades and irrigation. Identify the canonical saved action record, advance it through the registered Food update, then inspect the Water panel in `index.html`. Copy the nearby hauling/flow regression from the economy suite. Avoid maintaining a second UI copy of persistent state.
 
 ## State and simulation contracts
 
 Population is `player.points` (Decimal). Food, Water, Shelter and the other resource layers have session-owned player records. The visible Time resource uses the internal ID `freeTime`: root `player.time` remains the runtime clock timestamp. No population or food/water global exists.
 
-`player.civ` owns next-person progress, subsecond simulation remainder, active construction and work priority. `summary()` derives supply, labor allocation and UI descriptions from canonical state. The UI owns only disclosure state; save commands own collection replacement and browser effects.
+`player.civ` owns next-person progress, subsecond simulation remainder, action contracts and repeat orders, purchased improvements, irrigation, active construction and repeat priority. `player.food.routes` owns independent equipment levels; `player.shelter.comfort` owns domestic improvements. `occupiedWorkers()` derives domestic work, reserved crews, builder and available whole workers. `summary()` derives the UI from that canonical state. The UI owns only disclosure state; save commands own collection replacement and browser effects.
 
 All economic rates use game minutes; the runtime passes seconds. The economy persists a subsecond remainder and advances in one-second steps, reevaluating consumption, population support and construction each time. This avoids skipping growth limits during offline advancement. The existing capped offline bank and driver lifecycle are retained. Headless sessions start no timers or browser I/O.
 
@@ -48,7 +48,7 @@ Build balance coverage alongside each content change. [Balance workflow](balance
 
 The new game has the distinct mod/storage identity `civ-prestige-tree`; it never reads, migrates, overwrites or clears the prior game's `ptr` value. Those old resources have no meaningful conversion to this new economy. An old save may still be used with the prior game artifact. There is one current Civ runtime and one current Civ save model, without a legacy game mode.
 
-The retained codec hydrates detached Decimals and checks references and types. `civilization.validateData` additionally checks Population counts, nonnegative resources, housing consistency and recognized construction/priority state. Foreign game imports fail before activation. Startup errors expose original bytes when readable and start no game runtime. Storage write denial keeps the previous durable bytes and reports unsaved progress; retry saving after storage recovers. Tick or Vue faults stop drivers and block all save writes until reload.
+The retained codec hydrates detached Decimals and checks references and types. Version 0.2 adds missing action, route, comfort and improvement defaults to 0.1 Civ saves at ingress; existing stocks, infrastructure and construction progress remain, with one reserved builder for existing projects. There is one current economy after hydration. `civilization.validateData` checks Population, nonnegative resources, housing, action contracts, repeat permissions and total crew commitments. Foreign game imports fail before activation. Startup errors expose original bytes when readable and start no game runtime. Storage write denial keeps previous durable bytes and reports unsaved progress; retry saving after storage recovers. Tick or Vue faults stop drivers and block all save writes until reload.
 
 ## Final checks and delivery
 

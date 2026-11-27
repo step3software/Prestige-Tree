@@ -23,15 +23,18 @@ test('fresh game renders the resource tree, shared labor and current growth cons
 });
 test('real construction controls recover the foundation and improve capacity',async({page})=>{
     const errors=await open(page);
-    await page.getByRole('button',{name:/Expand gathering grounds/}).click();
+    await page.getByRole('button',{name:/Improve provisioning/}).click();
     await expect(page.getByRole('button',{name:/Weave food baskets/})).toBeDisabled();
     await page.evaluate(()=>gameUI.session.advance(60));
-    await expect(page.getByText('Supply capacity: 13 / min.',{exact:false})).toBeVisible();
-    await node(page,'Water').click();await page.getByRole('button',{name:/Improve water collection/}).click();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.sites)).toBe(1);
+    await node(page,'Water').click();await page.getByRole('button',{name:/Improve the well/}).click();
     await page.evaluate(()=>gameUI.session.advance(60));
     await node(page,'Shelter').click();await page.getByRole('button',{name:/Build a new hut/}).click();
     await page.evaluate(()=>gameUI.session.advance(90));
     expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.points.toNumber())).toBe(12);
+    await node(page,'Food').click();await page.getByRole('button',{name:'Send Hunt',exact:true}).click();
+    await node(page,'Water').click();await page.getByRole('button',{name:'Send Collect water',exact:true}).click();
+    await page.evaluate(()=>gameUI.session.advance(40));
     expect(await page.evaluate(()=>gameUI.session.saveState.player.points.toNumber())).toBeGreaterThan(8);
     expect(errors).toEqual([]);
 });
@@ -76,13 +79,13 @@ test('keyboard navigation and narrow reflow retain named, usable controls',async
         await page.setViewportSize({width,height:900});
         await node(page,'Water').focus();await page.keyboard.press('Enter');
         await expect(page.locator('#resource-title')).toHaveText('Water');
-        await expect(page.getByRole('button',{name:/Improve water collection/})).toBeVisible();
+        await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeVisible();
         expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth+1)).toBe(true);
     }
-    await page.selectOption('#priority','water');
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.priority)).toBe('water');
+    await page.selectOption('#priority','food');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.priority)).toBe('food');
     await page.emulateMedia({reducedMotion:'reduce'});
-    await expect(page.getByRole('button',{name:/Improve water collection/})).toBeVisible();
+    await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeVisible();
     expect(errors).toEqual([]);
 });
 test('corrupt Civ storage shows recovery while preserving original bytes',async({page})=>{
@@ -104,7 +107,7 @@ test('Civ retains the actual base theme and component styling',async({page})=>{
     expect(styles.family).toContain('monospace');
     expect(styles.radius).toBe('50%');
     expect(styles.style).toBe('style.css');
-    await expect(page.getByRole('button',{name:/Expand gathering grounds/})).toHaveClass(/upg/);
+    await expect(page.getByRole('button',{name:/Improve provisioning/})).toHaveClass(/upg/);
 });
 
 test('reloading the selected player invalidates every derived UI summary',async({page})=>{
@@ -132,4 +135,40 @@ test('runtime faults disable the visible economy and retain the last durable sav
     await expect(page.locator('#save-status')).toContainText(/Reload/i);
     await expect(page.locator('main')).toHaveAttribute('inert','');
     expect(await page.evaluate(()=>localStorage.getItem('civ-prestige-tree'))).toBe(durable);
+});
+
+test('expedition controls reserve parallel crews, block overbooking and release workers',async({page})=>{
+    const errors=await open(page);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);});
+    await page.getByRole('button',{name:'Send Gather',exact:true}).click();
+    await page.getByRole('button',{name:'Send Hunt',exact:true}).click();
+    await page.getByRole('button',{name:'Send Fish',exact:true}).click();
+    await expect(page.getByRole('button',{name:'Recall Gather',exact:true})).toBeVisible();
+    await node(page,'Water').click();
+    await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeDisabled();
+    await page.evaluate(()=>gameUI.session.advance(10));
+    await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeEnabled();
+    await page.getByRole('button',{name:'Send Collect water',exact:true}).click();
+    await expect(page.getByRole('button',{name:'Recall Collect water',exact:true})).toBeVisible();
+    await page.getByRole('button',{name:'Recall Collect water',exact:true}).click();
+    expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.water)).toBe(0);
+    expect(errors).toEqual([]);
+});
+
+test('overseer controls repeat staffed trips and Water upgrades remove hauling work',async({page})=>{
+    const errors=await open(page);
+    // Prepared resources isolate actual purchase/repeat controls; fresh legal
+    // reachability and pacing are covered by the balance policy tests.
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(10);p.organization.points=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await page.getByRole('button',{name:/^Expedition overseer/}).click();
+    await page.getByRole('button',{name:'Gather repeat: off',exact:true}).click();
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(0);p.food.points=new Decimal(0);gameUI.session.advance(22);});
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.completed)).toBeGreaterThanOrEqual(2);
+    expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.food)).toBe(1);
+    await node(page,'Water').click();
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.food.points=new Decimal(50);p.craft.points=new Decimal(2);});
+    await page.getByRole('button',{name:/^Gravity-fed spring/}).click();
+    await expect(page.getByText('Gravity-fed flow is fully automatic and uses 0 workers.',{exact:true})).toBeVisible();
+    expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.water)).toBe(0);
+    expect(errors).toEqual([]);
 });

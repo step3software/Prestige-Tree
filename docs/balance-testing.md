@@ -22,7 +22,8 @@ formulas in their existing owners; the balance tool calls those rules.
 1. **Define the pacing question.** State the section's start, observable completion
    condition and intended timing range, if the content design supplies one.
    Specify simulated seconds, the starting state and the policy assumptions.
-   Preserve five-minute regular manual checks and explicitly describe the active
+   Preserve the owner-selected regular cadence: 20-second opening checks, then
+   five-minute checks after overseer plus gravity flow. Describe the active
    strategy. Record an undecided target as undecided; an observed time alone does
    not become a design requirement.
 2. **Register the actual progression.** Add or revise section predicates and the
@@ -87,7 +88,7 @@ Content/section and entry → completion condition:
 Intended timing range and design source (or undecided):
 Starting state: fresh game / reached checkpoint / constructed fixture; skipped scope:
 Source revision, fixture identity and policy/configuration:
-Active and five-minute regular: observed game time, stop reason, actions exercised:
+Active and adaptive regular: observed game time, cadence transitions, stop reason, actions exercised:
 Rough vs fixed: matched horizon, step sizes, checkpoint drift and accepted tolerance:
 Focused assertions/commands and results:
 Unreached branches, missing policy decisions and remaining coverage:
@@ -119,19 +120,19 @@ times into a campaign total or call the best tested strategy a proven optimum.
 npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60
 ```
 
-The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 300 seconds). `active-organization` reverses the early prestige priority. All profiles construct real gathering grounds, collection sites and huts; earn Craft and Organization; enable auto-building only at 2 coordination; and invest through the content's affordability guards. No resources, workers or unlocks are granted.
+The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 20 seconds until both the Expedition overseer and Gravity-fed spring are earned, then every 300 seconds). This opening cadence was requested by the owner because five-minute fresh checks could not sustain manual expeditions. `cadenceChanges` records the actual transition. `active-organization` reverses the early prestige priority. Policies dispatch real crews, buy equipment and automation, construct housing/storage, earn Craft/Organization and invest through the shipped guards. No resources, workers or unlocks are granted.
 
 The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simulated game-time horizon, not a claim that the opening takes that long. `--save` loads a codec-validated synthetic checkpoint and measures time since that input. Reports include actual source hashes, actions, layer unlocks, completion/censoring and rough/fixed calibration. `balance-results/` is ignored; its saves are generated synthetic inputs, not player data.
 
 ## Policies and sections
 
-`sections.cjs` owns resource checkpoint predicates. Craft and Organization are recorded independently; Money/Time and Education/Culture require both sibling resources. `endgame` is the balance runner's label for completing both opening investments, not the engine's end-of-game predicate. A legal continuous fresh run is needed before reporting opening completion. Future content must extend the catalog and policies together.
+`sections.cjs` owns resource checkpoint predicates, including overseer, worker-free Water and farming. Craft and Organization are recorded independently; Money/Time and Education/Culture require both siblings. `endgame` requires both opening investments plus overseer, gravity flow and farming; it is a balance checkpoint, not the engine's end-of-game predicate. A legal fresh run is needed for opening completion claims. A separate continuous legal test reaches worker-free Food and verifies that Water reached autonomy earlier.
 
-`policy.cjs` uses one construction project at a time, reaches a two-point Craft/Organization foundation, enables earned automatic building, and makes the first Education/Culture investments. The observed best of these policies is not a proven optimum or actual-user timing. Regular play makes no manual choices between its five-minute checks; existing production, construction and earned automation continue normally.
+`policy.cjs` uses one construction project at a time, restarts available expeditions, buys automation and enables separate repeat orders. It funds later Food autonomy through Education and retained Craft. The observed best policy is not a proven optimum or actual-user timing. No manual choices occur between configured checks; batch jobs, construction and earned automation continue normally.
 
 ## Rough and fixed calibration
 
-Civ already advances its economy internally in one-second steps. Fixed mode uses the selected outer step (default 5 seconds); rough mode coalesces engine/cache calls while retaining the exact manual decision cadence. Automatic checkpoint observation is capped to 5 seconds before 8 people and 15 seconds before Education/Culture discovery, then up to the selected maximum. Entry windows describe observation precision, not statistical uncertainty. Resources and decisions remain governed by actual content rules.
+Civ advances internally in one-second steps. Fixed mode uses the selected outer step (default 5 seconds); rough mode coalesces engine/cache calls while retaining the same adaptive manual cadence. Checkpoint observation is capped to 5 seconds before farming and 15 before Education/Culture discovery, then up to the selected maximum. Entry windows describe observation precision, not statistical uncertainty. Resources and decisions remain governed by actual content rules.
 
 Compare active and regular modes over the same 60-minute horizon. The focused suite requires matching checkpoint coverage, matching action counts and at most 15 simulated seconds of checkpoint observation drift. That tolerance follows the explicit outer observation bound; it is not a balance target. No timing target for player satisfaction has been accepted. Investigate a differing transition or policy outcome rather than loosening tolerance to hide it.
 

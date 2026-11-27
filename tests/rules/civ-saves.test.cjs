@@ -53,3 +53,42 @@ test('export/import round trip retains the simulation remainder and building pro
     assert.equal(revived.run('p.civ.tickRemainder'),.5);
     assert.equal(revived.run('p.civ.projectWork'),r.run('p.civ.projectWork'));
 });
+
+test('active crews and repeat orders survive a codec round trip without duplicate yield',t=>{
+    const r=open(t);
+    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.toggleRepeat("gather");e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
+    const target=open(t);target.io.prompt=r.run('encoded');
+    assert.equal(target.run('gameUI.commands.importSave()'),true);
+    target.run('p=s.saveState.player');
+    assert.equal(target.run('p.civ.actions.gather.remaining'),7);
+    assert.equal(target.run('p.civ.actions.water.remaining'),5);
+    assert.equal(target.run('p.civ.actions.gather.repeat'),true);
+    target.run('s.advance(7)');
+    assert.equal(target.run('p.civ.actions.gather.completed'),1);
+    assert.equal(target.run('p.civ.actions.water.completed'),1);
+});
+
+test('0.1 Civ saves acquire current action defaults while retaining infrastructure and construction',t=>{
+    const r=open(t);
+    r.run(`e.startProject('water-site');s.advance(2);var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));raw.version='0.1';delete raw.food.routes;delete raw.shelter.comfort;for(var key of ['actions','improvements','projectWorkers','irrigation','autoIrrigate'])delete raw.civ[key];var result=s.saveCommands.saveCodec().decodePlayer(raw);`);
+    assert.equal(r.run('result.ok'),true);
+    assert.equal(r.run('result.value.civ.project'),'water-site');
+    assert.equal(r.run('result.value.civ.projectWork'),2);
+    assert.equal(r.run('result.value.civ.actions.gather.remaining'),0);
+    assert.equal(r.run('result.value.civ.projectWorkers'),1);
+    assert.equal(r.run('result.value.shelter.comfort'),0);
+});
+
+test('malformed action contracts and overcommitted crews are rejected before activation',t=>{
+    const r=open(t);
+    for(const mutation of [
+        'raw.civ.actions.gather.remaining=11;raw.civ.actions.gather.duration=10',
+        'raw.civ.actions.gather.repeat=true',
+        'raw.civ.actions.gather.remaining=5;raw.civ.actions.gather.duration=10;raw.civ.actions.gather.reward=6',
+        'for(var id of ["hunt","fish"]){raw.civ.actions[id].remaining=5;raw.civ.actions[id].duration=10;raw.civ.actions[id].workers=id==="hunt"?3:2;raw.civ.actions[id].reward=10}'
+    ]){
+        r.run('var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));'+mutation+';var result=s.saveCommands.saveCodec().decodePlayer(raw)');
+        assert.equal(r.run('result.ok'),false,mutation);
+        assert.equal(r.run('p.points.toNumber()'),5);
+    }
+});

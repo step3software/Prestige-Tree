@@ -5,9 +5,9 @@ function createCivilizationRules({ saveState }) {
     const names = {food: "Food", water: "Water", shelter: "Shelter", craft: "Craft",
         organization: "Organization", money: "Money", freeTime: "Time", education: "Education", culture: "Culture"};
     const descriptions = {
-        food: "Gather, cultivate and store enough food for a growing population.",
-        water: "Reliable water supports every person. More food cannot replace it.",
-        shelter: "Build room for your next neighbors. Housing lasts through early prestige.",
+        food: "Send gathering, hunting and fishing expeditions. Develop each route, then cultivate fields.",
+        water: "Carry water into your reservoir, then replace hauling with reliable worker-free flow.",
+        shelter: "Build more homes or improve domestic life to free workers. Housing survives early prestige.",
         craft: "Turn a well-supplied community into better tools and more productive work.",
         organization: "Coordinate shared labor. Keep useful knowledge and automate rebuilding.",
         money: "Exchange the output of specialized work and invest in the settlement.",
@@ -30,102 +30,206 @@ function createCivilizationRules({ saveState }) {
     const tier = id => ["food", "water", "shelter"].includes(id) ? 0 :
         ["craft", "organization"].includes(id) ? 1 : ["money", "freeTime"].includes(id) ? 2 : 3;
 
-    function defaults() {
-        return {growth: 0, tickRemainder: 0, project: "", projectWork: 0,
-            priority: "balanced", autoBuild: false, message: "Your first five people are gathering supplies."};
+    const actionNames = {gather: "Gather", hunt: "Hunt", fish: "Fish", farm: "Farm", water: "Collect water"};
+    const actionBase = {
+        gather: {resource: "food", workers: 1, duration: 10, reward: 6},
+        hunt: {resource: "food", workers: 3, duration: 25, reward: 24},
+        fish: {resource: "food", workers: 2, duration: 18, reward: 14},
+        farm: {resource: "food", workers: 3, duration: 60, reward: 75},
+        water: {resource: "water", workers: 2, duration: 8, reward: 14},
+    };
+    const improvementDefinitions = {
+        buckets: {resource: "water", name: "Carrying yokes", description: "Collection needs 1 worker instead of 2.", costs: {food: 12, water: 10}},
+        waterOrders: {resource: "water", name: "Water keeper", description: "Unlock repeat collection orders. The hauling worker is still needed.", costs: {food: 18, craft: 1}},
+        gravity: {resource: "water", name: "Gravity-fed spring", description: "Continuous reservoir refill, without orders or workers. Wells improve the flow.", costs: {food: 30, craft: 2, organization: 1}},
+        sluice: {resource: "water", name: "Automatic sluice", description: "Unlock automatic irrigation from surplus water.", costs: {money: 8, education: 1}},
+        hunting: {resource: "food", name: "Coordinated hunting", description: "Hunting needs 2 workers instead of 3.", costs: {food: 20, craft: 1}},
+        fishing: {resource: "food", name: "Fishing nets", description: "Fishing needs 1 worker instead of 2.", costs: {food: 20, craft: 1}},
+        overseer: {resource: "food", name: "Expedition overseer", description: "Unlock separate repeat orders. Each expedition still reserves its crew.", costs: {food: 25, craft: 1, organization: 1}},
+        farming: {resource: "food", name: "Cultivated fields", description: "Unlock long, high-yield farming cycles. Repeat with the overseer; 3 workers remain occupied per cycle.", costs: {food: 45, water: 25, craft: 3, organization: 2}},
+        autonomousFood: {resource: "food", name: "Autonomous food production", description: "All Food crews become worker-free. Repeat orders keep production running.", costs: {money: 120, freeTime: 10, craft: 12, education: 8}},
+        hearth: {resource: "shelter", name: "Shared hearths", description: "Reduce domestic work by 25% and add 25 Food storage.", costs: {food: 20, water: 15}},
+        joinery: {resource: "shelter", name: "Timber frames", description: "Every purchased home provides 6 housing instead of 4, including existing homes.", costs: {food: 25, craft: 2}},
+        builderTools: {resource: "shelter", name: "Construction tools", description: "Double construction speed. Projects still reserve a builder.", costs: {craft: 2, organization: 1}},
+    };
+    const owns = id => player().civ.improvements[id];
+    function emptyAction() {
+        return {remaining: 0, duration: 0, workers: 0, reward: 0, completed: 0, repeat: false};
     }
-
-    /** Evaluate supply and allocation without mutating persistent state. */
-    function supply() {
-        const p = player(), population = p.points.toNumber();
-        const knowledge = amount("education"), culture = amount("culture");
-        const toolEffect = 1 + amount("craft") * 0.18 + knowledge * 0.12;
-        const upkeep = 1 / (1 + amount("organization") * 0.06 + culture * 0.04);
-        const efficiency = {food: 3 * toolEffect, water: 3.2 * toolEffect};
-        const capacity = {food: (8 + p.food.sites * 5) * toolEffect,
-            water: (8 + p.water.sites * 5) * toolEffect};
-        const demand = population * upkeep;
-        const needed = demand / efficiency.food + demand / efficiency.water;
-        const coverage = Math.min(1, population / Math.max(needed, 0.001));
-        const workers = {food: demand / efficiency.food * coverage, water: demand / efficiency.water * coverage};
-        let spare = Math.max(0, population - workers.food - workers.water);
-        const builders = p.civ.project ? spare * (p.civ.priority === "shelter" ? 0.8 : 0.45) : 0;
-        spare -= builders;
-        const storage = {food: 50 + p.food.storage * 40, water: 50 + p.water.storage * 40};
-        const order = p.civ.priority === "water" ? ["water", "food"] : ["food", "water"];
-        // Reserve equal discretionary shares in Balanced, within site throughput.
-        const discretionary = spare;
-        for (const id of order) {
-            const focused = ["food", "water"].includes(p.civ.priority);
-            const share = focused ? (p.civ.priority === id ? 0.8 : 0.2) : 0.5;
-            const extra = p[id].points.lt(storage[id]) ? Math.min(spare, discretionary * share,
-                Math.max(0, capacity[id] / efficiency[id] - workers[id])) : 0;
-            workers[id] += extra;
-            spare -= extra;
+    function defaults() {
+        return {growth: 0, tickRemainder: 0, project: "", projectWork: 0, projectWorkers: 1,
+            priority: "balanced", autoBuild: false, irrigation: 0, autoIrrigate: false,
+            improvements: Object.fromEntries(Object.keys(improvementDefinitions).map(id => [id, false])),
+            actions: Object.fromEntries(Object.keys(actionBase).map(id => [id, emptyAction()])),
+            message: "Send a Food expedition and collect Water. Busy workers return when their action finishes."};
+    }
+    const toolEffect = () => 1 + amount("craft") * 0.18 + amount("education") * 0.12;
+    const storageCapacity = () => ({food: 50 + player().food.storage * 40 + (owns("hearth") ? 25 : 0), water: 50 + player().water.storage * 40});
+    function actionDefinition(id) {
+        const base = actionBase[id];
+        if (!base) return null;
+        const p = player(), state = p.civ.actions[id];
+        const level = id === "water" ? p.water.sites : p.food.routes[id];
+        let workers = base.workers;
+        if (id === "water" && owns("buckets")) workers = 1;
+        if (id === "hunt" && owns("hunting")) workers = 2;
+        if (id === "fish" && owns("fishing")) workers = 1;
+        if (base.resource === "food" && owns("autonomousFood")) workers = 0;
+        const unlocked = id !== "farm" || owns("farming");
+        const duration = Math.max(4, base.duration / (1 + level * 0.08));
+        const irrigationBonus = base.resource === "food" && p.civ.irrigation > 0 ? 1.35 : 1;
+        const reward = base.reward * (1 + level * 0.35) * toolEffect() * irrigationBonus *
+            (base.resource === "food" ? 1 + p.food.sites * 0.15 : 1);
+        return {id, name: actionNames[id], ...base, workers, duration, reward, level, unlocked,
+            automatic: id === "water" && owns("gravity"),
+            repeatAvailable: id === "water" ? owns("waterOrders") : owns("overseer"),
+            active: state.remaining > 0, remaining: state.remaining, crew: state.workers,
+            progress: state.duration ? 1 - state.remaining / state.duration : 0,
+            runningReward: state.reward, repeat: state.repeat, completed: state.completed};
+    }
+    function occupiedWorkers() {
+        const p = player();
+        const domestic = Math.max(0, p.points.toNumber() * 0.12 - p.shelter.comfort * 0.5) * (owns("hearth") ? 0.75 : 1);
+        const workers = {food: 0, water: 0};
+        for (const [id, action] of Object.entries(p.civ.actions)) {
+            if (action.remaining > 0) workers[actionBase[id].resource] += action.workers;
         }
-        const production = {food: Math.min(capacity.food, workers.food * efficiency.food),
-            water: Math.min(capacity.water, workers.water * efficiency.water)};
-        const support = Math.floor(Math.min(housing(), capacity.food / upkeep,
-            capacity.water / upkeep) + 1e-9);
+        const builders = p.civ.project ? p.civ.projectWorkers : 0;
+        const spare = Math.max(0, p.points.toNumber() - domestic - workers.food - workers.water - builders);
+        return {domestic, workers, builders, spare, availableWorkers: Math.floor(spare + 1e-9)};
+    }
+    function canDispatch(id) {
+        const action = actionDefinition(id);
+        return !!action && action.unlocked && !action.active && !action.automatic && occupiedWorkers().availableWorkers >= action.workers;
+    }
+    function dispatch(id) {
+        if (!canDispatch(id)) return false;
+        const definition = actionDefinition(id), state = player().civ.actions[id];
+        state.remaining = definition.duration;
+        state.duration = definition.duration;
+        state.workers = definition.workers;
+        state.reward = definition.reward;
+        player().civ.message = definition.name + " started. " + definition.workers + " workers reserved until completion.";
+        return true;
+    }
+    function recall(id) {
+        if (!actionBase[id] || !player().civ.actions[id].remaining) return false;
+        const state = player().civ.actions[id];
+        Object.assign(state, {remaining: 0, duration: 0, workers: 0, reward: 0, repeat: false});
+        player().civ.message = actionNames[id] + " recalled. Workers are available; unfinished yield is lost.";
+        return true;
+    }
+    function toggleRepeat(id) {
+        const action = actionDefinition(id);
+        if (!action || !action.repeatAvailable || !action.unlocked || action.automatic) return false;
+        player().civ.actions[id].repeat = !player().civ.actions[id].repeat;
+        return true;
+    }
+    /** A single derived labor ledger accounts for every reserved crew. Idle
+     * workers can trade/rest, and become available immediately when dispatched. */
+    function supply() {
+        const p = player(), population = p.points.toNumber(), labor = occupiedWorkers();
+        const upkeep = 1 / (1 + amount("organization") * 0.06 + amount("culture") * 0.04);
+        const demand = population * upkeep, storage = storageCapacity();
+        const production = {food: 0, water: owns("gravity") ? (24 + p.water.sites * 10) * toolEffect() : 0};
+        for (const [id, state] of Object.entries(p.civ.actions)) {
+            if (state.remaining > 0) production[actionBase[id].resource] += state.reward / state.duration * 60;
+        }
         const reserve = Math.max(3, (population + 1) * upkeep * 0.25);
         let bottleneck = "Growing";
         if (population >= housing()) bottleneck = "Shelter";
-        else if (population + 1 > capacity.food / upkeep + 1e-9) bottleneck = "Food";
-        else if (population + 1 > capacity.water / upkeep + 1e-9) bottleneck = "Water";
-        else if (coverage < 1) bottleneck = "Production";
         else if (p.food.points.lt(reserve)) bottleneck = "Food reserves";
         else if (p.water.points.lt(reserve)) bottleneck = "Water reserves";
-        const moneyWorkers = p.money.unlocked ? spare * 0.5 : 0;
-        const timeWorkers = p.freeTime.unlocked ? spare - moneyWorkers : 0;
-        return {population, upkeep, demand, workers, builders, idle: spare - moneyWorkers - timeWorkers,
-            moneyWorkers, timeWorkers, efficiency, capacity, production, storage, support, reserve,
-            bottleneck, growing: bottleneck === "Growing", laborUsed: workers.food + workers.water + builders + moneyWorkers + timeWorkers};
+        const moneyWorkers = p.money.unlocked ? labor.spare * 0.5 : 0;
+        const timeWorkers = p.freeTime.unlocked ? labor.spare - moneyWorkers : 0;
+        return {population, upkeep, demand, ...labor, production, storage, reserve, bottleneck,
+            growing: bottleneck === "Growing", support: housing(), capacity: production,
+            efficiency: {food: 3 * toolEffect(), water: 3.2 * toolEffect()},
+            moneyWorkers, timeWorkers, idle: labor.spare - moneyWorkers - timeWorkers,
+            laborUsed: labor.domestic + labor.workers.food + labor.workers.water + labor.builders + moneyWorkers + timeWorkers};
     }
-
     function projects(id) {
-        const p = player();
-        if (id === "food" || id === "water") return [
-            {id: id + "-site", name: id === "food" ? "Expand gathering grounds" : "Improve water collection",
-                description: "+5 base supply per minute. Uses shared labor; no stockpile cost.",
-                work: 10 * Math.pow(1.35, p[id].sites)},
-            {id: id + "-storage", name: id === "food" ? "Weave food baskets" : "Build water containers",
-                description: "+40 storage. Uses shared labor; no stockpile cost.",
-                work: 8 * Math.pow(1.35, p[id].storage)},
+        const p = player(), work = (base, level) => base * Math.pow(1.35, level);
+        if (id === "food") return [
+            ...["gather", "hunt", "fish", "farm"].filter(route => route !== "farm" || owns("farming")).map(route => ({
+                id: route + "-tools", name: {gather: "Gathering baskets", hunt: "Hunting equipment", fish: "Fishing equipment", farm: "Farming tools"}[route],
+                description: "Route level " + p.food.routes[route] + ": +35% base yield and faster trips per level.", work: work(14, p.food.routes[route])})),
+            {id: "food-site", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
+            {id: "food-storage", name: "Weave food baskets", description: "+40 Food storage.", work: work(12, p.food.storage)},
         ];
-        if (id === "shelter") return [{id: "shelter-home", name: "Build a new hut",
-            description: "+4 housing capacity. People and housing survive early prestige.",
-            work: 14 * Math.pow(1.3, p.shelter.homes)}];
+        if (id === "water") return [
+            {id: "water-site", name: "Improve the well", description: "Improve collection yield and speed; +10 base Water/min once gravity-fed.", work: work(16, p.water.sites)},
+            {id: "water-storage", name: "Expand the reservoir", description: "+40 Water storage. Store more between collection trips.", work: work(12, p.water.storage)},
+        ];
+        if (id === "shelter") return [
+            {id: "shelter-home", name: "Build a new hut", description: "+" + (owns("joinery") ? 6 : 4) + " housing. Owned: " + p.shelter.homes + ".", work: work(16, p.shelter.homes)},
+            {id: "shelter-comfort", name: "Improve existing homes", description: "Free up to 0.5 workers from domestic work. Improvements: " + p.shelter.comfort + ".", work: work(20, p.shelter.comfort)},
+        ];
         return [];
     }
     function projectDefinition(id) {
         return ["food", "water", "shelter"].flatMap(projects).find(item => item.id === id);
     }
     function startProject(id) {
-        if (player().civ.project || !projectDefinition(id)) return false;
-        player().civ.project = id;
-        player().civ.projectWork = 0;
-        player().civ.message = projectDefinition(id).name + " started.";
+        const p = player();
+        if (p.civ.project || !projectDefinition(id) || occupiedWorkers().availableWorkers < 1) return false;
+        p.civ.project = id;
+        p.civ.projectWork = 0;
+        p.civ.projectWorkers = 1;
+        p.civ.message = projectDefinition(id).name + " started. One builder is reserved until completion.";
         return true;
     }
     function cancelProject() {
         player().civ.project = "";
         player().civ.projectWork = 0;
-        player().civ.message = "Construction canceled. No resources were spent.";
+        player().civ.message = "Construction canceled. Builder released; no supplies were spent.";
     }
     function completeProject(id) {
-        const [resource, kind] = id.split("-");
-        if (kind === "home") { player().shelter.homes++; player().shelter.points = player().shelter.points.add(4); }
+        const name = projectDefinition(id).name, [resource, kind] = id.split("-");
+        if (kind === "tools") player().food.routes[resource]++;
+        else if (kind === "home") {
+            player().shelter.homes++;
+            player().shelter.points = new Decimal(8 + player().shelter.homes * (owns("joinery") ? 6 : 4));
+        } else if (kind === "comfort") player().shelter.comfort++;
         else if (kind === "site") player()[resource].sites++;
         else player()[resource].storage++;
-        player().civ.message = projectDefinition(id).name + " completed.";
         player().civ.project = "";
         player().civ.projectWork = 0;
+        player().civ.message = name + " completed. Builder available.";
+    }
+    function upgrades(resource) {
+        return Object.entries(improvementDefinitions).filter(([, item]) => item.resource === resource).map(([id, item]) => ({
+            id, ...item, owned: owns(id), canBuy: !owns(id) && Object.entries(item.costs).every(([key, cost]) => player()[key].points.gte(cost)),
+            costText: Object.entries(item.costs).map(([key, cost]) => cost + " " + names[key]).join(" · ")
+        }));
+    }
+    function buyUpgrade(id) {
+        const definition = improvementDefinitions[id];
+        if (!definition || owns(id)) return false;
+        if (!Object.entries(definition.costs).every(([resource, cost]) => player()[resource].points.gte(cost))) return false;
+        for (const [resource, cost] of Object.entries(definition.costs)) player()[resource].points = player()[resource].points.sub(cost);
+        player().civ.improvements[id] = true;
+        if (id === "joinery") player().shelter.points = new Decimal(8 + player().shelter.homes * 6);
+        player().civ.message = definition.name + " unlocked. Upgrades apply to the next dispatched crew.";
+        return true;
+    }
+    function irrigate() {
+        const p = player(), reserve = supply().reserve;
+        if (p.civ.irrigation > 0 || p.water.points.lt(20 + reserve)) return false;
+        p.water.points = p.water.points.sub(20);
+        p.civ.irrigation = 45;
+        p.civ.message = "Irrigation: new Food expeditions and farming cycles gain 35% yield for 45 seconds.";
+        return true;
     }
     function chooseAutomaticProject() {
-        const s = supply();
-        const target = s.bottleneck.startsWith("Water") ? "water-site" :
-            s.bottleneck.startsWith("Food") ? "food-site" : "shelter-home";
-        startProject(target);
+        const p = player();
+        if (p.points.toNumber() + 2 >= housing() && p.shelter.homes < 20) return startProject("shelter-home");
+        if (p.food.sites < 2) return startProject("food-site");
+        if (p.water.sites < 2) return startProject("water-site");
+        if (p.shelter.comfort < 4) return startProject("shelter-comfort");
+        if (p.food.storage < 3) return startProject("food-storage");
+        if (p.water.storage < 3) return startProject("water-storage");
+        return false;
     }
     function unlock() {
         const p = player();
@@ -142,17 +246,44 @@ function createCivilizationRules({ saveState }) {
         data.total = data.total.add(gain);
         data.best = data.best.max(data.points);
     }
+    function advanceActions(seconds) {
+        const p = player(), storage = storageCapacity();
+        for (const [id, state] of Object.entries(p.civ.actions)) {
+            if (state.remaining <= 0) continue;
+            state.remaining = Math.max(0, state.remaining - seconds);
+            if (state.remaining > 0) continue;
+            const resource = actionBase[id].resource;
+            addResource(resource, Math.min(state.reward, Math.max(0, storage[resource] - amount(resource))));
+            state.completed++;
+            Object.assign(state, {duration: 0, workers: 0, reward: 0});
+            p.civ.message = actionNames[id] + " completed. Crew returned; yield stored up to capacity.";
+        }
+    }
+    function automaticOrders() {
+        const p = player();
+        if (p.civ.autoIrrigate && owns("sluice")) irrigate();
+        // Water gets first refusal; continuous flow needs no crew. Construction
+        // then reserves its builder before Food can take the remaining workers.
+        if (p.civ.actions.water.repeat && owns("waterOrders") && amount("water") < storageCapacity().water - 1) dispatch("water");
+        if (p.civ.autoBuild && p.organization.points.gte(2) && !p.civ.project) chooseAutomaticProject();
+        if (!owns("overseer")) return;
+        const order = p.civ.priority === "food" ? ["farm", "hunt", "fish", "gather"] : ["gather", "fish", "hunt", "farm"];
+        for (const id of order) if (p.civ.actions[id].repeat && amount("food") < storageCapacity().food - 1) dispatch(id);
+    }
     function step(seconds) {
-        const p = player(), s = supply(), minutes = seconds / 60;
+        const p = player();
+        advanceActions(seconds);
+        const s = supply(), minutes = seconds / 60;
         for (const id of ["food", "water"]) {
-            p[id].points = p[id].points.add((s.production[id] - s.demand) * minutes).max(0).min(s.storage[id]);
+            const passive = id === "water" && owns("gravity") ? (24 + p.water.sites * 10) * toolEffect() : 0;
+            if (passive) addResource(id, Math.min(passive * minutes, Math.max(0, s.storage[id] - amount(id))));
+            p[id].points = p[id].points.sub(s.demand * minutes).max(0);
         }
         if (p.civ.project) {
-            p.civ.projectWork += s.builders * 60 * (1 + amount("organization") * 0.15) * minutes;
+            p.civ.projectWork += seconds * p.civ.projectWorkers * (1 + amount("organization") * 0.15) * (owns("builderTools") ? 2 : 1);
             if (p.civ.projectWork >= projectDefinition(p.civ.project).work) completeProject(p.civ.project);
         }
-        const after = supply();
-        if (after.growing) {
+        if (supply().growing) {
             p.civ.growth += seconds / 12;
             if (p.civ.growth >= 1) {
                 p.points = p.points.add(1);
@@ -162,8 +293,9 @@ function createCivilizationRules({ saveState }) {
         }
         if (p.money.unlocked) addResource("money", s.moneyWorkers * 2 * (1 + amount("craft") * 0.15) * minutes);
         if (p.freeTime.unlocked) addResource("freeTime", s.timeWorkers * minutes);
+        p.civ.irrigation = Math.max(0, p.civ.irrigation - seconds);
         unlock();
-        if (p.civ.autoBuild && p.organization.points.gte(2) && !p.civ.project) chooseAutomaticProject();
+        automaticOrders();
     }
     /** Persist the subsecond remainder so offline/online chunk sizes use the
      * same bounded one-second steps and never skip consumption or growth caps. */
@@ -221,38 +353,59 @@ function createCivilizationRules({ saveState }) {
             value: p[id].points, unit: id === "shelter" ? "housing" : id === "freeTime" ? "free hours" :
                 id === "organization" ? "coordination" : id === "education" ? "knowledge" : id === "culture" ? "influence" : "",
             requirement: isPrestige ? prestigeRequirements(id) : tier(id) === 2 ? "Earn Craft and Organization" : "Earn 5 Money and 3 free hours in total",
-            canPrestige: prestigeGain(id) > 0, prestigeGain: prestigeGain(id), projects: projects(id),
+            canPrestige: prestigeGain(id) > 0, prestigeGain: prestigeGain(id), projects: projects(id), upgrades: upgrades(id),
+            actions: Object.keys(actionBase).filter(key => actionBase[key].resource === id).map(key => ({...actionDefinition(key), canDispatch: canDispatch(key)})),
             costs: Object.entries(investments(id)).map(([resource, cost]) => ({name: names[resource], cost})), canInvest: canInvest(id)};
     }
     function summary() {
         const p = player(), s = supply(), project = projectDefinition(p.civ.project);
         const next = s.bottleneck.startsWith("Water") ? "water" : s.bottleneck.startsWith("Food") || s.bottleneck === "Production" ? "food" : "shelter";
-        return {...s, housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).map(node),
+        return {...s, irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).map(node),
             project: project ? {...project, progress: Math.min(1, p.civ.projectWork / project.work)} : null,
             next, advice: s.growing ? "Your supplies and housing support another person." :
-                s.bottleneck.includes("reserves") ? "Build a small supply buffer. Your existing population keeps working." :
-                    "Improve " + s.bottleneck.toLowerCase() + " to support the next person.",
+                s.bottleneck.includes("reserves") ? "Send a crew or enable an earned repeat order. Existing people remain safe." :
+                    "Build housing to support the next person.",
             toolBonus: (1 + amount("craft") * 0.18 + amount("education") * 0.12),
             autoAvailable: p.organization.points.gte(2)};
     }
-    /** Content validation runs at the existing codec boundary before activation. */
+    /** Defaults add the new fields to 0.1 saves once at codec ingress. Old
+     * infrastructure and in-flight construction retain their meaningful values;
+     * every loaded game then uses this single current economy. */
     function validateData(data) {
-        const validCount = value => Number.isSafeInteger(value) && value >= 0;
+        const count = value => Number.isSafeInteger(value) && value >= 0;
+        const finite = value => Number.isFinite(value) && value >= 0;
         if (!Object.hasOwn(names, data.tab)) throw new Error("Invalid civilization resource selection");
-        if (!Number.isSafeInteger(data.points.toNumber()) || data.points.lt(1)) throw new Error("Invalid Population count");
-        for (const id of Object.keys(names)) {
-            if (data[id].points.lt(0) || data[id].best.lt(0) || data[id].total.lt(0)) throw new Error("Negative " + names[id]);
-        }
-        for (const id of ["food", "water"]) {
-            if (!validCount(data[id].sites) || !validCount(data[id].storage)) throw new Error("Invalid supply infrastructure");
-        }
-        if (!validCount(data.shelter.homes) || !data.shelter.points.eq(8 + data.shelter.homes * 4)) throw new Error("Invalid housing capacity");
+        if (!count(data.points.toNumber()) || data.points.lt(1)) throw new Error("Invalid Population count");
+        for (const id of Object.keys(names)) if (data[id].points.lt(0) || data[id].best.lt(0) || data[id].total.lt(0)) throw new Error("Negative " + names[id]);
+        for (const id of ["food", "water"]) if (!count(data[id].sites) || !count(data[id].storage)) throw new Error("Invalid supply infrastructure");
         const civ = data.civ;
-        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home"];
-        if (!["balanced", "food", "water", "shelter"].includes(civ.priority) ||
-            (civ.project !== "" && !projectIds.includes(civ.project)) || civ.projectWork < 0 ||
-            civ.growth < 0 || civ.growth >= 1 || civ.tickRemainder < 0 || civ.tickRemainder >= 1 + 1e-8) throw new Error("Invalid civilization progress");
+        // These 0.1 priorities belonged to continuous production. Current repeat
+        // orders offer short-trip or large-harvest ordering only.
+        if (["water", "shelter"].includes(civ.priority)) civ.priority = "balanced";
+        if (Object.keys(civ.improvements).some(id => !Object.hasOwn(improvementDefinitions, id)) ||
+            Object.values(civ.improvements).some(value => typeof value !== "boolean")) throw new Error("Invalid improvements");
+        if (!count(data.shelter.homes) || !count(data.shelter.comfort) || !data.shelter.points.eq(8 + data.shelter.homes * (civ.improvements.joinery ? 6 : 4))) throw new Error("Invalid housing capacity");
+        if (Object.keys(data.food.routes).sort().join() !== "farm,fish,gather,hunt" || !Object.values(data.food.routes).every(count)) throw new Error("Invalid Food routes");
+        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "shelter-comfort", "gather-tools", "hunt-tools", "fish-tools", "farm-tools"];
+        if (!["balanced", "food"].includes(civ.priority) ||
+            (civ.project !== "" && !projectIds.includes(civ.project)) || (civ.project === "farm-tools" && !civ.improvements.farming) ||
+            !finite(civ.projectWork) || civ.projectWorkers !== 1 || !finite(civ.growth) || civ.growth >= 1 ||
+            !finite(civ.tickRemainder) || civ.tickRemainder >= 1 + 1e-8 || !finite(civ.irrigation) || civ.irrigation > 45) throw new Error("Invalid civilization progress");
+        if (Object.keys(civ.actions).sort().join() !== "farm,fish,gather,hunt,water") throw new Error("Invalid action types");
+        let crews = civ.project ? civ.projectWorkers : 0;
+        for (const [id, state] of Object.entries(civ.actions)) {
+            if (![state.remaining, state.duration, state.reward].every(finite) || !count(state.workers) || !count(state.completed) ||
+                state.workers > actionBase[id].workers || state.remaining > state.duration ||
+                (state.remaining > 0 && state.workers === 0 && !(actionBase[id].resource === "food" && civ.improvements.autonomousFood)) ||
+                (!state.remaining && (state.duration || state.workers || state.reward)) ||
+                (id === "farm" && state.remaining && !civ.improvements.farming) ||
+                typeof state.repeat !== "boolean" || (state.repeat && !(id === "water" ? civ.improvements.waterOrders : civ.improvements.overseer))) throw new Error("Invalid action state");
+            crews += state.workers;
+        }
+        const domestic = Math.max(0, data.points.toNumber() * 0.12 - data.shelter.comfort * 0.5) * (civ.improvements.hearth ? 0.75 : 1);
+        if (crews + domestic > data.points.toNumber() + 1e-9) throw new Error("Overcommitted workers");
     }
     return {defaults, supply, summary, node, projects, startProject, cancelProject, advance,
+        actionDefinition, canDispatch, dispatch, recall, toggleRepeat, upgrades, buyUpgrade, irrigate,
         prestige, prestigeGain, prestigeRequirements, investments, canInvest, invest, validateData};
 }

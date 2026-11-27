@@ -20,12 +20,15 @@ test('native balance loader matches the VM through real construction, growth and
  assert.ok(native.player.craft.total.gte(1)&&native.player.organization.total.gte(1));
  native.assertIsolated();assert.equal(r.io.writes,0);assert.equal(r.intervals.size,0);
 });
-test('five-minute policy never gains extra manual actions between its checks',()=>{
- const run=simulate({strategy:'regular',horizonSeconds:1500,stepSeconds:5});
- assert.equal(run.decisions,6);assert.ok(run.recentActions.every(action=>action.time%300===0));
- assert.ok(run.actions.construction>=4);assert.equal(run.sections.find(x=>x.id==='endgame').entrySeconds,null);
+test('regular policy uses 20-second opening checks and five-minute checks after automation',()=>{
+ const run=simulate({strategy:'regular',horizonSeconds:7200,stepSeconds:5});
+ assert.equal(run.status,'endgame');
+ assert.deepEqual(run.cadenceChanges.map(row=>row.seconds),[20,300]);
+ const transition=run.cadenceChanges[1].time;
+ assert.ok(run.recentActions.every(action=>action.time<=transition?action.time%20===0:(action.time-transition)%300===0));
+ assert.ok(run.actions.construction>=4);
 });
-test('both active branch orders and regular play reach the actual opening completion',()=>{
+test('both active branch orders and adaptive regular play reach the opening using earned automation',()=>{
  for(const strategy of ['active-balanced','active-organization','regular']){
   const run=simulate({strategy,horizonSeconds:14400,wallBudgetSeconds:15});
   assert.equal(run.status,'endgame',strategy);
@@ -35,6 +38,30 @@ test('both active branch orders and regular play reach the actual opening comple
   assert.ok(run.sections.every(row=>row.sectionSeconds===null||row.sectionSeconds>=0));
   console.log(strategy+' opening complete at '+run.simulatedSeconds+' simulated seconds');
  }
+});
+
+test('earned repeat orders and Water flow support five-minute idle play from a legally reached checkpoint',()=>{
+ let input;
+ const active=simulate({strategy:'active-balanced',horizonSeconds:3600,stopAt:'farming',onCheckpoint:row=>{if(row.id==='farming')input=row.encodedPlayer;}});
+ assert.equal(active.status,'checkpoint');
+ const idle=simulate({strategy:'regular',horizonSeconds:3600,encodedPlayer:input});
+ assert.equal(idle.status,'endgame');
+ assert.ok(idle.recentActions.every(action=>action.time%300===0));
+});
+
+test('continuous legal play reaches worker-free Food after worker-free Water and staffed farming',t=>{
+ const engine=createBalanceEngine();t.after(engine.dispose);
+ const policy=createPolicy(engine,strategies['active-balanced']);
+ let waterAt,foodAt,farmAt;
+ for(let time=0;time<=7200;time+=5){
+  policy.act(time);engine.advance(5);
+  if(engine.player.civ.improvements.gravity && waterAt===undefined)waterAt=time;
+  if(engine.player.civ.improvements.farming && farmAt===undefined)farmAt=time;
+  if(engine.player.civ.improvements.autonomousFood){foodAt=time;break;}
+ }
+ assert.ok(waterAt!==undefined && farmAt!==undefined && foodAt>farmAt && foodAt>waterAt+60);
+ assert.equal(engine.session.modRules.civilization.actionDefinition('farm').workers,0);
+ console.log('Legal worker-free Water at '+waterAt+'s; farming at '+farmAt+'s; worker-free Food at '+foodAt+'s (synthetic).');
 });
 test('rough and fixed runs have matching progression coverage and bounded observation drift',()=>{
  for(const strategy of ['active-balanced','regular']){

@@ -9,7 +9,9 @@ function observedRates(before,after,seconds){
  * observation windows retain useful precision for automatic unlock timestamps. */
 function roughSchedule(engine,settings,_observed,maxStepSeconds){
   const p=engine.player;
-  const cap=p.points.lt(8)?5:!p.education.unlocked?15:300;
+  // Batch completions and crew releases are nonlinear events; bound observation
+  // windows while the actual economy continues to advance in one-second steps.
+  const cap=!p.civ.improvements.farming?5:!p.education.unlocked?15:300;
   return {decisionWait:settings.decisionSeconds,stepSeconds:Math.min(cap,maxStepSeconds,settings.decisionSeconds)};
 }
 module.exports={captureEconomy,observedRates,roughSchedule};

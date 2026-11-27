@@ -26,7 +26,7 @@ function markdown(report) {
   const candidates=report.runs;
   const lines=['# Civ Prestige Tree balance timing','',
     `Source: \`${report.sourceRevision}\`. Mode: **${report.mode}**. ${report.startDescription}.`,
-    '', 'Regular play checks every **five minutes**; active policies use a five-second minimum cadence.',
+    '', 'Regular play checks every **20 seconds** until Food overseer and worker-free Water, then every **five minutes**. Active policies check every five seconds. Actual transitions are recorded in report.json.',
     '“Best tested” is an envelope of the tested strategies, not a proven optimum or one combined playthrough.',
     'Rough mode coalesces outer engine calls while the real Civ economy retains one-second internal steps. Checkpoint observation windows can differ; manual cadence stays fixed.',
     '', '| Section entry | Best tested | Winning policy | Regular |', '| --- | --- | --- | --- |'];

@@ -31,6 +31,7 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
   let rates;
   let nextStep=stepSeconds;
   let largestStepSeconds=0;
+  const cadenceChanges=[];
   function observe(exact=false) {
     for (const layer of progressionLayers) if (engine.player[layer].unlocked && !layerTimes.has(layer)) layerTimes.set(layer,time);
     for (const section of sections) {
@@ -49,7 +50,11 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
       if (reached.has('endgame')) {status='endgame';break;}
       if (time>=nextDecision) {
         policy.act(time);decisions++;observe(true);
-        const schedule=mode==='rough'?roughSchedule(engine,settings,rates,maxStepSeconds):{decisionWait:settings.decisionSeconds,stepSeconds};
+        const staffedOpening=settings.earlyDecisionSeconds && !(engine.player.civ.improvements.overseer && engine.player.civ.improvements.gravity);
+        const cadence=decisionSeconds??(staffedOpening?settings.earlyDecisionSeconds:settings.decisionSeconds);
+        if(cadenceChanges.at(-1)?.seconds!==cadence)cadenceChanges.push({time,seconds:cadence});
+        const currentSettings={...settings,decisionSeconds:cadence};
+        const schedule=mode==='rough'?roughSchedule(engine,currentSettings,rates,maxStepSeconds):{decisionWait:cadence,stepSeconds};
         nextDecision=time+schedule.decisionWait;nextStep=schedule.stepSeconds;
       }
       if (stopAt && reached.has(stopAt)) {status='checkpoint';break;}
@@ -75,7 +80,7 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
         censored:!entry || exit===null};
     });
     return {strategy,settings,horizonSeconds,simulatedSeconds:time,stepSeconds,mode,maxStepSeconds,largestStepSeconds,status,steps,decisions,
-      sections:report,layerTimes:Object.fromEntries(layerTimes),actions:policy.counts,recentActions:policy.recent,
+      sections:report,layerTimes:Object.fromEntries(layerTimes),actions:policy.counts,recentActions:policy.recent,cadenceChanges,
       stateSha256:createHash('sha256').update(state).digest('hex'),checkpoint:engine.exportPlayer(),
       unmetDiscoveries:progressionLayers.flatMap(layer=>Object.entries(engine.tmp[layer].upgrades||{})
         .filter(([_id,item])=>item && typeof item==='object' && item.pseudoUnl && !item.unlocked && !item.pseudoCan)
@@ -83,7 +88,7 @@ function simulate({strategy='regular',horizonSeconds=86400,stepSeconds=5,wallBud
       wallSeconds:(performance.now()-start)/1000,
       policyCapabilities:{construction:true,prestige:true,earnedAutomation:true,investments:true,workerPriority:true},
       interpretation:mode==='rough'?'Rough checkpoint observation with coalesced outer calls; the actual economy uses one-second internal steps. Manual cadence is unchanged. Compare entry windows with a fixed reference. Unreached sections are censored.':
-        'Fixed-step legal policy simulation, not a proven optimum or measured human play. Five-minute regular actions run while production and earned automation continue.'};
+        'Fixed-step legal policy simulation, not measured human play or a proven optimum. Regular uses 20-second opening checks, then five-minute checks after overseer and gravity flow; cadenceChanges records the transition.'};
 
   } finally {engine.dispose();}
 }

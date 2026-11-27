@@ -32,7 +32,7 @@ progress::-webkit-progress-bar { background: var(--background); }
 progress::-webkit-progress-value { background: var(--color); }
 progress::-moz-progress-bar { background: var(--color); }
 .game-layout { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--color); border-bottom: 2px solid var(--color); min-height: 650px; }
-.tree-section { width: 100%; min-width: 0; padding: 20px; }
+.tree-section { width: 100%; min-width: 0; padding: 20px; margin: 0; }
 .section-heading h2 { display: block; font-size: 22px; margin: 12px 0; }
 .live-label { display: none; }
 .resource-tree { margin-top: 24px; }
@@ -49,7 +49,7 @@ progress::-moz-progress-bar { background: var(--color); }
 .node-value small { margin-inline-start: 4px; font-size: 11px; }
 .node-hint { display: block; font-size: 10px; margin-top: 5px; }
 .tree-caption { font-size: 12px; margin: 10px 0; line-height: 1.6; }
-.resource-panel { width: 100%; min-width: 0; padding: 24px 28px; border-left: 3px solid var(--color); }
+.resource-panel { width: 100%; min-width: 0; padding: 24px 28px; border-left: 3px solid var(--color); margin: 0; }
 .resource-panel > h2 { display: block; font-size: 32px; margin: 16px 0; text-shadow: 0 0 8px currentColor; }
 .resource-description { font-size: 14px; line-height: 1.6; max-width: 640px; }
 .resource-total { margin: 24px 0; }
@@ -156,3 +156,12 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 @media (prefers-reduced-motion: reduce) {
     *, *:before, *:after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* Expedition controls retain the base upg/tabButton styles. */
+.action-row { margin: 18px 0; padding: 12px 0; border-bottom: 1px solid var(--color); }
+.action-row h4 { font-size: 17px; margin-bottom: 8px; }
+.action-row p { margin: 8px 0; line-height: 1.5; }
+.action-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.action-controls .upg { width: auto; height: auto; min-height: 48px; padding: 10px 16px; }
+.worker-ledger { line-height: 1.6; }
+.projects .project-button { height: auto; min-height: 80px; }

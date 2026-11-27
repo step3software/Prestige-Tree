@@ -27,6 +27,12 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         signed(value) { return (value >= 0 ? '+' : '') + this.number(value); },
         select(id) { if (layerRegistry.layers[id]) binding.player.tab = id; },
         build(id) { return actionable(() => modRules.civilization.startProject(id)); },
+        dispatch(id) { return actionable(() => modRules.civilization.dispatch(id)); },
+        recall(id) { return actionable(() => modRules.civilization.recall(id)); },
+        toggleRepeat(id) { return actionable(() => modRules.civilization.toggleRepeat(id)); },
+        buyUpgrade(id) { return actionable(() => modRules.civilization.buyUpgrade(id)); },
+        irrigate() { return actionable(() => modRules.civilization.irrigate()); },
+        toggleIrrigation() { return actionable(() => { if (modRules.civilization.summary().autoIrrigateAvailable) binding.player.civ.autoIrrigate = !binding.player.civ.autoIrrigate; }); },
         cancelProject() { return actionable(() => modRules.civilization.cancelProject()); },
         invest(id) { return actionable(() => modRules.civilization.invest(id)); },
         prestige(id) {
