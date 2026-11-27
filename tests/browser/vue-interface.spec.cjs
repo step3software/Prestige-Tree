@@ -1,3 +1,4 @@
+const { installPausedClock } = require('../support/paused-clock.cjs');
 const {test,expect} = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -6,8 +7,7 @@ const {historicalSources} = require('../support/historical-sources.cjs');
 const root = path.resolve(__dirname,'../..');
 
 test.beforeEach(async ({page})=>{
-  await page.clock.install({time:new Date(1700000000000)});
-  await page.clock.pauseAt(new Date(1700000000000));
+  await installPausedClock(page);
   await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
   page.testErrors=[];
   page.on('pageerror',error=>page.testErrors.push(error.message));

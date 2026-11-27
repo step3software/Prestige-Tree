@@ -24,6 +24,7 @@ While reading this documentation, the following key will be used when describing
 
 ### General
 
+- [Balance testing with content development](balance-testing.md#add-balance-coverage-with-content): Add pacing scenarios and focused tests in the same change as new or replaced content.
 - [Getting Started](getting-started.md): Getting your own copy of the code set up with Github Desktop.
 - [Main mod info](main-mod-info.md): How to set up general things for your mod in [mod.js](/js/mod.js).
 - [Basic layer breakdown](basic-layer-breakdown.md): Breaking down the components of a layer with minimal features.

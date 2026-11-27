@@ -67,6 +67,7 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 | Static artifact and preview | `scripts/build.cjs` → `dist/`; `scripts/serve.cjs` | [Package verification below](#vue-interface-and-packaging) |
 | Game identity, version, point rules | `js/mod.js` | [Main mod info](main-mod-info.md) |
 | Layer costs, rewards, upgrades and progression | `js/layers/manifest.js` → named `js/layers/` factories; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
+| Balance coverage for new or replaced content | `scripts/balance/sections.cjs` → `policy.cjs` → `tests/rules/balance-simulation.test.cjs` | [Content balance workflow](balance-testing.md#add-balance-coverage-with-content) |
 | Explicit advancement and resets | `js/game-session.js` → session-bound `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
 | Runtime clock, offline budget, timers and listeners | `js/game-runtime.js` → `startGameRuntime` / `createGameRuntime` | [Lifecycle below](#simulation-and-runtime-lifecycle) |
 | Session construction and selected collection | `js/game-session.js` (`createGameSession`, `createSaveState`) | [Ownership below](#state-and-command-ownership) |
@@ -94,6 +95,9 @@ definitions; the manifest alone determines registration order. Add a factory scr
 to the page and one manifest entry to add content. No asynchronous loader, discovery,
 plugin system or second maintained definition is involved. `js/tree.js` retains
 layout configuration; the former `js/layers.js` monolith has been removed.
+Add or update [balance coverage](balance-testing.md#add-balance-coverage-with-content)
+in the same PR as the content, including its entry/exit conditions, playable policy
+and focused scenario. The balance guide owns the procedure and evidence requirements.
 
 There are **34 active layers/tabs and one node**: 31 former monolith entries,
 `info-tab`, `options-tab`, `tree-tab` and `blank`. Every entry has a named file:
@@ -414,6 +418,20 @@ fixtures, standards/criteria/path coverage and known limits. Representative test
 do not establish full late-game balance, other engines, actual-user usability,
 assistive-technology behavior or the OS clipboard. The demonstration page's broader
 rendering and pre-existing lowercase `js/demo/` portability remain unverified.
+
+## Game-time balance tests
+
+Build balance tests with each new or replaced section of content, following the
+[content balance workflow](balance-testing.md#add-balance-coverage-with-content).
+The current runner is a foundation for the upcoming content replacement; its
+inherited section catalog and experimental policies do not establish full-game
+coverage or a campaign duration.
+
+From the worktree root, `npm run test:balance` runs the focused contract tests and
+`npm run balance` produces rough timing reports for active and five-minute regular
+play. The [balance guide](balance-testing.md) owns extension points, section inputs,
+calibration and PR evidence. Focused tests also run in normal CI; longer timing
+sweeps are opt-in. Generated `balance-results/` is ignored.
 
 ## Simulation and runtime lifecycle
 
