@@ -10,6 +10,7 @@ const invalid = [
   btoa('{"points":{}}'), btoa('{"subtabs":{"ma":null}}'),
   btoa('{"offTime":{"remain":"oops"}}'),
   btoa('{"p":{"__proto__":{"polluted":true}}}'),
+  btoa('{"devSpeed":{}}'), btoa('{"h":{"activeChallenge":{}}}'),
 ];
 for (const [index, input] of invalid.entries()) {
   // Present-field shape checks use a valid root, so a root check cannot mask them.
@@ -83,6 +84,9 @@ test('F1 a failed tick clears its guard and latches mutations/autosave until rel
   assert.equal(r.data.get('ptr'), before);
   r.run('setLocalStorage(); loadSave("save1");');
   assert.equal(r.data.get('ptr'), before);
+  r.run('importSave(btoa(JSON.stringify({versionType:"ptr", points:"123"})));');
+  assert.equal(r.data.get('ptr'), before);
+  assert.match(r.alerts.at(-1), /reload/i);
 });
 
 for (const operation of ['newSave()', 'renameSave("save1")']) {

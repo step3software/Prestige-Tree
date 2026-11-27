@@ -490,12 +490,23 @@ function validateImportedSave(data) {
 		for (let id of [11, 12, 13]) if (data.ge.clickables[id] === "") data.ge.clickables[id] = "0";
 	}
 	validateSaveValue(data, getStartPlayer());
+	// These fields are added during play/debugging rather than by startData.
+	if (data.devSpeed !== undefined && (typeof data.devSpeed !== "number" || !Number.isFinite(data.devSpeed) || data.devSpeed < 0)) throw new Error("Invalid game speed");
+	for (let layer of Object.keys(layers)) {
+		let challenge = data[layer] && data[layer].activeChallenge;
+		if (challenge === undefined || challenge === null) continue;
+		if ((typeof challenge !== "number" && typeof challenge !== "string") || !Object.prototype.hasOwnProperty.call(layers[layer].challenges || {}, challenge)) throw new Error("Invalid active challenge");
+	}
 	if (data.offTime !== undefined && data.offTime !== null) {
 		if (!isSaveObject(data.offTime) || !Number.isFinite(data.offTime.remain) || data.offTime.remain < 0) throw new Error("Invalid offline time");
 	}
 }
 
 function importSave(imported=undefined, forced=false) {
+	if (tickFaulted) {
+		alert("Reload the page to recover your last save before importing another save.");
+		return false;
+	}
 	if (imported === undefined) imported = prompt("Paste your save here");
 	if (imported === null) return false;
 	try {

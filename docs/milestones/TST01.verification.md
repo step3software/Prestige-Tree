@@ -12,9 +12,11 @@ owner request explicitly authorized this direct development cycle.
 - Actual PR base/source `master`: `077861d2d4479d77e6079fd5c8bdf5e4fe7821f8`.
 - Reviewed planning handoff: `f717064156b66f4a8ed98b586ccbedcac3d88221`.
 - Validated preparation commit: `82d38ad`; harness/baseline commit: `50f084c`.
-- Locally tested application/test/config revision: `bae7406b426dcf5432451e6ae263d351fa3f2e29`.
-  Later changes adding this evidence are documentation only. Final CI at the
-  current PR head is reported in the PR description/checks, rather than claimed here.
+- Full clean-install application/test/config verification: `bae7406b426dcf5432451e6ae263d351fa3f2e29`.
+  Final review additionally checked optional speed/challenge fields and extended the faulted-tick test and import guard to
+  keep explicit imports behind the same reload recovery boundary as other writes.
+  The final required rule run and current-head CI are reported on the PR, rather
+  than assigning historical results to a different revision here.
 - Current published Orcha `main`: `9dbea2b52cd076c8b52174edeb06ed807d3aa7d1`.
   `standards_resolver` verified catalog hashes at a fresh remote observation.
   [Preparation](TST01.preparation.json) records all 18 document hashes read, exact
@@ -58,7 +60,7 @@ before interpreting the baseline results.
 
 Discovery was followed by validation: F1–F3 are confirmed and corrected. Review
 also found and corrected an overly permissive Decimal parser boundary, the need
-to guard menu storage after a tick fault, and the two existing save representations
+to validate optional runtime fields, to guard menu storage and explicit imports after a tick fault, and the two existing save representations
 covered by the numeric-version/Gear regression. A suspected plan digest mismatch
 was rejected: Windows checkout CRLF differs, but every recorded digest matches
 the authoritative Git bytes. No finding was invented for that conversion.
@@ -74,12 +76,12 @@ expected-failure cases mask acceptance paths. Browser time is controlled.
 | AC01 | `npm ci`; `npm test`; `.node-version`, lockfile, current developer guide | Passed locked clean install and commands on Windows; Linux CI is separately reported on the PR |
 | AC02 | `tests/support/game-runtime.cjs`; separate-runtime test; browser config/context/clock and server teardown | Passed; fresh VM and in-memory saves per rule case, fresh browser contexts |
 | AC03 | `tests/rules/progression.test.cjs`: initialization/prestige/purchase/reset, huge-Decimal fixture/import/export/reload, sibling save selection | Passed, including numeric-version and Gear-sentinel compatibility |
-| AC04 | `tests/rules/save-safety.test.cjs`: fourteen malformed payloads, foreign confirmation/cancel, failed storage then retry, faulted tick and autosave | Passed; retained active/durable state and safe reload |
+| AC04 | `tests/rules/save-safety.test.cjs`: sixteen malformed payloads, foreign confirmation/cancel, failed storage then retry, faulted tick and autosave | Passed; retained active/durable state and safe reload |
 | AC05 | `tests/rules/clock.test.cjs`: 0, 1, 3599, 3600, 3601, 7200 seconds; backwards/load/disabled/catch-up | Passed; seconds conserved and cap respected |
 | AC06 | `tests/rules/save-safety.test.cjs`: both cancelled prompts, invalid names, valid creation/rename/selection/reload | Passed |
 | AC07 | `tests/browser/game.spec.cjs`: five journeys through rendered controls, native import dialogs, 1280×800 and 320×800 error cases; pageerror/console-error assertions | 5 passed; no unexpected errors. Keyboard activates Import; native browser OK/cancel semantics are used, not a screen-reader or actual-user study |
 | AC08 | `.github/workflows/test.yml`: immutable actions, public Ubuntu 24.04, read-only contents, exact local commands, no secrets/deployment, bounded failure artifacts | Source review passed; actual failing baseline job verified. Final green job evidence belongs to the PR |
-| AC09 | `npm run test:sensitivity`; immutable `077861d` F1–F3 checks; premature-player-swap and milliseconds-cap mutations in memory | All 3 final checks pass; all 3 baseline regressions and both mutations detected. Required final local rule suite: 48/48 passed |
+| AC09 | `npm run test:sensitivity`; immutable `077861d` F1–F3 checks; premature-player-swap and milliseconds-cap mutations in memory | All 3 final checks pass; all 3 baseline regressions and both mutations detected. Required final local rule suite: 50/50 passed |
 | AC10 | Full source/diff review, this mapping, hashes and actual PR head/base/check records | Local review completed; final remote checks and human merge/acceptance remain distinct |
 
 The first harness run against unchanged game code produced **18 passes / 29
@@ -87,7 +89,7 @@ failures** (47 tests), reproducing F1–F3 without changing player data. CI run
 [45942301648](https://github.com/step3software/Prestige-Tree/actions/runs/45942301648)
 at `50f084c` passed installation/syntax and **failed at `npm run test:rules`**;
 downstream steps were correctly blocked. The final suite adds the compatibility
-regression and passes **48 rules**, all **5 browser journeys**, syntax for **13
+regression and optional-field cases and passes **50 rules**, all **5 browser journeys**, syntax for **13
 shipped + 9 test/config scripts**, and the sensitivity command. The rule command
 also emits an ignored JUnit report retained on CI failure; browser diagnostics
 are failure-only with a three-day retention limit and ten-minute job timeout.
@@ -95,7 +97,7 @@ are failure-only with a three-day retention limit and ten-minute job timeout.
 The application/test/config revision `bae7406` also passed every required Linux
 step in PR CI run [45943536428](https://github.com/step3software/Prestige-Tree/actions/runs/45943536428)
 and push run [45943530959](https://github.com/step3software/Prestige-Tree/actions/runs/45943530959).
-Those results bind that exact revision. The final documentation-only head's checks
+Those results bind that exact revision. The final head's checks
 are refreshed and reported on the PR, without repinning these historical results.
 
 ## Complete changed-path accounting
