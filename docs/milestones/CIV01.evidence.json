@@ -168,8 +168,8 @@
       "sha256": "63a98074b2cce6e66b09e0bbe66ba87b1c35b724b7a4d97bc50aad77ff818ba0"
     }
   ],
-  "plan_sha256": "0f3ff6bb07bcf9e507f4045e9062594f602cd276c933b552cf616178c0b1b1c0",
-  "preparation_sha256": "4a4fabe6b7d255b442b73577f7dd72ae79f051a71b7403c3f3ea0e9058ebfdf0",
+  "plan_sha256": "de6ef6c7a44d4ccac67f69ce9f62cc5ad6feeae5c42d36541b18d4f17eccfe8e",
+  "preparation_sha256": "f13e644381c66dba7718c06a35a74c1d54c506a74232241e9f8097acc2c0617b",
   "native_lifecycle": "No enrollment, acceptance or transition performed.",
   "initial_source_revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
   "source_reconciliation": "main advanced with AGENTS source correction and content balance workflow. Rebased the isolated feature branch, preserving the published engine runner and adapting its content-specific policy/catalog.",
@@ -177,8 +177,8 @@
     "npm test": {
       "status": "passed",
       "rule_and_balance_tests": 24,
-      "chromium_journeys": 6,
-      "package": "30 local assets, 22 script tags including Vue; 3 actual templates compiled",
+      "chromium_journeys": 9,
+      "package": "33 local assets including unchanged base style.css, oldStyle.css and interface.css; 22 script tags including Vue; 3 templates compiled",
       "lexical_graph": "20 authored scripts",
       "platform": "Windows, Node 24.22.1, npm 11.19.1"
     },
@@ -224,6 +224,10 @@
     },
     "git diff --check": {
       "status": "passed"
+    },
+    "ui_replacement_and_fault_state": {
+      "status": "passed",
+      "verification": "Rendered repeated save load invalidates the entire derived summary; runtime fault makes the main economy inert while retaining durable bytes."
     }
   },
   "tested_runtime_working_bytes_sha256": {
@@ -232,17 +236,17 @@
     "js/tree.js": "c0b1df0c0ce7143db9ec76c523e16ee6c58af2ed0fce24437da2737fb939d6ae",
     "js/sc.js": "0559e2c61e0aa8a2eda2b2b8b37accd61ad625d2526a9ad1e5acb1290bc8bfa5",
     "js/help.js": "9133bfb065e426d214c1eeb78a6ec44fc2525f729aecca85a04ea8896b225c52",
-    "js/civilization.js": "78647249a8afb686e4ba2dfde448e2545936d9fbb5b4209e60df0acdacbe40da",
+    "js/civilization.js": "2c5d954a4bbc640ba93abff72cf90d068444c9dbc63cac7f146db4d6b23a91b3",
     "js/layers/resources.js": "b4f77890ffb5307752bd41f302bf6dbd35db5c092e9b069e62a2c01398b50b8c",
     "js/layers/manifest.js": "1a669201b7703b624ecb4d6e8da995fe518b7db0b0d9366f4003151245613aa8",
     "js/mod.js": "f03d16064cf1081e0ff57803c890c08e2532b91a530fd6077885c2f31b73ffc2",
     "js/technical/temp.js": "01e91e32b487aa00f29ba255fee2afcaf7a3d38db5aac034955da2d4a3c1ed23",
-    "js/game.js": "fbcbd765f87833c1dcea5235a8ecedcc493b5d72e8ac66e5d42a6b11028c5be8",
+    "js/game.js": "77c2b6c612a690f54cbb2858bb77826eacf1a2bcb55e3d1bc0c390b29b3d1087",
     "js/utils.js": "a77fcda8989fb4cad57cd97e1a7243a0c579ef91ac56006de6a51ed820847944",
     "js/save-codec.js": "d91e8e39e32cf3ad3761e487a47d1422085a6422de730626585199242108e0d5",
     "js/save-storage.js": "208e9273a69d465409dbdd3c7bda79182da978f6f45bc2f917ad322dbbe0e0ca",
     "js/saves.js": "d828440c2e5781982491d621b3fc75b706b9704484a6938fb044cf801e83cdfe",
-    "js/components.js": "104cf986c9e98387e99b2754044685ead34635b83fca31b78387fd31e90c1dba",
+    "js/components.js": "62244885ee345955b3a59364cf6eae93e35c811c3927793dba47db4d4965feb5",
     "js/technical/canvas.js": "d7d40693968d5770958ece8ab8287925fed252d361f99b7c1103444023ae3b4f",
     "js/game-runtime.js": "aae182a1d8e1214dea5b93f1572fd59d772d3bc2287a80c983bff11169a0f3e5",
     "js/game-session.js": "c1f85137c6bf3b0154e8d12648786815428bd9c651b01772a8f491ea73efdc6c",
@@ -263,5 +267,23 @@
     "Chromium coverage does not establish other browsers or screen-reader behavior.",
     "No deployment, native milestone acceptance or merge.",
     "Original ptr saves are retained, not converted into unrelated Civ resources."
-  ]
+  ],
+  "visual_revision": "Owner requested base styling. Restored unchanged base stylesheets and original treeNode/upg/reset/tabButton treatments; civ.css supplies layout/reflow and status adaptations only.",
+  "base_style_sources": {
+    "style.css": {
+      "revision": "d7d260fa66b270aae228dec2183f4df9da508b5f",
+      "blob_sha": "e2a12476d80f1efd82eb3bf4258e3d6052b90d3e",
+      "unchanged": true
+    },
+    "oldStyle.css": {
+      "revision": "d7d260fa66b270aae228dec2183f4df9da508b5f",
+      "blob_sha": "be871dedc8d3f417a016297ec8201dc282b7d81e",
+      "unchanged": true
+    },
+    "interface.css": {
+      "revision": "d7d260fa66b270aae228dec2183f4df9da508b5f",
+      "blob_sha": "a09c1a4209a824d2607091d64690c0686d81b6a7",
+      "unchanged": true
+    }
+  }
 }

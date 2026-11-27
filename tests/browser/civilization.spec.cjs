@@ -91,3 +91,45 @@ test('corrupt Civ storage shows recovery while preserving original bytes',async(
     expect(await page.evaluate(()=>localStorage.getItem('civ-prestige-tree'))).toBe('damaged-civ-save');
     await expect(page.locator('#save-original')).toHaveValue('damaged-civ-save');
 });
+
+test('Civ retains the actual base theme and component styling',async({page})=>{
+    await open(page);
+    const styles=await page.evaluate(()=>({
+        background:getComputedStyle(document.body).backgroundColor,
+        family:getComputedStyle(document.body).fontFamily,
+        radius:getComputedStyle(document.querySelector('.treeNode')).borderRadius,
+        style:document.querySelector('#styleStuff').getAttribute('href'),
+    }));
+    expect(styles.background).toBe('rgb(15, 15, 15)');
+    expect(styles.family).toContain('monospace');
+    expect(styles.radius).toBe('50%');
+    expect(styles.style).toBe('style.css');
+    await expect(page.getByRole('button',{name:/Expand gathering grounds/})).toHaveClass(/upg/);
+});
+
+test('reloading the selected player invalidates every derived UI summary',async({page})=>{
+    const errors=await open(page);
+    await page.getByRole('button',{name:'Save',exact:true}).click();
+    await page.evaluate(()=>gameUI.session.advance(60));
+    await expect(page.getByTestId('population')).toHaveText('8');
+    await page.evaluate(()=>{gameUI.commands.load();gameUI.session.runtimeServices.gameRuntime.stop();});
+    await expect(page.getByTestId('population')).toHaveText('5');
+    await page.evaluate(()=>gameUI.session.advance(12));
+    await expect(page.getByTestId('population')).toHaveText('6');
+    expect(errors).toEqual([]);
+});
+
+test('runtime faults disable the visible economy and retain the last durable save',async({page})=>{
+    await open(page);
+    await page.getByRole('button',{name:'Save',exact:true}).click();
+    const durable=await page.evaluate(()=>localStorage.getItem('civ-prestige-tree'));
+    page.on('dialog',dialog=>dialog.accept());
+    await page.evaluate(()=>{
+        const s=gameUI.session;
+        s.layerRegistry.layers.food.update=()=>{throw new Error('Synthetic rule fault');};
+        s.runtimeServices.gameRuntime.start();
+    });
+    await expect(page.locator('#save-status')).toContainText(/Reload/i);
+    await expect(page.locator('main')).toHaveAttribute('inert','');
+    expect(await page.evaluate(()=>localStorage.getItem('civ-prestige-tree'))).toBe(durable);
+});

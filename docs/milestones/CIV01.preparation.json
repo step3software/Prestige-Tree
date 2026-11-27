@@ -1,6 +1,6 @@
 {
   "milestone_id": "step3software/Prestige-Tree#CIV01",
-  "plan_sha256": "0f3ff6bb07bcf9e507f4045e9062594f602cd276c933b552cf616178c0b1b1c0",
+  "plan_sha256": "de6ef6c7a44d4ccac67f69ce9f62cc5ad6feeae5c42d36541b18d4f17eccfe8e",
   "base_revision": "d7d260fa66b270aae228dec2183f4df9da508b5f",
   "implementation_branch": "codex/civ-resource-opening",
   "validation_commands": [
@@ -867,5 +867,11 @@
   "source_branch_owner_answer": "Use current main (recommended)",
   "authority": "Direct implementation request in this chat; no native lifecycle transition or approval is manufactured.",
   "reconciliation_note": "Preparation refined to name the existing saveCommands codec-construction call site required by the planned content validation hook. No new behavior or external authority.",
-  "initial_base_revision": "0098433b8a18dedbabca8605d96cd40f3e995371"
+  "initial_base_revision": "0098433b8a18dedbabca8605d96cd40f3e995371",
+  "visual_revision": "Owner correction: restore actual base styles and native component classes. Restrict civ.css to layout, flow/status and accessibility adaptations; remove the paper/serif redesign.",
+  "source_invariants": [
+    "Base style.css, oldStyle.css and interface.css remain byte-identical to main.",
+    "Visible Civ summaries explicitly track selected-player replacement.",
+    "Fault state remains owned by gameRules and is observable by Vue."
+  ]
 }

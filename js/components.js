@@ -14,7 +14,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
     }
     const computed = {
         player() { return binding.player; }, allSaves() { return binding.allSaves; },
-        civ() { return modRules.civilization.summary(); },
+        civ() { return binding.player && modRules.civilization.summary(); },
         selected() { return modRules.civilization.node(binding.player.tab); },
         rows() { return [0,1,2,3].map(tier => this.civ.nodes.filter(node => node.tier === tier)); },
         frozen() { return binding.ruleStatus.gameEnded || gameRules.tickFaulted; },

@@ -27,7 +27,7 @@ The server exposes the exact generated `dist/` bytes on `http://127.0.0.1:8000/`
 | Saved defaults, validation and hydration | `js/save-codec.js` -> content validation in `civilization.validateData` | Save suite |
 | Atomic persistence and recovery | `js/saves.js` -> `js/save-storage.js`; only storage adapter reads/writes | Save suite and Chromium recovery journey |
 | Clock, offline bank, timers and disposal | `js/game-runtime.js` | Runtime suite |
-| Rendered view and controls | `index.html`, `js/components.js`, `civ.css` | `npx playwright test tests/browser/civilization.spec.cjs` |
+| Rendered view and controls | `index.html`, `js/components.js`; unchanged `style.css` / `interface.css` with `civ.css` layout adaptations | `npx playwright test tests/browser/civilization.spec.cjs` |
 | Static build and package identity | `scripts/build.cjs`, `scripts/check-package.cjs` | `npm run build` then `npm run test:package` |
 
 For a Water change: follow `README` -> this table -> `supply()` and `projects()` in `js/civilization.js`; identify the one canonical player record, advance it through the actual registered Food update, then inspect the Water panel in `index.html`. Copy a nearby boundary case from the economy suite. Avoid maintaining a second UI copy of persistent state.

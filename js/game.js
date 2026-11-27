@@ -3,8 +3,8 @@ function createGameRules({ derivedState, effects, gameHelpers, gameView, layerRe
 let needCanvasUpdate = true;
 // Vue observes this same rule-owned object; a computed scalar getter would
 // otherwise cache its first value without seeing the endgame transition.
-/** @type {{gameEnded:boolean|1}} */
-const status = effects.observe({ gameEnded: false });
+/** @type {{gameEnded:boolean|1,tickFaulted:boolean}} */
+const status = effects.observe({ gameEnded: false, tickFaulted: false });
 
 // Don't change this
 const TMT_VERSION = {
@@ -381,7 +381,7 @@ function hardReset() {
 
 let ticking = false
 // A failed tick may leave partial mutations. Only a reload restores a safe state.
-let tickFaulted = false
+
 
 /** Advance this owner's identity-bound state by elapsed seconds, without I/O.
  * Rule/cache collaborators belong to this session. Callers own clock/offline
@@ -390,7 +390,7 @@ let tickFaulted = false
  */
 function advanceGame(session, elapsedSeconds) {
 	if (!runtimeServices.isCurrentGameSession(session)) throw new Error("Superseded game session");
-	if (tickFaulted) throw new Error("Reload required after runtime failure");
+	if (status.tickFaulted) throw new Error("Reload required after runtime failure");
 	if (!Number.isFinite(elapsedSeconds) || elapsedSeconds < 0) throw new Error("Expected finite nonnegative elapsed seconds");
 	if (ticking) throw new Error("Game advancement is already in progress");
 	if (status.gameEnded && !saveState.player.keepGoing) return;
@@ -403,7 +403,7 @@ function advanceGame(session, elapsedSeconds) {
 		gameRules.gameLoop(elapsedSeconds);
 		gameHelpers.fixNaNs();
 	} catch (error) {
-		tickFaulted = true;
+		status.tickFaulted = true;
 		throw error;
 	} finally {
 		ticking = false;
@@ -436,8 +436,8 @@ const gameRules = {
  hardReset,
  get ticking() { return ticking; },
  set ticking(value) { ticking = value; },
- get tickFaulted() { return tickFaulted; },
- set tickFaulted(value) { tickFaulted = value; },
+ get tickFaulted() { return status.tickFaulted; },
+ set tickFaulted(value) { status.tickFaulted = value; },
  advanceGame,
 };
 return gameRules;

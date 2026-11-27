@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#234c3b">
+<meta name="theme-color" content="#0f0f0f">
 <meta name="description" content="Grow a civilization from five people. Balance Food, Water and Shelter, then discover what shared work makes possible.">
 <title>Civ Prestige Tree</title>
-<link id="styleStuff" rel="stylesheet" href="civ.css">
+<link id="styleStuff" rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="interface.css">
+<link rel="stylesheet" href="civ.css">
 <script src="vendor/vue.global.prod.js"></script>
 <script src="js/technical/break_eternity.js"></script>
 <script src="js/technical/layerSupport.js"></script>
@@ -41,9 +43,9 @@
 <div id="app" v-cloak>
     <a class="skip-link" href="#resource-panel">Skip to selected resource</a>
     <header class="masthead">
-        <a class="wordmark" href="./" aria-label="Civ Prestige Tree home"><span class="brand-mark">C</span><span>CIV<span class="brand-subtitle">PRESTIGE TREE</span></span></a>
+        <h2 class="game-title">Civ Prestige Tree</h2>
         <div class="chapter"><span class="chapter-dot"></span> THE FIRST SETTLEMENT <span class="version">v0.1</span></div>
-        <nav aria-label="Game controls"><button @click="save">Save</button><button @click="openSaves">Settlements</button><button :aria-expanded="ui.settings" aria-controls="settings" @click="ui.settings = !ui.settings">Settings</button></nav>
+        <nav aria-label="Game controls"><button class="tabButton" @click="save">Save</button><button class="tabButton" @click="openSaves">Settlements</button><button class="tabButton" :aria-expanded="ui.settings" aria-controls="settings" @click="ui.settings = !ui.settings">Settings</button></nav>
     </header>
     <section v-if="ui.settings" id="settings" class="settings">
         <h2>Settlement settings</h2>
@@ -52,7 +54,7 @@
     </section>
     <main :inert="frozen">
         <section class="population-banner" aria-labelledby="population-title">
-            <div class="population-main"><p id="population-title" class="eyebrow">YOUR CIVILIZATION BEGINS WITH</p><div class="population-count"><strong data-testid="population">{{number(civ.population,0)}}</strong><h1>Population<span>{{number(civ.housing,0)}} housing capacity</span></h1></div></div>
+            <div class="population-main"><p id="population-title" class="eyebrow">You have</p><div class="population-count"><strong data-testid="population">{{number(civ.population,0)}}</strong><h1>Population<span>{{number(civ.housing,0)}} housing capacity</span></h1></div></div>
             <div class="growth-overview"><div class="growth-heading"><span>{{civ.growing ? 'A community taking root' : 'Growth paused'}}</span><span>{{number(player.civ.growth * 100,0)}}%</span></div>
                 <progress :value="player.civ.growth" max="1" aria-label="Progress toward the next person"></progress>
                 <p v-if="civ.growing">{{civ.advice}}</p><p v-else><button class="text-button" @click="select(civ.next)">{{civ.bottleneck}}</button> is limiting growth. {{civ.advice}}</p>
@@ -65,17 +67,17 @@
                     <div class="resource-tier" v-for="(row,index) in rows" :key="index">
                         <span class="tier-label">{{['FOUNDATIONS','SHARED WORK','SURPLUS','EXPRESSION'][index]}}</span>
                         <div class="node-row" :class="{'three-nodes': index === 0}">
-                            <button v-for="node in row" :key="node.id" class="resource-node" :class="[node.id, {selected: player.tab === node.id, locked: !node.unlocked, ready: node.canPrestige}]" :aria-pressed="player.tab === node.id" :aria-label="node.name + (node.unlocked ? ', ' + number(node.value) + ' ' + node.unit : ', locked. ' + node.requirement)" @click="select(node.id)">
-                                <span class="node-icon"><resource-icon :path="node.icon"></resource-icon></span><strong>{{node.name}}</strong><span class="node-value">{{node.unlocked ? number(node.value) : 'Locked'}}<small v-if="node.unlocked && node.unit"> {{node.unit}}</small></span><span class="node-hint" v-if="node.canPrestige">Prestige available</span>
-                            </button>
+                            <div class="node-cell" v-for="node in row" :key="node.id">
+                                <button class="treeNode resource-node" :class="{selected: player.tab === node.id, locked: !node.unlocked, can: node.unlocked, resetNotify: node.canPrestige}" :style="{backgroundColor: node.unlocked ? node.color : undefined}" :aria-pressed="player.tab === node.id" :aria-label="node.name + (node.unlocked ? ', ' + number(node.value) + ' ' + node.unit : ', locked. ' + node.requirement)" @click="select(node.id)">{{node.symbol}}</button>
+                                <span class="node-label">{{node.name}}</span><span class="node-value">{{node.unlocked ? number(node.value) : 'Locked'}}<small v-if="node.unlocked && node.unit"> {{node.unit}}</small></span><span class="node-hint" v-if="node.canPrestige">Prestige available</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <p class="tree-caption">People make resources. Resources make room for possibility.</p>
             </section>
             <section id="resource-panel" tabindex="-1" class="resource-panel" :class="selected.id" aria-labelledby="resource-title">
-                <div class="panel-title"><span class="panel-icon"><resource-icon :path="selected.icon"></resource-icon></span><p class="eyebrow">{{['FOUNDATION RESOURCE','SHARED WORK','SURPLUS RESOURCE','CIVILIZATION RESOURCE'][selected.tier]}}</p></div>
-                <h2 id="resource-title">{{selected.name}}</h2><p class="resource-description">{{selected.description}}</p>
+                <div class="panel-title"><p class="eyebrow">{{['FOUNDATION RESOURCE','SHARED WORK','SURPLUS RESOURCE','CIVILIZATION RESOURCE'][selected.tier]}}</p></div>
+                <h2 id="resource-title" :style="{color:selected.color}">{{selected.name}}</h2><p class="resource-description">{{selected.description}}</p>
                 <template v-if="!selected.unlocked"><div class="unlock-note"><p class="eyebrow">NOT YET DISCOVERED</p><h3>{{selected.requirement}}</h3><p>Develop the earlier branches to bring this resource into your civilization.</p></div></template>
                 <template v-else>
                     <div class="resource-total"><strong>{{number(selected.value)}}</strong><span>{{selected.unit || selected.name.toLowerCase()}}</span></div>
@@ -86,15 +88,15 @@
                     </template>
                     <template v-if="selected.id === 'shelter'"><dl class="flow-ledger"><div><dt>Occupied housing</dt><dd>{{number(civ.population,0)}}</dd></div><div><dt>Room for more people</dt><dd>{{number(Math.max(0,civ.housing-civ.population),0)}}</dd></div></dl><p class="small-note">Housing creates room. Food and Water determine whether your population can grow into it.</p></template>
                     <div v-if="selected.projects.length" class="projects"><h3>Build the next improvement</h3>
-                        <button v-for="project in selected.projects" :key="project.id" class="project-button" :disabled="!!civ.project" @click="build(project.id)"><span><strong>{{project.name}}</strong><small>{{project.description}}</small></span><span class="project-cost">{{number(project.work,0)}}<small>work</small></span></button>
+                        <button v-for="project in selected.projects" :key="project.id" class="upg project-button" :class="{can:!civ.project,locked:!!civ.project}" :style="{backgroundColor: !civ.project ? selected.color : undefined}" :disabled="!!civ.project" @click="build(project.id)"><span><strong>{{project.name}}</strong><small>{{project.description}}</small></span><span class="project-cost">{{number(project.work,0)}}<small>work</small></span></button>
                         <p class="small-note">One project at a time. Construction shares your population's labor and remains available with empty stores.</p>
                     </div>
-                    <template v-if="['craft','organization'].includes(selected.id)"><div class="prestige-box"><p class="eyebrow">REORGANIZE, THEN REBUILD</p><h3>Gain {{selected.prestigeGain}} {{selected.id === 'craft' ? 'Craft' : 'coordination'}}</h3><p>Requires {{selected.requirement}}.</p><dl class="reset-preview"><div><dt>Restart</dt><dd>Food and Water stores; growth progress</dd></div><div><dt>Keep</dt><dd>Population, housing, infrastructure, construction and every other resource</dd></div></dl><button class="primary" :disabled="!selected.canPrestige" @click="prestige(selected.id)">Develop {{selected.name}}</button></div>
+                    <template v-if="['craft','organization'].includes(selected.id)"><div class="prestige-box"><p class="eyebrow">REORGANIZE, THEN REBUILD</p><h3>Gain {{selected.prestigeGain}} {{selected.id === 'craft' ? 'Craft' : 'coordination'}}</h3><p>Requires {{selected.requirement}}.</p><dl class="reset-preview"><div><dt>Restart</dt><dd>Food and Water stores; growth progress</dd></div><div><dt>Keep</dt><dd>Population, housing, infrastructure, construction and every other resource</dd></div></dl><button class="reset primary" :class="{can:selected.canPrestige,locked:!selected.canPrestige}" :style="{backgroundColor:selected.canPrestige ? selected.color : undefined}" :disabled="!selected.canPrestige" @click="prestige(selected.id)">Develop {{selected.name}}</button></div>
                         <p v-if="selected.id === 'craft'" class="small-note">Each Craft adds 18% to worker productivity and supply capacity.</p><p v-else class="small-note">Coordination reduces upkeep and speeds construction. At 2 coordination, unlock automatic building.</p>
                     </template>
                     <template v-if="selected.id === 'money'"><p class="resource-explanation">Specialized trade earns Money from {{number(civ.moneyWorkers)}} workers. Use it with free Time to fund Education.</p><p class="small-note">Earn 5 Money and 3 free hours in total to discover Education and Culture.</p></template>
                     <template v-if="selected.id === 'freeTime'"><p class="resource-explanation">{{number(civ.timeWorkers)}} workers' worth of time is free after essential production, construction and trade. Each contributes one free hour per game minute.</p><p class="small-note">Better tools and coordination free more labor. This resource rewards productivity.</p></template>
-                    <template v-if="['education','culture'].includes(selected.id)"><div class="prestige-box"><h3>{{selected.id === 'education' ? 'Support an apprenticeship' : 'Create a shared tradition'}}</h3><p>Gain 1 {{selected.unit}}.</p><p class="investment-cost"><span v-for="cost in selected.costs" :key="cost.name">{{number(cost.cost)}} {{cost.name}} </span></p><button class="primary" :disabled="!selected.canInvest" @click="invest(selected.id)">Invest in {{selected.name}}</button></div><p class="small-note">{{selected.id === 'education' ? 'Each Knowledge adds 12% to worker productivity and supply capacity.' : 'Cultural influence strengthens cooperation and reduces Population upkeep.'}}</p></template>
+                    <template v-if="['education','culture'].includes(selected.id)"><div class="prestige-box"><h3>{{selected.id === 'education' ? 'Support an apprenticeship' : 'Create a shared tradition'}}</h3><p>Gain 1 {{selected.unit}}.</p><p class="investment-cost"><span v-for="cost in selected.costs" :key="cost.name">{{number(cost.cost)}} {{cost.name}} </span></p><button class="reset primary" :class="{can:selected.canInvest,locked:!selected.canInvest}" :style="{backgroundColor:selected.canInvest ? selected.color : undefined}" :disabled="!selected.canInvest" @click="invest(selected.id)">Invest in {{selected.name}}</button></div><p class="small-note">{{selected.id === 'education' ? 'Each Knowledge adds 12% to worker productivity and supply capacity.' : 'Cultural influence strengthens cooperation and reduces Population upkeep.'}}</p></template>
                 </template>
             </section>
         </div>

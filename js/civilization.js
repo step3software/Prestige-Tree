@@ -215,7 +215,9 @@ function createCivilizationRules({ saveState }) {
     function node(id) {
         const p = player(), isPrestige = tier(id) === 1;
         const unlocked = tier(id) === 0 || isPrestige || p[id].unlocked;
-        return {id, name: names[id], tier: tier(id), icon: icons[id], description: descriptions[id], unlocked,
+        const colors = {food:"#4BDC13",water:"#31aeb0",shelter:"#c79b58",craft:"#f5b942",organization:"#b16fd6",money:"#f2cf54",freeTime:"#64d4f0",education:"#698df0",culture:"#e776b4"};
+        const symbols = {food:"F",water:"W",shelter:"S",craft:"C",organization:"O",money:"$",freeTime:"T",education:"E",culture:"Cu"};
+        return {id, name: names[id], color:colors[id], symbol:symbols[id], tier: tier(id), icon: icons[id], description: descriptions[id], unlocked,
             value: p[id].points, unit: id === "shelter" ? "housing" : id === "freeTime" ? "free hours" :
                 id === "organization" ? "coordination" : id === "education" ? "knowledge" : id === "culture" ? "influence" : "",
             requirement: isPrestige ? prestigeRequirements(id) : tier(id) === 2 ? "Earn Craft and Organization" : "Earn 5 Money and 3 free hours in total",

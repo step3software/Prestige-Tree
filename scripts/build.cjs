@@ -4,7 +4,7 @@ const {createHash} = require('node:crypto');
 
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'dist');
-const assets = ['index.html', 'js', 'civ.css', 'LICENSE', 'Prestige-tree-license'];
+const assets = ['index.html', 'js', 'style.css', 'oldStyle.css', 'interface.css', 'civ.css', 'LICENSE', 'Prestige-tree-license'];
 const vueRoot = path.dirname(require.resolve('vue/package.json'));
 const vue = require('vue/package.json');
 const manifest = require('../package.json');
