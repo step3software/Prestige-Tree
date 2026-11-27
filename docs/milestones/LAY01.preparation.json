@@ -18,6 +18,48 @@
   "open_questions": [],
   "file_changes": [
     {
+      "path": "js/technical/layerSupport.js",
+      "operation": "modify",
+      "implementation": "Move only info-tab/options-tab literals into named factories; preserve registry functions and every engine helper unchanged.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "fa432698c80d64dd5c5acca289a3c586bf797e47",
+        "sha256": "c695c03fa461f008fb8709e5515b8c4d957e252e4b7a1d26d97eed424edc8e5f"
+      }
+    },
+    {
+      "path": "demo.html",
+      "operation": "modify",
+      "implementation": "Load the two shared utility tab factories before the standalone demo tree; main game uses its sole manifest.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "ad94f7f05a51fddf546b79de35161d035f6bad65",
+        "sha256": "e3b417e781d1181e9413bdbaabedaeb29ed5ca129bacd5aaf4c39ba229653c2f"
+      }
+    },
+    {
+      "path": "js/Demo/demoTree.js",
+      "operation": "modify",
+      "implementation": "Register the same shared utility factories first in the standalone demo registration graph, preserving its prior engine-tab order; do not duplicate tab definitions or change demo content.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "7659b5c2a6bd75801ec6645c9fb06e99a6d08155",
+        "sha256": "bf4fc96a97182a286a7ed08d373b2d7ef5b71557fa395f9b4c208b66de3898fd"
+      }
+    },
+    {
       "path": "js/layers.js",
       "operation": "delete",
       "implementation": "Remove the superseded active monolith after exact object-body and real-definition before/after checks; retain Git history only.",
@@ -169,6 +211,24 @@
       "path": "docs/milestones/LAY01.verification.md",
       "operation": "create",
       "implementation": "Record actual criteria/shared/local standard mapping, complete moved path/consumer inventory, expectations/findings, representative before/after results, commands and limitations; retain legacy authority.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/info-tab.js",
+      "operation": "create",
+      "implementation": "Move info-tab unchanged into createInfoTabLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/options-tab.js",
+      "operation": "create",
+      "implementation": "Move options-tab unchanged into createOptionsTabLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
       "verification": [
         "Full diff/source and consumer accounting; npm test.",
         "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
@@ -514,6 +574,22 @@
     "purpose": "Fresh LAY01 run evidence, not a consumer pin"
   },
   "registration_inventory": [
+    {
+      "id": "info-tab",
+      "slug": "info-tab",
+      "kind": "layer",
+      "source": "js/technical/layerSupport.js",
+      "path": "js/layers/info-tab.js",
+      "factory": "createInfoTabLayer"
+    },
+    {
+      "id": "options-tab",
+      "slug": "options-tab",
+      "kind": "layer",
+      "source": "js/technical/layerSupport.js",
+      "path": "js/layers/options-tab.js",
+      "factory": "createOptionsTabLayer"
+    },
     {
       "id": "blank",
       "slug": "blank",
@@ -969,6 +1045,9 @@
     {
       "id": "LAY01-AC01",
       "paths": [
+        "js/technical/layerSupport.js",
+        "demo.html",
+        "js/Demo/demoTree.js",
         "js/layers.js",
         "js/tree.js",
         "js/layers/manifest.js",
@@ -982,6 +1061,8 @@
         "docs/developer-guide.md",
         "docs/milestones/LAY01.preparation.json",
         "docs/milestones/LAY01.verification.md",
+        "js/layers/info-tab.js",
+        "js/layers/options-tab.js",
         "js/layers/blank.js",
         "js/layers/tree-tab.js",
         "js/layers/prestige.js",
@@ -1023,6 +1104,9 @@
     {
       "id": "LAY01-AC02",
       "paths": [
+        "js/technical/layerSupport.js",
+        "demo.html",
+        "js/Demo/demoTree.js",
         "js/layers.js",
         "js/tree.js",
         "js/layers/manifest.js",
@@ -1036,6 +1120,8 @@
         "docs/developer-guide.md",
         "docs/milestones/LAY01.preparation.json",
         "docs/milestones/LAY01.verification.md",
+        "js/layers/info-tab.js",
+        "js/layers/options-tab.js",
         "js/layers/blank.js",
         "js/layers/tree-tab.js",
         "js/layers/prestige.js",
@@ -1077,6 +1163,9 @@
     {
       "id": "LAY01-AC03",
       "paths": [
+        "js/technical/layerSupport.js",
+        "demo.html",
+        "js/Demo/demoTree.js",
         "js/layers.js",
         "js/tree.js",
         "js/layers/manifest.js",
@@ -1090,6 +1179,8 @@
         "docs/developer-guide.md",
         "docs/milestones/LAY01.preparation.json",
         "docs/milestones/LAY01.verification.md",
+        "js/layers/info-tab.js",
+        "js/layers/options-tab.js",
         "js/layers/blank.js",
         "js/layers/tree-tab.js",
         "js/layers/prestige.js",
@@ -1131,6 +1222,9 @@
     {
       "id": "LAY01-AC04",
       "paths": [
+        "js/technical/layerSupport.js",
+        "demo.html",
+        "js/Demo/demoTree.js",
         "js/layers.js",
         "js/tree.js",
         "js/layers/manifest.js",
@@ -1144,6 +1238,8 @@
         "docs/developer-guide.md",
         "docs/milestones/LAY01.preparation.json",
         "docs/milestones/LAY01.verification.md",
+        "js/layers/info-tab.js",
+        "js/layers/options-tab.js",
         "js/layers/blank.js",
         "js/layers/tree-tab.js",
         "js/layers/prestige.js",
@@ -1185,6 +1281,9 @@
     {
       "id": "LAY01-AC05",
       "paths": [
+        "js/technical/layerSupport.js",
+        "demo.html",
+        "js/Demo/demoTree.js",
         "js/layers.js",
         "js/tree.js",
         "js/layers/manifest.js",
@@ -1198,6 +1297,8 @@
         "docs/developer-guide.md",
         "docs/milestones/LAY01.preparation.json",
         "docs/milestones/LAY01.verification.md",
+        "js/layers/info-tab.js",
+        "js/layers/options-tab.js",
         "js/layers/blank.js",
         "js/layers/tree-tab.js",
         "js/layers/prestige.js",
@@ -1239,6 +1340,9 @@
     {
       "id": "LAY01-AC06",
       "paths": [
+        "js/technical/layerSupport.js",
+        "demo.html",
+        "js/Demo/demoTree.js",
         "js/layers.js",
         "js/tree.js",
         "js/layers/manifest.js",
@@ -1252,6 +1356,8 @@
         "docs/developer-guide.md",
         "docs/milestones/LAY01.preparation.json",
         "docs/milestones/LAY01.verification.md",
+        "js/layers/info-tab.js",
+        "js/layers/options-tab.js",
         "js/layers/blank.js",
         "js/layers/tree-tab.js",
         "js/layers/prestige.js",
