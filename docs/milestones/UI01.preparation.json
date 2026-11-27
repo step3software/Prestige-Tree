@@ -1,0 +1,703 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#UI01",
+  "plan_sha256": "31d0047297f6704cd72cc2d6f84731278d085d5d0a19bba297b4bf2b43245965",
+  "base_revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+  "implementation_branch": "codex/ui01-vue-interface",
+  "file_changes": [
+    {
+      "path": ".gitignore",
+      "operation": "modify",
+      "implementation": "Ignore only generated dist/ package output; retain existing artifact ignores.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "modify",
+      "implementation": "Add the UI01 push branch, deterministic package build/check steps before all existing checks; retain pinned tools/actions, full history, read-only permissions and failure-only artifacts.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "README.md",
+      "operation": "modify",
+      "implementation": "Link the current package/setup route and UI01 verification without changing historical roadmap or source authority.",
+      "verification": [
+        "Validate canonical source/hash/criterion/file bindings and local links; review complete prose diff"
+      ]
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Update current Vue/component/state ownership, package/build/serve/test/generated/runtime dependency and rollback guidance; preserve game/save/runtime policies and parent stack provenance.",
+      "verification": [
+        "Validate canonical source/hash/criterion/file bindings and local links; review complete prose diff"
+      ]
+    },
+    {
+      "path": "docs/milestones/UI01.preparation.json",
+      "operation": "create",
+      "implementation": "Persist and validate this exact pre-code contract and canonical Git hashes; append only observed verification/provenance without altering file scope or criteria.",
+      "verification": [
+        "Validate canonical source/hash/criterion/file bindings and local links; review complete prose diff"
+      ]
+    },
+    {
+      "path": "docs/milestones/UI01.verification.md",
+      "operation": "create",
+      "implementation": "Record plan review/refinements, eight criteria, current requirements, path/consumer accounting, failures/corrections, actual checks, measurements, limits and stacked delivery.",
+      "verification": [
+        "Validate canonical source/hash/criterion/file bindings and local links; review complete prose diff"
+      ]
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Use packaged local Vue 3; adapt affected loop precedence, valid HTML, scoped resize handlers and native keyboard-accessible navigation controls without changing IDs/game controls.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "demo.html",
+      "operation": "modify",
+      "implementation": "Use the same packaged runtime and shared component-compatible template/scroll bindings; preserve demo content and existing lowercase example paths.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "style.css",
+      "operation": "modify",
+      "implementation": "Retain original theme bytes; move UI01-added shared focus/cloak/native-control/narrow rules to interface.css so selecting oldStyle cannot disable them.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "notification.css",
+      "operation": "modify",
+      "implementation": "Rename Vue transition enter class; bound notification sizing/reduced motion for supported narrow layouts.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "package.json",
+      "operation": "modify",
+      "implementation": "Pin Vue 3.5.46 as application dependency, retain exact Node/npm/Playwright/ESLint/TypeScript pins; add build/serve/package verification commands to the full test route.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "operation": "modify",
+      "implementation": "Regenerate exact npm lock for Vue 3.5.46 and its pinned upstream packages; remove Vue 2 dependency, without unrelated tool upgrades.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/browser-entry.js",
+      "operation": "modify",
+      "implementation": "Inject framework reactivity only at the browser boundary, preserve Decimal class instances and lazy validation/startup; replace Vue.set with ordinary property assignment.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/components.js",
+      "operation": "modify",
+      "implementation": "Create/register/mount one Vue 3 app per view; retain instance inspection contract and shared canonical binding. Convert dynamic is elements, precedence and malformed template structure; preserve commands/values. Route render errors through the existing reload-only fault policy.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/technical/systemComponents.js",
+      "operation": "modify",
+      "implementation": "Migrate shared templates and scoped data bindings; preserve layers/tabs/navigation and use accessible names for affected node controls.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/technical/temp.js",
+      "operation": "modify",
+      "implementation": "Observe the one derived-cache root at allocation/replacement through the injected state port, preserving calculations/order and setter semantics.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/game-session.js",
+      "operation": "modify",
+      "implementation": "Inject an optional generic identity-preserving observation port at canonical save/cache/status/notification ownership; headless default remains inert identity. Preserve independent sessions and activation/runtime lifetimes.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/contracts.js",
+      "operation": "modify",
+      "implementation": "Describe the optional generic observation port from the actual boundary; preserve all existing state/clock/Decimal negative contracts.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/game.js",
+      "operation": "modify",
+      "implementation": "Observe the canonical rule status through the injected port without changing endgame or calculation policies.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "js/mod.js",
+      "operation": "modify",
+      "implementation": "Observe the existing notification array using the injected port, preserving notification IDs/order/content and all formulas.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "scripts/build.cjs",
+      "operation": "create",
+      "implementation": "Produce a deterministic ignored dist static artifact from real game assets and locked Vue global production compiler build/license. No backend, runtime CDN, paid service, deployment or destructive data operation.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "scripts/serve.cjs",
+      "operation": "create",
+      "implementation": "Provide a loopback-only static package preview server with bounded path handling; no HTML/script substitutions, external calls or persistence.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "scripts/check-package.cjs",
+      "operation": "create",
+      "implementation": "Verify full packaged script/assets/runtime/license identity, exact Vue version/lock and source bytes; reject old runtime routes or missing/mismatched package graph. Compile actual page/component templates with matching official compiler and surface errors/warnings.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "scripts/check-static.cjs",
+      "operation": "modify",
+      "implementation": "Explicitly account for packaged vendor Vue separately while retaining complete authored lint and compiler graph equality; no production ignores or contract weakening.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "eslint.config.cjs",
+      "operation": "modify",
+      "implementation": "Exclude only named packaged vendor Vue from authored parsing, retaining every authored script declaration/global/lint rule.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "tests/support/game-runtime.cjs",
+      "operation": "modify",
+      "implementation": "Separate the real packaged Vue asset from the authored VM graph; adapt only browser UI stubs to Vue 3 while retaining Vue 2 stub support solely for immutable historical graphs. Historical loading must succeed before behavioral failures.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "tests/support/server.cjs",
+      "operation": "modify",
+      "implementation": "Serve the exact dist artifact through the shared loopback preview server; delete Vue/font HTML rewrites and the old test-vue route.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "tests/browser/vue-interface.spec.cjs",
+      "operation": "create",
+      "implementation": "Add exact-package/runtime, canonical identity/Decimal/dynamic cache/array/status/notification, early/middle/late real-save, automation/subtab, keyboard/focus, desktop/narrow, canvas/scroll, save/export/rename/rejection/recovery journeys; assert no unexpected console warnings/errors.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "tests/rules/vue-interface.test.cjs",
+      "operation": "create",
+      "implementation": "Add focused owner observation and no-copy/independent-session tests with real Vue reactivity, legacy save roundtrip equivalence and appropriate immutable baseline comparisons; retain all locked inherited assertions.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "tests/support/ui-measurements.cjs",
+      "operation": "create",
+      "implementation": "Capture repeatable five-sample real-browser startup, 20 explicit game ticks and DOM update measurements at the same synthetic early fixture, viewport and browser. Use identical workload before/after, record raw samples/environment and no invented threshold.",
+      "verification": [
+        "npm run test:package",
+        "npm run test:static",
+        "npm run test:rules",
+        "npm run test:browser"
+      ]
+    },
+    {
+      "path": "interface.css",
+      "operation": "create",
+      "implementation": "Own the migrated shared native-control, focus/cloak and narrow pane/menu rules independently of the selected styleStuff stylesheet. Move only UI01-added rules from style.css, preserving both original theme files; include/link the new stylesheet in the static artifact.",
+      "verification": [
+        "npm run build",
+        "npm run test:package",
+        "npx playwright test tests/browser/vue-interface.spec.cjs",
+        "Keyboard/visible-focus/narrow controls must pass after selecting both NEW and v1.0 styles through actual controls"
+      ]
+    }
+  ],
+  "validation_commands": [
+    "npm ci",
+    "npm run build",
+    "npm run test:package",
+    "npx playwright install chromium",
+    "npm test",
+    "git diff --check 51a9b96c9949e6d0f96a65d5650ecac575fb9da8"
+  ],
+  "handoff_instructions": [
+    "Implement only the exact listed paths on the exclusively protected UI01 checkout. Original specification/plan remain historical proposals; this owner continuation independently authorizes the full development/review-fix cycle.",
+    "Publish one separate draft unmerged stacked PR to codex/dev01-state-contracts at the verified base; document PR6/5/4/3/2 and preserve every parent. No merge/deployment/activation/native acceptance/enrollment/policy change.",
+    "Preserve ptr/schema/F1-F3, Decimal/formulas/balance/settings, layer IDs/fields/hooks/hotkeys/tree/order, session independence, saveCommands validation/persistence/activation, runtime fences and reload-only fault policy.",
+    "Complete exact runtime/packaged startup, rendered success/error/recovery/keyboard/responsive/reactivity evidence and all inherited static/rule/sensitivity/journey assertions. Reconcile any required scope/source changes before editing outside this file set.",
+    "Review all changed files and affected unchanged callers; record proof levels and unverified conditions. Retain writer protection until verified remote outcome and exact-head CI; no later milestone exists in this defined roadmap."
+  ],
+  "open_questions": [],
+  "source_specification_sha256": "c59d54d35ccf9e9afd47077e14194fea53783493164c32e06826886ea3e44438",
+  "authority": {
+    "mode": "legacy",
+    "request": "Owner-authorized UI01 scheduled continuation in the current Game work chat, from predecessor chat 01a21bcf-be05-7c60-bee5-0285245f038b",
+    "native_acceptance": false,
+    "implementation_authorization": "Current explicit multi-stage request, independent of historical docs-only proposal"
+  },
+  "source": {
+    "repository": "step3software/Prestige-Tree",
+    "branch": "codex/dev01-state-contracts",
+    "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+    "pr": 6,
+    "canonical_branch": "master",
+    "canonical_revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+    "dependencies": [
+      6,
+      5,
+      4,
+      3,
+      2
+    ]
+  },
+  "standards": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "document_sha256": {
+      "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+      "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+      "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+      "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+      "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+      "docs/agent-workflows/prepare.md": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255",
+      "docs/agent-workflows/implement.md": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51",
+      "docs/agent-workflows/refactor.md": "6c736d463a7ca9d3f0410220b41429d76433d41b721a734940262486627d3e42",
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+      "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52",
+      "docs/budget-aware-scheduling.md": "e4f594c76835d88344f1a58e712d22bb7aad9576f14349854d9c03bbc9b3f27a"
+    },
+    "purpose": "Fresh UI01 observation; not a consumer pin"
+  },
+  "source_document_sha256": {
+    ".gitignore": "22d2304cf25ed2222ad89d7cae2a9d1c0cc49693273dbf124643cf6208cd5d92",
+    ".github/workflows/test.yml": "7506bf798ce342da2aed8d38b8bebf6f9324357e164184e2fe6be75d64f23ea2",
+    "README.md": "e2031be14634f092e131dbf05227ef81bec0c969f46071f618bf2a27a4ba6ca3",
+    "docs/developer-guide.md": "184a8ad15af256e99a5e0530e72af3ad54b966fba45cf015307b8f20b6024f51",
+    "index.html": "42500b972557b0b2c3b19642c65d765608cde7982ef3616f9f93499ab775c256",
+    "demo.html": "1c3a4e4df6277644c4994e1754902b2ac2ced4f59cbb5092e0309791f8ed2d90",
+    "style.css": "c3066ee514007f885333d4bdaf3f49c8351a1bfc216b8e957a1fc5c72706f113",
+    "notification.css": "aa9082eb87fdbab6e3efe92a03d63298f67979540e8b2b41bee40376fdc022b5",
+    "package.json": "cefbd09bacd4198cfa57ee7dd3bd4669adc9fb4e81603c981216e65e5cb8826f",
+    "package-lock.json": "e1e37512113424e4f57eeea90a7e4d3b6c46eb724e859f61bca0bc93efc1ac9a",
+    "js/browser-entry.js": "34886d83d0b7f167e76d5ef25be618c8caa16bb7ffd72d5543a51aa170b6d486",
+    "js/components.js": "ae5dfb9aa9e4c158211b7949d33a45461c6b50ec8f9c0fd48fc199c61648947b",
+    "js/technical/systemComponents.js": "715028cca8d81bf6da79c26e940f1160e9d184474ebfe76575e20f97dc207493",
+    "js/technical/temp.js": "9763046bd5c611f485f0a13d6f5bbfd5b59948863be4bf478fd84f607dcc7819",
+    "js/game-session.js": "06b8674a35d410bf77dcda9d830bae6ca49370508da4f01e8472de3bde0535b5",
+    "js/contracts.js": "ca9b6371037679308103a88452729c958e486f327e17e324def8cb11393a6dfc",
+    "js/game.js": "5c0802ceb8d2926f45391a198823ad9435977d7089ec6036d383fe2885c18129",
+    "js/mod.js": "4cf781a38141fbf5118af68a9ed8d36cebd85dc10e404e54b299aa07ea1417f7",
+    "scripts/check-static.cjs": "140f327b8d8aa17dfabd1b23965d00711d952436ec5d0d900c3f144f0c061928",
+    "eslint.config.cjs": "165b69029b74a257c829bbae1ad221aae46541b62f523c582a50d9bb18067fc2",
+    "tests/support/game-runtime.cjs": "8211c4bfab4cf68eb30ae07bd81701b0a5b2ad361c517a8801f75de9ae9292d1",
+    "tests/support/server.cjs": "cd130f535c2e6994f02ef9e0831f3be020061c21209f6a49f165b944c2a53221"
+  },
+  "canonical_authority_correction": "Fresh git ls-tree/show at 077861d proves canonical AGENTS.md (blob bc1331477d12bea3ddabac766afc9550348a6b0b), .orcha/repository.json (039cae6a2b9b0596c20394d2278246c7ca96d7cb) and docs/developer-guide.md (cda3d726c8dbd52dc41d4b2e84965acbd10434ac) exist. Contrary predecessor prose is an evidence error, not absence of authority. Original predecessor artifacts remain untouched. Canonical instructions/manifest and guide were read; delivered stack guide supplies current source navigation.",
+  "plan_review": {
+    "disposition": "Valid scope and eight criteria; stale technical baseline reconciled in preparation without rewriting historical provenance",
+    "refinements": [
+      "DEV01 already removed implicit global player/tmp/allSaves; use its per-session factories and narrow browser effects.",
+      "Vue.set now resides in browser-entry setValue, not temp directly. Keep framework handling at that boundary.",
+      "Use supported stable Vue 3.5.46 full global production compiler build, local static dist output and exact matching compiler checks; no Vite/backend/compat framework is necessary.",
+      "Vue proxies must become canonical at owner allocation/activation, not a second UI model; exclude Decimal instances from proxies using nonserialized prototype metadata and test real class behavior.",
+      "Migrate combined v-if/v-for precedence, div is dynamic components, malformed table/void/duplicate attributes and transition classes. Test actual templates and packaged startup.",
+      "Scoped canvas handlers and narrow keyboard controls fall within AC05; no visual redesign or game-rule change."
+    ],
+    "consequential_owner_questions": []
+  },
+  "tool_selection": {
+    "vue": "3.5.46",
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "playwright": "1.65.1",
+    "eslint": "10.15.0",
+    "typescript": "7.0.2",
+    "runtime_asset": "vue/dist/vue.global.prod.js",
+    "artifact": "dist/",
+    "primary_evidence": [
+      "https://github.com/vuejs/core/releases/tag/v3.5.46",
+      "https://vuejs.org/guide/quick-start.html",
+      "https://vuejs.org/guide/essentials/reactivity-fundamentals.html",
+      "https://vuejs.org/api/reactivity-advanced.html",
+      "https://v3-migration.vuejs.org/breaking-changes/",
+      "https://vuejs.org/guide/best-practices/production-deployment.html"
+    ],
+    "npm_registry_observation": "latest=3.5.46; alpha/beta/rc 3.6 not selected; all @vue direct dependencies=3.5.46; MIT; integrity sha512-0kW5CgfjMPBqmH158049SaE1muufp+K/ZyrwvSEwrwYky6QB7zL2y8kXfruneKb9O12eh0xAJL6CVSpzb9o0Kg=="
+  },
+  "criterion_checks": {
+    "UI01-AC01": {
+      "requirement": "UI01-AC01: Preparation inventories Vue 2 usage and affected templates/components, selects an exact supported Vue 3/runtime/toolchain combination from current official guidance and locks it. Document how the static/local artifact is produced and served without imposing a backend or changing hosting authority.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC02": {
+      "requirement": "UI01-AC02: The shipped page uses Vue 3 application/component/lifecycle APIs and one canonical session owner. Vue.set and superseded Vue 2 boot/registration paths are removed; dynamic layer/upgrade arrays, save switching, tabs and derived-value changes remain visible through the actual reactive UI.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC03": {
+      "requirement": "UI01-AC03: The built/served application includes its pinned Vue runtime and required game assets with attribution. A clean locked install produces the artifact, and startup works with the external Vue CDN blocked. Any remaining external fonts/assets are documented; this criterion is not a claim of universal offline/PWA support.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC04": {
+      "requirement": "UI01-AC04: Browser fixtures cover fresh and representative early/middle/late saves, prestige/reset, purchase/automation, layer/tab selection, notifications, save/export/import/rename/select and error recovery. Values, controls, navigation context and valid saved progress match the behavioral baseline, with no unexpected console or migration warnings.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC05": {
+      "requirement": "UI01-AC05: Rendered checks verify keyboard access/focus through changed controls, readable feedback, supported desktop and narrow layouts, and canvas/tree resizing after tab/window changes. Preserve existing interactions; record any unavailable accessibility/actual-user evidence without claiming synthetic tests prove usability.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC06": {
+      "requirement": "UI01-AC06: Tests execute the same Vue version and boot path as the delivered artifact. Replace the TST01 Vue 2-specific local routing/fixtures where necessary, verify they cannot continue serving the old runtime, and run current rule/static/browser checks in CI against the integrated package.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC07": {
+      "requirement": "UI01-AC07: Only one production UI runtime/boot path remains, with no permanent legacy fallback or dual state adapter. Existing save formats/key and Decimal semantics are unchanged; smoke-load recoverable baseline fixtures and document rollback to the prior code artifact without destructive data conversion.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    },
+    "UI01-AC08": {
+      "requirement": "UI01-AC08: The development guide identifies app/component owners, packaging/start/test commands, generated artifact sources and external dependencies. Record before/after representative startup/tick/render measurements for the same fixture and environment, without inventing a performance target or claiming improvement without data; publish an unmerged PR with known limits.",
+      "evidence": "Planned: exact-package/static/compiler checks, real Vue owner rules, inherited suites and focused vue-interface Chromium journeys; AC08 also identical five-sample before/after measurements and guide review"
+    }
+  },
+  "user_outcome": {
+    "task": "A player opens valid progress, navigates/purchases/prestiges, saves/reloads and safely recovers rejected import.",
+    "start": "Disposable browser contexts with fresh and synthetic early/middle/late saves under ptr.",
+    "success": "Visible values, controls, context and canonical identity survive direct mutation/state replacement through actual packaged Vue 3.",
+    "failure_recovery": "Malformed/unsupported import, cancelled names, storage denial and runtime fault preserve inherited data and recovery; no missing asset/test-local substitution hides failure.",
+    "quality": "Rendered desktop/narrow/keyboard/focus/canvas checks; same-workload measurements without target. Actual-user, AT and other engines remain not run."
+  },
+  "rollback": "Return to the predecessor code artifact at 51a9b96; no save conversion or destructive storage operation. Validate supported existing saves through unchanged codec.",
+  "documentation_assessment": {
+    "organization": "README -> current developer guide -> source owner/test; engine feature index retained.",
+    "strengths": [
+      "Single milestone specification and matching plan",
+      "Current explicit session/save/runtime ownership guide"
+    ],
+    "defects": [
+      "Historical UI01 baseline predates DEV01",
+      "Predecessor incorrectly reports canonical authority files absent"
+    ],
+    "improvement": "Reconcile in this handoff and update only current package/navigation guidance; no duplicate spec or new lifecycle ledger",
+    "measurement": "Qualitative source review, no discovery-efficiency claim"
+  },
+  "validation": "development_flow.validate_plan and validate_preparation executed before source/test edits; canonical LF Git bytes used for hashes; no native receipt or owner answer fabricated.",
+  "preparation_refinements": [
+    {
+      "reason": "Review traced the real styleStuff swap to oldStyle.css. The rendered 320px style-control journey proved focus outline changed to none when shared UI migration rules lived only in style.css. A style-independent integration stylesheet is required for the already accepted settings/keyboard/responsive criteria.",
+      "prior_pre_code_commit": "ceba73a",
+      "prior_preparation_sha256": "dd237e14239c294d629ac8a1440609432a866f37a1cb06d2b5e22cf8096b222a",
+      "scope_delta": [
+        "create interface.css"
+      ],
+      "criteria_or_source_change": false,
+      "authority": "Original explicit authorization covers bounded preparation refinement and implementation for UI01; no new scope/owner answer/native acceptance is inferred.",
+      "timing": "Validated and writer scope extended before creating interface.css. Historical 30-file pre-code contract remains immutable in ceba73a."
+    }
+  ],
+  "governing_project_documents": [
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "AGENTS.md",
+      "sha256": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": ".orcha/repository.json",
+      "sha256": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "README.md",
+      "sha256": "d4feeb1c1f9d7a0fc299c00ab46db02079065a5ed32247282ead4b29b057aff4"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "docs/developer-guide.md",
+      "sha256": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "docs/!general-info.md",
+      "sha256": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "AGENTS.md",
+      "sha256": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": ".orcha/repository.json",
+      "sha256": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "README.md",
+      "sha256": "e2031be14634f092e131dbf05227ef81bec0c969f46071f618bf2a27a4ba6ca3"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/developer-guide.md",
+      "sha256": "184a8ad15af256e99a5e0530e72af3ad54b966fba45cf015307b8f20b6024f51"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/!general-info.md",
+      "sha256": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/UI01.md",
+      "sha256": "c59d54d35ccf9e9afd47077e14194fea53783493164c32e06826886ea3e44438"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/UI01.plan.json",
+      "sha256": "31d0047297f6704cd72cc2d6f84731278d085d5d0a19bba297b4bf2b43245965"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/DEV01.verification.md",
+      "sha256": "46d8897b984fb01db848dc21f3238d3e148452cd3cefaf9c4ee20f846d317230"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/DEV01.preparation.json",
+      "sha256": "b173bd058deeeaac799095721e22865154162f93686e34fc2a6bc4a3367884a7"
+    }
+  ],
+  "verification_observation": {
+    "local": "Full npm test passed: 147 rules, 30 Chromium journeys, all package/compiler/static/negative/sensitivity checks",
+    "syntax": "55 game scripts and 31 test/config/demo scripts; packaged Vue is independently upstream-byte verified",
+    "package": "154 game/vendor/license assets plus generated manifest; 56 HTML scripts; 46 registered/page templates",
+    "performance": {
+      "before": {
+        "artifact": "DEV01 inherited baseline",
+        "environment": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "browser": "159.0.8154.6",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          }
+        },
+        "method": "Five fresh contexts; synthetic early save at fixed game Date.now; loopback cold page load (navigation to control-ready), 20 explicit 0.05-second real ticks, then awaited canonical points DOM mutation. Real performance clock; no retries or target.",
+        "samples": [
+          {
+            "startupMs": 550.9000000059605,
+            "twentyTicksMs": 315.79999999701977,
+            "renderUpdateMs": 1.7999999970197678,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 408,
+            "twentyTicksMs": 311.3999999910593,
+            "renderUpdateMs": 2.3999999910593033,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 420.79999999701977,
+            "twentyTicksMs": 304.3999999910593,
+            "renderUpdateMs": 2,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 337.20000000298023,
+            "twentyTicksMs": 288.5,
+            "renderUpdateMs": 4.4000000059604645,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 342.79999999701977,
+            "twentyTicksMs": 258.5,
+            "renderUpdateMs": 4.299999997019768,
+            "vue": "2.6.12"
+          }
+        ]
+      },
+      "after": {
+        "artifact": "UI01 packaged artifact",
+        "environment": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "browser": "159.0.8154.6",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          }
+        },
+        "method": "Five fresh contexts; synthetic early save at fixed game Date.now; loopback cold page load (navigation to control-ready), 20 explicit 0.05-second real ticks, then awaited canonical points DOM mutation. Real performance clock; no retries or target.",
+        "samples": [
+          {
+            "startupMs": 545.5999999940395,
+            "twentyTicksMs": 430.5,
+            "renderUpdateMs": 0.7000000029802322,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 458.8999999910593,
+            "twentyTicksMs": 458.5,
+            "renderUpdateMs": 1.0999999940395355,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 449.19999998807907,
+            "twentyTicksMs": 430.40000000596046,
+            "renderUpdateMs": 0.6000000089406967,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 447.59999999403954,
+            "twentyTicksMs": 476.70000000298023,
+            "renderUpdateMs": 1.1000000089406967,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 470.29999999701977,
+            "twentyTicksMs": 406.40000000596046,
+            "renderUpdateMs": 1.2000000029802322,
+            "vue": "3.5.46"
+          }
+        ]
+      },
+      "before_sha256": "843c10692c30d61846a2adce908362874f16f4d70f3540cd6a1b7da611c39ca9",
+      "after_sha256": "625cbda9677064b1edb810199a4120b9fee74e66902ad74f17157abb9a28f914",
+      "measurement_script_sha256": "4f5d2b753ceae041dae16d90af471cc507b5443f76e14efd606e57cc22d10e6c",
+      "interpretation": "Five representative observations, no target or general improvement claim. Startup and tick medians are slower; DOM update median is faster."
+    },
+    "native_acceptance": false,
+    "next_defined_milestone": null
+  }
+}

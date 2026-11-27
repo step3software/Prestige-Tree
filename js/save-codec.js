@@ -1,12 +1,21 @@
+// Session-bound saveDefaults owner; composition supplies only the named ports.
+function createSaveDefaults({ layerRegistry, modRules, treeLayout }) {
+// The runtime optional defaults and their inferred contract have one owner.
+function optionalPlayerFields() {
+	return { devSpeed: 1, hqTree: false, timePlayedReset: false,
+		theme: /** @type {'aqua'|null} */ (null),
+		offTime: /** @type {{remain:number}|null} */ (null) };
+}
 // Pure ingress/egress boundary. Configuration/defaults (including time) are
 // supplied by the caller. No storage, active player, clock, UI or timer effects.
+/** @returns {SaveCodec} */
 function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 	const playerDefaults = Object.assign({}, defaults, { version: String(version.num) });
 	const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 	const record = value => value !== null && typeof value === "object" && !Array.isArray(value);
 	const numeric = "[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:e[+-]?[0-9]+)?";
 	const decimalText = new RegExp("^(?:" + numeric + "|[+-]?e{2,}" + numeric + "|[+-]?\\(e\\^[0-9]+\\)" + numeric + ")$", "i");
-	const optionalFields = { devSpeed: 1, hqTree: false, timePlayedReset: false, theme: null, offTime: null };
+	const optionalFields = saveDefaults.optionalPlayerFields();
 	const knownTab = name => own(layerDefinitions, name) || ["none", "tree-tab", "options", "info", "help", "options-tab", "info-tab", "gameEnded"].includes(name);
 
 	function check(condition, message) {
@@ -195,16 +204,16 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 // Fresh defaults from the static game definitions; the caller owns the clock.
 function startPlayerBase(now) {
 	return {
-		tab: layoutInfo.startTab,
-		navTab: (layoutInfo.showTree ? "tree-tab" : "none"),
+		tab: treeLayout.layoutInfo.startTab,
+		navTab: (treeLayout.layoutInfo.showTree ? "tree-tab" : "none"),
 		time: now,
 		autosave: true,
 		notify: {},
 		msDisplay: "always",
 		offlineProd: true,
-		versionType: modInfo.id,
-		version: String(VERSION.num),
-		beta: VERSION.beta,
+		versionType: modRules.modInfo.id,
+		version: String(modRules.VERSION.num),
+		beta: modRules.VERSION.beta,
 		timePlayed: 0,
 		keepGoing: false,
 		hasNaN: false,
@@ -225,47 +234,48 @@ function startPlayerBase(now) {
 		hideStars: false,
 		showStory: true,
 		saveMenuOpen: false,
-		points: new Decimal(modInfo.initialStartPoints),
+		// The vendor constructor is untyped; the codec checks this real class.
+		points: /** @type {DecimalValue} */ (new Decimal(modRules.modInfo.initialStartPoints)),
 		subtabs: {},
-		lastSafeTab: (layoutInfo.showTree ? "none" : layoutInfo.startTab)
+		lastSafeTab: (treeLayout.layoutInfo.showTree ? "none" : treeLayout.layoutInfo.startTab)
 	}
 }
 
 function createSavePlayer(now) {
-	let playerdata = startPlayerBase(now)
+	let playerdata = saveDefaults.startPlayerBase(now)
 
-	if (addedPlayerData) {
-		let extradata = addedPlayerData()
+	if (modRules.addedPlayerData) {
+		let extradata = modRules.addedPlayerData()
 		for (let thing in extradata)
 			playerdata[thing] = extradata[thing]
 	}
 
 	playerdata.infoboxes = {}
-	for (let layer in layers){
+	for (let layer in layerRegistry.layers){
 		playerdata[layer] = {}
-		if (layers[layer].startData)
-			playerdata[layer] = layers[layer].startData()
+		if (layerRegistry.layers[layer].startData)
+			playerdata[layer] = layerRegistry.layers[layer].startData()
 		else playerdata[layer].unlocked = true
-		playerdata[layer].buyables = getStartBuyables(layer)
-		if(playerdata[layer].clickables == undefined) playerdata[layer].clickables = getStartClickables(layer)
+		playerdata[layer].buyables = saveDefaults.getStartBuyables(layer)
+		if(playerdata[layer].clickables == undefined) playerdata[layer].clickables = saveDefaults.getStartClickables(layer)
 		playerdata[layer].spentOnBuyables = new Decimal(0)
 		playerdata[layer].upgrades = []
 		playerdata[layer].milestones = []
 		playerdata[layer].primeMiles = []
 		playerdata[layer].achievements = []
-		playerdata[layer].challenges = getStartChallenges(layer)
-		if (layers[layer].tabFormat && !Array.isArray(layers[layer].tabFormat)) {
+		playerdata[layer].challenges = saveDefaults.getStartChallenges(layer)
+		if (layerRegistry.layers[layer].tabFormat && !Array.isArray(layerRegistry.layers[layer].tabFormat)) {
 			playerdata.subtabs[layer] = {}
-			playerdata.subtabs[layer].mainTabs = Object.keys(layers[layer].tabFormat)[0]
+			playerdata.subtabs[layer].mainTabs = Object.keys(layerRegistry.layers[layer].tabFormat)[0]
 		}
-		if (layers[layer].microtabs) {
+		if (layerRegistry.layers[layer].microtabs) {
 			if (playerdata.subtabs[layer] == undefined) playerdata.subtabs[layer] = {}
-			for (let item in layers[layer].microtabs)
-			playerdata.subtabs[layer][item] = Object.keys(layers[layer].microtabs[item])[0]
+			for (let item in layerRegistry.layers[layer].microtabs)
+			playerdata.subtabs[layer][item] = Object.keys(layerRegistry.layers[layer].microtabs[item])[0]
 		}
-		if (layers[layer].infoboxes) {
+		if (layerRegistry.layers[layer].infoboxes) {
 			if (playerdata.infoboxes[layer] == undefined) playerdata.infoboxes[layer] = {}
-			for (let item in layers[layer].infoboxes)
+			for (let item in layerRegistry.layers[layer].infoboxes)
 				playerdata.infoboxes[layer][item] = false
 		}
 	}
@@ -275,8 +285,8 @@ function createSavePlayer(now) {
 
 function getStartBuyables(layer){
 	let data = {}
-	if (layers[layer].buyables) {
-		for (let id in layers[layer].buyables)
+	if (layerRegistry.layers[layer].buyables) {
+		for (let id in layerRegistry.layers[layer].buyables)
 			if (!isNaN(id))
 				data[id] = new Decimal(0)
 	}
@@ -285,8 +295,8 @@ function getStartBuyables(layer){
 
 function getStartClickables(layer){
 	let data = {}
-	if (layers[layer].clickables) {
-		for (let id in layers[layer].clickables)
+	if (layerRegistry.layers[layer].clickables) {
+		for (let id in layerRegistry.layers[layer].clickables)
 			if (!isNaN(id))
 				data[id] = new Decimal(0)
 	}
@@ -295,10 +305,23 @@ function getStartClickables(layer){
 
 function getStartChallenges(layer){
 	let data = {}
-	if (layers[layer].challenges) {
-		for (let id in layers[layer].challenges)
+	if (layerRegistry.layers[layer].challenges) {
+		for (let id in layerRegistry.layers[layer].challenges)
 			if (!isNaN(id))
 				data[id] = 0
 	}
 	return data
+}
+
+
+const saveDefaults = {
+ optionalPlayerFields,
+ createSaveCodec,
+ startPlayerBase,
+ createSavePlayer,
+ getStartBuyables,
+ getStartClickables,
+ getStartChallenges,
+};
+return saveDefaults;
 }

@@ -40,7 +40,7 @@ test('rendered prestige, upgrade, progression, save and reload retain earned pro
   await expect(page.getByRole('button', {name: /Begin/})).toHaveClass(/bought/);
   await page.clock.runFor(1000);
   await expect(page.locator('#app')).toContainText('You have');
-  const earned = await page.evaluate(() => player.points.toNumber());
+  const earned = await page.evaluate(() => gameUI.session.saveState.player.points.toNumber());
   expect(earned).toBeGreaterThan(0);
   await openOptions(page);
   await page.getByRole('button', {name: 'Save', exact: true}).click();
@@ -48,7 +48,7 @@ test('rendered prestige, upgrade, progression, save and reload retain earned pro
   expect(stored[stored.set].p.upgrades).toContain(11);
   await page.reload();
   await expect(page.locator('#p')).toBeVisible();
-  expect(await page.evaluate(() => player.points.toNumber())).toBeGreaterThanOrEqual(earned);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.toNumber())).toBeGreaterThanOrEqual(earned);
   await page.locator('#p').click();
   await expect(page.getByRole('button', {name: /Begin/})).toHaveClass(/bought/);
 });
@@ -60,7 +60,7 @@ test('valid import retains representative progress and survives a real reload', 
   await expect(page.locator('#p')).toBeVisible();
   await page.locator('#p').click();
   await expect(page.getByRole('button', {name: /Begin/})).toHaveClass(/bought/);
-  expect(await page.evaluate(() => player.points.eq('ee1000'))).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq('ee1000'))).toBe(true);
   const stored = await page.evaluate(() => JSON.parse(atob(localStorage.getItem('ptr'))));
   expect(stored[stored.set].b.milestones).toContain(0);
 });
@@ -84,7 +84,7 @@ for (const width of [1280, 320]) {
     expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(before);
     await expect(page.getByRole('button', {name: 'Import', exact: true})).toBeVisible();
     await page.clock.runFor(5000);
-    expect(await page.evaluate(() => player.points.eq(10) && player.p !== null)).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(10) && gameUI.session.saveState.player.p !== null)).toBe(true);
     await page.reload();
     await expect(page.locator('#p')).toBeVisible();
   });
@@ -102,5 +102,5 @@ test('cancelling New Save and Rename through the rendered menu retains selection
   await expect(page.locator('.activeSave')).toHaveText('save1');
   await page.reload();
   await expect(page.locator('#p')).toBeVisible();
-  expect(await page.evaluate(() => allSaves.set)).toBe('save1');
+  expect(await page.evaluate(() => gameUI.session.saveState.allSaves.set)).toBe('save1');
 });

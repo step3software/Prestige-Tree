@@ -1,5 +1,7 @@
+// Session-bound layer owner; composition supplies only the named ports.
 // ai — artificial intelligence content. Registration: manifest.js.
-function createArtificialIntelligenceLayer() {
+/** @param {Pick<GameLayerPorts, 'derivedState'|'effects'|'gameHelpers'|'gameRules'|'layerRegistry'|'saveState'>} ports */
+function createArtificialIntelligenceLayer({ derivedState, effects, gameHelpers, gameRules, layerRegistry, saveState }) {
     return {
 		name: "AI", // This is optional, only used in a few places, If absent it just uses the layer id.
         symbol: "AI", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -15,26 +17,27 @@ function createArtificialIntelligenceLayer() {
         }},
         color: "#e6ffcc",
 		nodeStyle() { return {
-			background: (player.ai.unlocked||canReset("ai"))?((player.grad&&!player.oldStyle)?"radial-gradient(circle, #e6ffcc 0%, #566b65 100%)":"#e6ffcc"):"#bf8f8f",
+			background: (saveState.player.ai.unlocked||gameRules.canReset("ai"))?((saveState.player.grad&&!saveState.player.oldStyle)?"radial-gradient(circle, #e6ffcc 0%, #566b65 100%)":"#e6ffcc"):"#bf8f8f",
 		}},
 		componentStyles: {
 			"prestige-button": {
-				background() { return (canReset("ai"))?((player.grad&&!player.oldStyle)?"radial-gradient(circle, #e6ffcc 0%, #566b65 100%)":"#e6ffcc"):"#bf8f8f" },
+				background() { return (gameRules.canReset("ai"))?((saveState.player.grad&&!saveState.player.oldStyle)?"radial-gradient(circle, #e6ffcc 0%, #566b65 100%)":"#e6ffcc"):"#bf8f8f" },
 			},
 		},
         requires: new Decimal(408), // Can be a function that takes requirement increases into account
         resource: "superintelligence", // Name of prestige currency 
         baseResource: "revelations", // Name of resource prestige is based on
-        baseAmount() {return tmp.id.rev}, // Get the current amount of baseResource
+        baseAmount() {return derivedState.tmp.id.rev}, // Get the current amount of baseResource
         type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
         exponent: new Decimal(2), // Prestige currency exponent
 		roundUpCost: true,
-        gainMult() { // Calculate the multiplier for main currency from bonuses
+        gainMult() {
+	let mult; // Calculate the multiplier for main currency from bonuses
             mult = new Decimal(1);
-			if (hasUpgrade("ai", 22)) mult = mult.times(3);
-			if (hasUpgrade("ai", 41)) mult = mult.times(upgradeEffect("ai", 41));
-			if (hasUpgrade("ai", 43)) mult = mult.times(upgradeEffect("ai", 43));
-			if (hasUpgrade("ai", 44)) mult = mult.times(player.ai.buyables[11].max(1));
+			if (gameHelpers.hasUpgrade("ai", 22)) mult = mult.times(3);
+			if (gameHelpers.hasUpgrade("ai", 41)) mult = mult.times(gameHelpers.upgradeEffect("ai", 41));
+			if (gameHelpers.hasUpgrade("ai", 43)) mult = mult.times(gameHelpers.upgradeEffect("ai", 43));
+			if (gameHelpers.hasUpgrade("ai", 44)) mult = mult.times(saveState.player.ai.buyables[11].max(1));
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
@@ -42,40 +45,40 @@ function createArtificialIntelligenceLayer() {
         },
         row: 6, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
-            {key: "R", description: "Press Shift+R to AI Reset", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+            {key: "R", description: "Press Shift+R to AI Reset", onPress(){if (gameRules.canReset(this.layer)) gameRules.doReset(this.layer)}},
         ],
 		passiveGeneration() { return 0 },
         doReset(resettingLayer){ 
 			let keep = [];
-			if (layers[resettingLayer].row == this.row) {
-				player.ai.time = new Decimal(0);
-				player.ai.consc = new Decimal(0);
+			if (layerRegistry.layers[resettingLayer].row == this.row) {
+				saveState.player.ai.time = new Decimal(0);
+				saveState.player.ai.consc = new Decimal(0);
 			}
-			if (layers[resettingLayer].row > this.row) layerDataReset(this.layer, keep)
+			if (layerRegistry.layers[resettingLayer].row > this.row) gameRules.layerDataReset(this.layer, keep)
         },
-        layerShown(){return player.r.unlocked && player.id.unlocked },
+        layerShown(){return saveState.player.r.unlocked && saveState.player.id.unlocked },
         branches: ["r", ["id", 3]],
 		update(diff) {
-			if (!player[this.layer].unlocked) return;
-			player.ai.time = player.ai.time.plus(diff);
+			if (!saveState.player[this.layer].unlocked) return;
+			saveState.player.ai.time = saveState.player.ai.time.plus(diff);
 			// player.ai.consc = player.ai.consc.plus(tmp.ai.buyables[11].effect.times(diff)).div(Decimal.pow(tmp.ai.divConsc, diff));
-			if (tmp.ai.divConsc.lte(1.00001)) player.ai.consc = player.ai.consc.add(tmp.ai.buyables[11].effect.mul(diff));
-			else player.ai.consc = player.ai.consc.add(tmp.ai.buyables[11].effect.mul(0.001).sub(player.ai.consc.mul(tmp.ai.divConsc.pow(0.001).sub(1))).mul(tmp.ai.divConsc.pow(0.001).sub(1).recip().mul(Decimal.sub(1, tmp.ai.divConsc.pow(0.001).recip().pow(diff*1000)))))
+			if (derivedState.tmp.ai.divConsc.lte(1.00001)) saveState.player.ai.consc = saveState.player.ai.consc.add(derivedState.tmp.ai.buyables[11].effect.mul(diff));
+			else saveState.player.ai.consc = saveState.player.ai.consc.add(derivedState.tmp.ai.buyables[11].effect.mul(0.001).sub(saveState.player.ai.consc.mul(derivedState.tmp.ai.divConsc.pow(0.001).sub(1))).mul(derivedState.tmp.ai.divConsc.pow(0.001).sub(1).recip().mul(Decimal.sub(1, derivedState.tmp.ai.divConsc.pow(0.001).recip().pow(diff*1000)))))
 		},
-		divConsc() { return player.ai.time.plus(1).log10().plus(1).sqrt() },
-		conscEff1() { return player.ai.consc.plus(1) },
-		conscEff2() { return player.ai.consc.plus(1).log(3).plus(1) },
+		divConsc() { return saveState.player.ai.time.plus(1).log10().plus(1).sqrt() },
+		conscEff1() { return saveState.player.ai.consc.plus(1) },
+		conscEff2() { return saveState.player.ai.consc.plus(1).log(3).plus(1) },
 		tabFormat: ["main-display",
 			"prestige-button",
 			"resource-display", "blank",
 			["buyable", 11], "blank",
-			["display-text", function() { return "<h3>"+format(player.ai.consc)+"</h3> Artificial Consciousness (divided by "+format(tmp.ai.divConsc)+" each second, based on time in this Row 7 run)" }], 
-			["display-text", function() { return "Effect: Multiplies Energy, Signal, & Robot gain by "+format(tmp.ai.conscEff1)+(tmp.nerdMode?" (x+1)":"")+", and divides the Robot & Idea req by "+format(tmp.ai.conscEff2)+(tmp.nerdMode?" (log3(x+1)+1)":".") }],"blank", "blank",
+			["display-text", function() { return "<h3>"+gameHelpers.format(saveState.player.ai.consc)+"</h3> Artificial Consciousness (divided by "+gameHelpers.format(derivedState.tmp.ai.divConsc)+" each second, based on time in this Row 7 run)" }],
+			["display-text", function() { return "Effect: Multiplies Energy, Signal, & Robot gain by "+gameHelpers.format(derivedState.tmp.ai.conscEff1)+(derivedState.tmp.nerdMode?" (x+1)":"")+", and divides the Robot & Idea req by "+gameHelpers.format(derivedState.tmp.ai.conscEff2)+(derivedState.tmp.nerdMode?" (log3(x+1)+1)":".") }],"blank", "blank",
 			["clickable", 11],
-			["display-text", function() { return "Nodes: "+formatWhole(player.ai.upgrades.length)+" / "+formatWhole(tmp.ai.nodeSlots) }], "blank",
+			["display-text", function() { return "Nodes: "+gameHelpers.formatWhole(saveState.player.ai.upgrades.length)+" / "+gameHelpers.formatWhole(derivedState.tmp.ai.nodeSlots) }], "blank",
 			"upgrades", "blank",
 		],
-		nodeSlots() { return player.ai.buyables[11].div(2).plus(player.ai.buyables[11].sub(6).div(2).max(0)).plus(player.ai.buyables[11].gte(1)?1:0).floor().min(16).toNumber() },
+		nodeSlots() { return saveState.player.ai.buyables[11].div(2).plus(saveState.player.ai.buyables[11].sub(6).div(2).max(0)).plus(saveState.player.ai.buyables[11].gte(1)?1:0).floor().min(16).toNumber() },
 		upgrades: {
 			rows: 4,
 			cols: 4,
@@ -94,10 +97,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked },
+				unlocked() { return saveState.player.ai.unlocked },
 				style: {height: '150px', width: '150px'},
 			},
 			12: {
@@ -115,10 +118,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && hasUpgrade("ai", 11) },
+				unlocked() { return saveState.player.ai.unlocked && gameHelpers.hasUpgrade("ai", 11) },
 				style: {height: '150px', width: '150px'},
 			},
 			13: {
@@ -136,10 +139,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=4 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=4 },
 				style: {height: '150px', width: '150px'},
 			},
 			14: {
@@ -157,10 +160,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
 			},
 			21: {
@@ -178,10 +181,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && hasUpgrade("ai", 11) },
+				unlocked() { return saveState.player.ai.unlocked && gameHelpers.hasUpgrade("ai", 11) },
 				style: {height: '150px', width: '150px'},
 			},
 			22: {
@@ -199,10 +202,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && hasUpgrade("ai", 11) },
+				unlocked() { return saveState.player.ai.unlocked && gameHelpers.hasUpgrade("ai", 11) },
 				style: {height: '150px', width: '150px'},
 			},
 			23: {
@@ -220,10 +223,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=4 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=4 },
 				style: {height: '150px', width: '150px'},
 			},
 			24: {
@@ -241,13 +244,13 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
-				effect() { return player.ge.points.max(1).pow(5) },
-				effectDisplay() { return format(tmp.ai.upgrades[24].effect)+"x" },
+				effect() { return saveState.player.ge.points.max(1).pow(5) },
+				effectDisplay() { return gameHelpers.format(derivedState.tmp.ai.upgrades[24].effect)+"x" },
 				formula: "x^5",
 			},
 			31: {
@@ -265,10 +268,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=4 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=4 },
 				style: {height: '150px', width: '150px'},
 			},
 			32: {
@@ -286,10 +289,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=4 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=4 },
 				style: {height: '150px', width: '150px'},
 			},
 			33: {
@@ -307,13 +310,13 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=4 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=4 },
 				style: {height: '150px', width: '150px'},
-				effect() { return player.ai.points.plus(1).pow(1.5) },
-				effectDisplay() { return format(tmp.ai.upgrades[33].effect)+"x" },
+				effect() { return saveState.player.ai.points.plus(1).pow(1.5) },
+				effectDisplay() { return gameHelpers.format(derivedState.tmp.ai.upgrades[33].effect)+"x" },
 				formula: "(x+1)^1.5",
 			},
 			34: {
@@ -331,10 +334,10 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
 			},
 			41: {
@@ -352,13 +355,13 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
-				effect() { return Decimal.pow(1.05, player.ma.points) },
-				effectDisplay() { return format(tmp.ai.upgrades[41].effect)+"x" },
+				effect() { return Decimal.pow(1.05, saveState.player.ma.points) },
+				effectDisplay() { return gameHelpers.format(derivedState.tmp.ai.upgrades[41].effect)+"x" },
 				formula: "1.05^x",
 			},
 			42: {
@@ -376,13 +379,13 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
-				effect() { return Decimal.pow(100, player.ai.upgrades.length) },
-				effectDisplay() { return format(tmp.ai.upgrades[42].effect)+"x" },
+				effect() { return Decimal.pow(100, saveState.player.ai.upgrades.length) },
+				effectDisplay() { return gameHelpers.format(derivedState.tmp.ai.upgrades[42].effect)+"x" },
 				formula: "100^x",
 			},
 			43: {
@@ -400,13 +403,13 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
-				effect() { return Decimal.pow(1.075, player.id.points) },
-				effectDisplay() { return format(tmp.ai.upgrades[43].effect)+"x" },
+				effect() { return Decimal.pow(1.075, saveState.player.id.points) },
+				effectDisplay() { return gameHelpers.format(derivedState.tmp.ai.upgrades[43].effect)+"x" },
 				formula: "1.075^x",
 			},
 			44: {
@@ -424,13 +427,13 @@ function createArtificialIntelligenceLayer() {
 					},
 				],
 				canAfford() {
-					let a = canAffordUpgrade(this.layer, this.id, true);
-					return a && (player.ai.upgrades.length<tmp.ai.nodeSlots)
+					let a = gameHelpers.canAffordUpgrade(this.layer, this.id, true);
+					return a && (saveState.player.ai.upgrades.length<derivedState.tmp.ai.nodeSlots)
 				},
-				unlocked() { return player.ai.unlocked && player.ai.upgrades.length>=9 },
+				unlocked() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>=9 },
 				style: {height: '150px', width: '150px'},
-				effect() { return player.ai.consc.plus(1).pow(5) },
-				effectDisplay() { return format(tmp.ai.upgrades[44].effect)+"x" },
+				effect() { return saveState.player.ai.consc.plus(1).pow(5) },
+				effectDisplay() { return gameHelpers.format(derivedState.tmp.ai.upgrades[44].effect)+"x" },
 				formula: "x^5",
 			},
 		},
@@ -439,33 +442,33 @@ function createArtificialIntelligenceLayer() {
 			cols: 1,
 			11: {
 				title: "AI Network",
-				cost(x=player[this.layer].buyables[this.id]) {
+				cost(x=saveState.player[this.layer].buyables[this.id]) {
 					return {
 						ai: Decimal.pow(2, x),
 						ge: Decimal.pow(100, x.pow(1.8)).times(1e78),
 						mc: Decimal.pow('1e525', x.pow(2.5)).times('1e750'),
 					};
 				},
-				effect() { return Decimal.pow(4, player[this.layer].buyables[this.id]).sub(1).times(hasAchievement("a", 163)?player.id.points.max(1):1) },
+				effect() { return Decimal.pow(4, saveState.player[this.layer].buyables[this.id]).sub(1).times(gameHelpers.hasAchievement("a", 163)?saveState.player.id.points.max(1):1) },
 				display() { // Everything else displayed in the buyable button after the title
-                    let data = tmp[this.layer].buyables[this.id];
+                    let data = derivedState.tmp[this.layer].buyables[this.id];
 					let cost = data.cost;
-					let amt = player[this.layer].buyables[this.id];
-                    let display = formatWhole(player.ai.points)+" / "+formatWhole(cost.ai)+" Superintelligence"+(tmp.nerdMode?(" (2^x)"):"")+"<br>"+formatWhole(player.ge.points)+" / "+formatWhole(cost.ge)+" Gears"+(tmp.nerdMode?(" (100^(x^1.8)*1e78)"):"")+"<br>"+formatWhole(player.mc.mechEn.times(tmp.mc.mechEnMult))+" / "+formatWhole(cost.mc)+" Mech-Energy"+(tmp.nerdMode?(" (1e525^(x^2.5)*1e750)"):"")+"<br><br>Level: "+formatWhole(amt)+"<br><br>Reward: Generates "+formatWhole(data.effect)+" Artificial Consciousness/sec"+(tmp.nerdMode?" (4^x-1)":".");
+					let amt = saveState.player[this.layer].buyables[this.id];
+                    let display = gameHelpers.formatWhole(saveState.player.ai.points)+" / "+gameHelpers.formatWhole(cost.ai)+" Superintelligence"+(derivedState.tmp.nerdMode?(" (2^x)"):"")+"<br>"+gameHelpers.formatWhole(saveState.player.ge.points)+" / "+gameHelpers.formatWhole(cost.ge)+" Gears"+(derivedState.tmp.nerdMode?(" (100^(x^1.8)*1e78)"):"")+"<br>"+gameHelpers.formatWhole(saveState.player.mc.mechEn.times(derivedState.tmp.mc.mechEnMult))+" / "+gameHelpers.formatWhole(cost.mc)+" Mech-Energy"+(derivedState.tmp.nerdMode?(" (1e525^(x^2.5)*1e750)"):"")+"<br><br>Level: "+gameHelpers.formatWhole(amt)+"<br><br>Reward: Generates "+gameHelpers.formatWhole(data.effect)+" Artificial Consciousness/sec"+(derivedState.tmp.nerdMode?" (4^x-1)":".");
 					return display;
                 },
-                unlocked() { return unl(this.layer) }, 
+                unlocked() { return gameHelpers.unl(this.layer) },
                 canAfford() {
-					if (!tmp[this.layer].buyables[this.id].unlocked) return false;
-					let cost = layers[this.layer].buyables[this.id].cost();
-                    return player[this.layer].unlocked && player.ai.points.gte(cost.ai) && player.ge.points.gte(cost.ge) && player.mc.mechEn.times(tmp.mc.mechEnMult).gte(cost.mc) && player.ai.time>=1;
+					if (!derivedState.tmp[this.layer].buyables[this.id].unlocked) return false;
+					let cost = layerRegistry.layers[this.layer].buyables[this.id].cost();
+                    return saveState.player[this.layer].unlocked && saveState.player.ai.points.gte(cost.ai) && saveState.player.ge.points.gte(cost.ge) && saveState.player.mc.mechEn.times(derivedState.tmp.mc.mechEnMult).gte(cost.mc) && saveState.player.ai.time>=1;
 				},
                 buy() { 
-					let cost = tmp[this.layer].buyables[this.id].cost;
-					player.ai.points = player.ai.points.sub(cost.ai);
-					player.ge.points = player.ge.points.sub(cost.ge);
-					player.mc.points = player.mc.points.sub(cost.mc);
-					player.ai.buyables[this.id] = player.ai.buyables[this.id].plus(1);
+					let cost = derivedState.tmp[this.layer].buyables[this.id].cost;
+					saveState.player.ai.points = saveState.player.ai.points.sub(cost.ai);
+					saveState.player.ge.points = saveState.player.ge.points.sub(cost.ge);
+					saveState.player.mc.points = saveState.player.mc.points.sub(cost.mc);
+					saveState.player.ai.buyables[this.id] = saveState.player.ai.buyables[this.id].plus(1);
                 },
                 style: {'height':'200px', 'width':'200px'},
 				autoed() { return false },
@@ -477,12 +480,12 @@ function createArtificialIntelligenceLayer() {
 			11: {
 				title: "Delete all AI Nodes",
 				display: "",
-				unlocked() { return player.ai.unlocked },
-				canClick() { return player.ai.unlocked && player.ai.upgrades.length>0 },
+				unlocked() { return saveState.player.ai.unlocked },
+				canClick() { return saveState.player.ai.unlocked && saveState.player.ai.upgrades.length>0 },
 				onClick() { 
-					if (!confirm("Are you sure you want to delete all AI Nodes? This will force an AI reset!")) return;
-					player.ai.upgrades = [];
-					doReset("ai", true);
+					if (!effects.confirm("Are you sure you want to delete all AI Nodes? This will force an AI reset!")) return;
+					saveState.player.ai.upgrades = [];
+					gameRules.doReset("ai", true);
 				},
 				style: {width: "80px", height: "80px"},
 			},

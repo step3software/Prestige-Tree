@@ -4,8 +4,10 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { createHash } = require('node:crypto');
 const { test } = require('node:test');
+const espree = require('espree');
 const { createRuntime, loadedRuntime, root, scripts } = require('../support/game-runtime.cjs');
 const { historicalSources } = require('../support/historical-sources.cjs');
+const { expressionContract, functionContract, normalizeContract, sessionOwners } = require('../support/ownership-contract.cjs');
 
 const parent = '7ee437d2101a507e5c610406f059e4df682cf692';
 const before = historicalSources(parent);
@@ -31,7 +33,8 @@ test('every baseline registration, function, field and ordered contract survives
   t.after(old.dispose); t.after(current.dispose);
   assert.equal(keys(old).length, 35, 'Refresh the characterized baseline deliberately when source changes');
   assert.deepEqual(keys(current), keys(old));
-  assert.equal(current.run(contract), old.run(contract));
+  const owners = sessionOwners(current);
+  assert.deepEqual(normalizeContract(current.run(contract), owners), normalizeContract(old.run(contract), owners));
   assert.equal(current.run('JSON.stringify(player)'), old.run('JSON.stringify(player)'));
   for (const value of ['JSON.stringify(hotkeys)', 'JSON.stringify(ROW_LAYERS)', 'JSON.stringify(TREE_LAYERS)', 'JSON.stringify(OTHER_LAYERS)']) {
     assert.equal(current.run(value), old.run(value));
@@ -48,7 +51,7 @@ test('the shipped page and real-script harness execute the one manifest with one
   assert.equal(fs.existsSync(path.join(root, 'js/layers.js')), false);
   assert.ok(!scripts.includes('js/layers.js'));
   for (const entry of entries) {
-    const owners = scripts.filter(file => fs.readFileSync(path.join(root,file),'utf8').includes(`function ${entry.factory}()`));
+    const owners = scripts.filter(file => fs.readFileSync(path.join(root,file),'utf8').includes(`function ${entry.factory}(`));
     assert.equal(owners.length, 1, `${entry.id} needs one named content owner`);
     assert.match(owners[0], /^js\/layers\/[a-z-]+\.js$/);
     assert.ok(scripts.indexOf(owners[0]) < scripts.indexOf(manifestPath));
@@ -59,7 +62,7 @@ test('the shipped page and real-script harness execute the one manifest with one
   assert.equal(r.listeners.size, 0);
 });
 
-test('every moved monolith object literal is byte-identical to immutable SIM01', () => {
+test('every layer preserves the complete immutable SIM01 formula AST apart from owner qualifiers and lexical bindings', () => {
   const source = before.sources['js/layers.js'];
   const starts = [...source.matchAll(/^addLayer\("([^"]+)", /gm)];
   const r = createRuntime();
@@ -68,9 +71,17 @@ test('every moved monolith object literal is byte-identical to immutable SIM01',
       const call = source.slice(starts[index].index, starts[index+1]?.index ?? source.length).trimEnd();
       const literal = call.slice(call.indexOf('{'), call.lastIndexOf('}')+1);
       const factory = r.run(`gameLayerManifest.find(entry => entry.id === ${JSON.stringify(starts[index][1])}).create.name`);
-      const owner = scripts.find(file => fs.readFileSync(path.join(root,file),'utf8').includes(`function ${factory}()`));
+      const owner = scripts.find(file => fs.readFileSync(path.join(root,file),'utf8').includes(`function ${factory}(`));
       const moved = fs.readFileSync(path.join(root,owner),'utf8');
-      assert.equal(moved.slice(moved.indexOf('return ')+7, moved.lastIndexOf(';\n}')), literal, starts[index][1]);
+      for (const newline of ['\n', '\r\n']) {
+        const text = moved.replace(/\r?\n/g, newline);
+        const factoryNode = espree.parse(text, {ecmaVersion:'latest', range:true}).body
+          .find(node => node.type === 'FunctionDeclaration' && node.id.name === factory);
+        const returned = factoryNode.body.body.find(node => node.type === 'ReturnStatement').argument;
+        assert.equal(returned.type, 'ObjectExpression', owner);
+        const actual = text.slice(...returned.range);
+        assert.deepEqual(expressionContract(actual,sessionOwners(r)),expressionContract(literal,sessionOwners(r)),starts[index][1]);
+      }
     }
     assert.equal(starts.length, 31);
   } finally { r.dispose(); }
@@ -83,24 +94,24 @@ test('isolated omission fails completeness and duplicate registration fails befo
   const omitted = createRuntime({sources:{[manifestPath]:manifest.replace(line,'')}}); t.after(omitted.dispose);
   assert.throws(() => assert.deepEqual(keys(omitted), keys(old)), {code:'ERR_ASSERTION'});
   assert.ok(!keys(omitted).includes('p'));
-  const duplicate = manifest.replace(line, `${line}\n${line}`).replace('registerGameLayers();',
-    'var registrationError; try { registerGameLayers(); } catch (error) { registrationError = error.message; }');
-  const r = createRuntime({sources:{[manifestPath]:duplicate}}); t.after(r.dispose);
-  assert.equal(r.run('registrationError'), 'Duplicate layer ID: p');
-  assert.deepEqual(keys(r), [], 'Duplicate manifest must fail before partial registration');
+  const duplicate = manifest.replace(line, `${line}\n${line}`);
+  const r = createRuntime({sources:{[manifestPath]:duplicate},scriptOrder:scripts.filter(file=>file!=='js/browser-entry.js'),bridge:false}); t.after(r.dispose);
+  r.run('var emptyRegistry=createLayerRegistry({gameHelpers:{},gameRules:{},saveState:{}});');
+  assert.throws(()=>r.run('registerGameLayers(emptyRegistry,{})'), /Duplicate layer ID: p/);
+  assert.equal(r.run('Object.keys(emptyRegistry.layers).length'), 0, 'Duplicate manifest must fail before partial registration');
   t.diagnostic('Omitted p: completeness assertion FAIL detected; duplicate p: explicit rejection, zero registrations (in-memory only)');
 });
 
 test('conflicting registration and a missing factory fail explicitly, without overwriting content', t => {
   const r = createRuntime(); t.after(r.dispose);
   const initial = r.run(contract);
-  assert.throws(() => r.run('registerGameLayers()'), /Layer already registered: info-tab/);
+  assert.throws(() => r.run('registerActiveGameLayers()'), /Layer already registered: info-tab/);
   assert.equal(r.run(contract), initial);
-  const invalid = manifest.replace('create: createPrestigeLayer', 'create: undefined').replace('registerGameLayers();',
-    'var registrationError; try { registerGameLayers(); } catch (error) { registrationError = error.message; }');
-  const missing = createRuntime({sources:{[manifestPath]:invalid}}); t.after(missing.dispose);
-  assert.equal(missing.run('registrationError'), 'Missing layer factory: p');
-  assert.deepEqual(keys(missing), []);
+  const invalid = manifest.replace('create: createPrestigeLayer', 'create: undefined');
+  const missing = createRuntime({sources:{[manifestPath]:invalid},scriptOrder:scripts.filter(file=>file!=='js/browser-entry.js'),bridge:false}); t.after(missing.dispose);
+  missing.run('var emptyRegistry=createLayerRegistry({gameHelpers:{},gameRules:{},saveState:{}});');
+  assert.throws(()=>missing.run('registerGameLayers(emptyRegistry,{})'), /Missing layer factory: p/);
+  assert.equal(missing.run('Object.keys(emptyRegistry.layers).length'), 0);
 });
 
 test('the standalone demo retains its exact utility/tree registry contracts and order', t => {
@@ -110,13 +121,24 @@ test('the standalone demo retains its exact utility/tree registry contracts and 
     execFileSync('git',['show',`${parent}:${file}`],{cwd:root,encoding:'utf8'})]));
   const old = createRuntime({scriptOrder:oldScripts,sources}); t.after(old.dispose);
   const current = createRuntime({scriptOrder:[...oldScripts.slice(0,2),
-    'js/layers/info-tab.js','js/layers/options-tab.js',demoTree]}); t.after(current.dispose);
+    'js/layers/info-tab.js','js/layers/options-tab.js',demoTree],bridge:false}); t.after(current.dispose);
+  current.run(`var layerRegistry=createLayerRegistry({gameHelpers:{},gameRules:{},saveState:{}});
+    createDemoTree({}).register({layerRegistry,saveState:{}}); var layers=layerRegistry.layers;`);
   assert.deepEqual(keys(current), keys(old));
-  assert.equal(current.run(contract),old.run(contract));
+  const owners={layerRegistry:['TREE_LAYERS'],saveState:['player']};
+  assert.deepEqual(normalizeContract(current.run(contract),owners),normalizeContract(old.run(contract),owners));
   const html=fs.readFileSync(path.join(root,'demo.html'),'utf8');
   for (const file of ['js/layers/info-tab.js','js/layers/options-tab.js']) {
     assert.ok(html.indexOf(`src="${file}"`) < html.indexOf('src="js/demo/demoTree.js"'));
   }
+});
+
+test('ownership normalization detects changed formula literals and incorrect owner qualifications', () => {
+  const owners={saveState:['player']};
+  const original=functionContract('effect() { return player.points.add(1); }',owners);
+  assert.deepEqual(functionContract('effect() { return saveState.player.points.add(1); }',owners),original);
+  assert.notDeepEqual(functionContract('effect() { return saveState.player.points.add(2); }',owners),original);
+  assert.notDeepEqual(functionContract('effect() { return unrelated.player.points.add(1); }',owners),original);
 });
 
 const settle = 'for (let pass=0; pass<5; pass++) updateTemp();';
@@ -132,7 +154,7 @@ const scenarios = [
       boosterEffect:tmp.b.effect.toString(), unlocked:tmp.b.upgrades[12].unlocked,
       automation:tmp.b.autoPrestige, resetNothing:tmp.b.resetsNothing, boosters:player.b.points.toString()})`,
     change:`player.g.points = new Decimal(999); player.t.milestones = [3,4]; player.b.auto = true;`,
-    action:'advanceGame(createGameSession(), 0.5);',
+    action:'advanceActiveGame(captureGameIdentity(), 0.5);',
     check(a,b) {
       assert.equal(a.cost,'7'); assert.equal(a.unlocked,true); assert.equal(a.automation,false);
       assert.equal(b.automation,true); assert.equal(b.resetNothing,true);
@@ -150,7 +172,7 @@ const scenarios = [
       effect:tmp.ba.upgrades[11].effect.toString(), unlocked:tmp.ba.upgrades[11].unlocked,
       automation:tmp.q.passiveGeneration, solarPower:tmp.o.solPow.toString(), energy:player.q.energy.toString(), quirks:player.q.points.toString()})`,
     change:'player.ba.milestones = [0,3]; player.ba.upgrades = [11];',
-    action:'advanceGame(createGameSession(), 0.5);',
+    action:'advanceActiveGame(captureGameIdentity(), 0.5);',
     check(a,b) {
       assert.equal(a.cost,'50000000'); assert.equal(a.unlocked,false); assert.equal(b.unlocked,true);
       assert.equal(a.automation,0); assert.equal(b.automation,1);
@@ -171,7 +193,7 @@ const scenarios = [
       shown:tmp.ai.layerShown, automation:tmp.ne.autoPrestige, resetsNothing:tmp.ne.resetsNothing,
       robotMultiplier:tmp.r.gainMult.toString(), signals:player.ne.signals.toString(), neurons:player.ne.points.toString()})`,
     change:'player.ne.auto = true; player.ne.activeChallenge = 11; player.ai.upgrades = [11]; player.ai.consc = new Decimal(161);',
-    action:'advanceGame(createGameSession(), 0.5);',
+    action:'advanceActiveGame(captureGameIdentity(), 0.5);',
     check(a,b) {
       assert.deepEqual(a.costs,['2','5']); assert.equal(a.unlocked,true); assert.equal(a.shown,true);
       assert.equal(a.automation,false); assert.equal(b.automation,true); assert.equal(b.resetsNothing,true);

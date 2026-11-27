@@ -1,19 +1,27 @@
-var tmp = {}
+// Session-bound derivedState owner; composition supplies only the named ports.
+function createDerivedState({ effects, gameHelpers, gameRules, helpContent, layerRegistry, modRules, saveState }) {
+	let item;
+/** Derived values are optional until setup/update complete; arbitrary layer
+ * properties are dynamically evaluated by this one canonical cache owner.
+ * @type {Record<string,unknown> & Partial<{nerdMode:boolean,pointGen:DecimalValue,row1to6spd:DecimalValue,displayThings:string[]}>}
+ */
+let tmp = effects.observe({})
 
 // Tmp will not call these
-var activeFunctions = [
+let activeFunctions = [
 	"startData", "onPrestige", "doReset", "update", "automate",
 	"buy", "buyMax", "respec", "onComplete", "onPurchase", "onPress", "onClick", "masterButtonPress",
 	"sellOne", "sellAll",
 ]
 
-var noCall = doNotCallTheseFunctionsEveryTick
+let noCall = modRules.doNotCallTheseFunctionsEveryTick
 for (item in noCall) {
 	activeFunctions.push(noCall[item])
 }
 
 function setupTemp() {
-	tmp = {}
+	let layer;
+	tmp = effects.observe({})
 	tmp.helpTab = NaN;
 	tmp.helpData = {};
 	tmp.nerdMode = false
@@ -21,8 +29,8 @@ function setupTemp() {
 	tmp.row1to6spd = new Decimal(1)
 	tmp.displayThings = []
 
-	setupTempData(layers, tmp)
-	for (layer in layers){
+	derivedState.setupTempData(layerRegistry.layers, tmp)
+	for (layer in layerRegistry.layers){
 		tmp[layer].resetGain = {}
 		tmp[layer].nextAt = {}
 		tmp[layer].nextAtDisp = {}
@@ -30,12 +38,13 @@ function setupTemp() {
 		tmp[layer].notify = {}
 		tmp[layer].prestigeNotify = {}
 		tmp[layer].prestigeButtonText = {}
-		setupBarStyles(layer)
+		derivedState.setupBarStyles(layer)
 	}
-	if (typeof help_data != "undefined") setupTempData(help_data, tmp.helpData);
+	if (typeof helpContent.help_data != "undefined") derivedState.setupTempData(helpContent.help_data, tmp.helpData);
 }
 
 function setupTempData(layerData, tmpData) {
+	let item;
 	for (item in layerData){
 		if (layerData[item] == null) {
 			tmpData[item] = null
@@ -44,13 +53,13 @@ function setupTempData(layerData, tmpData) {
 			tmpData[item] = layerData[item]
 		else if (Array.isArray(layerData[item])) {
 			tmpData[item] = []
-			setupTempData(layerData[item], tmpData[item])
+			derivedState.setupTempData(layerData[item], tmpData[item])
 		}
 		else if ((!!layerData[item]) && (layerData[item].constructor === Object)) {
 			tmpData[item] = {}
-			setupTempData(layerData[item], tmpData[item])
+			derivedState.setupTempData(layerData[item], tmpData[item])
 		}
-		else if (isFunction(layerData[item]) && !activeFunctions.includes(item)){
+		else if (gameHelpers.isFunction(layerData[item]) && !activeFunctions.includes(item)){
 			tmpData[item] = new Decimal(1) // Safest thing to put probably?
 		} else {
 			tmpData[item] = layerData[item]
@@ -59,80 +68,83 @@ function setupTempData(layerData, tmpData) {
 }
 
 function updateTemp() {
+	let layer, thing;
 	if (tmp === undefined)
-		setupTemp()
+		derivedState.setupTemp()
 
-	for (layer in layers) {updateTempData(layers[layer], tmp[layer], layer)}
+	for (layer in layerRegistry.layers) {derivedState.updateTempData(layerRegistry.layers[layer], tmp[layer], layer)}
 
-	for (layer in layers){
-		tmp[layer].resetGain = getResetGain(layer)
-		tmp[layer].nextAt = getNextAt(layer)
-		tmp[layer].nextAtDisp = getNextAt(layer, true)
-		tmp[layer].canReset = canReset(layer)
-		tmp[layer].notify = shouldNotify(layer)
-		tmp[layer].prestigeNotify = prestigeNotify(layer)
-		tmp[layer].prestigeButtonText = prestigeButtonText(layer)
-		constructBarStyles(layer)
+	for (layer in layerRegistry.layers){
+		tmp[layer].resetGain = gameRules.getResetGain(layer)
+		tmp[layer].nextAt = gameRules.getNextAt(layer)
+		tmp[layer].nextAtDisp = gameRules.getNextAt(layer, true)
+		tmp[layer].canReset = gameRules.canReset(layer)
+		tmp[layer].notify = gameRules.shouldNotify(layer)
+		tmp[layer].prestigeNotify = gameHelpers.prestigeNotify(layer)
+		tmp[layer].prestigeButtonText = gameHelpers.prestigeButtonText(layer)
+		derivedState.constructBarStyles(layer)
 	}
 
-	tmp.pointGen = getPointGen()
-	tmp.row1to6spd = getRow1to6Speed()
+	tmp.pointGen = modRules.getPointGen()
+	tmp.row1to6spd = modRules.getRow1to6Speed()
 	tmp.displayThings = []
-	for (thing in displayThings){
-		let text = displayThings[thing]
-		if (isFunction(text)) text = text()
+	for (thing in modRules.displayThings){
+		let text = modRules.displayThings[thing]
+		if (gameHelpers.isFunction(text)) text = text()
 		tmp.displayThings.push(text) 
 	}
 	
-	if (typeof help_data != "undefined" && player.tab=='help') {
-		updateTempData(help_data, tmp.helpData, "help");
+	if (typeof helpContent.help_data != "undefined" && saveState.player.tab=='help') {
+		derivedState.updateTempData(helpContent.help_data, tmp.helpData, "help");
 	}
 }
 
 function updateTempData(layerData, tmpData, layer, pre, pre2, isArr) {
+	let item;
 	
 	for (item in layerData){
-		if ((item.toLowerCase().includes("display") || (item.toLowerCase().includes("tabformat")&&layer!="tree-tab") || item.toLowerCase().includes("description") || (item == "unlocked" && pre2 != "upgrades")) && player.tab != layer) continue;
+		if ((item.toLowerCase().includes("display") || (item.toLowerCase().includes("tabformat")&&layer!="tree-tab") || item.toLowerCase().includes("description") || (item == "unlocked" && pre2 != "upgrades")) && saveState.player.tab != layer) continue;
 		if (Array.isArray(layerData[item])) {
-			updateTempData(layerData[item], tmpData[item], layer, item, pre, true)
+			derivedState.updateTempData(layerData[item], tmpData[item], layer, item, pre, true)
 		}
 		else if ((!!layerData[item]) && (layerData[item].constructor === Object)) {
-			updateTempData(layerData[item], tmpData[item], layer, item, pre, isArr)
+			derivedState.updateTempData(layerData[item], tmpData[item], layer, item, pre, isArr)
 		}
-		else if (isFunction(layerData[item]) && !activeFunctions.includes(item)){
+		else if (gameHelpers.isFunction(layerData[item]) && !activeFunctions.includes(item)){
 			let value = layerData[item]()
-			if (value !== value || value === decimalNaN){
+			if (value !== value || value === layerRegistry.decimalNaN){
 				throw new Error("Invalid derived value: " + layer + "." + item);
 			}
 
 
-			if (isArr) Vue.set(tmpData, item, value); else tmpData[item] = value
+			if (isArr) effects.setValue(tmpData, item, value); else tmpData[item] = value
 		}
 	}	
 }
 
 function updateChallengeTemp(layer)
 {
-	updateTempData(layers[layer].challenges, tmp[layer].challenges)
+	derivedState.updateTempData(layerRegistry.layers[layer].challenges, tmp[layer].challenges)
 }
 
 function updateBuyableTemp(layer)
 {
-	updateTempData(layers[layer].buyables, tmp[layer].buyables)
+	derivedState.updateTempData(layerRegistry.layers[layer].buyables, tmp[layer].buyables)
 }
 
 function updateClickableTemp(layer)
 {
-	updateTempData(layers[layer].clickables, tmp[layer].clickables)
+	derivedState.updateTempData(layerRegistry.layers[layer].clickables, tmp[layer].clickables)
 }
 
 
-var DIR_MARGINS = ["margin-bottom", "margin-top", "margin-right", "margin-left"]
+let DIR_MARGINS = ["margin-bottom", "margin-top", "margin-right", "margin-left"]
 
 function constructBarStyles(layer){
-	if (layers[layer].bars === undefined)
+	let id;
+	if (layerRegistry.layers[layer].bars === undefined)
 		return
-	for (id in layers[layer].bars){
+	for (id in layerRegistry.layers[layer].bars){
 		if (id !== "layer") {
 			let bar = tmp[layer].bars[id]
 			if (bar.progress instanceof Decimal)
@@ -145,16 +157,16 @@ function constructBarStyles(layer){
 			if (dir !== undefined)
 			{
 				bar.fillDims['clip-path'] = 'inset(0% 50% 0% 0%)'
-				if(dir == UP){
+				if(dir == layerRegistry.UP){
 					bar.fillDims['clip-path'] = 'inset(' + bar.progress + '% 0% 0% 0%)'
 				}
-				else if(dir == DOWN){
+				else if(dir == layerRegistry.DOWN){
 					bar.fillDims['clip-path'] = 'inset(0% 0% ' + bar.progress + '% 0%)'
 				}
-				else if(dir == RIGHT){
+				else if(dir == layerRegistry.RIGHT){
 					bar.fillDims['clip-path'] = 'inset(0% ' + bar.progress + '% 0% 0%)'
 				}
-				else if(dir == LEFT){
+				else if(dir == layerRegistry.LEFT){
 					bar.fillDims['clip-path'] = 'inset(0% 0% 0% ' + bar.progress + '%)'
 				}
 
@@ -165,12 +177,32 @@ function constructBarStyles(layer){
 }
 
 function setupBarStyles(layer){
-	if (layers[layer].bars === undefined)
+	let id;
+	if (layerRegistry.layers[layer].bars === undefined)
 		return
-	for (id in layers[layer].bars){
+	for (id in layerRegistry.layers[layer].bars){
 		let bar = tmp[layer].bars[id]
 		bar.dims = {}
 		let dir = bar.direction
 		bar.fillDims = {}
 	}
+}
+
+
+const derivedState = {
+ get tmp() { return tmp; },
+ get activeFunctions() { return activeFunctions; },
+ get noCall() { return noCall; },
+ setupTemp,
+ setupTempData,
+ updateTemp,
+ updateTempData,
+ updateChallengeTemp,
+ updateBuyableTemp,
+ updateClickableTemp,
+ get DIR_MARGINS() { return DIR_MARGINS; },
+ constructBarStyles,
+ setupBarStyles,
+};
+return derivedState;
 }

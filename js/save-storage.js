@@ -1,7 +1,10 @@
+// @ts-check
 // The only durable I/O owner. A codec failure never reaches setItem; Web Storage
 // atomically replaces this one key or throws, retaining its previous value.
+/** @param {()=>StoragePort} getStorage @param {string} key */
 function createSaveStorage(getStorage, key) {
 	return {
+		/** @param {SaveCodec} codec @returns {SaveOutcome<SaveCollection|null> & {original?:string}} */
 		read(codec) {
 			let raw;
 			try {
@@ -13,6 +16,7 @@ function createSaveStorage(getStorage, key) {
 			let decoded = codec.decodeCollection(raw);
 			return Object.assign({}, decoded, { original: raw });
 		},
+		/** @param {SaveCollection} collection @param {SaveCodec} codec @returns {SaveOutcome<SaveCollection>} */
 		write(collection, codec) {
 			let encoded = codec.encodeCollection(collection);
 			if (!encoded.ok) return encoded;
