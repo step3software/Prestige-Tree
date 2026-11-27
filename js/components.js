@@ -1,8 +1,81 @@
-var app;
+// Session-bound gameView owner; composition supplies only the named ports.
+function createGameView({ componentDefinitions, derivedState, effects, gameHelpers, gameRules, helpContent, layerRegistry, modRules, saveCommands, saveState }) {
+let app;
+
+// Vue observes these references, never a cloned persistent or derived model.
+const binding = { player: undefined, allSaves: undefined, tmp: undefined, ruleStatus: gameRules.status };
+function bind() {
+    binding.player = saveState.player;
+    binding.allSaves = saveState.allSaves;
+    binding.tmp = derivedState.tmp;
+}
+const uiBindings = {
+        "Decimal"() { return Decimal; },
+        "LAYERS"() { return layerRegistry.LAYERS; },
+        "OTHER_LAYERS"() { return layerRegistry.OTHER_LAYERS; },
+        "TMT_VERSION"() { return gameRules.TMT_VERSION; },
+        "VERSION"() { return modRules.VERSION; },
+        "activeNotifications"() { return modRules.activeNotifications; },
+        "allSaves"() { return this.sessionBinding.allSaves; },
+        "buyBuyable"() { return gameHelpers.buyBuyable; },
+        "buyUpg"() { return gameHelpers.buyUpg; },
+        "canAffordUpgrade"() { return gameHelpers.canAffordUpgrade; },
+        "canCompleteChallenge"() { return gameRules.canCompleteChallenge; },
+        "canGenPoints"() { return modRules.canGenPoints; },
+        "canReset"() { return gameRules.canReset; },
+        "clickClickable"() { return gameHelpers.clickClickable; },
+        "deleteSave"() { return saveCommands.deleteSave; },
+        "displayThings"() { return modRules.displayThings; },
+        "doReset"() { return gameRules.doReset; },
+        "format"() { return gameHelpers.format; },
+        "formatTime"() { return gameHelpers.formatTime; },
+        "formatWhole"() { return gameHelpers.formatWhole; },
+        "gameEnded"() { return this.sessionBinding.ruleStatus.gameEnded; },
+        "getImprovements"() { return gameHelpers.getImprovements; },
+        "getNextImpr"() { return gameHelpers.getNextImpr; },
+        "getPointGen"() { return modRules.getPointGen; },
+        "getThemeName"() { return gameHelpers.getThemeName; },
+        "goBack"() { return gameHelpers.goBack; },
+        "hasAchievement"() { return gameHelpers.hasAchievement; },
+        "hasChallenge"() { return gameHelpers.hasChallenge; },
+        "hasMilestone"() { return gameHelpers.hasMilestone; },
+        "hasUpgrade"() { return gameHelpers.hasUpgrade; },
+        "help_data"() { return helpContent.help_data; },
+        "hotkeys"() { return layerRegistry.hotkeys; },
+        "keepGoing"() { return gameHelpers.keepGoing; },
+        "layerShown"() { return layerRegistry.layerShown; },
+        "layers"() { return layerRegistry.layers; },
+        "layerunlocked"() { return gameHelpers.layerunlocked; },
+        "loadSave"() { return saveCommands.loadSave; },
+        "milestoneShown"() { return gameHelpers.milestoneShown; },
+        "modInfo"() { return modRules.modInfo; },
+        "moveSave"() { return saveCommands.moveSave; },
+        "nodeShown"() { return gameHelpers.nodeShown; },
+        "player"() { return this.sessionBinding.player; },
+        "prestigeButtonText"() { return gameHelpers.prestigeButtonText; },
+        "prestigeNotify"() { return gameHelpers.prestigeNotify; },
+        "pseudoUnl"() { return gameHelpers.pseudoUnl; },
+        "renameSave"() { return saveCommands.renameSave; },
+        "respecBuyables"() { return gameHelpers.respecBuyables; },
+        "showMoveSaveBtn"() { return saveCommands.showMoveSaveBtn; },
+        "showTab"() { return gameHelpers.showTab; },
+        "startChallenge"() { return gameRules.startChallenge; },
+        "subtabResetNotify"() { return gameHelpers.subtabResetNotify; },
+        "subtabShouldNotify"() { return gameHelpers.subtabShouldNotify; },
+        "tmp"() { return this.sessionBinding.tmp; },
+        "toggleAuto"() { return gameHelpers.toggleAuto; },
+        "unlockUpg"() { return gameHelpers.unlockUpg; },
+};
+function registerComponent(name, definition) {
+    effects.Vue.component(name, { ...definition,
+        mixins: [{ data: () => ({ sessionBinding: binding }), computed: uiBindings }, ...(definition.mixins || [])] });
+}
+
 
 function loadVue() {
+    gameView.bind();
 	// data = a function returning the content (actually HTML)
-	Vue.component('display-text', {
+	registerComponent('display-text', {
 		props: ['layer', 'data'],
 		template: `
 			<span class="instant" v-html="data"></span>
@@ -10,7 +83,7 @@ function loadVue() {
 	})
 
 // data = a function returning the content (actually HTML)
-	Vue.component('raw-html', {
+	registerComponent('raw-html', {
 			props: ['layer', 'data'],
 			template: `
 				<span class="instant"  v-html="data"></span>
@@ -18,7 +91,7 @@ function loadVue() {
 		})
 		
 	// data = a function returning the content (actually HTML)
-	Vue.component('tall-display-text', {
+	registerComponent('tall-display-text', {
 			props: ['layer', 'data'],
 			template: `
 				<div class="instant"  v-html="data" style="height: 100%;"></div>
@@ -26,7 +99,7 @@ function loadVue() {
 		})
 
 	// Blank space, data = optional height in px or pair with width and height in px
-	Vue.component('blank', {
+	registerComponent('blank', {
 		props: ['layer', 'data'],
 		template: `
 			<div class = "instant">
@@ -38,7 +111,7 @@ function loadVue() {
 	})
 
 	// Displays an image, data is the URL
-	Vue.component('display-image', {
+	registerComponent('display-image', {
 		props: ['layer', 'data'],
 		template: `
 			<img class="instant" v-bind:src= "data" v-bind:alt= "data">
@@ -46,7 +119,7 @@ function loadVue() {
 	})
 		
 	// data = an array of Components to be displayed in a row
-	Vue.component('row', {
+	registerComponent('row', {
 		props: ['layer', 'data'],
 		template: `
 		<div class="upgTable instant" >
@@ -62,7 +135,7 @@ function loadVue() {
 	})
 
 	// data = an array of Components to be displayed in a column
-	Vue.component('column', {
+	registerComponent('column', {
 		props: ['layer', 'data'],
 		template: `
 		<div class="upgTable instant">
@@ -77,7 +150,7 @@ function loadVue() {
 		`
 	})
 
-	Vue.component('infobox', {
+	registerComponent('infobox', {
 		props: ['layer', 'data'],
 		template: `
 		<div class="story instant" v-if="tmp[layer].infoboxes && tmp[layer].infoboxes[data]!== undefined && tmp[layer].infoboxes[data].unlocked" v-bind:style="[{'border-color': tmp[layer].color, 'border-radius': player.infoboxes[layer][data] ? 0 : '8px'}, tmp[layer].infoboxes[data].style]">
@@ -95,7 +168,7 @@ function loadVue() {
 
 
 	// Data = width in px, by default fills the full area
-	Vue.component('h-line', {
+	registerComponent('h-line', {
 		props: ['layer', 'data'],
 			template:`
 				<hr class="instant" v-bind:style="data ? {'width': data} : {}" class="hl">
@@ -103,14 +176,14 @@ function loadVue() {
 		})
 
 	// Data = height in px, by default is bad
-	Vue.component('v-line', {
+	registerComponent('v-line', {
 		props: ['layer', 'data'],
 		template: `
 			<div class="instant" v-bind:style="data ? {'height': data} : {}" class="vl2"></div>
 		`
 	})
 
-	Vue.component('challenges', {
+	registerComponent('challenges', {
 		props: ['layer'],
 		template: `
 		<div v-if="tmp[layer].challenges" class="upgTable">
@@ -124,7 +197,7 @@ function loadVue() {
 	})
 
 	// data = id
-	Vue.component('challenge', {
+	registerComponent('challenge', {
 		props: ['layer', 'data', 'cl'],
 		template: `
 		<div v-if="tmp[layer].challenges && tmp[layer].challenges[data]!== undefined && tmp[layer].challenges[data].unlocked && !(player.hideChallenges && hasChallenge(layer, [data]))" v-bind:class="{hChallenge: true, done: cl=='done', canComplete: cl=='canComplete', anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}" v-bind:style="tmp[layer].challenges[data].style">
@@ -139,7 +212,7 @@ function loadVue() {
 		`
 	})
 
-	Vue.component('upgrades', {
+	registerComponent('upgrades', {
 		props: ['layer'],
 		template: `
 		<div v-if="tmp[layer].upgrades" class="upgTable">
@@ -154,7 +227,7 @@ function loadVue() {
 	})
 
 	// data = id
-	Vue.component('upgrade', {
+	registerComponent('upgrade', {
 		props: ['layer', 'data', 'cl', 'pcl'],
 		template: `
 		<div v-if="tmp[layer].upgrades && tmp[layer].upgrades[data]!==undefined">
@@ -172,7 +245,7 @@ function loadVue() {
 		`
 	})
 	
-	Vue.component('improvements', {
+	registerComponent('improvements', {
 		props: ['layer'],
 		template: `
 		<div v-if="tmp[layer].impr" class="upgTable">
@@ -187,7 +260,7 @@ function loadVue() {
 	})
 
 	// data = id
-	Vue.component('improvement', {
+	registerComponent('improvement', {
 		props: ['layer', 'data'],
 		template: `
 		<button v-if="tmp[layer].impr && tmp[layer].impr[data]!== undefined && tmp[layer].impr[data].unlocked" v-bind:class="{ [layer]: true, upg: true, bought: getImprovements(layer, data).gt(0), locked: getImprovements(layer, data).lte(0), anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}"
@@ -200,7 +273,7 @@ function loadVue() {
 		`
 	})
 
-	Vue.component('milestones', {
+	registerComponent('milestones', {
 		props: ['layer'],
 		template: `
 		<div v-if="tmp[layer].milestones">
@@ -215,7 +288,7 @@ function loadVue() {
 	})
 
 	// data = id
-	Vue.component('milestone', {
+	registerComponent('milestone', {
 		props: ['layer', 'data', 'cl', 'shown', 'locked'],
 		template: `
 		<td v-if="tmp[layer].milestones && tmp[layer].milestones[data]!== undefined && shown" v-bind:style="[locked ? {'visibility': 'hidden'} : {}, tmp[layer].milestones[data].style]" v-bind:class="{milestone: cl=='milestone', milestoneDone: cl=='milestoneDone', anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}">
@@ -225,7 +298,7 @@ function loadVue() {
 		`
 	})
 
-	Vue.component('toggle', {
+	registerComponent('toggle', {
 		props: ['data', 'type'],
 		template: `
 		<button class="smallUpg can" v-bind:style="{'background-color': (player[(type=='multi')?data.layer:data[0]][(type=='multi')?data.varName:data[1]]?tmp[((type=='multi')?(data.layer):(data[0]))].color:'#666666')}" v-on:click="toggleAuto(data)">{{(type=='multi')?(player[data.layer][data.varName]):(player[data[0]][data[1]]?"ON":"OFF")}}</button>
@@ -233,7 +306,7 @@ function loadVue() {
 	})
 
 	// data = function to return the text describing the reset before the amount gained (optional)
-	Vue.component('prestige-button', {
+	registerComponent('prestige-button', {
 		props: ['layer', 'data'],
 		template: `
 		<div class='upgRow'><button v-if="(tmp[layer].type !== 'none')" v-bind:class="{ [layer]: true, reset: true, locked: !tmp[layer].canReset, can: tmp[layer].canReset, anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}"
@@ -250,7 +323,7 @@ function loadVue() {
 	})
 
 	// Displays the main resource for the layer
-	Vue.component('main-display', {
+	registerComponent('main-display', {
 		props: ['layer'],
 		template: `
 		<div v-if="!!player[layer].points"><span v-if="player[layer].points.lt('1e1000')">You have </span><h2 v-bind:style="{'color': tmp[layer].color, 'text-shadow': ('0px 0px 10px' + tmp[layer].color)}">{{formatWhole(player[layer].points)}}</h2><span v-if="tmp[layer].extraAmtDisplay"><span v-html="tmp[layer].extraAmtDisplay"></span></span> <h3 v-if="tmp.ma.mastered.includes(layer)" v-bind:style="{'color': tmp.ma.color, 'text-shadow': '0px 0px 10px', 'font-weight': 'bold'}">mastered</h3> {{tmp[layer].resource}}<span v-if="tmp[layer].effectDescription" v-html="', '+tmp[layer].effectDescription"></span><br><br></div>
@@ -258,7 +331,7 @@ function loadVue() {
 	})
 
 	// Displays the base resource for the layer, as well as the best and total values for the layer's currency, if tracked
-	Vue.component('resource-display', {
+	registerComponent('resource-display', {
 		props: ['layer'],
 		template: `
 		<div style="margin-top: -13px">
@@ -271,7 +344,7 @@ function loadVue() {
 	})
 
 	// data = button size, in px
-	Vue.component('buyables', {
+	registerComponent('buyables', {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="tmp[layer].buyables" class="upgTable">
@@ -287,7 +360,7 @@ function loadVue() {
 	})
 
 	// data = id of buyable
-	Vue.component('buyable', {
+	registerComponent('buyable', {
 		props: ['layer', 'data', 'size'],
 		template: `
 		<div v-if="tmp[layer].buyables && tmp[layer].buyables[data]!== undefined && tmp[layer].buyables[data].unlocked" style="display: grid">
@@ -304,7 +377,7 @@ function loadVue() {
 		`
 	})
 
-	Vue.component('respec-button', {
+	registerComponent('respec-button', {
 		props: ['layer', 'data'],
 		template: `
 			<button v-if="tmp[layer].buyables && tmp[layer].buyables.respec && !(tmp[layer].buyables.showRespec !== undefined && tmp[layer].buyables.showRespec == false)" v-on:click="respecBuyables(layer)" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked, anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle) }">{{tmp[layer].buyables.respecText ? tmp[layer].buyables.respecText : "Respec"}}</button>
@@ -312,7 +385,7 @@ function loadVue() {
 	})
 
 	// data = button size, in px
-	Vue.component('clickables', {
+	registerComponent('clickables', {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="tmp[layer].clickables" class="upgTable">
@@ -328,7 +401,7 @@ function loadVue() {
 	})
 
 	// data = id of clickable
-	Vue.component('clickable', {
+	registerComponent('clickable', {
 		props: ['layer', 'data', 'size'],
 		template: `
 		<button 
@@ -342,7 +415,7 @@ function loadVue() {
 		`
 	})
 
-	Vue.component('master-button', {
+	registerComponent('master-button', {
 		props: ['layer', 'data'],
 		template: `
 		<button v-if="tmp[layer].clickables && tmp[layer].clickables.masterButtonPress && !(tmp[layer].clickables.showMasterButton !== undefined && tmp[layer].clickables.showMasterButton == false)" v-on:click="tmp[layer].clickables.masterButtonPress()" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked, anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle) }">{{tmp[layer].clickables.masterButtonText ? tmp[layer].clickables.masterButtonText : "Click me!"}}</button>
@@ -350,10 +423,10 @@ function loadVue() {
 	})
 
 	// data = button size, in px
-	Vue.component('microtabs', {
+	registerComponent('microtabs', {
 		props: ['layer', 'data'],
 		computed: {
-			currentTab() {return player.subtabs[layer][data]}
+			currentTab() {return saveState.player.subtabs[this.layer][this.data]}
 		},
 		template: `
 		<div v-if="tmp[layer].microtabs" :style="{'border-style': 'solid'}">
@@ -369,7 +442,7 @@ function loadVue() {
 
 
 	// data = id of the bar
-	Vue.component('bar', {
+	registerComponent('bar', {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="tmp[layer].bars && tmp[layer].bars[data].unlocked" v-bind:style="{'position': 'relative'}"><div v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].dims, {'display': 'table'}]">
@@ -384,7 +457,7 @@ function loadVue() {
 	})
 
 
-	Vue.component('achievements', {
+	registerComponent('achievements', {
 		props: ['layer'],
 		template: `
 		<div v-if="tmp[layer].achievements" class="upgTable">
@@ -399,7 +472,7 @@ function loadVue() {
 	})
 
 	// data = id
-	Vue.component('achievement', {
+	registerComponent('achievement', {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="tmp[layer].achievements && tmp[layer].achievements[data]!== undefined && tmp[layer].achievements[data].unlocked" v-bind:class="{ [layer]: true, achievement: true, locked: !hasAchievement(layer, data), bought: hasAchievement(layer, data), anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}"
@@ -414,7 +487,7 @@ function loadVue() {
 		`
 	})
 	
-	Vue.component('stars', {
+	registerComponent('stars', {
 		props: ['layer'],
 		template: `<div v-if='!player.hideStars'><div v-if='player.ma.mastered.includes(layer)' class='star' style='position: absolute; left: -10px; top: -10px;'></div>
 		<div v-if='false' class='star' style='position: absolute; left: 13px; top: -10px;'></div>
@@ -425,7 +498,7 @@ function loadVue() {
 	})
 
 	// Data is an array with the structure of the tree
-	Vue.component('tree', {
+	registerComponent('tree', {
 		props: ['layer', 'data'],
 		template: `<div>
 		<span class="nodeRow" v-for="row in data"><table>
@@ -440,13 +513,13 @@ function loadVue() {
 	})
 
 	// These are for buyables, data is the id of the corresponding buyable
-	Vue.component('sell-one', {
+	registerComponent('sell-one', {
 		props: ['layer', 'data'],
 		template: `
 			<button v-if="tmp[layer].buyables && tmp[layer].buyables[data].sellOne && !(tmp[layer].buyables[data].canSellOne !== undefined && tmp[layer].buyables[data].canSellOne == false)" v-on:click="tmp[layer].buyables[data].sellOne()" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked, anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle) }">{{tmp[layer].buyables.sellOneText ? tmp[layer].buyables.sellOneText : "Sell One"}}</button>
 	`
 	})
-	Vue.component('sell-all', {
+	registerComponent('sell-all', {
 		props: ['layer', 'data'],
 		template: `
 			<button v-if="tmp[layer].buyables && tmp[layer].buyables[data].sellAll && !(tmp[layer].buyables[data].canSellAll !== undefined && tmp[layer].buyables[data].canSellAll == false)" v-on:click="tmp[layer].buyables[data].sellAll()" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked, anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle) }">{{tmp[layer].buyables.sellAllText ? tmp[layer].buyables.sellAllText : "Sell All"}}</button>
@@ -454,10 +527,10 @@ function loadVue() {
 	})
 	
 	// For the save menu popup
-	Vue.component('saves', {
+	registerComponent('saves', {
 		template: `
 		<div class="popup" v-if="!(!player.saveMenuOpen)">
-			<div class="popupBlocker" onclick="player.saveMenuOpen = false;"></div>
+			<div class="popupBlocker" onclick="gameUI.session.saveState.player.saveMenuOpen = false;"></div>
 			<div class="popup-content"><br>
 				<div class="upgRow" style="width: 100%;" v-for="(data, name) in allSaves" v-if="name!='set' && data!==undefined">
 					<div v-bind:class="{ activeSave: (allSaves.set==name), widthLock: true }">{{name}}</div>
@@ -466,7 +539,7 @@ function loadVue() {
 					<button v-on:click="deleteSave(name)" class="popupBtn can">Delete</button>
 					<div><button class="popupBtnMini can" v-on:click="moveSave(name, -1)" v-bind:style="{ visibility: (showMoveSaveBtn(name, 'up')?'visible':'hidden')}">▲</button><button class="popupBtnMini can" v-on:click="moveSave(name, 1)" v-bind:style="{ visibility: (showMoveSaveBtn(name, 'down')?'visible':'hidden')}">▼</button></div>
 				</div>
-				<div class="upgRow" style="width: 100%;"><button onclick="newSave()" class="popupBtn can">New Save</button></div>
+				<div class="upgRow" style="width: 100%;"><button onclick="gameUI.commands.newSave()" class="popupBtn can">New Save</button></div>
 			</div>
 		</div>
 	`
@@ -474,52 +547,29 @@ function loadVue() {
 
 	// SYSTEM COMPONENTS
 
-	Vue.component('tab-buttons', systemComponents['tab-buttons'])
-	Vue.component('button-node', systemComponents['button-node'])
-	Vue.component('layer-node', systemComponents['layer-node'])
-	Vue.component('layer-tab', systemComponents['layer-tab'])
-	Vue.component('overlay-head', systemComponents['overlay-head'])
-	Vue.component('info-tab', systemComponents['info-tab'])
-	Vue.component('options-tab', systemComponents['options-tab'])
+	registerComponent('tab-buttons', componentDefinitions.systemComponents['tab-buttons'])
+	registerComponent('button-node', componentDefinitions.systemComponents['button-node'])
+	registerComponent('layer-node', componentDefinitions.systemComponents['layer-node'])
+	registerComponent('layer-tab', componentDefinitions.systemComponents['layer-tab'])
+	registerComponent('overlay-head', componentDefinitions.systemComponents['overlay-head'])
+	registerComponent('info-tab', componentDefinitions.systemComponents['info-tab'])
+	registerComponent('options-tab', componentDefinitions.systemComponents['options-tab'])
 
 
-	app = new Vue({
+	app = new effects.Vue({
 		el: "#app",
-		data: {
-			player,
-			allSaves,
-			tmp,
-			Decimal,
-			format,
-			formatWhole,
-			formatTime,
-			focused,
-			getThemeName,
-			layerunlocked,
-			doReset,
-			buyUpg,
-			canAffordUpgrade,
-			hasUpgrade,
-			hasAchievement,
-			hasMilestone,
-			hasChallenge,
-			challengeCompletions,
-			startChallenge,
-			milestoneShown,
-			keepGoing,
-			hasUpgrade,
-			hasMilestone,
-			hasAchievement,
-			hasChallenge,
-			maxedChallenge,
-			canAffordUpgrade,
-			subtabShouldNotify,
-			subtabResetNotify,
-			VERSION,
-			LAYERS,
-			hotkeys
-		},
+		data: () => ({ sessionBinding: binding }),
+		computed: uiBindings,
 	})
 }
 
  
+
+
+const gameView = {
+ bind,
+ get app() { return app; },
+ loadVue,
+};
+return gameView;
+}

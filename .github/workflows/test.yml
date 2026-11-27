@@ -2,7 +2,7 @@ name: Game regressions
 on:
   pull_request:
   push:
-    branches: [master, codex/tst01-testing-milestone, codex/sav01-save-boundaries, codex/sim01-runtime-lifecycle, codex/lay01-layer-content]
+    branches: [master, codex/tst01-testing-milestone, codex/sav01-save-boundaries, codex/sim01-runtime-lifecycle, codex/lay01-layer-content, codex/dev01-state-contracts]
 permissions:
   contents: read
 jobs:
@@ -19,6 +19,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run test:syntax
+      - run: npm run test:static
+      - run: npm run test:static-sensitivity
       - run: npm run test:rules
       - run: npm run test:sensitivity
       - run: npx playwright install --with-deps chromium

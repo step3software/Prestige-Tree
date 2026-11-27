@@ -1,3 +1,5 @@
+// Session-bound gameHelpers owner; composition supplies only the named ports.
+function createGameHelpers({ derivedState, effects, gameRules, layerRegistry, modRules, saveState, softcapRules, treeCanvas, treeLayout }) {
 // ************ Number formatting ************
 
 function exponentialFormat(num, precision) {
@@ -7,7 +9,7 @@ function exponentialFormat(num, precision) {
 		m = 1
 		e++;
 	}
-	e = ((e>=1000) ? commaFormat(new Decimal(e), 0) : new Decimal(e).toStringWithDecimalPlaces(0))
+	e = ((e>=1000) ? gameHelpers.commaFormat(new Decimal(e), 0) : new Decimal(e).toStringWithDecimalPlaces(0))
 	return new Decimal(m).toStringWithDecimalPlaces(precision)+"e"+e
 }
 
@@ -37,43 +39,43 @@ function sumValues(x) {
 function format(decimal, precision=2, whole=false) {
 	decimal = new Decimal(decimal)
 	if (isNaN(decimal.sign)||isNaN(decimal.layer)||isNaN(decimal.mag)) {
-		player.hasNaN = true;
+		saveState.player.hasNaN = true;
 		return "NaN"
 	}
-	if (decimal.sign<0) return "-"+format(decimal.neg(), precision)
+	if (decimal.sign<0) return "-"+gameHelpers.format(decimal.neg(), precision)
 	if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
 	if (decimal.eq(0)) return "0"
 	if (decimal.gte("eeee1000")) {
-		var slog = decimal.slog()
-		if (slog.gte(1e3)) return "10^^" + formatWhole(slog)
-		else return "10^^" + regularFormat(slog, 3)
-	} else if (decimal.gte("eee100000")) return "eee"+format(decimal.log10().log10().log10(), 3)
-	else if (decimal.gte("ee100000")) return "ee"+format(decimal.log10().log10(), 3)
-	else if (decimal.gte("1e100000")) return "e"+format(decimal.log10(), 3)
-	else if (decimal.gte("1e1000")) return exponentialFormat(decimal, 0)
-	else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
-	else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
-	else if (decimal.gte(Decimal.pow(0.1, precision)) || whole) return regularFormat(decimal, precision)
-	else if (decimal.gt("1e-100000")) return exponentialFormat(decimal, decimal.gte("1e-1000")?precision:0)
-	else return "1/("+format(decimal.pow(-1), precision)+")"
+		let slog = decimal.slog()
+		if (slog.gte(1e3)) return "10^^" + gameHelpers.formatWhole(slog)
+		else return "10^^" + gameHelpers.regularFormat(slog, 3)
+	} else if (decimal.gte("eee100000")) return "eee"+gameHelpers.format(decimal.log10().log10().log10(), 3)
+	else if (decimal.gte("ee100000")) return "ee"+gameHelpers.format(decimal.log10().log10(), 3)
+	else if (decimal.gte("1e100000")) return "e"+gameHelpers.format(decimal.log10(), 3)
+	else if (decimal.gte("1e1000")) return gameHelpers.exponentialFormat(decimal, 0)
+	else if (decimal.gte(1e9)) return gameHelpers.exponentialFormat(decimal, precision)
+	else if (decimal.gte(1e3)) return gameHelpers.commaFormat(decimal, 0)
+	else if (decimal.gte(Decimal.pow(0.1, precision)) || whole) return gameHelpers.regularFormat(decimal, precision)
+	else if (decimal.gt("1e-100000")) return gameHelpers.exponentialFormat(decimal, decimal.gte("1e-1000")?precision:0)
+	else return "1/("+gameHelpers.format(decimal.pow(-1), precision)+")"
 }
 
 function formatWhole(decimal, reallyWhole=false) {
 	decimal = new Decimal(decimal)
-	if (decimal.gte(1e9)) return format(decimal, 2)
-	if (decimal.lte(0.95) && !decimal.eq(0) && !reallyWhole) return format(decimal, 2)
-	else return format(decimal, 0, true)
+	if (decimal.gte(1e9)) return gameHelpers.format(decimal, 2)
+	if (decimal.lte(0.95) && !decimal.eq(0) && !reallyWhole) return gameHelpers.format(decimal, 2)
+	else return gameHelpers.format(decimal, 0, true)
 }
 
 function formatTime(s) {
 	s = new Decimal(s);
 	if (s.gte(1/0)) return "Forever"
-	else if (s.lt(60)) return format(s)+"s"
-	else if (s.lt(3600)) return formatWhole(s.div(60).floor())+"m "+format(s.toNumber()%60)+"s"
-	else if (s.lt(86400)) return formatWhole(s.div(3600).floor())+"h "+format(s.div(60).floor().toNumber()%60)+"m"
-	else if (s.lt(31536000)) return formatWhole(s.div(84600).floor())+"d " + formatWhole(s.div(3600).floor().toNumber()%24)+"h"
-	else if (s.lt(31536000000)) return formatWhole(s.div(31536000).floor())+"y "+formatWhole(s.div(84600).floor().toNumber()%365)+"d"
-	else return formatWhole(s.div(31536000).floor())+"y"
+	else if (s.lt(60)) return gameHelpers.format(s)+"s"
+	else if (s.lt(3600)) return gameHelpers.formatWhole(s.div(60).floor())+"m "+gameHelpers.format(s.toNumber()%60)+"s"
+	else if (s.lt(86400)) return gameHelpers.formatWhole(s.div(3600).floor())+"h "+gameHelpers.format(s.div(60).floor().toNumber()%60)+"m"
+	else if (s.lt(31536000)) return gameHelpers.formatWhole(s.div(84600).floor())+"d " + gameHelpers.formatWhole(s.div(3600).floor().toNumber()%24)+"h"
+	else if (s.lt(31536000000)) return gameHelpers.formatWhole(s.div(31536000).floor())+"y "+gameHelpers.formatWhole(s.div(84600).floor().toNumber()%365)+"d"
+	else return gameHelpers.formatWhole(s.div(31536000).floor())+"y"
 }
 
 function toPlaces(x, precision, maxAccepted) {
@@ -85,23 +87,24 @@ function toPlaces(x, precision, maxAccepted) {
 	return result
 }
 function fixNaNs() {
-	NaNcheck(player)
+	gameHelpers.NaNcheck(saveState.player)
 }
 
 function NaNcheck(data) {
+	let item;
 	for (item in data){
 		if (data[item] == null) {
 		}
 		else if (Array.isArray(data[item])) {
-			NaNcheck(data[item])
+			gameHelpers.NaNcheck(data[item])
 		}
-		else if (data[item] !== data[item] || data[item] === decimalNaN || (data[item] instanceof Decimal && [data[item].sign, data[item].layer, data[item].mag].some(Number.isNaN))){
+		else if (data[item] !== data[item] || data[item] === layerRegistry.decimalNaN || (data[item] instanceof Decimal && [data[item].sign, data[item].layer, data[item].mag].some(Number.isNaN))){
 			throw new Error("Invalid value in player: " + item);
 		}
 		else if (data[item] instanceof Decimal) { // Convert to Decimal
 		}
 		else if ((!!data[item]) && (data[item].constructor === Object)) {
-			NaNcheck(data[item])
+			gameHelpers.NaNcheck(data[item])
 		}
 	}	
 }
@@ -117,27 +120,27 @@ const theme_names = {
 }
 
 function changeTheme() {
-	let aqua = player.theme == "aqua"
-	colors_theme = colors[player.theme || "default"]
-	document.body.style.setProperty('--background', aqua ? "#001f3f" : "#0f0f0f")
-	document.body.style.setProperty('--background_tooltip', aqua ? "rgba(0, 15, 31, 0.75)" : "rgba(0, 0, 0, 0.75)")
-	document.body.style.setProperty('--color', aqua ? "#bfdfff" : "#dfdfdf")
-	document.body.style.setProperty('--points', aqua ? "#dfefff" : "#ffffff")
-	document.body.style.setProperty("--locked", aqua ? "#c4a7b3" : "#bf8f8f")
+	let aqua = saveState.player.theme == "aqua"
+	treeCanvas.colors_theme = treeCanvas.colors[saveState.player.theme || "default"]
+	effects.document.body.style.setProperty('--background', aqua ? "#001f3f" : "#0f0f0f")
+	effects.document.body.style.setProperty('--background_tooltip', aqua ? "rgba(0, 15, 31, 0.75)" : "rgba(0, 0, 0, 0.75)")
+	effects.document.body.style.setProperty('--color', aqua ? "#bfdfff" : "#dfdfdf")
+	effects.document.body.style.setProperty('--points', aqua ? "#dfefff" : "#ffffff")
+	effects.document.body.style.setProperty("--locked", aqua ? "#c4a7b3" : "#bf8f8f")
 }
 
 function getThemeName() {
-	return player.theme ? theme_names[player.theme] : "Default"
+	return saveState.player.theme ? theme_names[saveState.player.theme] : "Default"
 }
 
 function switchTheme() {
-	if (player.theme === undefined || player.theme === null) player.theme = themes[1]
+	if (saveState.player.theme === undefined || saveState.player.theme === null) saveState.player.theme = themes[1]
 	else {
-		player.theme = themes[Object.keys(themes)[player.theme] + 1]
-		if (!player.theme) player.theme = null;
+		saveState.player.theme = themes[Object.keys(themes)[saveState.player.theme] + 1]
+		if (!saveState.player.theme) saveState.player.theme = null;
 	}
-	changeTheme()
-	resizeCanvas()
+	gameHelpers.changeTheme()
+	treeCanvas.resizeCanvas()
 }
 
 // ************ Options ************
@@ -145,9 +148,9 @@ function switchTheme() {
 function toggleOpt(name) {
 	if (name == "oldStyle" && styleCooldown>0) return;
 
-	player[name] = !player[name]
-	if (name == "hqTree") changeTreeQuality()
-	if (name == "oldStyle") updateStyle()
+	saveState.player[name] = !saveState.player[name]
+	if (name == "hqTree") gameHelpers.changeTreeQuality()
+	if (name == "oldStyle") gameHelpers.updateStyle()
 }
 
 function adjustGlow(type) {
@@ -155,10 +158,10 @@ function adjustGlow(type) {
 		slight() { return ["normal", "never"] },
 		space() { 
 			let data = ["normal", "2+", "3"];
-			if (hasUpgrade("s", 14)) {
+			if (gameHelpers.hasUpgrade("s", 14)) {
 				data[2] = "3+"
 				data.push("4")
-				if (hasUpgrade("s", 25)) {
+				if (gameHelpers.hasUpgrade("s", 25)) {
 					data[3] = "4+"
 					data.push("5")
 				}
@@ -168,9 +171,9 @@ function adjustGlow(type) {
 		},
 		sol() { 
 			let data = ["normal"]
-			if (player.ss.unlocked) {
+			if (saveState.player.ss.unlocked) {
 				data.push("tachoclinal plasma onward")
-				if (hasUpgrade("ss", 41)) {
+				if (gameHelpers.hasUpgrade("ss", 41)) {
 					data.push("convectional energy onward")
 					data.push("coronal waves")
 				} else data.push("convectional energy")
@@ -181,44 +184,45 @@ function adjustGlow(type) {
 		maj() { return ["normal", "uncasted", "never"] },
 	}
 	let data = glowData[type]()
-	let index = data.indexOf(player[type+"Glow"]);
-	player[type+"Glow"] = data[(index+1)%data.length]
+	let index = data.indexOf(saveState.player[type+"Glow"]);
+	saveState.player[type+"Glow"] = data[(index+1)%data.length]
 }
 
-var styleCooldown = 0;
+let styleCooldown = 0;
 
 
 function updateStyle() {
 	styleCooldown = 1;
-	let css = document.getElementById("styleStuff")
-	css.href = player.oldStyle?"oldStyle.css":"style.css"
-	needCanvasUpdate = true;
+	let css = effects.document.getElementById("styleStuff")
+	css.href = saveState.player.oldStyle?"oldStyle.css":"style.css"
+	gameRules.needCanvasUpdate = true;
 }
 
 function changeTreeQuality() {
-	var on = player.hqTree && !player.oldStyle
-	document.body.style.setProperty('--hqProperty1', on ? "2px solid" : "4px solid")
-	document.body.style.setProperty('--hqProperty2a', on ? "-4px -4px 4px rgba(0, 0, 0, 0.25) inset" : "-4px -4px 4px rgba(0, 0, 0, 0) inset")
-	document.body.style.setProperty('--hqProperty2b', on ? "0px 0px 20px var(--background)" : "")
-	document.body.style.setProperty('--hqProperty3', on ? "2px 2px 4px rgba(0, 0, 0, 0.25)" : "none")
+	let on = saveState.player.hqTree && !saveState.player.oldStyle
+	effects.document.body.style.setProperty('--hqProperty1', on ? "2px solid" : "4px solid")
+	effects.document.body.style.setProperty('--hqProperty2a', on ? "-4px -4px 4px rgba(0, 0, 0, 0.25) inset" : "-4px -4px 4px rgba(0, 0, 0, 0) inset")
+	effects.document.body.style.setProperty('--hqProperty2b', on ? "0px 0px 20px var(--background)" : "")
+	effects.document.body.style.setProperty('--hqProperty3', on ? "2px 2px 4px rgba(0, 0, 0, 0.25)" : "none")
 }
 
 function toggleAuto(toggle) {
 	if (!(toggle instanceof Array)) {
-		player[toggle.layer][toggle.varName] = toggle.options[(toggle.options.indexOf(player[toggle.layer][toggle.varName])+1)%toggle.options.length]
-	} else player[toggle[0]][toggle[1]] = !player[toggle[0]][toggle[1]] 
+		saveState.player[toggle.layer][toggle.varName] = toggle.options[(toggle.options.indexOf(saveState.player[toggle.layer][toggle.varName])+1)%toggle.options.length]
+	} else saveState.player[toggle[0]][toggle[1]] = !saveState.player[toggle[0]][toggle[1]]
 }
 
 function adjustMSDisp() {
 	let displays = ["always", "automation", "incomplete", "never"];
-	player.msDisplay = displays[(displays.indexOf(player.msDisplay)+1)%4]
+	saveState.player.msDisplay = displays[(displays.indexOf(saveState.player.msDisplay)+1)%4]
 }
 
 function milestoneShown(layer, id) {
-	complete = player[layer].milestones.includes(id)
-	auto = layers[layer].milestones[id].toggles
+	let auto, complete;
+	complete = saveState.player[layer].milestones.includes(id)
+	auto = layerRegistry.layers[layer].milestones[id].toggles
 
-	switch(player.msDisplay) {
+	switch(saveState.player.msDisplay) {
 		case "always": 
 			return true;
 			break;
@@ -240,99 +244,99 @@ function milestoneShown(layer, id) {
 // ************ Big Feature related ************
 
 function respecBuyables(layer) {
-	if (!layers[layer].buyables) return
-	if (!layers[layer].buyables.respec) return
-	if (!confirm("Are you sure you want to respec? This will force you to do a \"" + (tmp[layer].name ? tmp[layer].name : layer) + "\" reset as well!")) return
-	layers[layer].buyables.respec()
-	updateBuyableTemp(layer)
+	if (!layerRegistry.layers[layer].buyables) return
+	if (!layerRegistry.layers[layer].buyables.respec) return
+	if (!effects.confirm("Are you sure you want to respec? This will force you to do a \"" + (derivedState.tmp[layer].name ? derivedState.tmp[layer].name : layer) + "\" reset as well!")) return
+	layerRegistry.layers[layer].buyables.respec()
+	derivedState.updateBuyableTemp(layer)
 }
 
 function canAffordUpgrade(layer, id, skipAfford=false) {
-	let upg = tmp[layer].upgrades[id]
-	if (layers[layer].upgrades[id].canAfford!==undefined && !skipAfford) return upg.canAfford;
+	let upg = derivedState.tmp[layer].upgrades[id]
+	if (layerRegistry.layers[layer].upgrades[id].canAfford!==undefined && !skipAfford) return upg.canAfford;
 	else if (upg.multiRes) {
 		for (let i=0;i<upg.multiRes.length;i++) {
 			let cost = upg.multiRes[i].cost
-			if (!canAffordPurchase(layer, upg.multiRes[i], cost)) return false;
+			if (!gameHelpers.canAffordPurchase(layer, upg.multiRes[i], cost)) return false;
 		}
 		return true;
 	} else {
 		let cost = upg.cost
-		return canAffordPurchase(layer, upg, cost) 
+		return gameHelpers.canAffordPurchase(layer, upg, cost)
 	}
 }
 
 function hasUpgrade(layer, id){
-	return (player[layer].upgrades.includes(toNumber(id)) || player[layer].upgrades.includes(id.toString())) && unl(layer)
+	return (saveState.player[layer].upgrades.includes(gameHelpers.toNumber(id)) || saveState.player[layer].upgrades.includes(id.toString())) && gameHelpers.unl(layer)
 }
 
 function hasMilestone(layer, id){
-	return (player[layer].milestones.includes(toNumber(id)) || player[layer].milestones.includes(id.toString()))
+	return (saveState.player[layer].milestones.includes(gameHelpers.toNumber(id)) || saveState.player[layer].milestones.includes(id.toString()))
 }
 
 function hasAchievement(layer, id){
-	return (player[layer].achievements.includes(toNumber(id)) || player[layer].achievements.includes(id.toString())) && unl(layer)
+	return (saveState.player[layer].achievements.includes(gameHelpers.toNumber(id)) || saveState.player[layer].achievements.includes(id.toString())) && gameHelpers.unl(layer)
 }
 
 function hasChallenge(layer, id){
-	return (player[layer].challenges[id]>=tmp[layer].challenges[id].completionLimit) && unl(layer)
+	return (saveState.player[layer].challenges[id]>=derivedState.tmp[layer].challenges[id].completionLimit) && gameHelpers.unl(layer)
 }
 
 function maxedChallenge(layer, id){
-	return (player[layer].challenges[id] >= tmp[layer].challenges[id].completionLimit)
+	return (saveState.player[layer].challenges[id] >= derivedState.tmp[layer].challenges[id].completionLimit)
 }
 
 function challengeCompletions(layer, id){
-	return unl(layer)?(player[layer].challenges[id]||0):0
+	return gameHelpers.unl(layer)?(saveState.player[layer].challenges[id]||0):0
 }
 
 function getBuyableAmount(layer, id){
-	return unl(layer)?(player[layer].buyables[id]):0
+	return gameHelpers.unl(layer)?(saveState.player[layer].buyables[id]):0
 }
 
 function setBuyableAmount(layer, id, amt){
-	player[layer].buyables[id] = amt
+	saveState.player[layer].buyables[id] = amt
 }
 
 function getClickableState(layer, id){
-	return (player[layer].clickables[id])
+	return (saveState.player[layer].clickables[id])
 }
 
 function setClickableState(layer, id, state){
-	player[layer].clickables[id] = state
+	saveState.player[layer].clickables[id] = state
 }
 
 function upgradeEffect(layer, id){
-	return (tmp[layer].upgrades[id].effect);
+	return (derivedState.tmp[layer].upgrades[id].effect);
 }
 
 function challengeEffect(layer, id){
-	return (tmp[layer].challenges[id].rewardEffect)
+	return (derivedState.tmp[layer].challenges[id].rewardEffect)
 }
 
 function buyableEffect(layer, id){
-	return (tmp[layer].buyables[id].effect)
+	return (derivedState.tmp[layer].buyables[id].effect)
 }
 
 function clickableEffect(layer, id){
-	return (tmp[layer].clickables[id].effect)
+	return (derivedState.tmp[layer].clickables[id].effect)
 }
 
 function achievementEffect(layer, id){
-	return (tmp[layer].achievements[id].effect)
+	return (derivedState.tmp[layer].achievements[id].effect)
 }
 
 function getImprovements(layer, id) {
-	if (!unl(layer)) return new Decimal(0);
-	return tmp[layer].impr[id].unlocked?(tmp[layer].impr.amount.sub(tmp[layer].impr[id].num).div(tmp[layer].impr.activeRows*tmp[layer].impr.activeCols).plus(1).floor().max(0)):new Decimal(0);
+	if (!gameHelpers.unl(layer)) return new Decimal(0);
+	return derivedState.tmp[layer].impr[id].unlocked?(derivedState.tmp[layer].impr.amount.sub(derivedState.tmp[layer].impr[id].num).div(derivedState.tmp[layer].impr.activeRows*derivedState.tmp[layer].impr.activeCols).plus(1).floor().max(0)):new Decimal(0);
 }
 
 function getNextImpr(layer, id) {
-	return layers[layer].impr.nextAt(id);
+	return layerRegistry.layers[layer].impr.nextAt(id);
 }
 
 function improvementEffect(layer, id) {
-	return tmp[layer].impr[id].effect
+	return derivedState.tmp[layer].impr[id].effect
 }
 
 function canAffordPurchase(layer, thing, cost) {
@@ -344,29 +348,28 @@ function canAffordPurchase(layer, thing, cost) {
 		}
 		else if (thing.currencyLayer){
 			let lr = thing.currencyLayer
-			return !(player[lr][name].lt(cost)) 
+			return !(saveState.player[lr][name].lt(cost))
 		}
 		else {
-			return !(player[name].lt(cost))
+			return !(saveState.player[name].lt(cost))
 		}
 	}
 	else {
-		return !(player[layer].points.lt(cost))
+		return !(saveState.player[layer].points.lt(cost))
 	}
 }
 
 function buyUpgrade(layer, id) {
-	buyUpg(layer, id)
+	gameHelpers.buyUpg(layer, id)
 }
 
 function buyUpg(layer, id) {
-	if (!player[layer].unlocked) return
-	if (!tmp[layer].upgrades[id].unlocked) return
-	if (player[layer].upgrades.includes(id)) return
-	if (!canAffordUpgrade(layer, id)) return;
-	let upg = tmp[layer].upgrades[id]
-	let cost = tmp[layer].upgrades[id].cost
-	let orig = player;
+	if (!saveState.player[layer].unlocked) return
+	if (!derivedState.tmp[layer].upgrades[id].unlocked) return
+	if (saveState.player[layer].upgrades.includes(id)) return
+	if (!gameHelpers.canAffordUpgrade(layer, id)) return;
+	let upg = derivedState.tmp[layer].upgrades[id]
+	let cost = derivedState.tmp[layer].upgrades[id].cost
 
 	if (upg.multiRes) {
 		let doReturn = false;
@@ -381,21 +384,20 @@ function buyUpg(layer, id) {
 				}
 				else if (data.currencyLayer){
 					let lr = data.currencyLayer
-					if (player[lr][name].lt(cost)) doReturn = true;
-					player[lr][name] = player[lr][name].sub(cost)
+					if (saveState.player[lr][name].lt(cost)) doReturn = true;
+					saveState.player[lr][name] = saveState.player[lr][name].sub(cost)
 				}
 				else {
-					if (player[name].lt(cost)) doReturn = true;
-					player[name] = player[name].sub(cost)
+					if (saveState.player[name].lt(cost)) doReturn = true;
+					saveState.player[name] = saveState.player[name].sub(cost)
 				}
 			}
 			else {
-				if (player[layer].points.lt(cost)) doReturn = true;
-				player[layer].points = player[layer].points.sub(cost)	
+				if (saveState.player[layer].points.lt(cost)) doReturn = true;
+				saveState.player[layer].points = saveState.player[layer].points.sub(cost)
 			}
 		}
 		if (doReturn) {
-			player = orig;
 			return;
 		}
 	} else {
@@ -407,161 +409,161 @@ function buyUpg(layer, id) {
 			}
 			else if (upg.currencyLayer){
 				let lr = upg.currencyLayer
-				if (player[lr][name].lt(cost)) return
-				player[lr][name] = player[lr][name].sub(cost)
+				if (saveState.player[lr][name].lt(cost)) return
+				saveState.player[lr][name] = saveState.player[lr][name].sub(cost)
 			}
 			else {
-				if (player[name].lt(cost)) return
-				player[name] = player[name].sub(cost)
+				if (saveState.player[name].lt(cost)) return
+				saveState.player[name] = saveState.player[name].sub(cost)
 			}
 		}
 		else {
-			if (player[layer].points.lt(cost)) return
-			player[layer].points = player[layer].points.sub(cost)	
+			if (saveState.player[layer].points.lt(cost)) return
+			saveState.player[layer].points = saveState.player[layer].points.sub(cost)
 		}
 	}
-	player[layer].upgrades.push(id);
+	saveState.player[layer].upgrades.push(id);
 	if (upg.onPurchase != undefined)
 		upg.onPurchase()
 }
 
 function unlockUpg(layer, id) {
-	if (!player[layer].unlocked) return
-	if (!tmp[layer].upgrades[id].pseudoUnl) return
-	if (tmp[layer].upgrades[id].unlocked) return
-	if (player[layer].pseudoUpgs.includes(id)) return
-	let upg = tmp[layer].upgrades[id]
+	if (!saveState.player[layer].unlocked) return
+	if (!derivedState.tmp[layer].upgrades[id].pseudoUnl) return
+	if (derivedState.tmp[layer].upgrades[id].unlocked) return
+	if (saveState.player[layer].pseudoUpgs.includes(id)) return
+	let upg = derivedState.tmp[layer].upgrades[id]
 	if (!upg.pseudoCan) return;
-	player[layer].pseudoUpgs.push(id);
+	saveState.player[layer].pseudoUpgs.push(id);
 }
 
 function pseudoUnl(layer, id) {
-	return tmp[layer].upgrades[id].pseudoUnl && !tmp[layer].upgrades[id].unlocked;
+	return derivedState.tmp[layer].upgrades[id].pseudoUnl && !derivedState.tmp[layer].upgrades[id].unlocked;
 }
 
 function buyMaxBuyable(layer, id) {
-	if (!player[layer].unlocked) return
-	if (!tmp[layer].buyables[id].unlocked) return
-	if (!tmp[layer].buyables[id].canAfford) return
-	if (!layers[layer].buyables[id].buyMax) return
+	if (!saveState.player[layer].unlocked) return
+	if (!derivedState.tmp[layer].buyables[id].unlocked) return
+	if (!derivedState.tmp[layer].buyables[id].canAfford) return
+	if (!layerRegistry.layers[layer].buyables[id].buyMax) return
 
-	layers[layer].buyables[id].buyMax()
-	updateBuyableTemp(layer)
+	layerRegistry.layers[layer].buyables[id].buyMax()
+	derivedState.updateBuyableTemp(layer)
 }
 
 function buyBuyable(layer, id) {
-	if (!player[layer].unlocked) return
-	if (!tmp[layer].buyables[id].unlocked) return
-	if (!tmp[layer].buyables[id].canAfford) return
+	if (!saveState.player[layer].unlocked) return
+	if (!derivedState.tmp[layer].buyables[id].unlocked) return
+	if (!derivedState.tmp[layer].buyables[id].canAfford) return
 
-	layers[layer].buyables[id].buy()
-	updateBuyableTemp(layer)
+	layerRegistry.layers[layer].buyables[id].buy()
+	derivedState.updateBuyableTemp(layer)
 }
 
 function clickClickable(layer, id) {
-	if (!player[layer].unlocked) return
-	if (!tmp[layer].clickables[id].unlocked) return
-	if (!tmp[layer].clickables[id].canClick) return
+	if (!saveState.player[layer].unlocked) return
+	if (!derivedState.tmp[layer].clickables[id].unlocked) return
+	if (!derivedState.tmp[layer].clickables[id].canClick) return
 
-	layers[layer].clickables[id].onClick()
-	updateClickableTemp(layer)
+	layerRegistry.layers[layer].clickables[id].onClick()
+	derivedState.updateClickableTemp(layer)
 }
 
 // Function to determine if the player is in a challenge
 function inChallenge(layer, id){
-	let challenge = player[layer].activeChallenge
+	let challenge = saveState.player[layer].activeChallenge
 	if (!challenge) return false
-	id = toNumber(id)
+	id = gameHelpers.toNumber(id)
 	if (challenge==id) return true
 
-	if (layers[layer].challenges[challenge].countsAs)
-		return tmp[layer].challenges[challenge].countsAs.includes(id)
+	if (layerRegistry.layers[layer].challenges[challenge].countsAs)
+		return derivedState.tmp[layer].challenges[challenge].countsAs.includes(id)
 }
 
 // ************ Misc ************
 
-var onTreeTab = true
+let onTreeTab = true
 function showTab(name) {
-	if (LAYERS.includes(name) && !layerunlocked(name)) return
+	if (layerRegistry.LAYERS.includes(name) && !gameHelpers.layerunlocked(name)) return
 
-	var toTreeTab = name == "none"
-	player.tab = name
-	if (player.navTab == "none") player.lastSafeTab = name
-	player.notify[name] = false
-	needCanvasUpdate = true
-	updateTempData(layers[name], tmp[name], name)
+	let toTreeTab = name == "none"
+	saveState.player.tab = name
+	if (saveState.player.navTab == "none") saveState.player.lastSafeTab = name
+	saveState.player.notify[name] = false
+	gameRules.needCanvasUpdate = true
+	derivedState.updateTempData(layerRegistry.layers[name], derivedState.tmp[name], name)
 }
 
 function showNavTab(name) {
-	if (LAYERS.includes(name) && !layerunlocked(name)) return
+	if (layerRegistry.LAYERS.includes(name) && !gameHelpers.layerunlocked(name)) return
 
-	var toTreeTab = name == "tree"
-	player.navTab = name
-	player.notify[name] = false
-	needCanvasUpdate = true
+	let toTreeTab = name == "tree"
+	saveState.player.navTab = name
+	saveState.player.notify[name] = false
+	gameRules.needCanvasUpdate = true
 }
 
 function goBack() {
-	if (player.navTab !== "none") showTab("none")
-	else showTab(player.lastSafeTab)
+	if (saveState.player.navTab !== "none") gameHelpers.showTab("none")
+	else gameHelpers.showTab(saveState.player.lastSafeTab)
 }
 
 function prestigeNotify(layer) {
-	if (player.slightGlow=="never") return false;
-	else if (layers[layer].prestigeNotify) return layers[layer].prestigeNotify()
-	else if (tmp[layer].autoPrestige || tmp[layer].passiveGeneration) return false
-	else if (tmp[layer].type == "static") return tmp[layer].canReset
-	else if (tmp[layer].type == "normal") return (tmp[layer].canReset && (tmp[layer].resetGain.gte(player[layer].points.div(10))))
+	if (saveState.player.slightGlow=="never") return false;
+	else if (layerRegistry.layers[layer].prestigeNotify) return layerRegistry.layers[layer].prestigeNotify()
+	else if (derivedState.tmp[layer].autoPrestige || derivedState.tmp[layer].passiveGeneration) return false
+	else if (derivedState.tmp[layer].type == "static") return derivedState.tmp[layer].canReset
+	else if (derivedState.tmp[layer].type == "normal") return (derivedState.tmp[layer].canReset && (derivedState.tmp[layer].resetGain.gte(saveState.player[layer].points.div(10))))
 	else return false
 }
 
 function notifyLayer(name) {
-	if (player.tab == name || !layerunlocked(name)) return
-	player.notify[name] = 1
+	if (saveState.player.tab == name || !gameHelpers.layerunlocked(name)) return
+	saveState.player.notify[name] = 1
 }
 
 function subtabShouldNotify(layer, family, id){
 	let subtab = {}
-	if (family == "mainTabs") subtab = tmp[layer].tabFormat[id]
-	else subtab = tmp[layer].microtabs[family][id]
-	if (player.subtabs[layer][family] === id) return false
-	else if (subtab.embedLayer) return tmp[subtab.embedLayer].notify
+	if (family == "mainTabs") subtab = derivedState.tmp[layer].tabFormat[id]
+	else subtab = derivedState.tmp[layer].microtabs[family][id]
+	if (saveState.player.subtabs[layer][family] === id) return false
+	else if (subtab.embedLayer) return derivedState.tmp[subtab.embedLayer].notify
 	else return subtab.shouldNotify
 }
 
 function subtabResetNotify(layer, family, id){
 	let subtab = {}
-	if (family == "mainTabs") subtab = tmp[layer].tabFormat[id]
-	else subtab = tmp[layer].microtabs[family][id]
-	if (subtab.embedLayer) return tmp[subtab.embedLayer].prestigeNotify
+	if (family == "mainTabs") subtab = derivedState.tmp[layer].tabFormat[id]
+	else subtab = derivedState.tmp[layer].microtabs[family][id]
+	if (subtab.embedLayer) return derivedState.tmp[subtab.embedLayer].prestigeNotify
 	else return false
 }
 
 function nodeShown(layer) {
-	if (tmp[layer].layerShown) return true
+	if (derivedState.tmp[layer].layerShown) return true
 	switch(layer) {
 		case "idk":
-			return player.idk.unlocked
+			return saveState.player.idk.unlocked
 			break;
 	}
 	return false
 }
 
 function unl(layer) {
-	if (Array.isArray(tmp.ma.canBeMastered)) if (player.ma.selectionActive&&tmp[layer].row<6&&!tmp.ma.canBeMastered.includes(layer)) return false;
-	return player[layer].unlocked;
+	if (Array.isArray(derivedState.tmp.ma.canBeMastered)) if (saveState.player.ma.selectionActive&&derivedState.tmp[layer].row<6&&!derivedState.tmp.ma.canBeMastered.includes(layer)) return false;
+	return saveState.player[layer].unlocked;
 }
 
 function layerunlocked(layer) {
-	if (player.ma.selectionActive&&tmp[layer].row<6&&!tmp.ma.canBeMastered.includes(layer)) return false;
-	if (tmp[layer] && tmp[layer].type == "none") return (player[layer].unlocked)
-	return LAYERS.includes(layer) && (player[layer].unlocked || (tmp[layer].canReset && tmp[layer].layerShown))
+	if (saveState.player.ma.selectionActive&&derivedState.tmp[layer].row<6&&!derivedState.tmp.ma.canBeMastered.includes(layer)) return false;
+	if (derivedState.tmp[layer] && derivedState.tmp[layer].type == "none") return (saveState.player[layer].unlocked)
+	return layerRegistry.LAYERS.includes(layer) && (saveState.player[layer].unlocked || (derivedState.tmp[layer].canReset && derivedState.tmp[layer].layerShown))
 }
 
 function keepGoing() {
-	player.keepGoing = true;
-	needCanvasUpdate = true;
-	player.tab = layoutInfo.startTab;
+	saveState.player.keepGoing = true;
+	gameRules.needCanvasUpdate = true;
+	saveState.player.tab = treeLayout.layoutInfo.startTab;
 }
 
 function toNumber(x) {
@@ -571,32 +573,34 @@ function toNumber(x) {
 }
 
 function updateMilestones(layer){
-	for (id in layers[layer].milestones){
-		let done = layers[layer].milestones[id].done();
-		if (!player[layer].primeMiles.includes(id) && done) {
-			player[layer].primeMiles.push(id);
-			if (player.milNotify && !player[layer].milestones.includes(id)) addNotification("milestone", tmp[layer].milestones[id].requirementDescription, "Milestone Gotten!");
+	let id;
+	for (id in layerRegistry.layers[layer].milestones){
+		let done = layerRegistry.layers[layer].milestones[id].done();
+		if (!saveState.player[layer].primeMiles.includes(id) && done) {
+			saveState.player[layer].primeMiles.push(id);
+			if (saveState.player.milNotify && !saveState.player[layer].milestones.includes(id)) modRules.addNotification("milestone", derivedState.tmp[layer].milestones[id].requirementDescription, "Milestone Gotten!");
 		}
-		if (!(player[layer].milestones.includes(id)) && done) {
-			player[layer].milestones.push(id)
+		if (!(saveState.player[layer].milestones.includes(id)) && done) {
+			saveState.player[layer].milestones.push(id)
 		}
 	}
 }
 
 function updateAchievements(layer){
-	for (id in layers[layer].achievements){
-		if (!isNaN(id) && !(player[layer].achievements.includes(id)) && layers[layer].achievements[id].done()) {
-			player[layer].achievements.push(id)
-			if (layers[layer].achievements[id].onComplete) layers[layer].achievements[id].onComplete()
-			addNotification("achievement", layers[layer].achievements[id].name, "Achievement Gotten!");
+	let id;
+	for (id in layerRegistry.layers[layer].achievements){
+		if (!isNaN(id) && !(saveState.player[layer].achievements.includes(id)) && layerRegistry.layers[layer].achievements[id].done()) {
+			saveState.player[layer].achievements.push(id)
+			if (layerRegistry.layers[layer].achievements[id].onComplete) layerRegistry.layers[layer].achievements[id].onComplete()
+			modRules.addNotification("achievement", layerRegistry.layers[layer].achievements[id].name, "Achievement Gotten!");
 		}
 	}
 }
 
 function addTime(diff, layer) {
-	let data = player
+	let data = saveState.player
 	let time = data.timePlayed
-	if (!layer && !player.p.unlocked) return;
+	if (!layer && !saveState.player.p.unlocked) return;
 	if (layer) {
 		data = data[layer]
 		time = data.time
@@ -605,14 +609,14 @@ function addTime(diff, layer) {
 	//I am not that good to perfectly fix that leak. ~ DB Aarex
 	if (time + 0 !== time) {
 		console.log("Memory leak detected. Trying to fix...")
-		time = toNumber(time)
+		time = gameHelpers.toNumber(time)
 		if (isNaN(time) || time == 0) {
 			console.log("Couldn't fix! Resetting...")
-			time = layer ? player.timePlayed : 0
-			if (!layer) player.timePlayedReset = true
+			time = layer ? saveState.player.timePlayed : 0
+			if (!layer) saveState.player.timePlayedReset = true
 		}
 	}
-	time += toNumber(diff)
+	time += gameHelpers.toNumber(diff)
 
 	if (layer) data.time = time
 	else data.timePlayed = time
@@ -620,85 +624,174 @@ function addTime(diff, layer) {
 
 function layOver(obj1, obj2) {
 	for (let x in obj2) {
-		if (obj2[x] instanceof Object) layOver(obj1[x], obj2[x]);
+		if (obj2[x] instanceof Object) gameHelpers.layOver(obj1[x], obj2[x]);
 		else obj1[x] = obj2[x];
 	}
 }
 
-var minusHeld = false;
+let minusHeld = false;
 
 function gameKeyDown(e) {
-	if (player===undefined) return;
-	if (gameEnded&&!player.keepGoing) return;
+	if (saveState.player===undefined) return;
+	if (gameRules.gameEnded&&!saveState.player.keepGoing) return;
 	let ctrlDown = e.ctrlKey
 	let key = e.key
-	tmp.nerdMode = player.tapNerd?((e.key=="-"&&!minusHeld) ? !tmp.nerdMode : tmp.nerdMode):(e.key=="-")
+	derivedState.tmp.nerdMode = saveState.player.tapNerd?((e.key=="-"&&!minusHeld) ? !derivedState.tmp.nerdMode : derivedState.tmp.nerdMode):(e.key=="-")
 	if (e.shiftKey) minusHeld = true;
 	if (ctrlDown) key = "ctrl+" + key
 	if (onFocused) return
-	if (ctrlDown && hotkeys[key]) e.preventDefault()
-	if(hotkeys[key]){
-		if (player[hotkeys[key].layer].unlocked)
-			hotkeys[key].onPress()
+	if (ctrlDown && layerRegistry.hotkeys[key]) e.preventDefault()
+	if(layerRegistry.hotkeys[key]){
+		if (saveState.player[layerRegistry.hotkeys[key].layer].unlocked)
+			layerRegistry.hotkeys[key].onPress()
 	}
 }
 
 function gameKeyUp(e) {
-	if (player === undefined) return;
-	if (e.key=="-" && !player.tapNerd) tmp.nerdMode = false;
+	if (saveState.player === undefined) return;
+	if (e.key=="-" && !saveState.player.tapNerd) derivedState.tmp.nerdMode = false;
 	if (e.key=="-") minusHeld = false;
 }
 
-var onFocused = false
+let onFocused = false
 function focused(x) {
 	onFocused = x
 }
 
 function gainFormulaNormal(layer) {
-	let start = tmp[layer].requires;
-	let mult = tmp[layer].gainMult;
-	let exp1 = tmp[layer].exponent;
-	let exp2 = tmp[layer].gainExp;
-	let f = "(x / "+format(start)+")^"+format(exp1)+(mult.eq(1)?"":(mult.lt(1)?(" / "+format(mult.pow(-1))):(" * "+format(mult))));
-	if (!exp2.eq(1)) f = "("+f+")^"+format(exp2)
+	let start = derivedState.tmp[layer].requires;
+	let mult = derivedState.tmp[layer].gainMult;
+	let exp1 = derivedState.tmp[layer].exponent;
+	let exp2 = derivedState.tmp[layer].gainExp;
+	let f = "(x / "+gameHelpers.format(start)+")^"+gameHelpers.format(exp1)+(mult.eq(1)?"":(mult.lt(1)?(" / "+gameHelpers.format(mult.pow(-1))):(" * "+gameHelpers.format(mult))));
+	if (!exp2.eq(1)) f = "("+f+")^"+gameHelpers.format(exp2)
 	return f;
 }
 
 function costFormulaStatic(layer) {
-	let start = tmp[layer].requires;
-	let mult = tmp[layer].gainMult.times(start);
+	let row;
+	let start = derivedState.tmp[layer].requires;
+	let mult = derivedState.tmp[layer].gainMult.times(start);
 	if (!mult) mult = new Decimal(1);
-	let exp = new Decimal(tmp[layer].exponent).times(tmp[layer].gainExp);
-	let base = tmp[layer].base;
+	let exp = new Decimal(derivedState.tmp[layer].exponent).times(derivedState.tmp[layer].gainExp);
+	let base = derivedState.tmp[layer].base;
 	let resDiv = new Decimal(1);
 	
-	for (let scale=STATIC_SCALE_DATA.length-1;scale>=0;scale--) {
-		let scaleStart = getStaticScaleStart(scale, row+1)
-		let scaleExp = getStaticScaleExp(scale, row+1)
-		if (player[layer].points.gte(scaleStart)) {
+	for (let scale=softcapRules.STATIC_SCALE_DATA.length-1;scale>=0;scale--) {
+		let scaleStart = softcapRules.getStaticScaleStart(scale, row+1)
+		let scaleExp = softcapRules.getStaticScaleExp(scale, row+1)
+		if (saveState.player[layer].points.gte(scaleStart)) {
 			exp = exp.times(scaleExp);
 			resDiv = resDiv.times(scaleStart.pow(exp.sub(1)));
 		}
 	}
 	
-	return "("+format(base)+"^(x^"+format(exp)+")"+(resDiv.eq(1)?"":(" / "+format(resDiv)))+")"+(mult.eq(1)?"":(mult.gt(1)?(" * ("+format(mult)+")"):(" / ("+format(mult.pow(-1))+")")))
+	return "("+gameHelpers.format(base)+"^(x^"+gameHelpers.format(exp)+")"+(resDiv.eq(1)?"":(" / "+gameHelpers.format(resDiv)))+")"+(mult.eq(1)?"":(mult.gt(1)?(" * ("+gameHelpers.format(mult)+")"):(" / ("+gameHelpers.format(mult.pow(-1))+")")))
 }
 
 function prestigeButtonText(layer)
 {
-	if(tmp[layer].type == "normal") {
-		if (tmp.nerdMode) return "Gain Formula: "+gainFormulaNormal(layer);
-		else return `${ player[layer].points.lt(1e3) ? (tmp[layer].resetDescription !== undefined ? tmp[layer].resetDescription : "Reset for ") : ""}+<b>${formatWhole(tmp[layer].resetGain)}</b> ${tmp[layer].resource} ${tmp[layer].resetGain.lt(100) && player[layer].points.lt(1e3) ? `<br><br>Next at ${ (tmp[layer].roundUpCost ? formatWhole(tmp[layer].nextAt) : format(tmp[layer].nextAt))} ${ tmp[layer].baseResource }` : ""}`
-	} else if(tmp[layer].type== "static") {
-		if (tmp.nerdMode) return "Cost Formula: "+costFormulaStatic(layer);
-		else return `${tmp[layer].resetDescription !== undefined ? tmp[layer].resetDescription : "Reset for "}+<b>${formatWhole(tmp[layer].resetGain)}</b> ${tmp[layer].resource}<br><br>${player[layer].points.lt(30) ? (tmp[layer].baseAmount.gte(tmp[layer].nextAt)&&(tmp[layer].canBuyMax !== undefined) && tmp[layer].canBuyMax?"Next:":"Req:") : ""} ${formatWhole(tmp[layer].baseAmount)} / ${(tmp[layer].roundUpCost ? formatWhole(tmp[layer].nextAtDisp) : format(tmp[layer].nextAtDisp))} ${ tmp[layer].baseResource }		
+	if(derivedState.tmp[layer].type == "normal") {
+		if (derivedState.tmp.nerdMode) return "Gain Formula: "+gameHelpers.gainFormulaNormal(layer);
+		else return `${ saveState.player[layer].points.lt(1e3) ? (derivedState.tmp[layer].resetDescription !== undefined ? derivedState.tmp[layer].resetDescription : "Reset for ") : ""}+<b>${gameHelpers.formatWhole(derivedState.tmp[layer].resetGain)}</b> ${derivedState.tmp[layer].resource} ${derivedState.tmp[layer].resetGain.lt(100) && saveState.player[layer].points.lt(1e3) ? `<br><br>Next at ${ (derivedState.tmp[layer].roundUpCost ? gameHelpers.formatWhole(derivedState.tmp[layer].nextAt) : gameHelpers.format(derivedState.tmp[layer].nextAt))} ${ derivedState.tmp[layer].baseResource }` : ""}`
+	} else if(derivedState.tmp[layer].type== "static") {
+		if (derivedState.tmp.nerdMode) return "Cost Formula: "+gameHelpers.costFormulaStatic(layer);
+		else return `${derivedState.tmp[layer].resetDescription !== undefined ? derivedState.tmp[layer].resetDescription : "Reset for "}+<b>${gameHelpers.formatWhole(derivedState.tmp[layer].resetGain)}</b> ${derivedState.tmp[layer].resource}<br><br>${saveState.player[layer].points.lt(30) ? (derivedState.tmp[layer].baseAmount.gte(derivedState.tmp[layer].nextAt)&&(derivedState.tmp[layer].canBuyMax !== undefined) && derivedState.tmp[layer].canBuyMax?"Next:":"Req:") : ""} ${gameHelpers.formatWhole(derivedState.tmp[layer].baseAmount)} / ${(derivedState.tmp[layer].roundUpCost ? gameHelpers.formatWhole(derivedState.tmp[layer].nextAtDisp) : gameHelpers.format(derivedState.tmp[layer].nextAtDisp))} ${ derivedState.tmp[layer].baseResource }
 		`
-	} else if(tmp[layer].type == "none")
+	} else if(derivedState.tmp[layer].type == "none")
 		return ""
 	else
-		return layers[layer].prestigeButtonText()
+		return layerRegistry.layers[layer].prestigeButtonText()
 }
 
 function isFunction(obj) {
 	return !!(obj && obj.constructor && obj.call && obj.apply);
   };
+
+
+const gameHelpers = {
+ exponentialFormat,
+ commaFormat,
+ regularFormat,
+ fixValue,
+ sumValues,
+ format,
+ formatWhole,
+ formatTime,
+ toPlaces,
+ fixNaNs,
+ NaNcheck,
+ get themes() { return themes; },
+ get theme_names() { return theme_names; },
+ changeTheme,
+ getThemeName,
+ switchTheme,
+ toggleOpt,
+ adjustGlow,
+ get styleCooldown() { return styleCooldown; },
+ set styleCooldown(value) { styleCooldown = value; },
+ updateStyle,
+ changeTreeQuality,
+ toggleAuto,
+ adjustMSDisp,
+ milestoneShown,
+ respecBuyables,
+ canAffordUpgrade,
+ hasUpgrade,
+ hasMilestone,
+ hasAchievement,
+ hasChallenge,
+ maxedChallenge,
+ challengeCompletions,
+ getBuyableAmount,
+ setBuyableAmount,
+ getClickableState,
+ setClickableState,
+ upgradeEffect,
+ challengeEffect,
+ buyableEffect,
+ clickableEffect,
+ achievementEffect,
+ getImprovements,
+ getNextImpr,
+ improvementEffect,
+ canAffordPurchase,
+ buyUpgrade,
+ buyUpg,
+ unlockUpg,
+ pseudoUnl,
+ buyMaxBuyable,
+ buyBuyable,
+ clickClickable,
+ inChallenge,
+ get onTreeTab() { return onTreeTab; },
+ showTab,
+ showNavTab,
+ goBack,
+ prestigeNotify,
+ notifyLayer,
+ subtabShouldNotify,
+ subtabResetNotify,
+ nodeShown,
+ unl,
+ layerunlocked,
+ keepGoing,
+ toNumber,
+ updateMilestones,
+ updateAchievements,
+ addTime,
+ layOver,
+ get minusHeld() { return minusHeld; },
+ set minusHeld(value) { minusHeld = value; },
+ gameKeyDown,
+ gameKeyUp,
+ get onFocused() { return onFocused; },
+ set onFocused(value) { onFocused = value; },
+ focused,
+ gainFormulaNormal,
+ costFormulaStatic,
+ prestigeButtonText,
+ isFunction,
+};
+return gameHelpers;
+}

@@ -2,10 +2,15 @@
   "name": "prestige-tree-regressions",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": "24.22.1", "npm": "11.19.1" },
+  "engines": {
+    "node": "24.22.1",
+    "npm": "11.19.1"
+  },
   "packageManager": "npm@11.19.1",
   "scripts": {
-    "test": "npm run test:syntax && npm run test:rules && npm run test:sensitivity && npm run test:browser",
+    "test": "npm run test:syntax && npm run test:static && npm run test:static-sensitivity && npm run test:rules && npm run test:sensitivity && npm run test:browser",
+    "test:static": "node scripts/check-static.cjs",
+    "test:static-sensitivity": "node scripts/check-static-sensitivity.cjs",
     "test:syntax": "node scripts/check-syntax.cjs",
     "test:rules": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=rule-results.xml tests/rules/*.test.cjs",
     "test:browser": "playwright test",
@@ -13,6 +18,8 @@
   },
   "devDependencies": {
     "@playwright/test": "1.65.1",
+    "eslint": "10.15.0",
+    "typescript": "7.0.2",
     "vue": "2.6.12"
   }
 }

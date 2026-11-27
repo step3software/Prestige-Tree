@@ -13,7 +13,8 @@ The game uses plain JavaScript, HTML and CSS, Vue **2.6.12** loaded by
 `index.html` from jsDelivr, and a checked-in `break_eternity.js` Decimal library.
 There is no application build step. The regression tools use Node **24.22.1**
 ([.node-version](../.node-version)), npm **11.19.1**, Playwright **1.65.1** and
-Chromium pinned by that Playwright release. The test-only Vue dependency is exactly
+Chromium pinned by that Playwright release. DEV01 adds ESLint **10.15.0**
+and TypeScript **7.0.2** as JavaScript checking tools; application code remains JavaScript. The test-only Vue dependency is exactly
 **2.6.12**, matching the shipped page; this change does not migrate Vue.
 
 From an isolated worktree root, open `index.html` in a current browser. The
@@ -42,11 +43,12 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 
 | Task | Owning implementation | Relevant reference |
 | --- | --- | --- |
-| Page startup and script order | `index.html` → `load()` in `js/saves.js` | [Main mod info](main-mod-info.md) |
+| Page startup and script order | `index.html` → `gameUI.commands.load()` in `js/browser-entry.js` → `js/saves.js` | [Main mod info](main-mod-info.md) |
 | Game identity, version, point rules | `js/mod.js` | [Main mod info](main-mod-info.md) |
 | Layer costs, rewards, upgrades and progression | `js/layers/manifest.js` → named `js/layers/` factories; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
-| Explicit advancement and resets | `advanceGame(session, elapsedSeconds)` in `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
+| Explicit advancement and resets | `js/game-session.js` → session-bound `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
 | Runtime clock, offline budget, timers and listeners | `js/game-runtime.js` → `startGameRuntime` / `createGameRuntime` | [Lifecycle below](#simulation-and-runtime-lifecycle) |
+| Session construction and selected collection | `js/game-session.js` (`createGameSession`, `createSaveState`) | [Ownership below](#state-and-command-ownership) |
 | Save commands, active state and recovery UI | `js/saves.js` (`save`, `load`, `exportSave`, `importSave`, menu commands) | [Save boundaries below](#save-boundaries-and-recovery) |
 | Pure save data/defaults, validation and conversion | `js/save-codec.js` (`createSaveCodec`, `createSavePlayer`) | [Mod configuration](main-mod-info.md) |
 | Durable storage I/O | `js/save-storage.js` (`createSaveStorage`) | [Save boundaries below](#save-boundaries-and-recovery) |
@@ -62,8 +64,9 @@ attribution in both [licenses](../LICENSE) and [Prestige Tree license](../Presti
 ## Layer content and registration
 
 Start at [the registration manifest](../js/layers/manifest.js). `index.html`
-loads the named factory scripts, then this manifest calls the existing `addLayer`
-or `addNode` in its explicit order. The VM harness reads the same HTML and executes
+loads the named factory scripts, then explicit session composition calls `registerGameLayers(layerRegistry, ports)`.
+The manifest invokes that session’s existing `addLayer`/`addNode` APIs in its explicit order.
+Factory definitions and the manifest register nothing on evaluation. The VM harness reads the same HTML and executes
 the same manifest; it has no separate test registry. Script-tag order loads factory
 definitions; the manifest alone determines registration order. Add a factory script
 to the page and one manifest entry to add content. No asynchronous loader, discovery,
@@ -135,8 +138,10 @@ node --test tests/rules/layer-content.test.cjs
 Expected result: all tests pass. The early fixture changes Generator points and
 Time milestones and observes Booster effect/automation; middle Balance → Solarity
 and late AI → Neurons/Robots fixtures exercise other real formulas with shipped
-Decimals. All moved contracts and nine complete player checkpoints compare to
-immutable SIM01. Registry omission/duplication fixtures mutate only memory and
+Decimals. All complete contracts and nine player checkpoints compare to immutable SIM01.
+DEV01 compares complete formula ASTs while normalizing only explicit owner
+qualifiers, added lexical declarations and equivalent var/let bindings; numerical
+checkpoints remain exact. Controlled formula/incorrect-owner changes must fail. Registry omission/duplication fixtures mutate only memory and
 must fail the completeness check or reject registration. This representative
 evidence does not prove full late-game balance. Final delivery runs `npm test`.
 
@@ -148,6 +153,73 @@ The standalone demo reuses the same utility-tab factories from its own tree entr
 its broader rendering and pre-existing lowercase `js/demo/` URLs on case-sensitive
 servers remain outside this content refactor's verified browser journeys.
 
+## State and command ownership
+
+Start at [session composition](../js/game-session.js). Every existing module is
+a factory receiving only its named collaborators; layer factories receive their
+used ports. There is no global player/cache swap, second persisted model, dynamic
+loader or new state framework. The same realm can hold independent sessions.
+
+| Owner | Lifetime and update route |
+| --- | --- |
+| `session.saveState` | One selected collection/player identity. `saveCommands` activates only defaults or codec-validated candidates; it remains the sole browser persistence command path. |
+| `session.derivedState` | Fresh `tmp` per session; `setupTemp` replaces it and `updateTemp` derives values. It is never serialized. |
+| `session.layerRegistry` | Fresh definitions, hotkeys and ordered row indexes; the one manifest constructs closures with this session’s ports. |
+| `session.gameRules`, `gameHelpers`, `modRules`, `softcapRules` | Existing progression/reset, purchase, formula and notification owners, with explicit state/cache collaborators. |
+| `session.runtimeServices` | Clock/scheduler/listeners and all created runtime handles; generation, identity, disposal and reload-only fault gates. |
+| `session.gameView`, `treeCanvas` | Vue/template observation and canvas effects. `bind()` observes the same canonical player/collection/cache objects after activation; it never clones the model. |
+
+The classic-script external boundary is immutable factory declarations, the frozen
+manifest and the [browser adapter](../js/browser-entry.js), `gameUI`. Native HTML
+handlers use its 14 `commands`; inspection uses `gameUI.session` and the named
+owners above. There are no global `player`, `allSaves`, `tmp`, loop temporaries or
+catch-all mutable global allowlists. Browser dependencies are injected effects;
+headless caches use a plain property setter instead of Vue. Circular collaborator
+ports forward to their actual owners, so methods/values are never copied into a
+second mutable model. Factory creation itself performs no browser I/O.
+
+For a representative command, use the browser console in a disposable page:
+
+```javascript
+const session = createGameSession();
+session.gameRules.doReset('p');
+session.purchase('p', 11);
+advanceGame(session, 1); // explicit seconds; no timer or wall clock
+session.saveState.player.points.toString(); // '1'
+session.dispose();
+```
+
+Trace `purchase` → `gameHelpers.buyUpg` in `js/utils.js` →
+`js/layers/prestige.js`’s session-bound cost/hook → the canonical player.
+Copy [session ownership tests](../tests/rules/session-ownership.test.cjs), then run
+`node --test tests/rules/session-ownership.test.cjs` from the worktree root;
+expected result: all tests pass. They interleave real purchases/advances/restoration
+in one realm and prove independent caches, closures, handles and failure gates.
+`session.loadPlayer(text)` restores through the same codec **in memory**, stopping
+owned drivers before replacement. It never persists; browser import/selection
+continues through SAV01’s atomic commands and reload. It cannot clear a tick fault.
+The [rendered tests](../tests/browser/session-ownership.spec.cjs) exercise active
+progression after independent sessions, import and save selection.
+
+`npm run test:static` derives lint scope from the actual main HTML graph and checks
+every authored shipped script. Only the identified vendor is outside lint;
+demo/archive code is not main-page shipped code. Factory declarations are read-only;
+duplicate declarations, unexpected global state, undeclared writes and `var` fail.
+`jsconfig.json` contains that exact graph (including the vendor for type loading).
+Checked JavaScript is scoped to `@ts-check` state composition, runtime, storage and
+the shared contracts; typed layer inputs and actual module return types supply
+their boundary shapes. Dynamic content bodies remain JavaScript with full-graph
+lexical lint, rather than an exhaustive per-layer type conversion. There are no
+`ts-nocheck` files, broad production ignores or suppression comments. The narrow
+Decimal instance port describes the untyped vendor boundary; codec/runtime tests
+still use the real class. GameState/optional fields derive from the canonical
+defaults and derived-state types live with their cache owner, without another schema.
+
+`npm run test:static-sensitivity` first passes valid fixtures, then requires rejected
+undeclared writes, malformed purchase/save inputs, primitive Decimal assignments,
+wrong elapsed/clock types and invalid layer/UI ports. It uses disposable fixtures,
+never changed checked-out source. These commands are mandatory locally and in CI.
+
 ## Verify a focused change
 
 From a dedicated worktree root on Windows or the Ubuntu CI runner:
@@ -156,6 +228,8 @@ From a dedicated worktree root on Windows or the Ubuntu CI runner:
 npm ci
 npx playwright install chromium
 npm run test:syntax
+npm run test:static
+npm run test:static-sensitivity
 npm run test:rules
 npm run test:sensitivity
 npm run test:browser
@@ -168,7 +242,7 @@ intentional dependency change. The install and browser-download commands contact
 npm/Playwright distribution servers. Linux hosts also need browser OS dependencies;
 CI uses `npx playwright install --with-deps chromium` on `ubuntu-24.04`.
 Every required test command exits **0** on success and nonzero on failure.
-`npm test` runs all four required checks after installation. For a focused rule
+`npm test` runs all six required checks after installation. For a focused rule
 run, use `node --test --test-name-pattern="F1" tests/rules/save-safety.test.cjs`;
 the final required suite must run without filtering, skips or retries.
 
@@ -242,22 +316,32 @@ correctness, domain compliance or milestone acceptance.
 
 ## Simulation and runtime lifecycle
 
-Follow README → this source map → `load()` in `js/saves.js` →
-`startGameRuntime()` in `js/game-runtime.js` → `advanceGame()` in `js/game.js`.
+Follow README → this source map → `gameUI.commands.load()` → session-bound
+`load()` in `js/saves.js` → `startGameRuntime()` in `js/game-runtime.js` →
+`advanceGame()` in `js/game.js`. These module methods receive named ports.
 Run `node --test tests/rules/runtime-lifecycle.test.cjs` from the worktree root;
 expected result: every case passes. The nearby tests show how to advance real
 rules without timers and compare meaningful before/after state against immutable
 SAV01. Final milestone verification still requires the complete `npm test` suite.
 
-`createGameSession()` captures the active player and derived-state identity.
-`advanceGame(session, elapsedSeconds)` accepts finite, nonnegative seconds,
-updates derived values, runs the existing ordered rules and checks player values.
-It reads no wall clock, storage or DOM and starts no timers or dialogs. Rule
-helpers retain their context-local globals pending DEV01; this is one session per
-script context, with stale/disposed identities rejected. Use separate contexts
-for independent sessions. It preserves both existing development-speed
-multipliers and nonlinear tick order. Identical fixtures and ordered action/time
-steps replay deterministically; arbitrary chunk sizes need not produce equal results.
+`createGameSession({now, effects})` in `js/game-session.js` constructs independent
+owners and fresh registered layer closures/caches in the **same JavaScript realm**.
+It samples no clock, touches no storage/DOM and starts no timers/listeners. `now`
+defaults to zero for deterministic headless fixtures; callers supply time explicitly.
+The browser defers activation until SAV01 reads/validates storage, so failed startup
+still exposes no default player and cannot overwrite the original.
+
+`advanceGame(session, elapsedSeconds)` delegates to that session’s rule owner with
+an identity captured by `session.runtimeServices.captureGameIdentity()`.
+Finite, nonnegative seconds update derived values, ordered rules and player-value
+checks without clock, storage, DOM or timers. Cross-session, stale and disposed
+identities are rejected. Both development-speed multipliers and nonlinear order
+are preserved; arbitrary tick chunk sizes need not produce equal results.
+
+Each runtime owner tracks all handles created through its explicit ports. Session
+disposal or player replacement disposes every handle, including directly created
+drivers; no second session’s handles are affected. Queued callbacks remain fenced.
+Stopping one driver is restartable; disposing the whole session is terminal.
 
 `createGameRuntime({session, clock, scheduler, resume, tick, refresh, autosave,
 listeners, onError, onStop})` owns three intervals (50ms calculation, 500ms canvas
@@ -311,8 +395,8 @@ are rejected. New runtime fields must have a defined durable shape here; caches,
 timers, functions, DOM/Vue objects and unknown root fields cannot be serialized.
 
 The canonical durable representation remains base64 JSON `{set, <name>: player}`
-under **ptr**, with one selected active `player` object also held by
-`allSaves[allSaves.set]`. Inactive entries use the same hydrated model. Vue receives
+under **ptr**, with one selected active `saveState.player` object also held by
+`saveState.allSaves[saveState.allSaves.set]`. Inactive entries use the same hydrated model. Vue receives
 these same objects after a successful collection commit. Export remains a single
 base64 player for compatibility. No schema envelope, second key, dual writer or
 legacy operating mode is introduced.
@@ -376,3 +460,11 @@ remains `master`. [LAY01 preparation](milestones/LAY01.preparation.json) and
 [verification](milestones/LAY01.verification.md) retain scope, all moves, standards,
 representative before/after evidence and limitations. No native milestone
 acceptance, enrollment, merge, deployment or activation is inferred.
+
+
+DEV01 continues the authorized stack: `codex/dev01-state-contracts` targets
+`codex/lay01-layer-content` ([PR #5](https://github.com/step3software/Prestige-Tree/pull/5)),
+then PR #4/#3/#2. Keep all parents intact while unmerged; final integration remains
+`master`. [Preparation](milestones/DEV01.preparation.json) and
+[verification](milestones/DEV01.verification.md) bind exact scope, standards and
+criterion evidence. Publication is not native acceptance, merge or activation.

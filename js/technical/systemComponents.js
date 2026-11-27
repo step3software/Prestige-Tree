@@ -1,4 +1,6 @@
-var systemComponents = {
+// Session-bound componentDefinitions owner; composition supplies only the named ports.
+function createSystemComponents({  }) {
+let systemComponents = {
 	'tab-buttons': {
 		props: ['layer', 'data', 'name'],
 		template: `
@@ -166,30 +168,36 @@ var systemComponents = {
         template: `
         <table>
             <tr>
-                <td><button class="opt" onclick="save()">Save</button></td>
-                <td><button class="opt" onclick="toggleOpt('autosave')">Autosave: {{ player.autosave?"ON":"OFF" }}</button></td>
-                <td><button class="opt" onclick="hardReset()">HARD RESET</button></td>
+                <td><button class="opt" onclick="gameUI.commands.save()">Save</button></td>
+                <td><button class="opt" onclick="gameUI.commands.toggleOpt('autosave')">Autosave: {{ player.autosave?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="gameUI.commands.hardReset()">HARD RESET</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="exportSave()">Export to clipboard</button></td>
-                <td><button class="opt" onclick="importSave()">Import</button></td>
-                <td><button class="opt" onclick="toggleOpt('offlineProd')">Offline Prod: {{ player.offlineProd?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="gameUI.commands.exportSave()">Export to clipboard</button></td>
+                <td><button class="opt" onclick="gameUI.commands.importSave()">Import</button></td>
+                <td><button class="opt" onclick="gameUI.commands.toggleOpt('offlineProd')">Offline Prod: {{ player.offlineProd?"ON":"OFF" }}</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="switchTheme()">Theme: {{ getThemeName() }}</button></td>
-                <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ player.msDisplay.toUpperCase() }}</button></td>
-                <td><button class="opt" onclick="toggleOpt('hqTree')">High-Quality Tree: {{ player.hqTree?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="gameUI.commands.switchTheme()">Theme: {{ getThemeName() }}</button></td>
+                <td><button class="opt" onclick="gameUI.commands.adjustMSDisp()">Show Milestones: {{ player.msDisplay.toUpperCase() }}</button></td>
+                <td><button class="opt" onclick="gameUI.commands.toggleOpt('hqTree')">High-Quality Tree: {{ player.hqTree?"ON":"OFF" }}</button></td>
             </tr>
                 <tr>
-                    <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ player.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
-                <!--	<td><button class="opt" onclick="toggleOpt('oldStyle')">Style: {{ player.oldStyle?"v1.0":"NEW" }}</button></td>-->
+                    <td><button class="opt" onclick="gameUI.commands.toggleOpt('hideChallenges')">Completed Challenges: {{ player.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
+                <!--	<td><button class="opt" onclick="gameUI.commands.toggleOpt('oldStyle')">Style: {{ player.oldStyle?"v1.0":"NEW" }}</button></td>-->
             </tr> 
         </table>`
     },
 
     'back-button': {
         template: `
-        <button v-bind:class="back" onclick="goBack()">←</button>
+        <button v-bind:class="back" onclick="gameUI.commands.goBack()">←</button>
         `
     }
+}
+
+const componentDefinitions = {
+ get systemComponents() { return systemComponents; },
+};
+return componentDefinitions;
 }

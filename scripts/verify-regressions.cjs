@@ -60,7 +60,7 @@ function mutation(file, before, after, check) {
   assert.equal(source.split(before).length, 2, `Mutation anchor must occur exactly once: ${before}`);
   expectBehaviorFailure(check, {sources: {[file]: source.replace(before, after)}}, 'Mutation escaped the behavioral assertion');
 }
-mutation('js/saves.js', 'let decoded = saveCodec().decodePlayer(imported);', 'player = JSON.parse(atob(imported)); let decoded = saveCodec().decodePlayer(imported);', checks.F1);
+mutation('js/saves.js', 'let decoded = saveCommands.saveCodec().decodePlayer(imported);', 'saveState.activate({ ...saveState.allSaves, [saveState.allSaves.set]: JSON.parse(atob(imported)) }); let decoded = saveCommands.saveCodec().decodePlayer(imported);', checks.F1);
 console.log('Save-preservation mutation: FAIL detected (in-memory source only)');
 mutation('js/save-storage.js', 'if (!encoded.ok) return encoded;', 'if (!encoded.ok) return { ok: true, value: collection };', r => {
   r.run('save(); player.p = null;');

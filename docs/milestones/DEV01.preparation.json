@@ -1,6 +1,6 @@
 {
   "milestone_id": "step3software/Prestige-Tree#DEV01",
-  "plan_sha256": "116421bd7d3ac595b1888f16b87bd76017e468be50fac676ab6e56ad780d83d8",
+  "plan_sha256": "324d83686135133125364ad7ab5f1b9e84e278db05fbfa645b0a458c87d81087",
   "base_revision": "04dc620c1e0dee90340e3e133fec89d081735ede",
   "implementation_branch": "codex/dev01-state-contracts",
   "validation_commands": [
@@ -3588,5 +3588,36 @@
       "Existing save/runtime/module/test owners and immutable graphs reused."
     ],
     "measurement": "Qualitative assessment; no performance/time claims."
+  },
+  "plan_hash_reconciliation": {
+    "initial_worktree_sha256": "116421bd7d3ac595b1888f16b87bd76017e468be50fac676ab6e56ad780d83d8",
+    "canonical_git_sha256": "324d83686135133125364ad7ab5f1b9e84e278db05fbfa645b0a458c87d81087",
+    "initial_preparation_commit": "90a4a57",
+    "initial_preparation_git_sha256": "75c27560a9c963b5c5ae8643bbf80aedf30eb191dab5c666e28da0c735d762b6",
+    "reason": "Initial preparation validated the CRLF checkout artifact; canonical Git stores LF. Parsed plan JSON is identical. This correction binds canonical Git bytes, preserving the observed pre-code digest, unchanged source/spec/criteria and exact file scope. No native acceptance receipt exists or is fabricated."
+  },
+  "project_documents": {
+    "04dc620c1e0dee90340e3e133fec89d081735ede": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "README.md": "d46ebc2c73af0cff498a39b2d4f8c4f664dc024017c51bc28b0e381b9fae8893",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/developer-guide.md": "34703763cd5eadefd4c09e6c757af1c69f86eb1c9e56d15872b24b78ee5c2333",
+      "docs/milestones/DEV01.md": "b5e4862a6e9b5c38c5337da95e81503dc98746dd65ba0ed40e0166330a1765c0",
+      "docs/milestones/DEV01.plan.json": "324d83686135133125364ad7ab5f1b9e84e278db05fbfa645b0a458c87d81087",
+      "docs/milestones/LAY01.preparation.json": "0e917393667d08e7a1ad7a5af8340b2a21338b561a48116ac06cb827049100b2",
+      "docs/milestones/LAY01.verification.md": "b6476f25a2d2ea1f89d5cdfd04a54193c03b772b6fae0e43587ad947cdbc5e86"
+    },
+    "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8": {
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    }
+  },
+  "execution_observation": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "dispatch_evidence": "Verified predecessor create_thread host call for 01a21bcf-be05-7c60-bee5-0285245f038b",
+    "quota_observation": "Authenticated codex_app_server; ordinary usage allowed; 68% remaining at initial admission; route present in live catalog.",
+    "priority_pause": "Installed config/priorities.json: default Low, project unpaused, no focus restriction; unchanged.",
+    "writer": "Fresh exclusive branch/checkout claim via installed hash-verified branch_writers; private receipt outside Git; unrelated PR2-review protection preserved."
   }
 }

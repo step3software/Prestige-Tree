@@ -39,21 +39,19 @@ const gameLayerManifest = Object.freeze([
     Object.freeze({ id: "ab", create: createAutobuyersLayer }),
 ]);
 
-function registerGameLayers() {
+function registerGameLayers(registry, ports) {
     // Reject the complete invalid manifest before changing the existing registry.
     const seen = new Set();
     for (const entry of gameLayerManifest) {
         if (seen.has(entry.id)) throw new Error("Duplicate layer ID: " + entry.id);
-        if (Object.prototype.hasOwnProperty.call(layers, entry.id)) {
+        if (Object.prototype.hasOwnProperty.call(registry.layers, entry.id)) {
             throw new Error("Layer already registered: " + entry.id);
         }
         if (typeof entry.create !== "function") throw new Error("Missing layer factory: " + entry.id);
         seen.add(entry.id);
     }
     for (const entry of gameLayerManifest) {
-        if (entry.node) addNode(entry.id, entry.create());
-        else addLayer(entry.id, entry.create());
+        if (entry.node) registry.addNode(entry.id, entry.create(ports));
+        else registry.addLayer(entry.id, entry.create(ports));
     }
 }
-
-registerGameLayers();

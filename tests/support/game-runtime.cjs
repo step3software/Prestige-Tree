@@ -8,7 +8,7 @@ const scripts = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)]
   .map(match => match[1]).filter(source => !source.startsWith('http'));
 
 /** Fresh real-script engine. Adapters model only browser I/O, never game rules. */
-function createRuntime({ storage = {}, sources = {}, scriptOrder = scripts } = {}) {
+function createRuntime({ storage = {}, sources = {}, scriptOrder = scripts, bridge = true } = {}) {
   const data = new Map(Object.entries(storage));
   const intervals = new Map();
   const alerts = [];
@@ -64,6 +64,7 @@ function createRuntime({ storage = {}, sources = {}, scriptOrder = scripts } = {
   for (const script of scriptOrder) {
     vm.runInContext(sources[script] ?? fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
   }
+  if (bridge) vm.runInContext(`(${require('./session-bridge.cjs').installSessionBridge.toString()})()`, context);
   const run = code => vm.runInContext(code, context, { timeout: 10000 });
   const fire = ms => {
     const timer = [...intervals.values()].find(item => item.ms === ms);

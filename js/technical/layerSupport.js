@@ -1,4 +1,6 @@
-var layers = {}
+// Session-bound layerRegistry owner; composition supplies only the named ports.
+function createLayerRegistry({ gameHelpers, gameRules, saveState }) {
+let layers = {}
 
 const decimalZero = new Decimal(0)
 const decimalOne = new Decimal(1)
@@ -8,14 +10,15 @@ function layerShown(layer){
     return layers[layer].layerShown();
 }
 
-var LAYERS = Object.keys(layers);
+let LAYERS = Object.keys(layers);
 
-var hotkeys = {};
+let hotkeys = {};
 
-var maxRow = 0;
+let maxRow = 0;
 
 function updateHotkeys()
 {
+	let hk, id, layer;
     hotkeys = {};
     for (layer in layers){
         hk = layers[layer].hotkeys
@@ -28,11 +31,12 @@ function updateHotkeys()
     }
 }
 
-var ROW_LAYERS = {}
-var TREE_LAYERS = {}
-var OTHER_LAYERS = {}
+let ROW_LAYERS = {}
+let TREE_LAYERS = {}
+let OTHER_LAYERS = {}
 
 function updateLayers(){
+	let data, layer, row, thing, x;
     LAYERS = Object.keys(layers);
     ROW_LAYERS = {}
     TREE_LAYERS = {}
@@ -168,7 +172,7 @@ function updateLayers(){
         if (TREE_LAYERS[x]) treeLayers2.push(TREE_LAYERS[x])
     }
     TREE_LAYERS = treeLayers2
-    updateHotkeys()
+    layerRegistry.updateHotkeys()
 }
 
 function addLayer(layerName, layerData){ // Call this to add layers from a different file!
@@ -178,7 +182,7 @@ function addLayer(layerName, layerData){ // Call this to add layers from a diffe
 	// Making challenge buttons responsive
 	if (layers[layerName].challenges) for (let r=1;r<=layers[layerName].challenges.rows;r++) for (let c=1;c<=layers[layerName].challenges.cols;c++) {
 		let id = r*10+c;
-		layers[layerName].challenges[id].buttonText = function() { return (player[this.layer].activeChallenge==(this.id)?(canCompleteChallenge(this.layer, this.id)?"Finish":"Exit Early"):(hasChallenge(this.layer, this.id)?"Completed":"Start")) };
+		layers[layerName].challenges[id].buttonText = function() { return (saveState.player[this.layer].activeChallenge==(this.id)?(gameRules.canCompleteChallenge(this.layer, this.id)?"Finish":"Exit Early"):(gameHelpers.hasChallenge(this.layer, this.id)?"Completed":"Start")) };
 	}
 }
 
@@ -189,7 +193,7 @@ function addNode(layerName, layerData){ // Does the same thing
 	// Making challenge buttons responsive
 	if (layers[layerName].challenges) for (let r=1;r<=layers[layerName].challenges.rows;r++) for (let c=1;c<=layers[layerName].challenges.cols;c++) {
 		let id = r*10+c;
-		layers[layerName].challenges[id].buttonText = function() { return (player[this.layer].activeChallenge==(this.id)?(canCompleteChallenge(this.layer, this.id)?"Finish":"Exit Early"):(hasChallenge(this.layer, this.id)?"Completed":"Start")) };
+		layers[layerName].challenges[id].buttonText = function() { return (saveState.player[this.layer].activeChallenge==(this.id)?(gameRules.canCompleteChallenge(this.layer, this.id)?"Finish":"Exit Early"):(gameHelpers.hasChallenge(this.layer, this.id)?"Completed":"Start")) };
 	}
 }
 
@@ -203,8 +207,9 @@ function readData(data, args=null){
 }
 
 function someLayerUnlocked(row){
+	let layer;
     for (layer in ROW_LAYERS[row])
-        if (player[layer].unlocked)
+        if (saveState.player[layer].unlocked)
             return true
     return false
 }
@@ -215,3 +220,30 @@ const UP = 0
 const DOWN = 1
 const LEFT = 2
 const RIGHT = 3
+
+
+const layerRegistry = {
+ get layers() { return layers; },
+ get decimalZero() { return decimalZero; },
+ get decimalOne() { return decimalOne; },
+ get decimalNaN() { return decimalNaN; },
+ layerShown,
+ get LAYERS() { return LAYERS; },
+ get hotkeys() { return hotkeys; },
+ get maxRow() { return maxRow; },
+ updateHotkeys,
+ get ROW_LAYERS() { return ROW_LAYERS; },
+ get TREE_LAYERS() { return TREE_LAYERS; },
+ get OTHER_LAYERS() { return OTHER_LAYERS; },
+ updateLayers,
+ addLayer,
+ addNode,
+ readData,
+ someLayerUnlocked,
+ get UP() { return UP; },
+ get DOWN() { return DOWN; },
+ get LEFT() { return LEFT; },
+ get RIGHT() { return RIGHT; },
+};
+return layerRegistry;
+}
