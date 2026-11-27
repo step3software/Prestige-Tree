@@ -1,0 +1,1294 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#LAY01",
+  "plan_sha256": "510e3851ee9d21268c6d0cc32332ad341db704a7c2cbc780d2455db3be1cd791",
+  "base_revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+  "implementation_branch": "codex/lay01-layer-content",
+  "validation_commands": [
+    "npm ci",
+    "npx playwright install chromium",
+    "npm test",
+    "git diff --check",
+    "py -3 -B verify-lay01.py"
+  ],
+  "handoff_instructions": [
+    "Validate and commit this preparation before editing source/tests; use only this exact file contract on the owned child worktree.",
+    "Publish separate draft stacked PR to codex/sim01-runtime-lifecycle; PR #4 then #3 then #2 dependencies; final integration master. Preserve parent branches and worktrees.",
+    "Original plan/spec docs-only provenance remains unchanged. Current owner continuation separately authorizes full LAY01 development; no native receipt/enrollment/acceptance/activation/merge/deployment."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "js/layers.js",
+      "operation": "delete",
+      "implementation": "Remove the superseded active monolith after exact object-body and real-definition before/after checks; retain Git history only.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "7e595e49824daf73925291193435c839110782ab",
+        "sha256": "4dcf86048b79881113ff3ccef01d14c2a34876d10a19eb57a669b5ebd8445f04"
+      }
+    },
+    {
+      "path": "js/tree.js",
+      "operation": "modify",
+      "implementation": "Retain layoutInfo; move blank and tree-tab definitions into named content owners registered first by the manifest.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "998fc1720f73d9b7cc87de5aba4c18db00169d68",
+        "sha256": "b11108b16e40011dd9f18e987cbdd196fe6368253c13f56cb138b180a7ae2948"
+      }
+    },
+    {
+      "path": "js/layers/manifest.js",
+      "operation": "create",
+      "implementation": "One explicit ordered ID/factory/node manifest registers all 33 baseline entries through existing addLayer/addNode. Validate duplicate IDs/factory and existing-ID conflicts before registration. HTML loads factory scripts; this manifest alone selects registration order. No automatic discovery or alternate registry.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Replace monolith script with named content factory scripts followed by the authoritative manifest before mod/temp/game/save startup. Keep explicit load/runtime boundary.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "582278310b0d56178433e8c0e694b5a989f0fbe6",
+        "sha256": "7cf4939fae904dafa164c6932e460680ed0873a03937086fda36ebb6a2864d88"
+      }
+    },
+    {
+      "path": "tests/support/game-runtime.cjs",
+      "operation": "modify",
+      "implementation": "Accept an explicit historical scriptOrder in addition to source overlays; default remains actual current HTML script graph, which executes the real registration manifest.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "d3ef8b9f6030ce656f5758a62176d21318976b76",
+        "sha256": "6d3d157c9f762554497f51fe152dc1927480dad1e2fc8caf5f10419f2f032d26"
+      }
+    },
+    {
+      "path": "tests/support/historical-sources.cjs",
+      "operation": "create",
+      "implementation": "Read each immutable historical index.html and its complete script graph from Git. Reuse this test-only adapter for original sensitivity, SAV01/SIM01 checkpoints and LAY01 comparisons, preventing mixed-version graphs or missing-file false passes.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "tests/rules/runtime-lifecycle.test.cjs",
+      "operation": "modify",
+      "implementation": "Replace historical current-script overlay with the explicit immutable SAV01 graph; keep all established assertions/scenarios intact.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "134a4bc1299c7bbeb58fd9602b7c08d7d8781455",
+        "sha256": "50ee79f05292c0ef6f2770ffdcce1f387b918c78e3bd8b39748af77b4fd8e510"
+      }
+    },
+    {
+      "path": "tests/rules/layer-content.test.cjs",
+      "operation": "create",
+      "implementation": "Compare full real registration contracts/functions/default state/order to immutable SIM01; assert explicit owners and manifest wiring. Exercise real Decimal early/middle/late reset gains, costs/effects, unlocks, automation and cross-layer changes before/after. Detect omitted/duplicated registration in isolated memory, plus missing/conflicting factories.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "scripts/verify-regressions.cjs",
+      "operation": "modify",
+      "implementation": "Use immutable historical script graphs for F1-F3 and failed-selection checks; retain all five existing behavioral mutations and require expected assertion failures rather than arbitrary loader failures.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "2013c84356ab8c2cf2e10db0e4eec3e4da6d63ac",
+        "sha256": "0589a77db14b89b989d76ebf1bf4d47ab2471aebfe7c151264be8bd7f6ebb316"
+      }
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "modify",
+      "implementation": "Add new LAY01 branch to push trigger, preserving full required locked suites/read-only permissions.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "38a0656744b8703998d1c216bc45fa168bff9d5c",
+        "sha256": "e1ef95cfa1429300a93de7e1a8eebed483bd690e902ddf1344d9c002a8aa39fb"
+      }
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Repair current content source map, list all named ID/file owners, shared formula helpers/cross-layer examples, manifest/loading contract, exact focused test and stacked dependency.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ],
+      "source": {
+        "revision": "7ee437d2101a507e5c610406f059e4df682cf692",
+        "blob": "d7415ff5f5ae40b5de92b1eb839a7db52f6847ff",
+        "sha256": "0071f05e9ad08639ae0b478b4b83cb8dc5f27cce03a392f0555b344f56225c30"
+      }
+    },
+    {
+      "path": "docs/milestones/LAY01.preparation.json",
+      "operation": "create",
+      "implementation": "Validated exact-file handoff, source/plan/spec/project/standards hashes, criterion map, inventory, rationale and separate direct-session authority.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "docs/milestones/LAY01.verification.md",
+      "operation": "create",
+      "implementation": "Record actual criteria/shared/local standard mapping, complete moved path/consumer inventory, expectations/findings, representative before/after results, commands and limitations; retain legacy authority.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/blank.js",
+      "operation": "create",
+      "implementation": "Move blank unchanged into createBlankLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/tree-tab.js",
+      "operation": "create",
+      "implementation": "Move tree-tab unchanged into createTreeTabLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/prestige.js",
+      "operation": "create",
+      "implementation": "Move p unchanged into createPrestigeLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/boosters.js",
+      "operation": "create",
+      "implementation": "Move b unchanged into createBoostersLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/generators.js",
+      "operation": "create",
+      "implementation": "Move g unchanged into createGeneratorsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/time.js",
+      "operation": "create",
+      "implementation": "Move t unchanged into createTimeLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/enhance.js",
+      "operation": "create",
+      "implementation": "Move e unchanged into createEnhanceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/space.js",
+      "operation": "create",
+      "implementation": "Move s unchanged into createSpaceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/super-boosters.js",
+      "operation": "create",
+      "implementation": "Move sb unchanged into createSuperBoostersLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/super-generators.js",
+      "operation": "create",
+      "implementation": "Move sg unchanged into createSuperGeneratorsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/hindrance.js",
+      "operation": "create",
+      "implementation": "Move h unchanged into createHindranceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/quirks.js",
+      "operation": "create",
+      "implementation": "Move q unchanged into createQuirksLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/solarity.js",
+      "operation": "create",
+      "implementation": "Move o unchanged into createSolarityLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/subspace.js",
+      "operation": "create",
+      "implementation": "Move ss unchanged into createSubspaceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/magic.js",
+      "operation": "create",
+      "implementation": "Move m unchanged into createMagicLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/balance.js",
+      "operation": "create",
+      "implementation": "Move ba unchanged into createBalanceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/phantom-souls.js",
+      "operation": "create",
+      "implementation": "Move ps unchanged into createPhantomSoulsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/hyper-boosters.js",
+      "operation": "create",
+      "implementation": "Move hn unchanged into createHyperBoostersLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/nebula.js",
+      "operation": "create",
+      "implementation": "Move n unchanged into createNebulaLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/hyperspace.js",
+      "operation": "create",
+      "implementation": "Move hs unchanged into createHyperspaceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/imperium.js",
+      "operation": "create",
+      "implementation": "Move i unchanged into createImperiumLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/mastery.js",
+      "operation": "create",
+      "implementation": "Move ma unchanged into createMasteryLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/gear.js",
+      "operation": "create",
+      "implementation": "Move ge unchanged into createGearLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/machine.js",
+      "operation": "create",
+      "implementation": "Move mc unchanged into createMachineLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/energy.js",
+      "operation": "create",
+      "implementation": "Move en unchanged into createEnergyLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/neurons.js",
+      "operation": "create",
+      "implementation": "Move ne unchanged into createNeuronsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/ideas.js",
+      "operation": "create",
+      "implementation": "Move id unchanged into createIdeasLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/reality.js",
+      "operation": "create",
+      "implementation": "Move r unchanged into createRealityLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/artificial-intelligence.js",
+      "operation": "create",
+      "implementation": "Move ai unchanged into createArtificialIntelligenceLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/sanctum.js",
+      "operation": "create",
+      "implementation": "Move c unchanged into createSanctumLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/achievements.js",
+      "operation": "create",
+      "implementation": "Move a unchanged into createAchievementsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/softcaps.js",
+      "operation": "create",
+      "implementation": "Move sc unchanged into createSoftcapsLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    },
+    {
+      "path": "js/layers/autobuyers.js",
+      "operation": "create",
+      "implementation": "Move ab unchanged into createAutobuyersLayer returning its exact object literal; no formula/ID/field/hook/hotkey/tree/dependency changes. Sole registration is in manifest.js.",
+      "verification": [
+        "Full diff/source and consumer accounting; npm test.",
+        "Exact-file/source/hash validation; compare every moved object/contract against immutable SIM01 and map all six criteria."
+      ]
+    }
+  ],
+  "implementation_criteria": [
+    "LAY01-AC01: Every active baseline layer has one clearly named source owner; the current baseline inventory is 31 IDs and must be refreshed at preparation if source changed. The registration entry lists each exactly once in the established order, and duplicate/missing IDs fail a focused check.",
+    "LAY01-AC02: The real application entry and test loader consume the same authoritative registration manifest. Adding a layer does not require editing unrelated layer bodies or maintaining a separate test-only registry.",
+    "LAY01-AC03: All existing layer identifiers, serialized fields, hooks, hotkeys, tree positions, formulas and dependency semantics remain unchanged. A before/after registration/contract inventory accounts for every moved definition and consumer; any intentional behavior change needs separate scope.",
+    "LAY01-AC04: Synthetic representative early/middle/late fixtures exercise reset gains, upgrade costs/effects, unlocks, automation and cross-layer effects before and after moves using actual definitions and the shipped Decimal library. TST01 and registry tests remain green; report remaining balance coverage limits explicitly.",
+    "LAY01-AC05: The old monolithic definitions are removed from the active path after verified movement; no duplicate loader, fallback registry or second maintained content copy remains. Tests fail for an intentionally omitted/duplicated registration in an isolated temporary fixture.",
+    "LAY01-AC06: The existing development guide maps layer names/IDs to source files, shared helpers and relevant tests. Trace one layer change from guide to definition, registry, caller and check using repository content alone. The unmerged PR preserves attribution and records all moves and results."
+  ],
+  "authority": {
+    "mode": "legacy",
+    "request_chat": "01a21bb9-6425-7f20-8a60-efe1f095b934",
+    "source_chat": "01a21ba2-ac03-7710-a07c-99a9cfaec7da",
+    "scope": "Explicit owner scheduled continuation: review, fix, plan, prepare, implement, test, review/fix, publish unmerged stacked PR and create next milestone chat."
+  },
+  "standards_observation": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "document_sha256": {
+      "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+      "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+      "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+      "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+      "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+      "docs/agent-workflows/prepare.md": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255",
+      "docs/agent-workflows/implement.md": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51",
+      "docs/agent-workflows/refactor.md": "6c736d463a7ca9d3f0410220b41429d76433d41b721a734940262486627d3e42",
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+      "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+    },
+    "purpose": "Fresh LAY01 run evidence, not a consumer pin"
+  },
+  "registration_inventory": [
+    {
+      "id": "blank",
+      "slug": "blank",
+      "kind": "node",
+      "source": "js/tree.js",
+      "path": "js/layers/blank.js",
+      "factory": "createBlankLayer"
+    },
+    {
+      "id": "tree-tab",
+      "slug": "tree-tab",
+      "kind": "layer",
+      "source": "js/tree.js",
+      "path": "js/layers/tree-tab.js",
+      "factory": "createTreeTabLayer"
+    },
+    {
+      "id": "p",
+      "slug": "prestige",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "00cec47603d26c361cc8ce06461390b48eda97ed87270f8ee4618bcb6e4d51a7",
+      "source_lines": [
+        1,
+        280
+      ],
+      "path": "js/layers/prestige.js",
+      "factory": "createPrestigeLayer"
+    },
+    {
+      "id": "b",
+      "slug": "boosters",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "8e8257657d48365a4f0755826b97912cda90c117556bb8e0e15e837416e6ffba",
+      "source_lines": [
+        281,
+        551
+      ],
+      "path": "js/layers/boosters.js",
+      "factory": "createBoostersLayer"
+    },
+    {
+      "id": "g",
+      "slug": "generators",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "ad302e1154dbd4f8cf4b12e9f1aeab8b349f909ab979eca9c5f92e1e8e4827ca",
+      "source_lines": [
+        552,
+        896
+      ],
+      "path": "js/layers/generators.js",
+      "factory": "createGeneratorsLayer"
+    },
+    {
+      "id": "t",
+      "slug": "time",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "e78820eeba5ed76610dda929accee2b02f9afafaa5a7947e52f0a9ab90dcf2b9",
+      "source_lines": [
+        897,
+        1301
+      ],
+      "path": "js/layers/time.js",
+      "factory": "createTimeLayer"
+    },
+    {
+      "id": "e",
+      "slug": "enhance",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "985774fbe62b7a979241a5d74a9238cf985c91c79e198865f3fe2b3daaec60c9",
+      "source_lines": [
+        1302,
+        1573
+      ],
+      "path": "js/layers/enhance.js",
+      "factory": "createEnhanceLayer"
+    },
+    {
+      "id": "s",
+      "slug": "space",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "7e55f32c2a1d1e6bebb9b516507ebd4219697fadbdbcbc7d27517921142408cd",
+      "source_lines": [
+        1574,
+        2450
+      ],
+      "path": "js/layers/space.js",
+      "factory": "createSpaceLayer"
+    },
+    {
+      "id": "sb",
+      "slug": "super-boosters",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "d8cda9ee2103f26a1dbf707580ee7d4a42a3656648ccc73e20890446830c1778",
+      "source_lines": [
+        2451,
+        2525
+      ],
+      "path": "js/layers/super-boosters.js",
+      "factory": "createSuperBoostersLayer"
+    },
+    {
+      "id": "sg",
+      "slug": "super-generators",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "2d27c5928396db919411c3d93391ee4f090143655f6e897e0dca06f2cfeb2d62",
+      "source_lines": [
+        2526,
+        2613
+      ],
+      "path": "js/layers/super-generators.js",
+      "factory": "createSuperGeneratorsLayer"
+    },
+    {
+      "id": "h",
+      "slug": "hindrance",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "0ca8f82363ef97ef6a4d7d3d3543a94d03315ba217ed2e1f3b56865b62a1f6ba",
+      "source_lines": [
+        2614,
+        2916
+      ],
+      "path": "js/layers/hindrance.js",
+      "factory": "createHindranceLayer"
+    },
+    {
+      "id": "q",
+      "slug": "quirks",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "3d4e8e8ee783c6205d88002963d5f69a7ab4695e8aa6b19fa0c3a8f6529de128",
+      "source_lines": [
+        2917,
+        3524
+      ],
+      "path": "js/layers/quirks.js",
+      "factory": "createQuirksLayer"
+    },
+    {
+      "id": "o",
+      "slug": "solarity",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "6708bd386f7a7e8a6d3ba75a4958df1991e620fb3a06837974295f98f32fc727",
+      "source_lines": [
+        3525,
+        3897
+      ],
+      "path": "js/layers/solarity.js",
+      "factory": "createSolarityLayer"
+    },
+    {
+      "id": "ss",
+      "slug": "subspace",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "fe7716b263845debd96dceaf45a627262a7d53046fc22f3d5309707e6f237ba9",
+      "source_lines": [
+        3898,
+        4122
+      ],
+      "path": "js/layers/subspace.js",
+      "factory": "createSubspaceLayer"
+    },
+    {
+      "id": "m",
+      "slug": "magic",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "68c76086aad4d08dcb434260d0d4d18893b73fdeac03275e650c80b3f75922e9",
+      "source_lines": [
+        4123,
+        4506
+      ],
+      "path": "js/layers/magic.js",
+      "factory": "createMagicLayer"
+    },
+    {
+      "id": "ba",
+      "slug": "balance",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "3abef6dfe56b55190cfd035e7202f52d190dc9880be53a3dcf4256c9f2b6fb92",
+      "source_lines": [
+        4507,
+        4821
+      ],
+      "path": "js/layers/balance.js",
+      "factory": "createBalanceLayer"
+    },
+    {
+      "id": "ps",
+      "slug": "phantom-souls",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "1329b1603ae80a3508506f3d3e27f04153c0d745bafc0c0b1a5faf61b6ac438b",
+      "source_lines": [
+        4822,
+        5141
+      ],
+      "path": "js/layers/phantom-souls.js",
+      "factory": "createPhantomSoulsLayer"
+    },
+    {
+      "id": "hn",
+      "slug": "hyper-boosters",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "bc846bafa00b5e8c713e09992acf1b4aa1a088260fb1412db85522bed1fe62ee",
+      "source_lines": [
+        5142,
+        5752
+      ],
+      "path": "js/layers/hyper-boosters.js",
+      "factory": "createHyperBoostersLayer"
+    },
+    {
+      "id": "n",
+      "slug": "nebula",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "1b8b744ac4e17df418025bdb99a6a03e7fbb32a269aea4f7e2408e75bd45b386",
+      "source_lines": [
+        5753,
+        5981
+      ],
+      "path": "js/layers/nebula.js",
+      "factory": "createNebulaLayer"
+    },
+    {
+      "id": "hs",
+      "slug": "hyperspace",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "6a5042fcbaa766466eeabe97690a8c1574e0d3d21e9023f58de819285f2476ee",
+      "source_lines": [
+        5982,
+        6423
+      ],
+      "path": "js/layers/hyperspace.js",
+      "factory": "createHyperspaceLayer"
+    },
+    {
+      "id": "i",
+      "slug": "imperium",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "514ed3f4b1e99a832dbed7c156a6c2679d757aa136cfe2ad104af1e987a6a5a8",
+      "source_lines": [
+        6424,
+        6680
+      ],
+      "path": "js/layers/imperium.js",
+      "factory": "createImperiumLayer"
+    },
+    {
+      "id": "ma",
+      "slug": "mastery",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "a53fda9792c21a015836c7b880f58cf921a6aabf7543a60244849766a2b77042",
+      "source_lines": [
+        6681,
+        6915
+      ],
+      "path": "js/layers/mastery.js",
+      "factory": "createMasteryLayer"
+    },
+    {
+      "id": "ge",
+      "slug": "gear",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "e6a4334821df6d094c58f7dda17dfe0423af378e1f66bc16c4c8878e2f06dbbb",
+      "source_lines": [
+        6916,
+        7248
+      ],
+      "path": "js/layers/gear.js",
+      "factory": "createGearLayer"
+    },
+    {
+      "id": "mc",
+      "slug": "machine",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "4d1289b4ed8412c566a60a4e2594170b32e834243e949ece50a3f4ea7b2029ac",
+      "source_lines": [
+        7249,
+        7549
+      ],
+      "path": "js/layers/machine.js",
+      "factory": "createMachineLayer"
+    },
+    {
+      "id": "en",
+      "slug": "energy",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "b8bbb8a49c61c91cfcb9ec3764606869a1eef25d2826107271e3bf074db35bbe",
+      "source_lines": [
+        7550,
+        7757
+      ],
+      "path": "js/layers/energy.js",
+      "factory": "createEnergyLayer"
+    },
+    {
+      "id": "ne",
+      "slug": "neurons",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "d7f601c9c157745604dde36c03dfea6efe2e2e02ad9bc43737ee70e7c438c563",
+      "source_lines": [
+        7758,
+        7984
+      ],
+      "path": "js/layers/neurons.js",
+      "factory": "createNeuronsLayer"
+    },
+    {
+      "id": "id",
+      "slug": "ideas",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "1a4288dec4e2b4c3deffdecf755cb23d2da1d9e456de57eb14c4c0b66414b9fe",
+      "source_lines": [
+        7985,
+        8087
+      ],
+      "path": "js/layers/ideas.js",
+      "factory": "createIdeasLayer"
+    },
+    {
+      "id": "r",
+      "slug": "reality",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "2f024d2d0ef56165faced2744f78a56ce81af33c54fa4eb934e4f05213c3b2d3",
+      "source_lines": [
+        8088,
+        8448
+      ],
+      "path": "js/layers/reality.js",
+      "factory": "createRealityLayer"
+    },
+    {
+      "id": "ai",
+      "slug": "artificial-intelligence",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "6804ba2b834a9d954383755cb19a8b12c11b968e4558cd68d7d3c40b05b778e6",
+      "source_lines": [
+        8449,
+        8937
+      ],
+      "path": "js/layers/artificial-intelligence.js",
+      "factory": "createArtificialIntelligenceLayer"
+    },
+    {
+      "id": "c",
+      "slug": "sanctum",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "aa574381cd807fa0ce617151bd8d2f95be777d8b8e4073f5c730cb2e4be4fb51",
+      "source_lines": [
+        8938,
+        9134
+      ],
+      "path": "js/layers/sanctum.js",
+      "factory": "createSanctumLayer"
+    },
+    {
+      "id": "a",
+      "slug": "achievements",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "2def04779e52a255f5662dbd8209053331cc6714db501b2e86295847f26a4eea",
+      "source_lines": [
+        9135,
+        9656
+      ],
+      "path": "js/layers/achievements.js",
+      "factory": "createAchievementsLayer"
+    },
+    {
+      "id": "sc",
+      "slug": "softcaps",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "c2248d37654e1432ad941fdc4892a5b77e2356050225942798b8fd6c4b755072",
+      "source_lines": [
+        9657,
+        9679
+      ],
+      "path": "js/layers/softcaps.js",
+      "factory": "createSoftcapsLayer"
+    },
+    {
+      "id": "ab",
+      "slug": "autobuyers",
+      "kind": "layer",
+      "source": "js/layers.js",
+      "object_sha256": "8fd9a0bc56861aaccbb085b593158298c676ecfa0222a026d5ced6bac6124cc1",
+      "source_lines": [
+        9680,
+        9915
+      ],
+      "path": "js/layers/autobuyers.js",
+      "factory": "createAutobuyersLayer"
+    }
+  ],
+  "project_documents": {
+    "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/developer-guide.md": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190",
+      "docs/main-mod-info.md": "b80ccff65bda5b8aa4dc8a3f72402978fbfe2404150769a8ed0a932e78b05554"
+    },
+    "7ee437d2101a507e5c610406f059e4df682cf692": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/developer-guide.md": "0071f05e9ad08639ae0b478b4b83cb8dc5f27cce03a392f0555b344f56225c30",
+      "docs/main-mod-info.md": "b80ccff65bda5b8aa4dc8a3f72402978fbfe2404150769a8ed0a932e78b05554"
+    }
+  },
+  "source_invariants": [
+    "Preserve ptr, Decimal, settings/balance, serialized fields and F1-F3; SAV01 codec/storage/commands and SIM01 advanceGame/session/runtime remain unchanged.",
+    "Preserve ordered addLayer/addNode registry and all factory literal bytes/functions; no registry replacement, async loader, plugin machinery or filesystem discovery.",
+    "No vendor/archive cleanup, schema migration, UI redesign, source/permission/policy/priority changes, native acceptance or paid services."
+  ],
+  "technical_refinements": [
+    "Refresh historical 31 monolith layers to 32 active layers plus blank node: include tree-tab/blank named owners in manifest and contract comparison.",
+    "Factories defer literal construction to the same deterministic registration sequence; HTML only loads factory definitions, not a second registration list. VM consumes the actual HTML and manifest.",
+    "Historical before/after fixtures must load their own immutable HTML script list; preserve all locked assertions and exact formula source."
+  ],
+  "user_outcome": {
+    "task": "Existing startup/progression/prestige/purchase/save/reload/offline and recovery journeys unchanged.",
+    "verification": "Run inherited real-page Chromium journeys; no new user flow, performance budget or actual-user study required."
+  },
+  "documentation_assessment": "README \u2192 developer guide is useful; repair monolith navigation in place and map shared formula owners, examples and focused checks. No measured navigation savings claimed.",
+  "criterion_mapping": [
+    {
+      "id": "LAY01-AC01",
+      "paths": [
+        "js/layers.js",
+        "js/tree.js",
+        "js/layers/manifest.js",
+        "index.html",
+        "tests/support/game-runtime.cjs",
+        "tests/support/historical-sources.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/layer-content.test.cjs",
+        "scripts/verify-regressions.cjs",
+        ".github/workflows/test.yml",
+        "docs/developer-guide.md",
+        "docs/milestones/LAY01.preparation.json",
+        "docs/milestones/LAY01.verification.md",
+        "js/layers/blank.js",
+        "js/layers/tree-tab.js",
+        "js/layers/prestige.js",
+        "js/layers/boosters.js",
+        "js/layers/generators.js",
+        "js/layers/time.js",
+        "js/layers/enhance.js",
+        "js/layers/space.js",
+        "js/layers/super-boosters.js",
+        "js/layers/super-generators.js",
+        "js/layers/hindrance.js",
+        "js/layers/quirks.js",
+        "js/layers/solarity.js",
+        "js/layers/subspace.js",
+        "js/layers/magic.js",
+        "js/layers/balance.js",
+        "js/layers/phantom-souls.js",
+        "js/layers/hyper-boosters.js",
+        "js/layers/nebula.js",
+        "js/layers/hyperspace.js",
+        "js/layers/imperium.js",
+        "js/layers/mastery.js",
+        "js/layers/gear.js",
+        "js/layers/machine.js",
+        "js/layers/energy.js",
+        "js/layers/neurons.js",
+        "js/layers/ideas.js",
+        "js/layers/reality.js",
+        "js/layers/artificial-intelligence.js",
+        "js/layers/sanctum.js",
+        "js/layers/achievements.js",
+        "js/layers/softcaps.js",
+        "js/layers/autobuyers.js"
+      ],
+      "checks": [
+        "Real registration/full literal/contract inventory; early/middle/late real Decimal comparisons; omission/duplication sensitivity; inherited full suites; guide trace and complete review."
+      ]
+    },
+    {
+      "id": "LAY01-AC02",
+      "paths": [
+        "js/layers.js",
+        "js/tree.js",
+        "js/layers/manifest.js",
+        "index.html",
+        "tests/support/game-runtime.cjs",
+        "tests/support/historical-sources.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/layer-content.test.cjs",
+        "scripts/verify-regressions.cjs",
+        ".github/workflows/test.yml",
+        "docs/developer-guide.md",
+        "docs/milestones/LAY01.preparation.json",
+        "docs/milestones/LAY01.verification.md",
+        "js/layers/blank.js",
+        "js/layers/tree-tab.js",
+        "js/layers/prestige.js",
+        "js/layers/boosters.js",
+        "js/layers/generators.js",
+        "js/layers/time.js",
+        "js/layers/enhance.js",
+        "js/layers/space.js",
+        "js/layers/super-boosters.js",
+        "js/layers/super-generators.js",
+        "js/layers/hindrance.js",
+        "js/layers/quirks.js",
+        "js/layers/solarity.js",
+        "js/layers/subspace.js",
+        "js/layers/magic.js",
+        "js/layers/balance.js",
+        "js/layers/phantom-souls.js",
+        "js/layers/hyper-boosters.js",
+        "js/layers/nebula.js",
+        "js/layers/hyperspace.js",
+        "js/layers/imperium.js",
+        "js/layers/mastery.js",
+        "js/layers/gear.js",
+        "js/layers/machine.js",
+        "js/layers/energy.js",
+        "js/layers/neurons.js",
+        "js/layers/ideas.js",
+        "js/layers/reality.js",
+        "js/layers/artificial-intelligence.js",
+        "js/layers/sanctum.js",
+        "js/layers/achievements.js",
+        "js/layers/softcaps.js",
+        "js/layers/autobuyers.js"
+      ],
+      "checks": [
+        "Real registration/full literal/contract inventory; early/middle/late real Decimal comparisons; omission/duplication sensitivity; inherited full suites; guide trace and complete review."
+      ]
+    },
+    {
+      "id": "LAY01-AC03",
+      "paths": [
+        "js/layers.js",
+        "js/tree.js",
+        "js/layers/manifest.js",
+        "index.html",
+        "tests/support/game-runtime.cjs",
+        "tests/support/historical-sources.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/layer-content.test.cjs",
+        "scripts/verify-regressions.cjs",
+        ".github/workflows/test.yml",
+        "docs/developer-guide.md",
+        "docs/milestones/LAY01.preparation.json",
+        "docs/milestones/LAY01.verification.md",
+        "js/layers/blank.js",
+        "js/layers/tree-tab.js",
+        "js/layers/prestige.js",
+        "js/layers/boosters.js",
+        "js/layers/generators.js",
+        "js/layers/time.js",
+        "js/layers/enhance.js",
+        "js/layers/space.js",
+        "js/layers/super-boosters.js",
+        "js/layers/super-generators.js",
+        "js/layers/hindrance.js",
+        "js/layers/quirks.js",
+        "js/layers/solarity.js",
+        "js/layers/subspace.js",
+        "js/layers/magic.js",
+        "js/layers/balance.js",
+        "js/layers/phantom-souls.js",
+        "js/layers/hyper-boosters.js",
+        "js/layers/nebula.js",
+        "js/layers/hyperspace.js",
+        "js/layers/imperium.js",
+        "js/layers/mastery.js",
+        "js/layers/gear.js",
+        "js/layers/machine.js",
+        "js/layers/energy.js",
+        "js/layers/neurons.js",
+        "js/layers/ideas.js",
+        "js/layers/reality.js",
+        "js/layers/artificial-intelligence.js",
+        "js/layers/sanctum.js",
+        "js/layers/achievements.js",
+        "js/layers/softcaps.js",
+        "js/layers/autobuyers.js"
+      ],
+      "checks": [
+        "Real registration/full literal/contract inventory; early/middle/late real Decimal comparisons; omission/duplication sensitivity; inherited full suites; guide trace and complete review."
+      ]
+    },
+    {
+      "id": "LAY01-AC04",
+      "paths": [
+        "js/layers.js",
+        "js/tree.js",
+        "js/layers/manifest.js",
+        "index.html",
+        "tests/support/game-runtime.cjs",
+        "tests/support/historical-sources.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/layer-content.test.cjs",
+        "scripts/verify-regressions.cjs",
+        ".github/workflows/test.yml",
+        "docs/developer-guide.md",
+        "docs/milestones/LAY01.preparation.json",
+        "docs/milestones/LAY01.verification.md",
+        "js/layers/blank.js",
+        "js/layers/tree-tab.js",
+        "js/layers/prestige.js",
+        "js/layers/boosters.js",
+        "js/layers/generators.js",
+        "js/layers/time.js",
+        "js/layers/enhance.js",
+        "js/layers/space.js",
+        "js/layers/super-boosters.js",
+        "js/layers/super-generators.js",
+        "js/layers/hindrance.js",
+        "js/layers/quirks.js",
+        "js/layers/solarity.js",
+        "js/layers/subspace.js",
+        "js/layers/magic.js",
+        "js/layers/balance.js",
+        "js/layers/phantom-souls.js",
+        "js/layers/hyper-boosters.js",
+        "js/layers/nebula.js",
+        "js/layers/hyperspace.js",
+        "js/layers/imperium.js",
+        "js/layers/mastery.js",
+        "js/layers/gear.js",
+        "js/layers/machine.js",
+        "js/layers/energy.js",
+        "js/layers/neurons.js",
+        "js/layers/ideas.js",
+        "js/layers/reality.js",
+        "js/layers/artificial-intelligence.js",
+        "js/layers/sanctum.js",
+        "js/layers/achievements.js",
+        "js/layers/softcaps.js",
+        "js/layers/autobuyers.js"
+      ],
+      "checks": [
+        "Real registration/full literal/contract inventory; early/middle/late real Decimal comparisons; omission/duplication sensitivity; inherited full suites; guide trace and complete review."
+      ]
+    },
+    {
+      "id": "LAY01-AC05",
+      "paths": [
+        "js/layers.js",
+        "js/tree.js",
+        "js/layers/manifest.js",
+        "index.html",
+        "tests/support/game-runtime.cjs",
+        "tests/support/historical-sources.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/layer-content.test.cjs",
+        "scripts/verify-regressions.cjs",
+        ".github/workflows/test.yml",
+        "docs/developer-guide.md",
+        "docs/milestones/LAY01.preparation.json",
+        "docs/milestones/LAY01.verification.md",
+        "js/layers/blank.js",
+        "js/layers/tree-tab.js",
+        "js/layers/prestige.js",
+        "js/layers/boosters.js",
+        "js/layers/generators.js",
+        "js/layers/time.js",
+        "js/layers/enhance.js",
+        "js/layers/space.js",
+        "js/layers/super-boosters.js",
+        "js/layers/super-generators.js",
+        "js/layers/hindrance.js",
+        "js/layers/quirks.js",
+        "js/layers/solarity.js",
+        "js/layers/subspace.js",
+        "js/layers/magic.js",
+        "js/layers/balance.js",
+        "js/layers/phantom-souls.js",
+        "js/layers/hyper-boosters.js",
+        "js/layers/nebula.js",
+        "js/layers/hyperspace.js",
+        "js/layers/imperium.js",
+        "js/layers/mastery.js",
+        "js/layers/gear.js",
+        "js/layers/machine.js",
+        "js/layers/energy.js",
+        "js/layers/neurons.js",
+        "js/layers/ideas.js",
+        "js/layers/reality.js",
+        "js/layers/artificial-intelligence.js",
+        "js/layers/sanctum.js",
+        "js/layers/achievements.js",
+        "js/layers/softcaps.js",
+        "js/layers/autobuyers.js"
+      ],
+      "checks": [
+        "Real registration/full literal/contract inventory; early/middle/late real Decimal comparisons; omission/duplication sensitivity; inherited full suites; guide trace and complete review."
+      ]
+    },
+    {
+      "id": "LAY01-AC06",
+      "paths": [
+        "js/layers.js",
+        "js/tree.js",
+        "js/layers/manifest.js",
+        "index.html",
+        "tests/support/game-runtime.cjs",
+        "tests/support/historical-sources.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/layer-content.test.cjs",
+        "scripts/verify-regressions.cjs",
+        ".github/workflows/test.yml",
+        "docs/developer-guide.md",
+        "docs/milestones/LAY01.preparation.json",
+        "docs/milestones/LAY01.verification.md",
+        "js/layers/blank.js",
+        "js/layers/tree-tab.js",
+        "js/layers/prestige.js",
+        "js/layers/boosters.js",
+        "js/layers/generators.js",
+        "js/layers/time.js",
+        "js/layers/enhance.js",
+        "js/layers/space.js",
+        "js/layers/super-boosters.js",
+        "js/layers/super-generators.js",
+        "js/layers/hindrance.js",
+        "js/layers/quirks.js",
+        "js/layers/solarity.js",
+        "js/layers/subspace.js",
+        "js/layers/magic.js",
+        "js/layers/balance.js",
+        "js/layers/phantom-souls.js",
+        "js/layers/hyper-boosters.js",
+        "js/layers/nebula.js",
+        "js/layers/hyperspace.js",
+        "js/layers/imperium.js",
+        "js/layers/mastery.js",
+        "js/layers/gear.js",
+        "js/layers/machine.js",
+        "js/layers/energy.js",
+        "js/layers/neurons.js",
+        "js/layers/ideas.js",
+        "js/layers/reality.js",
+        "js/layers/artificial-intelligence.js",
+        "js/layers/sanctum.js",
+        "js/layers/achievements.js",
+        "js/layers/softcaps.js",
+        "js/layers/autobuyers.js"
+      ],
+      "checks": [
+        "Real registration/full literal/contract inventory; early/middle/late real Decimal comparisons; omission/duplication sensitivity; inherited full suites; guide trace and complete review."
+      ]
+    }
+  ]
+}
