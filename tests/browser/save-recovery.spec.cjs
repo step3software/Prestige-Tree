@@ -35,6 +35,35 @@ async function failWrites(page, denied) {
   }, denied);
 }
 
+test('a TST01 prototype save loads, survives failed saving and can be renamed after retry', async ({ page }) => {
+  const { storage } = require('../fixtures/tst01-prototype-collection.json');
+  await page.evaluate(raw => localStorage.setItem('ptr', raw), storage.ptr);
+  await page.reload();
+  await expect(page.locator('#p')).toBeVisible();
+  await menu(page);
+  await expect(page.locator('.activeSave')).toHaveText('prototype');
+  await options(page);
+  await failWrites(page, true);
+  await page.getByRole('button', {name:'Save',exact:true}).click();
+  await expect(page.getByRole('status')).toContainText('unsaved');
+  expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(storage.ptr);
+  await failWrites(page, false);
+  await page.getByRole('button', {name:'Save',exact:true}).click();
+  await expect(page.getByRole('status')).toHaveText('Saved in this browser.');
+  await menu(page);
+  page.once('dialog', dialog => dialog.accept('renamed'));
+  await page.locator('.upgRow').filter({has:page.locator('.activeSave')})
+    .getByRole('button', {name:'Rename',exact:true}).click();
+  await expect(page.locator('.activeSave')).toHaveText('renamed');
+  await page.reload();
+  await expect(page.locator('#p')).toBeVisible();
+  const durable = await page.evaluate(() => JSON.parse(atob(localStorage.getItem('ptr'))));
+  expect(durable.set).toBe('renamed');
+  expect(durable.renamed.points).toBe('456');
+  expect(durable.save1.points).toBe('123');
+  expect(Object.hasOwn(durable, 'prototype')).toBe(false);
+});
+
 for (const width of [1280, 320]) {
   test(`save and import failure retain valid progress, show truthful live feedback and retry at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({width,height:800});

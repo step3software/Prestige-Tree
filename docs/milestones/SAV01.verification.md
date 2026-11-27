@@ -219,3 +219,26 @@ under separate owner coordination. This run performs no merge, deployment,
 activation, native milestone acceptance or permission/policy change. The next
 defined milestone is **SIM01 — Deterministic simulation and explicit runtime lifecycle**;
 it needs its own fresh source/standards/dependency/preparation checks and authority.
+
+## Stack review correction R2 — 27 November 2026
+
+The owner requested the full-stack review fixes. Save-name dictionary validation
+now accepts TST01's ordinary own `prototype` slot. Inherited Object prototype
+names (including `__proto__` and `constructor`) remain rejected. Recursive player
+copying retains all three prohibited keys, including nested `prototype`; this is
+not a schema change, alternate reader or lossy name conversion.
+
+`tests/fixtures/tst01-prototype-collection.json` is the actual immutable TST01
+`379241b` writer's synthetic New Save → reload → save output, with selected
+`prototype` progress 456 and sibling `save1` progress 123. The prior reader rejects
+these bytes; the new focused rule checks pass load, canonical identity, failed
+write/original retention, retry, reload and rename. Hostile collection names and
+nested prototype keys remain rejected. The rendered journey is in
+`tests/browser/save-recovery.spec.cjs`; full-suite results accompany publication.
+
+Requirements: SAV01 AC01/04/05/07, local save-preservation, shared migration/data
+preservation and RC-04/07. README → developer guide → `js/save-codec.js` /
+`js/saves.js` → `tests/rules/save-boundary.test.cjs` supplies the reproducible route.
+Use the inherited [current-main standards observation](stack-review-fix-standards.json).
+This bounded correction preserves accepted scope and legacy authority. R4 is
+carried from the parent by merge; original commits and PR bases remain intact.
