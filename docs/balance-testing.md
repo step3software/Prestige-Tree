@@ -130,7 +130,7 @@ The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simul
 
 `policy.cjs` uses one construction project at a time, restarts available expeditions, buys automation and enables separate repeat orders. It funds later Food autonomy through Education and retained Craft. The observed best policy is not a proven optimum or actual-user timing. No manual choices occur between configured checks; batch jobs, construction and earned automation continue normally.
 
-Buyables now reset on either prestige until lifetime Organization protects Water at 1, Food at 3 and Shelter at 5. Policies earn the first Craft, then prioritize these retention milestones before repeated Craft gains. The catalog records each retention threshold; all active/regular opening runs must reach all three. Auto-building is earned at 2 lifetime Organization and remains available after spending it. This policy revision exercises the new reset rules through legal play rather than granting retained infrastructure.
+Policies exercise all ten Organization milestones through legal commands. First obtain the opening Craft, then prioritize Organization while maintaining enough Craft to buy unlocked upgrades. Only named buyables survive their individual milestones (reservoirs 4, Food baskets 5, wells 6, gathering equipment 7, hunting equipment 8, fishing equipment 9, huts 10). Auto-building requires 10 lifetime Organization. Provisioning, farming tools and home improvements still reset. Each opening completion must reach every Organization checkpoint and purchase farming; a shorter run cannot imply ten-milestone coverage. The active/regular policies also exercise the single initial Craft choice per node and the first three unlock gates.
 
 ## Rough and fixed calibration
 

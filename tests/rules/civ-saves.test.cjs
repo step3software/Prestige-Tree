@@ -56,7 +56,7 @@ test('export/import round trip retains the simulation remainder and building pro
 
 test('active crews and repeat orders survive a codec round trip without duplicate yield',t=>{
     const r=open(t);
-    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.toggleRepeat("gather");e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
+    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.organization.total=new Decimal(5);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.toggleRepeat("gather");e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
     const target=open(t);target.io.prompt=r.run('encoded');
     assert.equal(target.run('gameUI.commands.importSave()'),true);
     target.run('p=s.saveState.player');
@@ -95,10 +95,10 @@ test('malformed action contracts and overcommitted crews are rejected before act
 
 test('spent Organization retains milestone progress across saving and reload',t=>{
     const r=open(t);
-    r.run('p.organization.total=new Decimal(5);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
+    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
     const restored=open(t,{storage:Object.fromEntries(r.data)});
-    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),4);
-    assert.equal(restored.run('e.prestigePreview("craft").kept.shelter'),true);
+    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),10);
+    assert.equal(restored.run('e.prestigePreview("craft").kept["shelter-home"]'),true);
     assert.equal(restored.run('p.food.routes.fish'),2);
     assert.equal(restored.run('e.summary().autoAvailable'),true);
 });

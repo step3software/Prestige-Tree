@@ -43,7 +43,7 @@ test('prestige preview, cancellation and confirmation match retained game state'
     // Synthetic prepared economy isolates the destructive-action UI contract.
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.food.routes.gather=2;p.shelter.homes=1;p.shelter.points=new Decimal(12);});
     await node(page,'Craft').click();
-    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Food, Water, Shelter buyables');
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Gathering baskets');
     await expect(page.getByTestId('prestige-keep-preview')).toContainText('Population; permanent upgrades; repeat orders');
     page.once('dialog',dialog=>dialog.dismiss());
     await page.getByRole('button',{name:'Develop Craft',exact:true}).click();
@@ -59,22 +59,45 @@ test('prestige preview, cancellation and confirmation match retained game state'
     expect(errors).toEqual([]);
 });
 
-test('Organization shows permanent milestones and previews rewards earned by the next prestige',async({page})=>{
+test('Organization previews exact buyable protection earned by the next milestone',async({page})=>{
     const errors=await open(page);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.routes.gather=2;p.water.sites=2;p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.routes.gather=2;p.water.sites=2;p.water.storage=2;p.organization.total=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await node(page,'Organization').click();
     await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
-    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Water buyables');
-    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Food, Shelter buyables');
+    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Reservoirs');
+    await expect(page.getByTestId('prestige-keep-preview')).not.toContainText('Well improvements');
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Gathering baskets');
+    await expect(page.getByText('4 Organization · Reservoir records · Locked',{exact:true})).toBeVisible();
     page.once('dialog',dialog=>dialog.accept());
     await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
-    await expect(page.getByText('1 Organization · Water records · Earned',{exact:true})).toBeVisible();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.sites)).toBe(2);
+    await expect(page.getByText('4 Organization · Reservoir records · Earned',{exact:true})).toBeVisible();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.storage)).toBe(2);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.water.sites)).toBe(0);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(0);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.points=new Decimal(0);});
-    await expect(page.getByText('1 Organization · Water records · Earned',{exact:true})).toBeVisible();
+    await page.evaluate(()=>{gameUI.session.saveState.player.organization.points=new Decimal(0);});
+    await expect(page.getByText('4 Organization · Reservoir records · Earned',{exact:true})).toBeVisible();
+    await expect(page.getByRole('button',{name:/^Auto-build:/})).toHaveCount(0);
     expect(errors).toEqual([]);
 });
+
+test('each foundation starts with one Craft upgrade and Organization reveals purchases',async({page})=>{
+    const errors=await open(page);
+    const upgradePanel=()=>page.locator('.projects').filter({has:page.getByRole('heading',{name:'Craft upgrades · keep through prestige',exact:true})});
+    for(const [resource,name] of [['Food','Coordinated hunting'],['Water','Carrying yokes'],['Shelter','Shared hearths']]){
+        await node(page,resource).click();
+        await expect(upgradePanel().getByRole('button')).toHaveCount(1);
+        await expect(upgradePanel().getByRole('button',{name:new RegExp('^'+name)})).toBeVisible();
+    }
+    await node(page,'Food').click();
+    await expect(page.getByRole('button',{name:/^Fishing nets/})).toHaveCount(0);
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(1);p.craft.points=new Decimal(1);p.food.points=new Decimal(20);});
+    await expect(page.getByRole('button',{name:/^Fishing nets/})).toBeEnabled();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.improvements.fishing)).toBe(false);
+    await page.getByRole('button',{name:/^Fishing nets/}).click();
+    await expect(page.getByRole('button',{name:/^Fishing nets · Owned/})).toBeDisabled();
+    expect(errors).toEqual([]);
+});
+
 test('save, reload, native save dialog and denied import preserve progress',async({page})=>{
     const errors=await open(page);
     await page.evaluate(()=>{gameUI.session.advance(30);localStorage.setItem('ptr','keep-original');});
@@ -180,7 +203,7 @@ test('overseer controls repeat staffed trips and Water upgrades remove hauling w
     const errors=await open(page);
     // Prepared resources isolate actual purchase/repeat controls; fresh legal
     // reachability and pacing are covered by the balance policy tests.
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(10);p.organization.points=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(10);p.organization.points=new Decimal(3);p.organization.total=new Decimal(6);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await page.getByRole('button',{name:/^Expedition overseer/}).click();
     await page.getByRole('button',{name:'Gather repeat: off',exact:true}).click();
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(0);p.food.points=new Decimal(0);gameUI.session.advance(22);});

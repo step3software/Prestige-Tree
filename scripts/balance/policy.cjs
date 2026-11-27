@@ -15,14 +15,15 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['buckets','waterOrders','overseer','gravity','hunting','fishing','farming','hearth','joinery','builderTools','sluice','autonomousFood']){
+    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','waterOrders','overseer','gravity','farming','builderTools','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
-    const sequence=settings.first==='organization'?['organization','craft']:['craft','organization'];
+    const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];
+    const sequence=p.craft.total.gte(1)?['organization','craft']:opening;
     for(const id of sequence){
-      const needsRetention=p.organization.total.lt(5);
+      const needsRetention=p.organization.total.lt(10);
       const wanted=id==='organization'?p.organization.points.lt(3)||needsRetention:
-        p.craft.points.lt(15)&&(!needsRetention||p.craft.total.lt(1));
+        p.craft.points.lt(needsRetention?3:15);
       if(wanted && economy.prestigeGain(id)>0 && economy.prestige(id))record('prestige',id,time);
     }
     if(economy.summary().autoAvailable && !p.civ.autoBuild){p.civ.autoBuild=true;record('automation','organization',time);}

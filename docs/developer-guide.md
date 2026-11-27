@@ -32,7 +32,9 @@ The server exposes the exact generated `dist/` bytes on `http://127.0.0.1:8000/`
 
 For a Water change: follow `README` -> this table -> `actionDefinition()`, `dispatch()`, `advanceActions()` and `step()` in `js/civilization.js`. The same owner defines Water upgrades and irrigation. Identify the canonical saved action record, advance it through the registered Food update, then inspect the Water panel in `index.html`. Copy the nearby hauling/flow regression from the economy suite. Avoid maintaining a second UI copy of persistent state.
 
-For prestige retention: follow `organizationRewards` -> `organizationMilestones()` (lifetime `organization.total`) -> `prestigePreview()` -> `prestige()`. The node panel and native confirmation consume that same plan. The economy suite covers exact earning thresholds, spending, housing below Population, crew safety and protected/unprotected construction; the browser suite exercises preview, cancellation, confirmation and earned milestone display.
+For Craft unlocks: follow organizationRewards -> upgradeRequirement() -> upgrades() / buyUpgrade() in js/civilization.js. Exactly one initial upgrade is visible in each foundation. The same lifetime milestones gate visibility and affordability; locked upgrades reject even fully funded direct calls. The organization-progression rule suite owns these boundaries and all ten exact retention thresholds.
+
+For prestige retention: follow `organizationRewards` -> `organizationMilestones()` (lifetime `organization.total`) -> `prestigePreview()` -> `prestige()`. The node panel and native confirmation consume that same plan. Retention keys are exact buyable/project IDs. The economy suite covers exact earning thresholds, spending, housing below Population, crew safety and protected/unprotected construction; the browser suite exercises preview, cancellation, confirmation and earned milestone display.
 
 ## State and simulation contracts
 
