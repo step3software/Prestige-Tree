@@ -12,6 +12,18 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
   const data = new Map(Object.entries(storage));
   const intervals = new Map();
   const alerts = [];
+  const callbacks = [];
+  const listeners = new Map();
+  function eventTarget(name) {
+    return {
+      addEventListener(type, fn) {
+        const key = `${name}:${type}`;
+        if (!listeners.has(key)) listeners.set(key, new Set());
+        listeners.get(key).add(fn);
+      },
+      removeEventListener(type, fn) { listeners.get(`${name}:${type}`)?.delete(fn); },
+    };
+  }
   const clock = { now: 1700000000000 };
   const io = { prompt: null, confirm: false, storageError: false, readError: false, writes: 0, reloads: 0, clipboard: '' };
   const elements = Object.fromEntries(['styleStuff', 'save-status', 'save-recovery', 'save-original', 'app'].map(id => [id, { hidden: true, textContent: '', value: '' }]));
@@ -23,12 +35,13 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
   const context = vm.createContext({
     console, Date: ControlledDate, Vue,
     document: {
+      ...eventTarget("document"),
       body: { style: { setProperty() {} }, appendChild() {}, removeChild() {} },
       getElementById: id => elements[id] ?? null,
       createElement: () => ({ value: '', select() { io.clipboard = this.value; }, setSelectionRange() {} }),
       execCommand: () => true,
     },
-    window: { addEventListener() {}, location: { reload() { io.reloads++; } } },
+    window: { ...eventTarget("window"), location: { reload() { io.reloads++; } } },
     localStorage: {
       getItem: key => {
         if (io.readError) throw new Error('Synthetic storage read denial');
@@ -42,7 +55,7 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
     },
     // Use Node's standards-compatible implementations, including malformed base64 rejection.
     atob, btoa,
-    setInterval: (fn, ms) => { const id = ++nextTimer; intervals.set(id, { fn, ms }); return id; },
+    setInterval: (fn, ms) => { const id = ++nextTimer; intervals.set(id, { fn, ms }); callbacks.push({fn, ms, id}); return id; },
     clearInterval: id => intervals.delete(id),
     setTimeout: () => ++nextTimer, clearTimeout() {},
     prompt: () => io.prompt, confirm: () => io.confirm,
@@ -54,10 +67,12 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
   const run = code => vm.runInContext(code, context, { timeout: 10000 });
   const fire = ms => {
     const timer = [...intervals.values()].find(item => item.ms === ms);
-    if (!timer) throw new Error(`No ${ms}ms timer registered`);
-    timer.fn();
+    timer?.fn();
   };
-  return { run, fire, data, clock, io, alerts, elements, dispose: () => intervals.clear() };
+  return { run, fire, data, clock, io, alerts, elements, intervals, callbacks, listeners,
+    emit: (target, type, event = {}) => { for (const fn of [...(listeners.get(`${target}:${type}`) ?? [])]) fn(event); },
+    dispose: () => { run('if (typeof gameRuntime !== "undefined" && gameRuntime) gameRuntime.dispose();'); intervals.clear(); },
+  };
 }
 
 function loadedRuntime(options) {

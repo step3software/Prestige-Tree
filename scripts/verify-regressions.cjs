@@ -35,7 +35,7 @@ const baselineSources = Object.fromEntries(files.map(file => [file,
   execFileSync('git', ['show', `${baseline}:${file}`], {cwd: root, encoding: 'utf8'})]));
 // The immutable baseline predates extraction. Do not overlay new command owners
 // onto it, which would make a historical failure falsely appear repaired.
-for (const file of ['js/save-codec.js', 'js/save-storage.js', 'js/saves.js']) baselineSources[file] = '';
+for (const file of ['js/save-codec.js', 'js/save-storage.js', 'js/saves.js', 'js/game-runtime.js']) baselineSources[file] = '';
 for (const [id, check] of Object.entries(checks)) {
   exercise(check, {});
   assert.throws(() => exercise(check, baselineSources), undefined, `${id} did not fail at the immutable baseline`);
@@ -43,7 +43,7 @@ for (const [id, check] of Object.entries(checks)) {
 }
 const predecessorSources = Object.fromEntries(files.map(file => [file,
   execFileSync('git', ['show', `379241bd94cf50ca6423e07f1ad68c567edcb6a0:${file}`], {cwd: root, encoding: 'utf8'})]));
-for (const file of ['js/save-codec.js', 'js/save-storage.js', 'js/saves.js']) predecessorSources[file] = '';
+for (const file of ['js/save-codec.js', 'js/save-storage.js', 'js/saves.js', 'js/game-runtime.js']) predecessorSources[file] = '';
 const failedSelection = r => {
   r.run('allSaves.second = getStartPlayer(); save(); var previousPlayer = player;');
   const durable = r.data.get('ptr');
@@ -70,5 +70,26 @@ mutation('js/save-storage.js', 'if (!encoded.ok) return encoded;', 'if (!encoded
   assert.equal(r.data.get('ptr'), before, 'Invalid candidate overwrote durable progress');
 });
 console.log('Candidate-validation mutation: FAIL detected (in-memory source only)');
-mutation('js/game.js', 'modInfo.offlineLimit * 3600', 'modInfo.offlineLimit * 3600000', checks.F2);
+mutation('js/game-runtime.js', 'Math.max(state.offTime.remain, 0), offlineLimitHours * 3600', 'Math.max(state.offTime.remain, 0), offlineLimitHours * 3600000', checks.F2);
 console.log('Offline-cap mutation: FAIL detected (in-memory source only)');
+
+const stoppedCallback = r => {
+  r.run('doReset("p"); buyUpg("p",11); updateTemp(); player.offTime = null;');
+  const queued = r.callbacks.find(item => item.ms === 50).fn;
+  r.run('gameRuntime.stop();');
+  const before = r.run('JSON.stringify(player)');
+  r.clock.now += 1000;
+  queued();
+  assert.equal(r.run('JSON.stringify(player)'), before, 'Stopped callback mutated progress');
+  assert.equal(r.io.writes, 0);
+  r.run('gameRuntime.start();');
+  const restarted = r.run('JSON.stringify(player)');
+  queued();
+  assert.equal(r.run('JSON.stringify(player)'), restarted, 'Old generation mutated restarted progress');
+};
+exercise(stoppedCallback, {});
+mutation('js/game-runtime.js', 'if (state !== "running" || token !== generation || busy) return;', 'if (busy) return;', stoppedCallback);
+console.log('Stopped-generation mutation: FAIL detected (in-memory source only)');
+
+mutation('js/game-runtime.js', 'token !== generation || ', '', stoppedCallback);
+console.log('Restart-generation mutation: FAIL detected (in-memory source only)');

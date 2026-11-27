@@ -45,7 +45,8 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 | Page startup and script order | `index.html` → `load()` in `js/saves.js` | [Main mod info](main-mod-info.md) |
 | Game identity, version, point rules | `js/mod.js` | [Main mod info](main-mod-info.md) |
 | Layer costs, rewards, upgrades and progression | `js/layers.js`; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
-| Tick and reset calculations | `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
+| Explicit advancement and resets | `advanceGame(session, elapsedSeconds)` in `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
+| Runtime clock, offline budget, timers and listeners | `js/game-runtime.js` → `startGameRuntime` / `createGameRuntime` | [Lifecycle below](#simulation-and-runtime-lifecycle) |
 | Save commands, active state and recovery UI | `js/saves.js` (`save`, `load`, `exportSave`, `importSave`, menu commands) | [Save boundaries below](#save-boundaries-and-recovery) |
 | Pure save data/defaults, validation and conversion | `js/save-codec.js` (`createSaveCodec`, `createSavePlayer`) | [Mod configuration](main-mod-info.md) |
 | Durable storage I/O | `js/save-storage.js` (`createSaveStorage`) | [Save boundaries below](#save-boundaries-and-recovery) |
@@ -86,6 +87,7 @@ the final required suite must run without filtering, skips or retries.
 | --- | --- |
 | Prestige, purchases, resets, Decimal round-trips | [progression.test.cjs](../tests/rules/progression.test.cjs): real `load` → `doReset` → `buyUpg` → tick → `save`/reload |
 | Import validation, atomic persistence, save menu | [save-safety.test.cjs](../tests/rules/save-safety.test.cjs) and [save-boundary.test.cjs](../tests/rules/save-boundary.test.cjs): `importSave` → pure codec → storage adapter → activation → reload; rejection keeps active/durable state |
+| Lifecycle, races, replay and before/after equivalence | [runtime-lifecycle.test.cjs](../tests/rules/runtime-lifecycle.test.cjs) and [runtime-lifecycle.spec.cjs](../tests/browser/runtime-lifecycle.spec.cjs): explicit advance → stop/restart/stale callbacks → fault/reload; real page and unchanged game formulas |
 | Offline elapsed time and bank consumption | [clock.test.cjs](../tests/rules/clock.test.cjs): `load` accumulation → the actual 50ms tick; bank units are seconds, `offlineLimit` is hours |
 | Rendered controls and recovery | [game.spec.cjs](../tests/browser/game.spec.cjs) and [save-recovery.spec.cjs](../tests/browser/save-recovery.spec.cjs): actual page, Options/Import, prestige/save menu, live error status and blocked startup recovery |
 
@@ -147,6 +149,52 @@ py -3 -B "$orchaCheckout\standards_check.py" --repository . --orcha "$orchaCheck
 This observes remote Orcha `main` and checks manifest/reference integrity. Success
 reports `reference_valid: true`; it does not certify workflow exercise, game
 correctness, domain compliance or milestone acceptance.
+
+## Simulation and runtime lifecycle
+
+Follow README → this source map → `load()` in `js/saves.js` →
+`startGameRuntime()` in `js/game-runtime.js` → `advanceGame()` in `js/game.js`.
+Run `node --test tests/rules/runtime-lifecycle.test.cjs` from the worktree root;
+expected result: every case passes. The nearby tests show how to advance real
+rules without timers and compare meaningful before/after state against immutable
+SAV01. Final milestone verification still requires the complete `npm test` suite.
+
+`createGameSession()` captures the active player and derived-state identity.
+`advanceGame(session, elapsedSeconds)` accepts finite, nonnegative seconds,
+updates derived values, runs the existing ordered rules and checks player values.
+It reads no wall clock, storage or DOM and starts no timers or dialogs. Rule
+helpers retain their context-local globals pending DEV01; this is one session per
+script context, with stale/disposed identities rejected. Use separate contexts
+for independent sessions. It preserves both existing development-speed
+multipliers and nonlinear tick order. Identical fixtures and ordered action/time
+steps replay deterministically; arbitrary chunk sizes need not produce equal results.
+
+`createGameRuntime({session, clock, scheduler, resume, tick, refresh, autosave,
+listeners, onError, onStop})` owns three intervals (50ms calculation, 500ms canvas
+invalidation, 5000ms autosave) and removable keyboard/resize/wheel/pagehide
+listeners. `clock.now()` returns milliseconds; scheduler ports are `setInterval`
+and `clearInterval`. Ports are called through a session/generation fence and
+exceptions stop the whole runtime. Evaluating scripts does not register resources.
+Successful `load()` validates SAV01 state, prepares temp/Vue, then explicitly
+starts the browser composition. Repeated loading disposes the prior runtime and
+rebinds the existing Vue; ordinary save retains the active session. Successful
+selection/import/reset replacement disposes it before reload can occur.
+
+`start()` is idempotent; `stop()` clears timers/listeners and allows restart;
+`dispose()` is idempotent and terminal. Error is terminal for the page session:
+partial mutations cannot be retried or saved. The visible live status and native
+alert instruct reload to restore the previous durable save. Calculation, derived
+state, render, listener and unexpected autosave callback failures share this gate.
+Ordinary storage denial remains SAV01's recoverable unsaved/retry result. Direct
+advancement errors also latch saving protection and propagate to the caller.
+
+The runtime alone converts observed milliseconds to seconds and budgets offline
+time. Start/restart adds unobserved time to the capped offline bank once; ticks
+consume the established 10%/elapsed policy. `offlineLimit` is hours, bank and
+advancement are seconds. A backwards clock cannot lower the observed high-water
+mark and credit the same period twice. Disabled offline production drops the
+bank. Saved schema/key/settings remain unchanged. Pagehide disposes a departing
+page; a browser-cached page retains its owner while the browser suspends it.
 
 ## Save boundaries and recovery
 
@@ -223,3 +271,10 @@ target remains `master`; retarget/rebase only after coordinating the parent merg
 and rechecking the resulting diff. [SAV01 preparation](milestones/SAV01.preparation.json)
 and [verification](milestones/SAV01.verification.md) retain the exact authorized
 source, file scope, current-main standards hashes and delivery evidence.
+
+SIM01 continues the owner-authorized stack: `codex/sim01-runtime-lifecycle`
+targets `codex/sav01-save-boundaries` ([PR #3](https://github.com/step3software/Prestige-Tree/pull/3)),
+which depends on PR #2 above. Preserve both parents while unmerged; final
+integration remains `master`. [SIM01 preparation](milestones/SIM01.preparation.json)
+and [verification](milestones/SIM01.verification.md) bind the exact file scope,
+source and standards observation. No native stage acceptance is inferred.

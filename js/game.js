@@ -394,36 +394,28 @@ var ticking = false
 // A failed tick may leave partial mutations. Only a reload restores a safe state.
 var tickFaulted = false
 
-var interval = setInterval(function() {
-	if (player===undefined||tmp===undefined) return;
-	if (ticking || tickFaulted) return;
-	if (gameEnded&&!player.keepGoing) return;
-	ticking = true
+/** Advance the active identity-bound session by elapsed seconds, without I/O.
+ * Rule globals remain scoped to this engine context until DEV01. Callers own
+ * clock/offline budgeting and effects; errors propagate to their lifecycle owner.
+ */
+function advanceGame(session, elapsedSeconds) {
+	if (!isCurrentGameSession(session)) throw new Error("Superseded game session");
+	if (tickFaulted) throw new Error("Reload required after runtime failure");
+	if (!Number.isFinite(elapsedSeconds) || elapsedSeconds < 0) throw new Error("Expected finite nonnegative elapsed seconds");
+	if (ticking) throw new Error("Game advancement is already in progress");
+	if (gameEnded && !player.keepGoing) return;
+	ticking = true;
 	try {
-		let now = Date.now()
-		let diff = Math.max((now - player.time) / 1e3, 0)
-		if (!player.offlineProd) player.offTime = null;
-		if (player.offTime !== undefined && player.offTime !== null) {
-			player.offTime.remain = Math.min(Math.max(player.offTime.remain, 0), modInfo.offlineLimit * 3600);
-			if (player.offTime.remain > 0) {
-				let offlineDiff = Math.min(player.offTime.remain, Math.max(player.offTime.remain / 10, diff))
-				player.offTime.remain -= offlineDiff
-				diff += Math.max(offlineDiff, 0)
-			}
-			if (player.offTime.remain <= 0) player.offTime = null;
-		}
-		if (player.devSpeed) diff *= player.devSpeed
-		player.time = now
-		if (needCanvasUpdate) resizeCanvas();
+		// Preserve the historical pre-loop multiplier as well as gameLoop's own
+		// multiplier. Changing development-speed balance is outside SIM01.
+		if (player.devSpeed) elapsedSeconds *= player.devSpeed;
 		updateTemp();
-		gameLoop(diff)
-		fixNaNs()
+		gameLoop(elapsedSeconds);
+		fixNaNs();
 	} catch (error) {
 		tickFaulted = true;
-		alert("The game could not finish a tick. Progression and saving are paused to protect your saved progress. Reload the page to recover your last save.");
+		throw error;
 	} finally {
 		ticking = false;
 	}
-}, 50)
-
-setInterval(function() {needCanvasUpdate = true}, 500)
+}

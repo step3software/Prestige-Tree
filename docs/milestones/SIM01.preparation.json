@@ -303,5 +303,103 @@
     "task": "Open/resume synthetic progress, prestige/purchase, save/reload, offline return; on a runtime fault recover last durable progress with reload.",
     "verification": "Required real-page Chromium plus controlled real-script/Decimal tests; actual users/other engines not claimed."
   },
-  "documentation_assessment": "README \u2192 developer guide is useful; repair moved tick/autosave/clock owners there. No reorganization or measured navigation savings."
+  "documentation_assessment": "README \u2192 developer guide is useful; repair moved tick/autosave/clock owners there. No reorganization or measured navigation savings.",
+  "execution_handoff_revision": "6af9877",
+  "coverage_clarification": "Scope-preserving criterion/file mapping made explicit during final review; original exact-file handoff was validated and committed at 6af9877 before production/test edits. No source, plan, allowed-path or authority change.",
+  "criterion_mapping": [
+    {
+      "id": "SIM01-AC01",
+      "paths": [
+        "js/game.js",
+        "js/game-runtime.js",
+        "js/technical/temp.js",
+        "js/utils.js",
+        "tests/rules/runtime-lifecycle.test.cjs"
+      ],
+      "checks": [
+        "Hostile clock/DOM/storage/timer/dialog ports; identical action/time replay; finite elapsed/identity rejection before mutation."
+      ]
+    },
+    {
+      "id": "SIM01-AC02",
+      "paths": [
+        "js/game-runtime.js",
+        "js/saves.js",
+        "tests/rules/clock.test.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs"
+      ],
+      "checks": [
+        "Zero/backwards high-water marks, cap boundaries, disabled offline, repeated catch-up/start, same period never doubled."
+      ]
+    },
+    {
+      "id": "SIM01-AC03",
+      "paths": [
+        "index.html",
+        "demo.html",
+        "js/game-runtime.js",
+        "js/game.js",
+        "js/saves.js",
+        "js/utils.js",
+        "js/technical/canvas.js",
+        "tests/rules/runtime-lifecycle.test.cjs"
+      ],
+      "checks": [
+        "Evaluation/blocked-load resource count zero; explicit validated startup owns three intervals and five listeners; real page startup."
+      ]
+    },
+    {
+      "id": "SIM01-AC04",
+      "paths": [
+        "js/game-runtime.js",
+        "js/saves.js",
+        "tests/support/game-runtime.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "scripts/verify-regressions.cjs"
+      ],
+      "checks": [
+        "Repeated start/stop/dispose, restart, old callback delivery both stopped and restarted, replacement/load/import identity fences, isolated contexts and mutations."
+      ]
+    },
+    {
+      "id": "SIM01-AC05",
+      "paths": [
+        "js/game-runtime.js",
+        "js/game.js",
+        "js/saves.js",
+        "js/technical/temp.js",
+        "js/utils.js",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/browser/runtime-lifecycle.spec.cjs"
+      ],
+      "checks": [
+        "Calculation/derived/render/input/refresh/NaN/autosave/startup/scheduler exceptions, finally guard, no durable write, terminal error and real reload recovery."
+      ]
+    },
+    {
+      "id": "SIM01-AC06",
+      "paths": [
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/clock.test.cjs",
+        "tests/rules/progression.test.cjs",
+        "scripts/verify-regressions.cjs"
+      ],
+      "checks": [
+        "Complete-player checkpoints vs immutable SAV01 for reset/progression/devSpeed, offline return, huge Decimal fixture; original F1-F3 and sensitivity retained."
+      ]
+    },
+    {
+      "id": "SIM01-AC07",
+      "paths": [
+        "tests/browser/runtime-lifecycle.spec.cjs",
+        "tests/browser/game.spec.cjs",
+        "tests/browser/save-recovery.spec.cjs",
+        "docs/developer-guide.md",
+        ".github/workflows/test.yml"
+      ],
+      "checks": [
+        "Real-page startup/prestige/purchase/save/reload/offline, repeated load and hotkey stop/resume, 1280/320px live status/keyboard recovery; guide route and exact-head CI."
+      ]
+    }
+  ]
 }

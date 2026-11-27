@@ -95,17 +95,8 @@ function NaNcheck(data) {
 		else if (Array.isArray(data[item])) {
 			NaNcheck(data[item])
 		}
-		else if (data[item] !== data[item] || data[item] === decimalNaN){
-			console.log("DATA: "+JSON.stringify(data));
-			if (NaNalert === true || confirm ("Invalid value found in player, named '" + item + "'. Please let the creator of this mod know! Would you like to try to auto-fix the save and keep going?")){
-				NaNalert = true
-				data[item] = (data[item] !== data[item] ? 0 : decimalZero)
-			}
-			else {
-				clearInterval(interval);
-				player.autosave = false;
-				NaNalert = true;
-			}
+		else if (data[item] !== data[item] || data[item] === decimalNaN || (data[item] instanceof Decimal && [data[item].sign, data[item].layer, data[item].mag].some(Number.isNaN))){
+			throw new Error("Invalid value in player: " + item);
 		}
 		else if (data[item] instanceof Decimal) { // Convert to Decimal
 		}
@@ -636,7 +627,7 @@ function layOver(obj1, obj2) {
 
 var minusHeld = false;
 
-document.onkeydown = function(e) {
+function gameKeyDown(e) {
 	if (player===undefined) return;
 	if (gameEnded&&!player.keepGoing) return;
 	let ctrlDown = e.ctrlKey
@@ -652,7 +643,8 @@ document.onkeydown = function(e) {
 	}
 }
 
-document.onkeyup = function(e) {
+function gameKeyUp(e) {
+	if (player === undefined) return;
 	if (e.key=="-" && !player.tapNerd) tmp.nerdMode = false;
 	if (e.key=="-") minusHeld = false;
 }
@@ -710,5 +702,3 @@ function prestigeButtonText(layer)
 function isFunction(obj) {
 	return !!(obj && obj.constructor && obj.call && obj.apply);
   };
-  
-document.title = modInfo.name

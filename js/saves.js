@@ -41,6 +41,7 @@ function currentSaveCollection() {
 }
 
 function activateSaveCollection(collection) {
+	if (gameRuntime && player !== collection[collection.set]) gameRuntime.dispose();
 	allSaves = collection;
 	player = collection[collection.set];
 	if (typeof app !== "undefined" && app) {
@@ -178,6 +179,8 @@ function blockSaveLoading(result) {
 }
 
 function load() {
+	if (tickFaulted) return false;
+	if (gameRuntime) gameRuntime.dispose();
 	let now = Date.now();
 	let codec = saveCodec(now);
 	let result = saveStorage.read(codec);
@@ -201,22 +204,24 @@ function load() {
 	if (recovery) recovery.hidden = true;
 	if (game) game.hidden = false;
 	activateSaveCollection(collection);
-	if (player.offlineProd) {
-		if (player.offTime === undefined || player.offTime === null) player.offTime = { remain: 0 };
-		let elapsedSeconds = Math.max((now - player.time) / 1000, 0);
-		player.offTime.remain = Math.min(Math.max(player.offTime.remain, 0) + elapsedSeconds, modInfo.offlineLimit * 3600);
-	} else player.offTime = null;
-	player.time = now;
-	changeTheme();
-	changeTreeQuality();
-	updateLayers();
-	setupTemp();
-	updateTemp();
-	updateTemp();
-	updateTemp();
-	loadVue();
-	player.saveMenuOpen = false;
-	return true;
+
+	try {
+		document.title = modInfo.name;
+		changeTheme();
+		changeTreeQuality();
+		updateLayers();
+		setupTemp();
+		updateTemp();
+		updateTemp();
+		updateTemp();
+		if (typeof app !== "undefined" && app) app.tmp = tmp;
+		else loadVue();
+		player.saveMenuOpen = false;
+		return startGameRuntime();
+	} catch (error) {
+		reportRuntimeFault(error);
+		return false;
+	}
 }
 
 function exportSave() {
@@ -270,9 +275,3 @@ function rejectedSaveImport(reason) {
 	alert(message);
 	return false;
 }
-
-var saveInterval = setInterval(function() {
-	if (player === undefined || allSaves === undefined || tickFaulted || saveRecovery.required) return;
-	if (gameEnded && !player.keepGoing) return;
-	if (player.autosave) save();
-}, 5000);

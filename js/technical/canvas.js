@@ -1,8 +1,6 @@
 var canvas;
 var ctx;
 
-window.addEventListener("resize", (_=>resizeCanvas()));
-window.addEventListener('wheel', (_=>resizeCanvas()));
 
 function retrieveCanvasData() {
 	let treeCanv = document.getElementById("treeCanvas")
