@@ -1,0 +1,1943 @@
+{
+  "schema": "civ.research-sources/v1",
+  "parser_version": 1,
+  "indexed_on": "2026-11-27",
+  "locator_convention": "Chapter IDs and one-based nonempty XHTML block ordinals; headings, captions, list items and definition items count. Whitespace is collapsed. These are not printed pages or Kindle locations.",
+  "library": {
+    "local_root": "C:\\Users\\PhillipCurry\\projects\\books\\books",
+    "repository": "https://github.com/step3software/books",
+    "observed_branch": "main",
+    "binary_tracking": "Both EPUBs are tracked on main at the recorded revision; local Git blob identities match the published tree.",
+    "revision": "8893e4e75744f12fd3f52cc1b9f5347a11e97453"
+  },
+  "books": {
+    "smil": {
+      "title": "Energy and Civilization: A History",
+      "author": "Vaclav Smil",
+      "copyright_year": 2017,
+      "publisher": "The MIT Press",
+      "copyright_page_isbn": "9780262338295 (eISBN); 9780262035774 (hardcover)",
+      "metadata_note": "Copyright page identifies ePub Version 1.0; OPF lists several ISBNs.",
+      "publisher_url": "https://mitpress.mit.edu/9780262536165/energy-and-civilization/",
+      "citation_prefix": "SMI",
+      "local_path": "C:\\Users\\PhillipCurry\\projects\\books\\books\\Vaclav Smil - Energy and Civilization\\Vaclav Smil - Energy and Civilization.epub",
+      "relative_path": "Vaclav Smil - Energy and Civilization/Vaclav Smil - Energy and Civilization.epub",
+      "sha256": "9dd0afcb6180aa2869e9bfbb6d76a37c42532fe0174a5dddeb312248a9201752",
+      "chapters": [
+        {
+          "id": "1",
+          "title": "Energy and Society",
+          "spine": 6,
+          "epub_href": "OPS/c10752_001.xhtml",
+          "sha256": "546aad9866ccad51ade325112be99a70b577948dfab098ed20b4934b20f9610e",
+          "paragraph_count": 74,
+          "headings": [
+            {
+              "title": "1 Energy and Society",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Flows, Stores, and Controls",
+              "paragraph": 16,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.1Gravity and the habitability of Earth",
+              "paragraph": 18,
+              "element_id": null
+            },
+            {
+              "title": "Concepts and Measures",
+              "paragraph": 30,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.2Diminishing utility of converted energy",
+              "paragraph": 32,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.3Measuring energy and power",
+              "paragraph": 36,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.4Energy densities of foodstuffs and fuels",
+              "paragraph": 42,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.5Power densities of phytomass fuels",
+              "paragraph": 45,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.6Efficiency improvements and the Jevons paradox",
+              "paragraph": 51,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.7Comparison of energy returns in food production",
+              "paragraph": 55,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.8Energy intensities of common materials",
+              "paragraph": 59,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.9Energy returns on energy investment",
+              "paragraph": 62,
+              "element_id": null
+            },
+            {
+              "title": "Complexities and Caveats",
+              "paragraph": 64,
+              "element_id": null
+            },
+            {
+              "title": "Box 1.10Calculating the net energy cost of human labor",
+              "paragraph": 70,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "Energy in Prehistory",
+          "spine": 7,
+          "epub_href": "OPS/c10752_002.xhtml",
+          "sha256": "a4d6434d42e5de3d54de4ebd4cd2fbae1b49ffeee1799cc6986f4af30b86e2cd",
+          "paragraph_count": 94,
+          "headings": [
+            {
+              "title": "2 Energy in Prehistory",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.1Wood consumption in open-fire cooking of meat",
+              "paragraph": 18,
+              "element_id": null
+            },
+            {
+              "title": "Foraging Societies",
+              "paragraph": 22,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.2Harvesting Brazil nuts",
+              "paragraph": 31,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.3Running and heat dissipation by humans",
+              "paragraph": 35,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.4Extinction of the Late Pleistocene megafauna",
+              "paragraph": 42,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.5Body masses, energy densities, and food energy content of hunted animals",
+              "paragraph": 46,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.6Food preferences and attitudes toward work",
+              "paragraph": 50,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.7Net energy returns in foraging",
+              "paragraph": 57,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.8Alaskan whalers",
+              "paragraph": 63,
+              "element_id": null
+            },
+            {
+              "title": "Origins of Agriculture",
+              "paragraph": 71,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.9Energy costs and population densities in shifting cultivation",
+              "paragraph": 84,
+              "element_id": null
+            },
+            {
+              "title": "Box 2.10Nomadic pastoralists",
+              "paragraph": 91,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "title": "Traditional Farming",
+          "spine": 8,
+          "epub_href": "OPS/c10752_003.xhtml",
+          "sha256": "76278f65b5378c225207aa7c4d6000cd3cda1b804c2f623054793a8fe87afa72",
+          "paragraph_count": 282,
+          "headings": [
+            {
+              "title": "3 Traditional Farming",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Commonalities and Peculiarities",
+              "paragraph": 13,
+              "element_id": null
+            },
+            {
+              "title": "Field Work",
+              "paragraph": 15,
+              "element_id": null
+            },
+            {
+              "title": "The Dominance of Grains",
+              "paragraph": 29,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.1Energy density and carbohydrate and protein content of principal grains",
+              "paragraph": 34,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.2Labor and energy requirements in traditional farming",
+              "paragraph": 41,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.3Cereal milling",
+              "paragraph": 46,
+              "element_id": null
+            },
+            {
+              "title": "Cropping Cycles",
+              "paragraph": 50,
+              "element_id": null
+            },
+            {
+              "title": "Routes to Intensification",
+              "paragraph": 59,
+              "element_id": null
+            },
+            {
+              "title": "Draft Animals",
+              "paragraph": 62,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.4Typical weights, drafts, working speeds, and power of domestic animals",
+              "paragraph": 65,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.5Comparing harnesses and draft power",
+              "paragraph": 77,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.6Energy cost, efficiency, and performance of a draft horse",
+              "paragraph": 91,
+              "element_id": null
+            },
+            {
+              "title": "Irrigation",
+              "paragraph": 95,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.7Power requirements, lifts, and capacities of traditional water-lifting devices",
+              "paragraph": 107,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.8Energy returns of wheat irrigation",
+              "paragraph": 113,
+              "element_id": null
+            },
+            {
+              "title": "Fertilization",
+              "paragraph": 117,
+              "element_id": null
+            },
+            {
+              "title": "Crop Diversity",
+              "paragraph": 131,
+              "element_id": null
+            },
+            {
+              "title": "Persistence and Innovation",
+              "paragraph": 136,
+              "element_id": null
+            },
+            {
+              "title": "Ancient Egypt",
+              "paragraph": 141,
+              "element_id": null
+            },
+            {
+              "title": "China",
+              "paragraph": 151,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.9Nitrogen content of organic materials recycled in China",
+              "paragraph": 161,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.10Net energy return of fertilization",
+              "paragraph": 166,
+              "element_id": null
+            },
+            {
+              "title": "Mesoamerican Cultures",
+              "paragraph": 175,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.11Raised fields in the basin of Mexico",
+              "paragraph": 181,
+              "element_id": null
+            },
+            {
+              "title": "Europe",
+              "paragraph": 185,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.12Labor requirements of European wheat harvests, 200–1800",
+              "paragraph": 189,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.13Energy costs and returns of European wheat harvests, 200–1800",
+              "paragraph": 204,
+              "element_id": null
+            },
+            {
+              "title": "North America",
+              "paragraph": 208,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.14Labor requirements (human/animal) in hours/hectare and the energy cost of American wheat, 1800–1900",
+              "paragraph": 218,
+              "element_id": null
+            },
+            {
+              "title": "Box 3.15Feeding America’s draft horses",
+              "paragraph": 222,
+              "element_id": null
+            },
+            {
+              "title": "The Limits of Traditional Farming",
+              "paragraph": 225,
+              "element_id": null
+            },
+            {
+              "title": "Achievements",
+              "paragraph": 228,
+              "element_id": null
+            },
+            {
+              "title": "Nutrition",
+              "paragraph": 249,
+              "element_id": null
+            },
+            {
+              "title": "Limits",
+              "paragraph": 259,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "title": "Preindustrial Prime Movers and Fuels",
+          "spine": 9,
+          "epub_href": "OPS/c10752_004.xhtml",
+          "sha256": "a04551e862703fe79aec6364bf8a880f9997bbe59c1054416b5a44fe339ed031",
+          "paragraph_count": 369,
+          "headings": [
+            {
+              "title": "4 Preindustrial Prime Movers and Fuels",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.1Raising Alexander’s column",
+              "paragraph": 11,
+              "element_id": null
+            },
+            {
+              "title": "Prime Movers",
+              "paragraph": 15,
+              "element_id": null
+            },
+            {
+              "title": "Animate Power",
+              "paragraph": 19,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.2Work, force, and distance",
+              "paragraph": 23,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.3Working on a treadmill",
+              "paragraph": 50,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.4Draft horses in urban transportation",
+              "paragraph": 65,
+              "element_id": null
+            },
+            {
+              "title": "Water Power",
+              "paragraph": 70,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.5Power of undershot wheels",
+              "paragraph": 82,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.6Power of overshot waterwheels",
+              "paragraph": 86,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.7Barbegal waterwheels",
+              "paragraph": 95,
+              "element_id": null
+            },
+            {
+              "title": "Wind Power",
+              "paragraph": 109,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.8Wind energy and power",
+              "paragraph": 114,
+              "element_id": null
+            },
+            {
+              "title": "Biomass Fuels",
+              "paragraph": 127,
+              "element_id": null
+            },
+            {
+              "title": "Wood and Charcoal",
+              "paragraph": 132,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.9Energy content of biomass fuels",
+              "paragraph": 134,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.10Wood consumption in the Roman Empire",
+              "paragraph": 145,
+              "element_id": null
+            },
+            {
+              "title": "Crop Residues and Dung",
+              "paragraph": 149,
+              "element_id": null
+            },
+            {
+              "title": "Household Needs",
+              "paragraph": 157,
+              "element_id": null
+            },
+            {
+              "title": "Food Preparation",
+              "paragraph": 162,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.11Lucius Apuleius (Metamorphoses IX, 12, 3.4) on Roman mill slaves",
+              "paragraph": 165,
+              "element_id": null
+            },
+            {
+              "title": "Heat and Light",
+              "paragraph": 172,
+              "element_id": null
+            },
+            {
+              "title": "Transportation and Construction",
+              "paragraph": 183,
+              "element_id": null
+            },
+            {
+              "title": "Moving on Land",
+              "paragraph": 185,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.12Energy cost of Roman roads",
+              "paragraph": 202,
+              "element_id": null
+            },
+            {
+              "title": "Oared Ships and Sail Ships",
+              "paragraph": 219,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.13Ancient canal transportation",
+              "paragraph": 226,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.14Sails and sailing near the wind",
+              "paragraph": 233,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.15Portuguese voyages of discovery",
+              "paragraph": 246,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.16Contribution of sail ships to Dutch energy use",
+              "paragraph": 259,
+              "element_id": null
+            },
+            {
+              "title": "Buildings and Structures",
+              "paragraph": 262,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.17Brunelleschi’s ingenious machines",
+              "paragraph": 268,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.18Energy cost of the Great Pyramid",
+              "paragraph": 283,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.19Rome’s Pantheon",
+              "paragraph": 290,
+              "element_id": null
+            },
+            {
+              "title": "Metallurgy",
+              "paragraph": 301,
+              "element_id": null
+            },
+            {
+              "title": "Nonferrous Metals",
+              "paragraph": 304,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.20Fuelwood needs for Roman copper and silver smelting at Rio Tinto",
+              "paragraph": 309,
+              "element_id": null
+            },
+            {
+              "title": "Iron and Steel",
+              "paragraph": 315,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.21Tensile strength and hardness of common metals and alloys",
+              "paragraph": 322,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.22Fuel needs of an eighteenth-century English blast furnace",
+              "paragraph": 328,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.23Energy needs in British and American iron production",
+              "paragraph": 331,
+              "element_id": null
+            },
+            {
+              "title": "Warfare",
+              "paragraph": 340,
+              "element_id": null
+            },
+            {
+              "title": "Animate Energies",
+              "paragraph": 343,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.24Kinetic energy of swords and arrows",
+              "paragraph": 346,
+              "element_id": null
+            },
+            {
+              "title": "Box 4.25Prussian supplies and animals for the Russian invasion",
+              "paragraph": 356,
+              "element_id": null
+            },
+            {
+              "title": "Explosives and Guns",
+              "paragraph": 363,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "title": "Fossil Fuels, Primary Electricity, and Renewables",
+          "spine": 10,
+          "epub_href": "OPS/c10752_005.xhtml",
+          "sha256": "e65d837558326825710d2fdccafd1e8b0a7aa930508c31654fb388af898e1720",
+          "paragraph_count": 258,
+          "headings": [
+            {
+              "title": "5 Fossil Fuels, Primary Electricity, and Renewables",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.1Fossil fuels",
+              "paragraph": 5,
+              "element_id": null
+            },
+            {
+              "title": "The Great Transition",
+              "paragraph": 12,
+              "element_id": null
+            },
+            {
+              "title": "The Beginnings and Diffusion of Coal Extraction",
+              "paragraph": 18,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.2An Inquiry Into the Condition of the Women Who Carry Coals Under Ground in Scotland, Known by the Name of BEARERS",
+              "paragraph": 24,
+              "element_id": null
+            },
+            {
+              "title": "From Charcoal to Coke",
+              "paragraph": 36,
+              "element_id": null
+            },
+            {
+              "title": "Steam Engines",
+              "paragraph": 41,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.3Watt’s 1769 patent",
+              "paragraph": 50,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.4Watt and Boulton delay the development of a steam carriage",
+              "paragraph": 58,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.5Mass/power ratio of steam engines and a Megatherium",
+              "paragraph": 78,
+              "element_id": null
+            },
+            {
+              "title": "Oil and Internal Combustion Engines",
+              "paragraph": 82,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.6The first modern car",
+              "paragraph": 99,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.7The first flights",
+              "paragraph": 107,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.8Diesel’s engine: The intent and the outcome",
+              "paragraph": 117,
+              "element_id": null
+            },
+            {
+              "title": "Electricity",
+              "paragraph": 123,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.9Faraday’s discovery of electromagnetic induction",
+              "paragraph": 128,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.10Edison’s electrical system",
+              "paragraph": 137,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.11Transforming electricity and transmission losses",
+              "paragraph": 152,
+              "element_id": null
+            },
+            {
+              "title": "Technical Innovations",
+              "paragraph": 168,
+              "element_id": null
+            },
+            {
+              "title": "Coals",
+              "paragraph": 182,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.12Chinese coal production",
+              "paragraph": 191,
+              "element_id": null
+            },
+            {
+              "title": "Hydrocarbons",
+              "paragraph": 196,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.13Giant oil tankers",
+              "paragraph": 203,
+              "element_id": null
+            },
+            {
+              "title": "Electricity",
+              "paragraph": 215,
+              "element_id": null
+            },
+            {
+              "title": "Box 5.14Reliability of electricity supply",
+              "paragraph": 222,
+              "element_id": null
+            },
+            {
+              "title": "Renewable Energies",
+              "paragraph": 229,
+              "element_id": null
+            },
+            {
+              "title": "Prime Movers in Transportation",
+              "paragraph": 244,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "title": "Fossil-Fueled Civilization",
+          "spine": 11,
+          "epub_href": "OPS/c10752_006.xhtml",
+          "sha256": "b7129930fad0c77c1187a95c9f8ca260ca10cdf00fda7755fdffbb6633e79588",
+          "paragraph_count": 304,
+          "headings": [
+            {
+              "title": "6 Fossil-Fueled Civilization",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Unprecedented Power and Its Uses",
+              "paragraph": 7,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.1Efficiency of household heating",
+              "paragraph": 14,
+              "element_id": null
+            },
+            {
+              "title": "Energy in Agriculture",
+              "paragraph": 34,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.2Energy costs of nitrogenous fertilizers",
+              "paragraph": 43,
+              "element_id": null
+            },
+            {
+              "title": "Industrialization",
+              "paragraph": 58,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.3From experiments with steel cutting to Japan’s car exports",
+              "paragraph": 71,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.4Growth and mass and energy balances of blast furnaces",
+              "paragraph": 84,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.5Cars as mechatronic machines",
+              "paragraph": 94,
+              "element_id": null
+            },
+            {
+              "title": "Transportation",
+              "paragraph": 98,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.6Volkswagen and other durable models",
+              "paragraph": 111,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.7Boeing and Airbus",
+              "paragraph": 125,
+              "element_id": null
+            },
+            {
+              "title": "Information and Communication",
+              "paragraph": 129,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.8Invention of integrated circuits",
+              "paragraph": 143,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.9Energy embodied in mobile phones and cars",
+              "paragraph": 159,
+              "element_id": null
+            },
+            {
+              "title": "Economic Growth",
+              "paragraph": 163,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.10Declining energy intensity of economic growth",
+              "paragraph": 176,
+              "element_id": null
+            },
+            {
+              "title": "Consequences and Concerns",
+              "paragraph": 185,
+              "element_id": null
+            },
+            {
+              "title": "Urbanization",
+              "paragraph": 190,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.11Power densities of traditional urban energy supply and use",
+              "paragraph": 192,
+              "element_id": null
+            },
+            {
+              "title": "Quality of Life",
+              "paragraph": 203,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.12Importance of electricity for easing housework",
+              "paragraph": 218,
+              "element_id": null
+            },
+            {
+              "title": "Political Implications",
+              "paragraph": 232,
+              "element_id": null
+            },
+            {
+              "title": "Weapons and Wars",
+              "paragraph": 244,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.13Kinetic energy of projectiles propelled by explosives",
+              "paragraph": 248,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.14Kinetic energy of explosive devices",
+              "paragraph": 253,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.15Firebombing of Tokyo, March 9–10, 1945",
+              "paragraph": 258,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.16Maximum energy of explosive weapons",
+              "paragraph": 265,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.17Casualties of modern wars",
+              "paragraph": 273,
+              "element_id": null
+            },
+            {
+              "title": "Environmental Changes",
+              "paragraph": 290,
+              "element_id": null
+            },
+            {
+              "title": "Box 6.18Greenhouse gases and rising tropospheric temperature",
+              "paragraph": 301,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "7",
+          "title": "Energy in World History",
+          "spine": 12,
+          "epub_href": "OPS/c10752_007.xhtml",
+          "sha256": "609660fdc01acc618d47c4b7c632f3b8eda9fcf27007135d0213b09297bda336",
+          "paragraph_count": 201,
+          "headings": [
+            {
+              "title": "7 Energy in World History",
+              "paragraph": 1,
+              "element_id": null
+            },
+            {
+              "title": "Grand Patterns of Energy Use",
+              "paragraph": 4,
+              "element_id": null
+            },
+            {
+              "title": "Energy Eras and Transitions",
+              "paragraph": 11,
+              "element_id": null
+            },
+            {
+              "title": "Box 7.1Persistence of animate power",
+              "paragraph": 26,
+              "element_id": null
+            },
+            {
+              "title": "Long-Term Trends and Falling Costs",
+              "paragraph": 43,
+              "element_id": null
+            },
+            {
+              "title": "Box 7.2Efficiency and efficacy of lighting",
+              "paragraph": 55,
+              "element_id": null
+            },
+            {
+              "title": "Box 7.3Energy subsidies",
+              "paragraph": 74,
+              "element_id": null
+            },
+            {
+              "title": "What Has Not Changed?",
+              "paragraph": 76,
+              "element_id": null
+            },
+            {
+              "title": "Box 7.4Business cycles and energy",
+              "paragraph": 88,
+              "element_id": null
+            },
+            {
+              "title": "Between Determinism and Choice",
+              "paragraph": 108,
+              "element_id": null
+            },
+            {
+              "title": "Imperatives of Energy Needs and Uses",
+              "paragraph": 113,
+              "element_id": null
+            },
+            {
+              "title": "The Importance of Controls",
+              "paragraph": 138,
+              "element_id": null
+            },
+            {
+              "title": "The Limits of Energy Explanations",
+              "paragraph": 155,
+              "element_id": null
+            },
+            {
+              "title": "Box 7.5Electricity’s promise that never ends",
+              "paragraph": 183,
+              "element_id": null
+            }
+          ]
+        }
+      ],
+      "spine_inventory": [
+        {
+          "spine": 1,
+          "epub_href": "OPS/cover.xhtml",
+          "sha256": "3afda9faf0e210e398da7d4235b159e12f9b5d3646a572514f1c14953bc0421a",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 2,
+          "epub_href": "OPS/c10752_000_1.xhtml",
+          "sha256": "9669848b23995ec927a451b6f80f002c452b921a356ebf42ac9c5a8409b9c672",
+          "headings": [
+            "Energy and Civilization",
+            "A History"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 3,
+          "epub_href": "OPS/c10752_000_2.xhtml",
+          "sha256": "f9dacd2a6a9dad863e552c219eb2f310bcef6476a4c2c77e5520766adc542e4b",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 4,
+          "epub_href": "OPS/toc.xhtml",
+          "sha256": "b3d3f9a83e91dae7c214a83cb26859706ee801cbb91559c60d6aefd4402259fb",
+          "headings": [
+            "Table of Contents",
+            "List of Illustrations",
+            "Guide"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 5,
+          "epub_href": "OPS/c10752_000a.xhtml",
+          "sha256": "8383334598c9b8a269a1679416dccd549c11365add0beed50410b9f434a754f1",
+          "headings": [
+            "Preface and Acknowledgments"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 6,
+          "epub_href": "OPS/c10752_001.xhtml",
+          "sha256": "546aad9866ccad51ade325112be99a70b577948dfab098ed20b4934b20f9610e",
+          "headings": [
+            "1 Energy and Society",
+            "Flows, Stores, and Controls",
+            "Box 1.1Gravity and the habitability of Earth",
+            "Concepts and Measures",
+            "Box 1.2Diminishing utility of converted energy",
+            "Box 1.3Measuring energy and power",
+            "Box 1.4Energy densities of foodstuffs and fuels",
+            "Box 1.5Power densities of phytomass fuels",
+            "Box 1.6Efficiency improvements and the Jevons paradox",
+            "Box 1.7Comparison of energy returns in food production",
+            "Box 1.8Energy intensities of common materials",
+            "Box 1.9Energy returns on energy investment",
+            "Complexities and Caveats",
+            "Box 1.10Calculating the net energy cost of human labor"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 7,
+          "epub_href": "OPS/c10752_002.xhtml",
+          "sha256": "a4d6434d42e5de3d54de4ebd4cd2fbae1b49ffeee1799cc6986f4af30b86e2cd",
+          "headings": [
+            "2 Energy in Prehistory",
+            "Box 2.1Wood consumption in open-fire cooking of meat",
+            "Foraging Societies",
+            "Box 2.2Harvesting Brazil nuts",
+            "Box 2.3Running and heat dissipation by humans",
+            "Box 2.4Extinction of the Late Pleistocene megafauna",
+            "Box 2.5Body masses, energy densities, and food energy content of hunted animals",
+            "Box 2.6Food preferences and attitudes toward work",
+            "Box 2.7Net energy returns in foraging",
+            "Box 2.8Alaskan whalers",
+            "Origins of Agriculture",
+            "Box 2.9Energy costs and population densities in shifting cultivation",
+            "Box 2.10Nomadic pastoralists"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 8,
+          "epub_href": "OPS/c10752_003.xhtml",
+          "sha256": "76278f65b5378c225207aa7c4d6000cd3cda1b804c2f623054793a8fe87afa72",
+          "headings": [
+            "3 Traditional Farming",
+            "Commonalities and Peculiarities",
+            "Field Work",
+            "The Dominance of Grains",
+            "Box 3.1Energy density and carbohydrate and protein content of principal grains",
+            "Box 3.2Labor and energy requirements in traditional farming",
+            "Box 3.3Cereal milling",
+            "Cropping Cycles",
+            "Routes to Intensification",
+            "Draft Animals",
+            "Box 3.4Typical weights, drafts, working speeds, and power of domestic animals",
+            "Box 3.5Comparing harnesses and draft power",
+            "Box 3.6Energy cost, efficiency, and performance of a draft horse",
+            "Irrigation",
+            "Box 3.7Power requirements, lifts, and capacities of traditional water-lifting devices",
+            "Box 3.8Energy returns of wheat irrigation",
+            "Fertilization",
+            "Crop Diversity",
+            "Persistence and Innovation",
+            "Ancient Egypt",
+            "China",
+            "Box 3.9Nitrogen content of organic materials recycled in China",
+            "Box 3.10Net energy return of fertilization",
+            "Mesoamerican Cultures",
+            "Box 3.11Raised fields in the basin of Mexico",
+            "Europe",
+            "Box 3.12Labor requirements of European wheat harvests, 200–1800",
+            "Box 3.13Energy costs and returns of European wheat harvests, 200–1800",
+            "North America",
+            "Box 3.14Labor requirements (human/animal) in hours/hectare and the energy cost of American wheat, 1800–1900",
+            "Box 3.15Feeding America’s draft horses",
+            "The Limits of Traditional Farming",
+            "Achievements",
+            "Nutrition",
+            "Limits"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 9,
+          "epub_href": "OPS/c10752_004.xhtml",
+          "sha256": "a04551e862703fe79aec6364bf8a880f9997bbe59c1054416b5a44fe339ed031",
+          "headings": [
+            "4 Preindustrial Prime Movers and Fuels",
+            "Box 4.1Raising Alexander’s column",
+            "Prime Movers",
+            "Animate Power",
+            "Box 4.2Work, force, and distance",
+            "Box 4.3Working on a treadmill",
+            "Box 4.4Draft horses in urban transportation",
+            "Water Power",
+            "Box 4.5Power of undershot wheels",
+            "Box 4.6Power of overshot waterwheels",
+            "Box 4.7Barbegal waterwheels",
+            "Wind Power",
+            "Box 4.8Wind energy and power",
+            "Biomass Fuels",
+            "Wood and Charcoal",
+            "Box 4.9Energy content of biomass fuels",
+            "Box 4.10Wood consumption in the Roman Empire",
+            "Crop Residues and Dung",
+            "Household Needs",
+            "Food Preparation",
+            "Box 4.11Lucius Apuleius (Metamorphoses IX, 12, 3.4) on Roman mill slaves",
+            "Heat and Light",
+            "Transportation and Construction",
+            "Moving on Land",
+            "Box 4.12Energy cost of Roman roads",
+            "Oared Ships and Sail Ships",
+            "Box 4.13Ancient canal transportation",
+            "Box 4.14Sails and sailing near the wind",
+            "Box 4.15Portuguese voyages of discovery",
+            "Box 4.16Contribution of sail ships to Dutch energy use",
+            "Buildings and Structures",
+            "Box 4.17Brunelleschi’s ingenious machines",
+            "Box 4.18Energy cost of the Great Pyramid",
+            "Box 4.19Rome’s Pantheon",
+            "Metallurgy",
+            "Nonferrous Metals",
+            "Box 4.20Fuelwood needs for Roman copper and silver smelting at Rio Tinto",
+            "Iron and Steel",
+            "Box 4.21Tensile strength and hardness of common metals and alloys",
+            "Box 4.22Fuel needs of an eighteenth-century English blast furnace",
+            "Box 4.23Energy needs in British and American iron production",
+            "Warfare",
+            "Animate Energies",
+            "Box 4.24Kinetic energy of swords and arrows",
+            "Box 4.25Prussian supplies and animals for the Russian invasion",
+            "Explosives and Guns"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 10,
+          "epub_href": "OPS/c10752_005.xhtml",
+          "sha256": "e65d837558326825710d2fdccafd1e8b0a7aa930508c31654fb388af898e1720",
+          "headings": [
+            "5 Fossil Fuels, Primary Electricity, and Renewables",
+            "Box 5.1Fossil fuels",
+            "The Great Transition",
+            "The Beginnings and Diffusion of Coal Extraction",
+            "Box 5.2An Inquiry Into the Condition of the Women Who Carry Coals Under Ground in Scotland, Known by the Name of BEARERS",
+            "From Charcoal to Coke",
+            "Steam Engines",
+            "Box 5.3Watt’s 1769 patent",
+            "Box 5.4Watt and Boulton delay the development of a steam carriage",
+            "Box 5.5Mass/power ratio of steam engines and a Megatherium",
+            "Oil and Internal Combustion Engines",
+            "Box 5.6The first modern car",
+            "Box 5.7The first flights",
+            "Box 5.8Diesel’s engine: The intent and the outcome",
+            "Electricity",
+            "Box 5.9Faraday’s discovery of electromagnetic induction",
+            "Box 5.10Edison’s electrical system",
+            "Box 5.11Transforming electricity and transmission losses",
+            "Technical Innovations",
+            "Coals",
+            "Box 5.12Chinese coal production",
+            "Hydrocarbons",
+            "Box 5.13Giant oil tankers",
+            "Electricity",
+            "Box 5.14Reliability of electricity supply",
+            "Renewable Energies",
+            "Prime Movers in Transportation"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 11,
+          "epub_href": "OPS/c10752_006.xhtml",
+          "sha256": "b7129930fad0c77c1187a95c9f8ca260ca10cdf00fda7755fdffbb6633e79588",
+          "headings": [
+            "6 Fossil-Fueled Civilization",
+            "Unprecedented Power and Its Uses",
+            "Box 6.1Efficiency of household heating",
+            "Energy in Agriculture",
+            "Box 6.2Energy costs of nitrogenous fertilizers",
+            "Industrialization",
+            "Box 6.3From experiments with steel cutting to Japan’s car exports",
+            "Box 6.4Growth and mass and energy balances of blast furnaces",
+            "Box 6.5Cars as mechatronic machines",
+            "Transportation",
+            "Box 6.6Volkswagen and other durable models",
+            "Box 6.7Boeing and Airbus",
+            "Information and Communication",
+            "Box 6.8Invention of integrated circuits",
+            "Box 6.9Energy embodied in mobile phones and cars",
+            "Economic Growth",
+            "Box 6.10Declining energy intensity of economic growth",
+            "Consequences and Concerns",
+            "Urbanization",
+            "Box 6.11Power densities of traditional urban energy supply and use",
+            "Quality of Life",
+            "Box 6.12Importance of electricity for easing housework",
+            "Political Implications",
+            "Weapons and Wars",
+            "Box 6.13Kinetic energy of projectiles propelled by explosives",
+            "Box 6.14Kinetic energy of explosive devices",
+            "Box 6.15Firebombing of Tokyo, March 9–10, 1945",
+            "Box 6.16Maximum energy of explosive weapons",
+            "Box 6.17Casualties of modern wars",
+            "Environmental Changes",
+            "Box 6.18Greenhouse gases and rising tropospheric temperature"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 12,
+          "epub_href": "OPS/c10752_007.xhtml",
+          "sha256": "609660fdc01acc618d47c4b7c632f3b8eda9fcf27007135d0213b09297bda336",
+          "headings": [
+            "7 Energy in World History",
+            "Grand Patterns of Energy Use",
+            "Energy Eras and Transitions",
+            "Box 7.1Persistence of animate power",
+            "Long-Term Trends and Falling Costs",
+            "Box 7.2Efficiency and efficacy of lighting",
+            "Box 7.3Energy subsidies",
+            "What Has Not Changed?",
+            "Box 7.4Business cycles and energy",
+            "Between Determinism and Choice",
+            "Imperatives of Energy Needs and Uses",
+            "The Importance of Controls",
+            "The Limits of Energy Explanations",
+            "Box 7.5Electricity’s promise that never ends"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 13,
+          "epub_href": "OPS/c10752_008.xhtml",
+          "sha256": "98556cf4e5b54964abc0acc0d0e612765094836dbaa0fcb1f490203fb13b8014",
+          "headings": [
+            "Addenda",
+            "Basic Measures",
+            "Scientific Units and Their Multiples and Submultiples",
+            "Basic SI units",
+            "Other units used in the text",
+            "Multiples used in the International System of Units",
+            "Submultiples used in the International System of Units",
+            "Chronology of Energy-Related Developments",
+            "BCE",
+            "CE",
+            "Power in History",
+            "Power ratings: From a candle to global civilization",
+            "Maximum power of prime movers in field work, 1700–2015",
+            "Maximum power of prime movers in land transportation, 1700–2015",
+            "Average annual consumption (GJ/capita) of primary energy"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 14,
+          "epub_href": "OPS/c10752_009.xhtml",
+          "sha256": "0b4e595aaa43652b70a81b178ec38c5ef830a02f30f45589656f18341391a398",
+          "headings": [
+            "Bibliographical Notes"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 15,
+          "epub_href": "OPS/c10752_444.xhtml",
+          "sha256": "58fe9126db53e43054f4b2261bafb1e69482150b3c9672c1f59a5a545c5388c4",
+          "headings": [
+            "References"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 16,
+          "epub_href": "OPS/c10752_555n.xhtml",
+          "sha256": "ab8b43861e476e8b004a3c8596d22f48ad4a6902601a6a113ba13c772ffc6110",
+          "headings": [
+            "Name Index"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 17,
+          "epub_href": "OPS/c10752_555s.xhtml",
+          "sha256": "023470b2fef7132277590e854f6cea50233dfa7d3f439c44a1da7ceb0b768167",
+          "headings": [
+            "Subject Index"
+          ],
+          "indexed_chapter": false
+        }
+      ],
+      "repository_path": "books/Vaclav Smil - Energy and Civilization/Vaclav Smil - Energy and Civilization.epub",
+      "git_blob_sha": "512311341c99dc317b8d949bde0be8c16aac8092",
+      "repository_url": "https://github.com/step3software/books/blob/8893e4e75744f12fd3f52cc1b9f5347a11e97453/books/Vaclav%20Smil%20-%20Energy%20and%20Civilization/Vaclav%20Smil%20-%20Energy%20and%20Civilization.epub"
+    },
+    "scott": {
+      "title": "Against the Grain: A Deep History of the Earliest States",
+      "author": "James C. Scott",
+      "copyright_year": 2017,
+      "publisher": "Yale University Press",
+      "copyright_page_isbn": "9780300182910 (hardcover)",
+      "metadata_note": "OPF date 0101-01-01 is invalid as a publication date; copyright page supplies 2017.",
+      "publisher_url": "https://yalebooks.yale.edu/book/9780300231687/against-the-grain/",
+      "citation_prefix": "SCT",
+      "local_path": "C:\\Users\\PhillipCurry\\projects\\books\\books\\Against the Grain A Deep History of the Earliest States by James C. Scott.epub",
+      "relative_path": "Against the Grain A Deep History of the Earliest States by James C. Scott.epub",
+      "sha256": "ad3aa7f4092b186596856c331371bb12ffdb4a28dd493a11d285e02f4215a0bd",
+      "chapters": [
+        {
+          "id": "intro",
+          "title": "Introduction: A Narrative in Tatters: What I Didn’t Know",
+          "spine": 11,
+          "epub_href": "text/part0010.html",
+          "sha256": "2e4fd522ba82b5daad1a9b6facd303f91d6d45691244b9459fbaabf48a646ca0",
+          "paragraph_count": 61,
+          "headings": [
+            {
+              "title": "Introduction: A Narrative in Tatters: What I Didn’t Know",
+              "paragraph": 1,
+              "element_id": "intro"
+            },
+            {
+              "title": "PARADOXES OF STATE AND CIVILIZATION NARRATIVES",
+              "paragraph": 9,
+              "element_id": null
+            },
+            {
+              "title": "PUTTING THE STATE IN ITS PLACE",
+              "paragraph": 20,
+              "element_id": null
+            },
+            {
+              "title": "THUMBNAIL ITINERARY",
+              "paragraph": 29,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "title": "The Domestication of Fire, Plants, Animals, and . . . Us",
+          "spine": 12,
+          "epub_href": "text/part0011.html",
+          "sha256": "a3771e73994584c137f156a42254f93402dd5f6b0f68d38098e94c9d9b7aa851",
+          "paragraph_count": 57,
+          "headings": [
+            {
+              "title": "CHAPTER ONE",
+              "paragraph": 1,
+              "element_id": "ch1"
+            },
+            {
+              "title": "The Domestication of Fire, Plants, Animals, and . . . Us",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "FIRE",
+              "paragraph": 3,
+              "element_id": null
+            },
+            {
+              "title": "CONCENTRATION AND SEDENTISM: A WETLANDS THESIS",
+              "paragraph": 15,
+              "element_id": null
+            },
+            {
+              "title": "WETLANDS AND SEDENTISM",
+              "paragraph": 22,
+              "element_id": null
+            },
+            {
+              "title": "WHY IGNORED?",
+              "paragraph": 36,
+              "element_id": null
+            },
+            {
+              "title": "MINDING THE GAP",
+              "paragraph": 41,
+              "element_id": null
+            },
+            {
+              "title": "WHY PLANT AT ALL?",
+              "paragraph": 51,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "Landscaping the World: The Domus Complex",
+          "spine": 13,
+          "epub_href": "text/part0012.html",
+          "sha256": "a71b240da647e82973b8aa2f0566e181d0171ec9a6583775464e2b7e65ec0346",
+          "paragraph_count": 56,
+          "headings": [
+            {
+              "title": "CHAPTER TWO",
+              "paragraph": 1,
+              "element_id": "ch2"
+            },
+            {
+              "title": "Landscaping the World: The Domus Complex",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "FROM NEOLITHIC PLANTING TO FLORAL ZOO: CONSEQUENCES OF CULTIVATION",
+              "paragraph": 9,
+              "element_id": null
+            },
+            {
+              "title": "THE DOMUS AS A MODULE OF EVOLUTION",
+              "paragraph": 12,
+              "element_id": null
+            },
+            {
+              "title": "FROM HUNTER’S PREY TO FARMER’S CORRAL",
+              "paragraph": 19,
+              "element_id": null
+            },
+            {
+              "title": "SPECULATION ON HUMAN PARALLELS",
+              "paragraph": 31,
+              "element_id": null
+            },
+            {
+              "title": "THE DOMESTICATION OF US",
+              "paragraph": 42,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "title": "Zoonoses: A Perfect Epidemiological Storm",
+          "spine": 14,
+          "epub_href": "text/part0013.html",
+          "sha256": "36cb349170dd5e409654efea3030df3af419255d65d86b2ac57728c220ba3b6b",
+          "paragraph_count": 42,
+          "headings": [
+            {
+              "title": "CHAPTER THREE",
+              "paragraph": 1,
+              "element_id": "ch3"
+            },
+            {
+              "title": "Zoonoses: A Perfect Epidemiological Storm",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "DRUDGERY AND ITS HISTORY",
+              "paragraph": 3,
+              "element_id": null
+            },
+            {
+              "title": "THE LATE NEOLITHIC MULTISPECIES RESETTLEMENT CAMP: A PERFECT EPIDEMIOLOGICAL STORM",
+              "paragraph": 8,
+              "element_id": null
+            },
+            {
+              "title": "A NOTE ON FERTILITY AND POPULATION",
+              "paragraph": 37,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "title": "Agro-ecology of the Early State",
+          "spine": 15,
+          "epub_href": "text/part0014.html",
+          "sha256": "459cc5db5ca828b4969db3a909cfa581a150e41d5915729d23c9a996bd0b64e7",
+          "paragraph_count": 67,
+          "headings": [
+            {
+              "title": "CHAPTER FOUR",
+              "paragraph": 1,
+              "element_id": "ch4"
+            },
+            {
+              "title": "Agro-ecology of the Early State",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "THE AGRO-GEOGRAPHY OF STATE-MAKING",
+              "paragraph": 20,
+              "element_id": null
+            },
+            {
+              "title": "GRAINS MAKE STATES",
+              "paragraph": 28,
+              "element_id": null
+            },
+            {
+              "title": "WALLS MAKE STATES: PROTECTION AND CONFINEMENT",
+              "paragraph": 46,
+              "element_id": null
+            },
+            {
+              "title": "WRITING MAKES STATES: RECORD KEEPING AND LEGIBILITY",
+              "paragraph": 49,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "title": "Population Control: Bondage and War",
+          "spine": 16,
+          "epub_href": "text/part0015.html",
+          "sha256": "2539247691ef39c21d81608d9ec6e7a569c75e17bdd1bb90c75a0f7d4857a3e5",
+          "paragraph_count": 85,
+          "headings": [
+            {
+              "title": "CHAPTER FIVE",
+              "paragraph": 1,
+              "element_id": "ch5"
+            },
+            {
+              "title": "Population Control: Bondage and War",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "THE STATE AND SLAVERY",
+              "paragraph": 18,
+              "element_id": null
+            },
+            {
+              "title": "SLAVERY AND BONDAGE IN MESOPOTAMIA",
+              "paragraph": 23,
+              "element_id": null
+            },
+            {
+              "title": "EGYPT AND CHINA",
+              "paragraph": 45,
+              "element_id": null
+            },
+            {
+              "title": "SLAVERY AS “HUMAN RESOURCES” STRATEGY",
+              "paragraph": 50,
+              "element_id": null
+            },
+            {
+              "title": "BOOTY CAPITALISM AND STATE BUILDING",
+              "paragraph": 64,
+              "element_id": null
+            },
+            {
+              "title": "THE PARTICULARITY OF MESOPOTAMIAN SLAVERY AND BONDAGE",
+              "paragraph": 68,
+              "element_id": null
+            },
+            {
+              "title": "A SPECULATIVE NOTE ON DOMESTICATION, DRUDGERY, AND SLAVERY",
+              "paragraph": 80,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "title": "Fragility of the Early State: Collapse as Disassembly",
+          "spine": 17,
+          "epub_href": "text/part0016.html",
+          "sha256": "0bb71277af9cbc9fb0578b44519fce1488dc783de7ba7f8f241bf9a3df4b68d4",
+          "paragraph_count": 64,
+          "headings": [
+            {
+              "title": "CHAPTER SIX",
+              "paragraph": 1,
+              "element_id": "ch6"
+            },
+            {
+              "title": "Fragility of the Early State: Collapse as Disassembly",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "EARLY STATE MORBIDITY: ACUTE AND CHRONIC",
+              "paragraph": 13,
+              "element_id": null
+            },
+            {
+              "title": "Disease: Hypersedentism, Movement, and the State",
+              "paragraph": 15,
+              "element_id": null
+            },
+            {
+              "title": "Ecocide: Deforestation and Salinization",
+              "paragraph": 22,
+              "element_id": null
+            },
+            {
+              "title": "Politicide: Wars and Exploitation of the Core",
+              "paragraph": 35,
+              "element_id": null
+            },
+            {
+              "title": "PRAISING COLLAPSE",
+              "paragraph": 49,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "7",
+          "title": "The Golden Age of the Barbarians",
+          "spine": 18,
+          "epub_href": "text/part0017.html",
+          "sha256": "5ee381f306f2b1cbce4ea8e6328fc0753c7cd4b6a12f02bcbab2a5e045894391",
+          "paragraph_count": 82,
+          "headings": [
+            {
+              "title": "CHAPTER SEVEN",
+              "paragraph": 1,
+              "element_id": "ch7"
+            },
+            {
+              "title": "The Golden Age of the Barbarians",
+              "paragraph": 2,
+              "element_id": null
+            },
+            {
+              "title": "CIVILIZATIONS AND THEIR BARBARIAN PENUMBRA",
+              "paragraph": 13,
+              "element_id": null
+            },
+            {
+              "title": "BARBARIAN GEOGRAPHY, BARBARIAN ECOLOGY",
+              "paragraph": 23,
+              "element_id": null
+            },
+            {
+              "title": "RAIDING",
+              "paragraph": 40,
+              "element_id": null
+            },
+            {
+              "title": "TRADE ROUTES AND TAXABLE GRAIN CORES",
+              "paragraph": 55,
+              "element_id": null
+            },
+            {
+              "title": "DARK TWINS",
+              "paragraph": 66,
+              "element_id": null
+            },
+            {
+              "title": "A GOLDEN AGE?",
+              "paragraph": 76,
+              "element_id": null
+            }
+          ]
+        }
+      ],
+      "spine_inventory": [
+        {
+          "spine": 1,
+          "epub_href": "titlepage.xhtml",
+          "sha256": "389ede7c6364a920c57ede3d835856a2d7364cc7a64fee25ffa16f4d0d985a25",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 2,
+          "epub_href": "text/part0001.html",
+          "sha256": "d6ead20a0003229152502ab9876056fa6cbca8c80248784f30d1ccb6085b3910",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 3,
+          "epub_href": "text/part0002.html",
+          "sha256": "f3de3b525ad0bd6b8f53d535bf116267551417d09617df69f89d52fb566e0e7f",
+          "headings": [
+            "Against the Grain"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 4,
+          "epub_href": "text/part0003.html",
+          "sha256": "6cc19408065ba82bfe236c46068f1600f34b38d2372f62ea501352902355b444",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 5,
+          "epub_href": "text/part0004.html",
+          "sha256": "c824ba6b1a49c29082638b43621a19eaee1a08b96491f222267970c1ee68b89d",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 6,
+          "epub_href": "text/part0005.html",
+          "sha256": "2eabde6ed818aab5948df75f28df619e0df48ec1c44d17b311cc445b1f1887b9",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 7,
+          "epub_href": "text/part0006.html",
+          "sha256": "ce53330900ae1331c41605e16be36d5bbdbbb6df1f0d6f9b4c0512d2a11d77c3",
+          "headings": [
+            "Contents"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 8,
+          "epub_href": "text/part0007.html",
+          "sha256": "c27e8abed0fdc472938ffccbaf07f1c65352da0695d57f75eec9685c43adcb1c",
+          "headings": [
+            "Preface"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 9,
+          "epub_href": "text/part0008.html",
+          "sha256": "58cda57efbad83da93fd235ddcb7fbcaf5ce87f3bd1d1c843c5659aa497a01ae",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 10,
+          "epub_href": "text/part0009.html",
+          "sha256": "5fa5a21f98431135bd5c63ecbcf93fa13475c87cb50fbd1545be14fa27e8ca8b",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 11,
+          "epub_href": "text/part0010.html",
+          "sha256": "2e4fd522ba82b5daad1a9b6facd303f91d6d45691244b9459fbaabf48a646ca0",
+          "headings": [
+            "Introduction: A Narrative in Tatters: What I Didn’t Know",
+            "PARADOXES OF STATE AND CIVILIZATION NARRATIVES",
+            "PUTTING THE STATE IN ITS PLACE",
+            "THUMBNAIL ITINERARY"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 12,
+          "epub_href": "text/part0011.html",
+          "sha256": "a3771e73994584c137f156a42254f93402dd5f6b0f68d38098e94c9d9b7aa851",
+          "headings": [
+            "CHAPTER ONE",
+            "The Domestication of Fire, Plants, Animals, and . . . Us",
+            "FIRE",
+            "CONCENTRATION AND SEDENTISM: A WETLANDS THESIS",
+            "WETLANDS AND SEDENTISM",
+            "WHY IGNORED?",
+            "MINDING THE GAP",
+            "WHY PLANT AT ALL?"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 13,
+          "epub_href": "text/part0012.html",
+          "sha256": "a71b240da647e82973b8aa2f0566e181d0171ec9a6583775464e2b7e65ec0346",
+          "headings": [
+            "CHAPTER TWO",
+            "Landscaping the World: The Domus Complex",
+            "FROM NEOLITHIC PLANTING TO FLORAL ZOO: CONSEQUENCES OF CULTIVATION",
+            "THE DOMUS AS A MODULE OF EVOLUTION",
+            "FROM HUNTER’S PREY TO FARMER’S CORRAL",
+            "SPECULATION ON HUMAN PARALLELS",
+            "THE DOMESTICATION OF US"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 14,
+          "epub_href": "text/part0013.html",
+          "sha256": "36cb349170dd5e409654efea3030df3af419255d65d86b2ac57728c220ba3b6b",
+          "headings": [
+            "CHAPTER THREE",
+            "Zoonoses: A Perfect Epidemiological Storm",
+            "DRUDGERY AND ITS HISTORY",
+            "THE LATE NEOLITHIC MULTISPECIES RESETTLEMENT CAMP: A PERFECT EPIDEMIOLOGICAL STORM",
+            "A NOTE ON FERTILITY AND POPULATION"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 15,
+          "epub_href": "text/part0014.html",
+          "sha256": "459cc5db5ca828b4969db3a909cfa581a150e41d5915729d23c9a996bd0b64e7",
+          "headings": [
+            "CHAPTER FOUR",
+            "Agro-ecology of the Early State",
+            "THE AGRO-GEOGRAPHY OF STATE-MAKING",
+            "GRAINS MAKE STATES",
+            "WALLS MAKE STATES: PROTECTION AND CONFINEMENT",
+            "WRITING MAKES STATES: RECORD KEEPING AND LEGIBILITY"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 16,
+          "epub_href": "text/part0015.html",
+          "sha256": "2539247691ef39c21d81608d9ec6e7a569c75e17bdd1bb90c75a0f7d4857a3e5",
+          "headings": [
+            "CHAPTER FIVE",
+            "Population Control: Bondage and War",
+            "THE STATE AND SLAVERY",
+            "SLAVERY AND BONDAGE IN MESOPOTAMIA",
+            "EGYPT AND CHINA",
+            "SLAVERY AS “HUMAN RESOURCES” STRATEGY",
+            "BOOTY CAPITALISM AND STATE BUILDING",
+            "THE PARTICULARITY OF MESOPOTAMIAN SLAVERY AND BONDAGE",
+            "A SPECULATIVE NOTE ON DOMESTICATION, DRUDGERY, AND SLAVERY"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 17,
+          "epub_href": "text/part0016.html",
+          "sha256": "0bb71277af9cbc9fb0578b44519fce1488dc783de7ba7f8f241bf9a3df4b68d4",
+          "headings": [
+            "CHAPTER SIX",
+            "Fragility of the Early State: Collapse as Disassembly",
+            "EARLY STATE MORBIDITY: ACUTE AND CHRONIC",
+            "Disease: Hypersedentism, Movement, and the State",
+            "Ecocide: Deforestation and Salinization",
+            "Politicide: Wars and Exploitation of the Core",
+            "PRAISING COLLAPSE"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 18,
+          "epub_href": "text/part0017.html",
+          "sha256": "5ee381f306f2b1cbce4ea8e6328fc0753c7cd4b6a12f02bcbab2a5e045894391",
+          "headings": [
+            "CHAPTER SEVEN",
+            "The Golden Age of the Barbarians",
+            "CIVILIZATIONS AND THEIR BARBARIAN PENUMBRA",
+            "BARBARIAN GEOGRAPHY, BARBARIAN ECOLOGY",
+            "RAIDING",
+            "TRADE ROUTES AND TAXABLE GRAIN CORES",
+            "DARK TWINS",
+            "A GOLDEN AGE?"
+          ],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 19,
+          "epub_href": "text/part0018.html",
+          "sha256": "3ef6e909bc165dbe3e0c9c463b2d947e7ffa2563f1d38c200498e20ed383c7d0",
+          "headings": [
+            "Notes",
+            "INTRODUCTION",
+            "1. THE DOMESTICATION OF FIRE, PLANTS, ANIMALS, AND . . . US",
+            "2. LANDSCAPING THE WORLD",
+            "3. ZOONOSES",
+            "4. AGRO-ECOLOGY OF THE EARLY STATE",
+            "5. POPULATION CONTROL",
+            "6. FRAGILITY OF THE EARLY STATE",
+            "7. THE GOLDEN AGE OF THE BARBARIANS"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 20,
+          "epub_href": "text/part0019.html",
+          "sha256": "a073039f1e21936b2ec967cf9b0f0b19b417bc7ac71bda4bd0d1aca2acab1ece",
+          "headings": [
+            "Bibliography"
+          ],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 21,
+          "epub_href": "text/part0020.html",
+          "sha256": "59f26a4702599e893e7bdfc76f813787d3a747934258d5f4d5f2835829da7c1b",
+          "headings": [
+            "Index"
+          ],
+          "indexed_chapter": false
+        }
+      ],
+      "repository_path": "books/Against the Grain A Deep History of the Earliest States by James C. Scott.epub",
+      "git_blob_sha": "2b92f42e70350bfd4290058e9cb7afbaba23785d",
+      "repository_url": "https://github.com/step3software/books/blob/8893e4e75744f12fd3f52cc1b9f5347a11e97453/books/Against%20the%20Grain%20A%20Deep%20History%20of%20the%20Earliest%20States%20by%20James%20C.%20Scott.epub"
+    }
+  }
+}

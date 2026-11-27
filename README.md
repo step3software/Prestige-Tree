@@ -2,6 +2,8 @@
 
 This is `step3software/Prestige-Tree`, forked from
 [Jacorb90/Prestige-Tree](https://github.com/Jacorb90/Prestige-Tree).
+For the Civilization game's historical grounding, start at the
+[research index](docs/research/README.md) and [game reference guide](docs/research/reference-guide.md).
 Build balance tests alongside new or replaced content. The
 [balance testing guide](docs/balance-testing.md#add-balance-coverage-with-content)
 explains checkpoints, play policies, focused tests and timing evidence.
