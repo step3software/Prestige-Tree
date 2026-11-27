@@ -4,6 +4,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { createHash } = require('node:crypto');
 const { test } = require('node:test');
+const espree = require('espree');
 const { createRuntime, loadedRuntime, root, scripts } = require('../support/game-runtime.cjs');
 const { historicalSources } = require('../support/historical-sources.cjs');
 const { expressionContract, functionContract, normalizeContract, sessionOwners } = require('../support/ownership-contract.cjs');
@@ -72,8 +73,15 @@ test('every layer preserves the complete immutable SIM01 formula AST apart from 
       const factory = r.run(`gameLayerManifest.find(entry => entry.id === ${JSON.stringify(starts[index][1])}).create.name`);
       const owner = scripts.find(file => fs.readFileSync(path.join(root,file),'utf8').includes(`function ${factory}(`));
       const moved = fs.readFileSync(path.join(root,owner),'utf8');
-      const actual = moved.slice(moved.indexOf('return ')+7, moved.lastIndexOf(';\n}'));
-      assert.deepEqual(expressionContract(actual,sessionOwners(r)),expressionContract(literal,sessionOwners(r)),starts[index][1]);
+      for (const newline of ['\n', '\r\n']) {
+        const text = moved.replace(/\r?\n/g, newline);
+        const factoryNode = espree.parse(text, {ecmaVersion:'latest', range:true}).body
+          .find(node => node.type === 'FunctionDeclaration' && node.id.name === factory);
+        const returned = factoryNode.body.body.find(node => node.type === 'ReturnStatement').argument;
+        assert.equal(returned.type, 'ObjectExpression', owner);
+        const actual = text.slice(...returned.range);
+        assert.deepEqual(expressionContract(actual,sessionOwners(r)),expressionContract(literal,sessionOwners(r)),starts[index][1]);
+      }
     }
     assert.equal(starts.length, 31);
   } finally { r.dispose(); }

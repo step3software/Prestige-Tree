@@ -217,3 +217,24 @@ claimed as an executed navigation journey. Existing Vue 2 advisory remains UI01.
 No arbitrary tick-chunk equivalence, performance budget or latency benefit is
 claimed. Native acceptance, merge, deployment, paid services, service activation
 and permission/policy changes remain outside this delivery.
+
+## Stack review correction R3 — 27 November 2026
+
+`start()` now verifies state, generation and session identity after the injected
+clock/resume ports and each resource-registration port. A superseded start returns
+false. Any handle returned after cleanup is immediately cancelled; listener
+registration is rechecked too. A stop/restart reentry keeps only the new generation's
+resources. No gameplay, timer periods, save semantics or browser policy changed.
+
+The new `tests/rules/startup-reentry.test.cjs` checks dispose, stop, player
+replacement and stop/restart from resume, plus disposal from clock/scheduler/listener
+ports, repeat disposal and stale callback fencing. Immutable SIM01 failed six of
+these seven cases (including the reported three leaked handles); the correction
+passes all seven. The existing lifecycle suite remains required at publication.
+
+Requirements: SIM01 AC03/04, local lifecycle ownership and RC-03/04/07. README →
+developer guide → `js/game-runtime.js` → the two lifecycle rule suites is the
+reader route. No new user interface is involved; existing browser runtime/fault
+journeys cover unchanged browser composition. R2/R4 arrive from the corrected
+parent. [Standards hashes](stack-review-fix-standards.json) bind current Orcha main.
+No native acceptance, PR merge, deployment or service activation is implied.

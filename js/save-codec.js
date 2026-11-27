@@ -173,7 +173,9 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId }) {
 		let collection = { set: raw.set };
 		for (let name of Object.keys(raw)) {
 			if (name === "set" || raw[name] === undefined) continue;
-			check(!["__proto__", "prototype", "constructor"].includes(name) && !(name in Object.prototype), "Invalid save name.");
+			// Save names are dictionary keys, not fields recursively copied into a player.
+			// TST01 accepted "prototype"; nested data still uses the stricter copy guard.
+			check(!(name in Object.prototype), "Invalid save name.");
 			collection[name] = playerCandidate(raw[name]);
 			check(collection[name].versionType === modId, "Stored save belongs to a different mod.");
 		}

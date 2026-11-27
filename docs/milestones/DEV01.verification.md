@@ -238,3 +238,20 @@ branch from the verified final DEV01 head. Its own current standards, source,
 plan/preparation and model/quota/priority/pause/writer/authority gates must be
 refreshed independently. No merge, native acceptance, deployment, service
 activation, spending or permission/policy change follows from this delivery.
+
+## Stack review correction R1 — 27 November 2026
+
+Layer comparison now parses each named factory with Espree and extracts its actual
+returned object by AST range. It no longer searches for a line-ending delimiter.
+Every one of the 31 immutable SIM01 formula contracts is compared against both LF
+and CRLF representations. The original rule reproduces `Unexpected token ;` in
+the detached Windows CRLF review checkout; all ten focused layer tests pass after
+the correction. The older development checkout itself used LF and did not reproduce
+the failure; that pass is not presented as the Windows failing baseline.
+
+Requirements: TST01 AC01/09, DEV01 AC06 and RC-07. README → developer guide →
+`node --test tests/rules/layer-content.test.cjs` is the reader route. This changes
+test extraction only; player journeys/formulas/production assets are unchanged.
+R2/R3/R4 are integrated through the corrected parent stack with their regressions.
+Full integrated/static/browser and fresh checkout results accompany publication.
+See [current-main standards observation](stack-review-fix-standards.json).
