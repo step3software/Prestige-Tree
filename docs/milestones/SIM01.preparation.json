@@ -1,0 +1,405 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#SIM01",
+  "plan_sha256": "35cba1601333af2d7c307df337b3f2f9e212736c09c103b3c4f4cb10e5916cef",
+  "base_revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+  "implementation_branch": "codex/sim01-runtime-lifecycle",
+  "validation_commands": [
+    "npm ci",
+    "npx playwright install chromium",
+    "npm test",
+    "git diff --check",
+    "py -3 -B verify-sim01.py"
+  ],
+  "handoff_instructions": [
+    "Use only these exact files on the protected dedicated worktree; preserve parent branches and their worktrees.",
+    "Validate artifacts before production or test edits. Explicit current continuation authorizes review/fix/plan/prepare/implement/test/publish; historical docs-only provenance remains unchanged.",
+    "Publish a separate draft PR to codex/sav01-save-boundaries; dependencies PR #3 then #2, final target master; no merge/deployment/activation."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "js/game.js",
+      "operation": "modify",
+      "implementation": "Retain rule sequence and reset helpers; replace implicit interval with explicit identity-bound advanceGame(session, elapsedSeconds), preserving both existing devSpeed applications.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "09229d87737845ea54ea83c7b7aceebd40305acb",
+        "sha256": "28059527e52cd527ef4fa11074eba9726854b78c1581b9c7e4ecee06dd96f564"
+      }
+    },
+    {
+      "path": "js/game-runtime.js",
+      "operation": "create",
+      "implementation": "Create the sole lifecycle/composition and named-unit clock/offline budgeting owner; injected clock/scheduler/listeners, generation and session fences, idempotent start/stop/dispose and reload-only fault recovery; no evaluation effects.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ]
+    },
+    {
+      "path": "js/utils.js",
+      "operation": "modify",
+      "implementation": "Name input handlers without installing them, move title effect to startup; replace calculation NaN dialogs/timer ownership with thrown errors consumed at runtime boundary.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "ea51a32b236ae426e74f597b7afc64281c77bf7a",
+        "sha256": "f51fef630ee23286c6bed8a7e7eb2ff470cf551eeff5b2efbe4ffd7c248f0d29"
+      }
+    },
+    {
+      "path": "js/technical/temp.js",
+      "operation": "modify",
+      "implementation": "Replace derived-state NaN dialog/interval control with thrown error; retain formula evaluation/order and Vue data assignment.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "9395fddd35473e7047e4dc3bfb4f70dc1c348f30",
+        "sha256": "42eafd49cbd9a167b14f787a390f8a6f0facea39a8a9e4fbea1f22cf2c356d5a"
+      }
+    },
+    {
+      "path": "js/technical/canvas.js",
+      "operation": "modify",
+      "implementation": "Remove evaluation-time resize/wheel listener registration; runtime installs and cleans up the same rendering callbacks.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "c5f2aca3f9561bc6e7cdb2327b429f11f5aeaf4a",
+        "sha256": "9f57991c5a97672d6154fdf2f90ea1ec7c6d58db1710b9b22c5f7d250de07857"
+      }
+    },
+    {
+      "path": "js/saves.js",
+      "operation": "modify",
+      "implementation": "Remove independent autosave interval and load-time clock budget. Dispose superseded sessions, initialize and explicitly start one runtime only after validation; retain SAV01 codec/storage and F1 fault write gate, catch startup effects safely and reuse existing Vue on repeated load.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "b9d95fe86df321748cc6c6b281237813c174fa06",
+        "sha256": "5ba5478b261ed09464e58b0ee75e4bbd1543dff3aa7a36c272766a41932c9a74"
+      }
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Load runtime owner in the shipped script graph before explicit load startup.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "7b025499b94a8ed7d7d67a6d82ae7b1c3d3ed6c8",
+        "sha256": "073b7f130cb8b0bc8dfe9c5ac66d01a4af7cfcb1b0e9b039cf52508acac1de53"
+      }
+    },
+    {
+      "path": "demo.html",
+      "operation": "modify",
+      "implementation": "Load shared runtime owner in the example script graph; no unrelated demo repair.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "edcef1f7b7ee992efeeb5f0086abc63fdd520695",
+        "sha256": "97128ccd08b2a0cc154c1c17296ee7de8fd38d7bff1f412a47e01cb3a5ccfec5"
+      }
+    },
+    {
+      "path": "tests/support/game-runtime.cjs",
+      "operation": "modify",
+      "implementation": "Expose controlled scheduler callbacks and removable event targets for lifecycle/race checks; allow delivery after cancellation and fire no callback when stopped; keep real scripts/formulas.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "746fa244e45b7ca6d4bfb9a182ae72f7505d8e8d",
+        "sha256": "052a3e12686538fb8667b78ebc67dc746c7d3271d9e6ee2eff3c9c215b3347ff"
+      }
+    },
+    {
+      "path": "tests/rules/runtime-lifecycle.test.cjs",
+      "operation": "create",
+      "implementation": "Add explicit advancement purity, replay, baseline comparison, time boundaries, lifecycle/stale/superseded sessions, independent contexts, startup/scheduling/input/render/derive/calculation error and autosave recovery checks.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ]
+    },
+    {
+      "path": "tests/browser/runtime-lifecycle.spec.cjs",
+      "operation": "create",
+      "implementation": "Exercise real page lifecycle, hotkeys, controlled offline return, no duplicate progress, fault save protection and real reload recovery in disposable Chromium contexts.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ]
+    },
+    {
+      "path": "scripts/verify-regressions.cjs",
+      "operation": "modify",
+      "implementation": "Preserve immutable baseline/parent checks with matching script graphs; move offline mutation anchor to new owner and add stale-callback sensitivity.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "2a7405650e184729be64de043ace225e5c528cfb",
+        "sha256": "c7746b8773711dc8882087460f04871f7256968e03628b006a4ac59d3de1024f"
+      }
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "modify",
+      "implementation": "Add the SIM01 branch to the existing push trigger; preserve locked/read-only full-suite CI.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "483e72103e649d4eef8376401898d1501729d148",
+        "sha256": "b021c71ffa26b66adf7e8b43dc1c3139ea7a79a0730042ade7216d7765a2062e"
+      }
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Update current simulation/lifecycle source map, public contracts/recovery/focused test and explicit stacked PR exception.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ],
+      "source": {
+        "revision": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+        "blob": "85588e5061f632c0d5638495b8178c3eba7f58fa",
+        "sha256": "fcb2562d947f1d80e753b90b49dacbbbb0217feb1ce60eb04ed5d8d9715d025f"
+      }
+    },
+    {
+      "path": "docs/milestones/SIM01.preparation.json",
+      "operation": "create",
+      "implementation": "Record this validated exact-file handoff, original plan/spec hashes, source blobs, criteria, standards and separate continuation authority.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ]
+    },
+    {
+      "path": "docs/milestones/SIM01.verification.md",
+      "operation": "create",
+      "implementation": "Record actual criteria/standards/scenario/path evidence, before/after results, delivery refs and limits without acceptance claims.",
+      "verification": [
+        "Inspect full diff and source callers; map relevant SIM01 criteria to tests and final review.",
+        "npm test; exact-file/source/hash and link validation."
+      ]
+    }
+  ],
+  "source_invariants": [
+    "Preserve ptr key, SAV01 data owners/validation and F1-F3 protections; no schema migration.",
+    "Preserve Decimal/library/layers/game balance/rule order/settings; compare identical ordered action/time sequences, never arbitrary nonlinear chunk equivalence.",
+    "One session per script context retains globals pending DEV01; explicit session identity checks reject stale bindings; no global-state migration.",
+    "Runtime errors invalidate the session for progression and all save writes until reload; start cannot revive partial mutations.",
+    "No default-off coordination activation, authority/enrollment/permission/priority/quota change or paid service."
+  ],
+  "technical_refinements": [
+    "SAV01 moved autosave and load clock logic into saves.js; reconcile actual extracted owners.",
+    "Existing NaN dialogs violate calculation purity and can allow partial unsafe writes; throw at calculation owner, report at lifecycle effect boundary and require reload.",
+    "Use a monotonic observed wall-time high-water mark to avoid crediting the same period twice after a backwards clock.",
+    "Reuse existing mounted Vue on repeated successful load and rebind canonical temp/player/collection; no framework migration."
+  ],
+  "implementation_criteria": [
+    "SIM01-AC01: A documented advancement entry point takes explicit session/context and elapsed seconds. Its calculation path does not read Date.now, access localStorage/DOM, create timers or present dialogs. Supplying the same fixture and ordered actions/time steps produces the same meaningful game state.",
+    "SIM01-AC02: Clock conversion and online/offline budgeting have a single owner with named units. Zero/backwards time, below/at/above offline cap, disabled offline production and repeated catch-up preserve TST01 expectations; one elapsed period is never credited twice.",
+    "SIM01-AC03: Evaluating/loading game code creates no ticking or autosave intervals and attaches no unmanaged runtime listeners. The real page explicitly starts the runtime once after a validated state is ready, with timer IDs and listeners owned by that runtime.",
+    "SIM01-AC04: Start is idempotent, stop/dispose clears owned timers/listeners, and pending callbacks cannot mutate a stopped/disposed or superseded session. Tests demonstrate start twice, stop twice, restart, stale callback delivery and independent isolated contexts.",
+    "SIM01-AC05: A calculation/derived-state/render callback exception cannot leave the ticking guard stuck or continue unsafe autosaves. Cleanup happens reliably; the runtime enters an explicit stopped/error condition with a recoverable original save and clear recovery behavior. Tests exercise the exception and subsequent lifecycle operation.",
+    "SIM01-AC06: Before/after fixtures for representative progression/reset/offline paths preserve established rule ordering, Decimal values and settings for the same time/action sequence. Test adapters control clocks and scheduling; they do not replace game formulas.",
+    "SIM01-AC07: Browser startup, prestige/purchase, save/reload and controlled offline return use the new runtime and pass TST01 journeys without duplicate progression or timers. Update the existing guide with advancement/lifecycle owners and targeted checks; no unsupported latency claim is made."
+  ],
+  "authority": {
+    "mode": "legacy",
+    "request_chat": "01a21ba2-ac03-7710-a07c-99a9cfaec7da",
+    "source_chat": "01a21b4e-ec1e-7ed3-ac43-bb65271a9cd3",
+    "scope": "Explicit scheduled SIM01 full development continuation; preserve original proposal provenance; no native receipts or human acceptance fabricated."
+  },
+  "standards_observation": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "document_sha256": {
+      "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+      "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+      "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+      "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+      "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+      "docs/agent-workflows/prepare.md": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255",
+      "docs/agent-workflows/implement.md": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51",
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+      "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+    },
+    "purpose": "Fresh SIM01 run evidence, not a consumer pin"
+  },
+  "project_documents": {
+    "origin/master": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/developer-guide.md": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190",
+      "docs/main-mod-info.md": "b80ccff65bda5b8aa4dc8a3f72402978fbfe2404150769a8ed0a932e78b05554"
+    },
+    "199b14e622f2fdf7c2d1d2363874b0e38744121a": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/developer-guide.md": "fcb2562d947f1d80e753b90b49dacbbbb0217feb1ce60eb04ed5d8d9715d025f",
+      "docs/main-mod-info.md": "b80ccff65bda5b8aa4dc8a3f72402978fbfe2404150769a8ed0a932e78b05554"
+    }
+  },
+  "dependency_evidence": {
+    "TST01": {
+      "head": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+      "pr": 2,
+      "source_verified": "F1-F3, real-script/Decimal rules, clock tests, Chromium and sensitivity owners present in prepared source"
+    },
+    "SAV01": {
+      "head": "199b14e622f2fdf7c2d1d2363874b0e38744121a",
+      "pr": 3,
+      "source_verified": "Codec/storage/commands, protected collection commits and predecessor verification read"
+    }
+  },
+  "user_outcome": {
+    "task": "Open/resume synthetic progress, prestige/purchase, save/reload, offline return; on a runtime fault recover last durable progress with reload.",
+    "verification": "Required real-page Chromium plus controlled real-script/Decimal tests; actual users/other engines not claimed."
+  },
+  "documentation_assessment": "README \u2192 developer guide is useful; repair moved tick/autosave/clock owners there. No reorganization or measured navigation savings.",
+  "execution_handoff_revision": "6af9877",
+  "coverage_clarification": "Scope-preserving criterion/file mapping made explicit during final review; original exact-file handoff was validated and committed at 6af9877 before production/test edits. No source, plan, allowed-path or authority change.",
+  "criterion_mapping": [
+    {
+      "id": "SIM01-AC01",
+      "paths": [
+        "js/game.js",
+        "js/game-runtime.js",
+        "js/technical/temp.js",
+        "js/utils.js",
+        "tests/rules/runtime-lifecycle.test.cjs"
+      ],
+      "checks": [
+        "Hostile clock/DOM/storage/timer/dialog ports; identical action/time replay; finite elapsed/identity rejection before mutation."
+      ]
+    },
+    {
+      "id": "SIM01-AC02",
+      "paths": [
+        "js/game-runtime.js",
+        "js/saves.js",
+        "tests/rules/clock.test.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs"
+      ],
+      "checks": [
+        "Zero/backwards high-water marks, cap boundaries, disabled offline, repeated catch-up/start, same period never doubled."
+      ]
+    },
+    {
+      "id": "SIM01-AC03",
+      "paths": [
+        "index.html",
+        "demo.html",
+        "js/game-runtime.js",
+        "js/game.js",
+        "js/saves.js",
+        "js/utils.js",
+        "js/technical/canvas.js",
+        "tests/rules/runtime-lifecycle.test.cjs"
+      ],
+      "checks": [
+        "Evaluation/blocked-load resource count zero; explicit validated startup owns three intervals and five listeners; real page startup."
+      ]
+    },
+    {
+      "id": "SIM01-AC04",
+      "paths": [
+        "js/game-runtime.js",
+        "js/saves.js",
+        "tests/support/game-runtime.cjs",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "scripts/verify-regressions.cjs"
+      ],
+      "checks": [
+        "Repeated start/stop/dispose, restart, old callback delivery both stopped and restarted, replacement/load/import identity fences, isolated contexts and mutations."
+      ]
+    },
+    {
+      "id": "SIM01-AC05",
+      "paths": [
+        "js/game-runtime.js",
+        "js/game.js",
+        "js/saves.js",
+        "js/technical/temp.js",
+        "js/utils.js",
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/browser/runtime-lifecycle.spec.cjs"
+      ],
+      "checks": [
+        "Calculation/derived/render/input/refresh/NaN/autosave/startup/scheduler exceptions, finally guard, no durable write, terminal error and real reload recovery."
+      ]
+    },
+    {
+      "id": "SIM01-AC06",
+      "paths": [
+        "tests/rules/runtime-lifecycle.test.cjs",
+        "tests/rules/clock.test.cjs",
+        "tests/rules/progression.test.cjs",
+        "scripts/verify-regressions.cjs"
+      ],
+      "checks": [
+        "Complete-player checkpoints vs immutable SAV01 for reset/progression/devSpeed, offline return, huge Decimal fixture; original F1-F3 and sensitivity retained."
+      ]
+    },
+    {
+      "id": "SIM01-AC07",
+      "paths": [
+        "tests/browser/runtime-lifecycle.spec.cjs",
+        "tests/browser/game.spec.cjs",
+        "tests/browser/save-recovery.spec.cjs",
+        "docs/developer-guide.md",
+        ".github/workflows/test.yml"
+      ],
+      "checks": [
+        "Real-page startup/prestige/purchase/save/reload/offline, repeated load and hotkey stop/resume, 1280/320px live status/keyboard recovery; guide route and exact-head CI."
+      ]
+    }
+  ]
+}

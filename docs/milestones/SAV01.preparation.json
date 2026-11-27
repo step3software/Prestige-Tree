@@ -1,0 +1,287 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#SAV01",
+  "plan_sha256": "9927897dfebe55ccb77aa8a5a064caae1b46ac85bdbb8e7f3162636bfa74b3d1",
+  "base_revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+  "handoff_head": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+  "implementation_branch": "codex/sav01-save-boundaries",
+  "validation_commands": [
+    "npm ci",
+    "npx playwright install chromium",
+    "npm test",
+    "git diff --check"
+  ],
+  "handoff_instructions": [
+    "Verify the exclusive fenced writer before editing. Keep PR #2 and its parent branch intact.",
+    "Retain historical SAV01 plan/spec bytes and docs-only provenance; this owner continuation separately authorizes the direct review/fix/plan/prepare/implement/test/review/publication sequence.",
+    "Publish one unmerged draft stacked PR based on codex/tst01-testing-milestone at the verified source; final integration target remains master. Do not retarget while TST01 is unmerged.",
+    "No milestone receipt, acceptance, enrollment, merge, deployment, service activation, policy/spend or source pause changes.",
+    "Complete every SAV01 criterion; keep SIM01/LAY01/DEV01/UI01 out of scope. Revalidate the exact file contract before any expansion."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "js/save-codec.js",
+      "operation": "create",
+      "implementation": "Extract pure default construction, detached validation/hydration, player and collection codec, explicit supported-format conversion and reference checks. Inject time/defaults/configuration; return complete candidates or explicit errors; no active state or I/O.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    },
+    {
+      "path": "js/save-storage.js",
+      "operation": "create",
+      "implementation": "Create the single injected storage adapter for ptr. Catch read denial and atomic write failures, validate/encode before replacement and return explicit outcomes with original raw data on decoding failure.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    },
+    {
+      "path": "js/saves.js",
+      "operation": "create",
+      "implementation": "Own existing save/menu/import/export/startup commands, clock/theme/Vue effects, failure status and recovery panel. Persist complete detached candidates before collection/selection/player activation; preserve ordinary active identity and all siblings; keep tick-fault guard; conversion startup fails closed until retry/recovery.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    },
+    {
+      "path": "js/utils.js",
+      "operation": "modify",
+      "implementation": "Remove superseded save codec, persistence, menu, startup, version and timer paths after extraction; retain unrelated formatting/game/UI helpers and NaN recovery.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "c5a1b71d2f6ef2c7c6747c7e02497c102ba7828318fabde7ecaa7a7f3473795c",
+        "git_blob": "3dc547e8bdf2f32bc20dec52b643de6e5e0ef431"
+      }
+    },
+    {
+      "path": "js/game.js",
+      "operation": "modify",
+      "implementation": "Route hardReset through the save command transaction; never replace player or reload when reset persistence fails. Preserve all tick/offline rules and fault latch.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "32d27915f25c1f5ea4cb0de7fda2b2846aa903b59e91795b2fcaf38238638250",
+        "git_blob": "8e3c510cc31e63ef106f39ec1e50cb86899e5260"
+      }
+    },
+    {
+      "path": "js/components.js",
+      "operation": "modify",
+      "implementation": "Remove the redundant pre-selection save effect; call transactional loadSave directly. Synchronize Vue bindings after committed collection changes to keep one active authority.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "b4ce08ef29aa49b34a1a5d4ed83775424eda5af845b90a591e704457c124d802",
+        "git_blob": "61f3601d61fd79094774d7fd8f256ec120060ae8"
+      }
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Wire codec, storage and commands in order and add readable live save status plus keyboard-operable blocked-load recovery controls and original-data export.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "5264d5f5849befaaa4cccf1a5de4230a57934fd833dcdc1d2732ebda4bf7d4b4",
+        "git_blob": "a4c8195da85954f713c06024ff23dcef519c77fd"
+      }
+    },
+    {
+      "path": "demo.html",
+      "operation": "modify",
+      "implementation": "Wire the same extracted owners and recovery markup for this existing shared-script caller; avoid changing example gameplay or upstream path debt.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "d514fda6ae1d996c5fa732aca6ab668220a61209bf5a49a2c73bb1a6e802a0c9",
+        "git_blob": "4511971e8749a266ec68f3fce4f00d7db7447184"
+      }
+    },
+    {
+      "path": "tests/support/game-runtime.cjs",
+      "operation": "modify",
+      "implementation": "Extend the existing isolated storage/DOM adapters with read failure, write counting and status/recovery elements. Keep the actual shipped script order and Decimal.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "952425d270e410020a97184f6bad25c5923ac6edc2dd6da93832f9fbe355871f",
+        "git_blob": "d95079c741045ae1717055107f24c0577f534ed0"
+      }
+    },
+    {
+      "path": "tests/rules/save-boundary.test.cjs",
+      "operation": "create",
+      "implementation": "Cover codec purity, current/historical meaningful round trips, unsupported/corrupt/nested/reference failures, all durable callers, atomic menu/reset/import failures, denial/quota, conversion interruption/retry and startup recovery. Assert F1-F3 protections remain.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    },
+    {
+      "path": "tests/fixtures/historical-saves.json",
+      "operation": "create",
+      "implementation": "Add synthetic compact source-shaped representatives for pre-multi-save single player and numeric-version/Gear sentinels; include version inventory and meaningful expected values, without claiming all historical installations were surveyed.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    },
+    {
+      "path": "tests/browser/save-recovery.spec.cjs",
+      "operation": "create",
+      "implementation": "Exercise real save/export/import/menu controls, repeat/retry, storage failures and blocked startup recovery at desktop/narrow widths with keyboard/live status and preserved context.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    },
+    {
+      "path": "scripts/verify-regressions.cjs",
+      "operation": "modify",
+      "implementation": "Preserve F1-F3 immutable-baseline assertions and offline mutation. Point save-preservation mutation at the extracted import activation boundary and add a candidate-write ordering mutation.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "8c9c517e2fdf37b2d570b2a628c50551b9899c46741c8047c5922fa99e15ce63",
+        "git_blob": "374e9e1709080812e4b0a93e6ac6f1faaa4cbd67"
+      }
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "operation": "modify",
+      "implementation": "Add this milestone branch to existing push triggers; keep locked installs, immutable actions, public runner, read-only permissions and required suite commands.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "ab23f0ed21d8200950b8e0252474d6844bc495ce509e76cdd0ed381e0e2b32c2",
+        "git_blob": "2048bc3619b208aa5b9450cf132f7f077cdee0ac"
+      }
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Update source map and trace for codec/storage/commands, supported formats, failure/retry/recovery and focused checks; document explicit TST01 stacked publication dependency.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ],
+      "source": {
+        "revision": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+        "sha256": "7f9fe3f0f625a239edaf1f99519c1e8d9cca4e9822214e7f630729ecf29a0c93",
+        "git_blob": "3924bb6a3222fcd25c25cc5c0379e2592acb1428"
+      }
+    },
+    {
+      "path": "docs/milestones/SAV01.verification.md",
+      "operation": "create",
+      "implementation": "Record plan/source review, complete storage/version inventory, expected invariants, findings and corrections, all criteria/standards/scenarios/path accounting, actual commands/results, before/after evidence and limitations.",
+      "verification": [
+        "Run relevant required suites and inspect results against SAV01-AC01 through AC07."
+      ]
+    }
+  ],
+  "standards_observation": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "document_sha256": {
+      "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+      "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+      "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+      "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+      "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+      "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+      "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+      "docs/agent-workflows/fix.md": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+      "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+      "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+      "docs/agent-workflows/prepare.md": "20d05f0577f15d4d02461b708c657dafecb823e31460b4710fead2d7c5bf6255",
+      "docs/agent-workflows/implement.md": "ce0a9f3dd97fbd7806b92dabcbd8abda4473d9dcc9cda5d545b91f51ba0ccd51",
+      "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+      "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+      "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+      "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+      "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+      "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52"
+    },
+    "purpose": "Fresh SAV01 run evidence, not a consumer pin"
+  },
+  "owner_authority": {
+    "channel": "Owner continuation in Codex chat 01a21b79-b686-72e1-ae8b-05f1f47e5c67 from 01a21b4e-ec1e-7ed3-ac43-bb65271a9cd3",
+    "scope": "SAV01 full direct development cycle and unmerged stacked PR; no fabricated native lifecycle receipts/human acceptance"
+  },
+  "dependency": {
+    "id": "TST01",
+    "pr": "https://github.com/step3software/Prestige-Tree/pull/2",
+    "branch": "codex/tst01-testing-milestone",
+    "head": "379241bd94cf50ca6423e07f1ad68c567edcb6a0",
+    "status": "Open/draft/unmerged; source and tests present; rerun required suites before extraction",
+    "historical_ci": [
+      45944210096,
+      45944204259
+    ]
+  },
+  "plan_review": {
+    "result": "Seven criteria cover the requested bounded outcome. No consequential unresolved decision. Historical docs-only authority is preserved, with the current execution grant carried separately.",
+    "refinements": [
+      "Explicit inventory and conversion boundary for single-player, selected collection, numeric versions, missing defaults and Gear zero sentinels.",
+      "All collection commands and hard reset use a detached candidate and one storage replacement.",
+      "Unreadable/unsupported startup cannot create and autosave replacement defaults; show recoverable original and permit retry or explicitly confirmed validated recovery import."
+    ],
+    "documentation_assessment": "Existing README -> developer guide is a usable entry. Update moved source routes in that guide; do not reorganize engine docs or add a competing ledger."
+  },
+  "source_invariants": [
+    "Retain ptr, btoa(JSON save) layout, layer IDs, Decimal values, multi-save order/selection and F1-F3.",
+    "Single current hydrated player/collection model; historical handling is a pure ingress conversion, never a runtime mode or dual write.",
+    "Storage setItem is one atomic key replacement; no cross-key transaction/readback rollback claims.",
+    "Keep original raw data and block writes/game initialization on unreadable startup; no silent defaults.",
+    "Do not persist derived caches/timers/DOM/functions; validate external data and references before activation."
+  ],
+  "user_outcome_journeys": [
+    {
+      "criteria": [
+        "SAV01-AC01",
+        "SAV01-AC02",
+        "SAV01-AC03",
+        "SAV01-AC04",
+        "SAV01-AC05",
+        "SAV01-AC06",
+        "SAV01-AC07"
+      ],
+      "task_and_start": "Player with synthetic valid saved progress uses save/export/import and multi-save controls or reloads a supported historical representation.",
+      "success": "Valid operations retain values/siblings/selection and survive reload in the current model.",
+      "failure_recovery": "Cancellation/rejection/storage denial/quota/conversion interruption preserve prior active and durable progress, visibly report failure, and permit safe retry; corrupt startup exposes original without ticking/autosaving defaults.",
+      "verification": "Planned: real-script rules plus rendered Chromium controls at desktop/narrow widths and keyboard status/recovery. No performance budget, other-engine or actual-user claim."
+    }
+  ],
+  "rollback": "Revert only SAV01 child commits. No external user data is touched; synthetic isolated tests only. Original storage is unchanged until a validated candidate is atomically replaced.",
+  "governing_project_documents": {
+    "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/developer-guide.md": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/main-mod-info.md": "b80ccff65bda5b8aa4dc8a3f72402978fbfe2404150769a8ed0a932e78b05554"
+    },
+    "379241bd94cf50ca6423e07f1ad68c567edcb6a0": {
+      "AGENTS.md": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9",
+      ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+      "docs/developer-guide.md": "7f9fe3f0f625a239edaf1f99519c1e8d9cca4e9822214e7f630729ecf29a0c93",
+      "docs/!general-info.md": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7",
+      "docs/main-mod-info.md": "b80ccff65bda5b8aa4dc8a3f72402978fbfe2404150769a8ed0a932e78b05554"
+    }
+  }
+}
