@@ -15,7 +15,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','waterOrders','waterReserves','overseer','rationing','gravity','farming','builderTools','relief','sluice','autonomousFood']){
+    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','hutForeman','waterReserves','overseer','rationing','gravity','farming','builderTools','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];
@@ -33,13 +33,13 @@ function createPolicy(engine,settings,onAction=()=>{}){
       const held=id==='education'?p[id].points:p[id].total;
       if(held.lt(target) && economy.canInvest(id) && economy.invest(id))record('investment',id,time);
     }
-    for(const id of ['water','gather','fish','hunt','farm']){
+    for(const id of ['gather','fish','hunt','farm']){
       const action=economy.actionDefinition(id);
-      if(action.unlocked && action.repeatAvailable && !action.automatic && !action.repeat && economy.toggleRepeat(id))record('automation',id,time);
+      if(action.unlocked && action.repeatAvailable && !action.repeat && economy.setRepeat(id,1))record('automation',id,time);
     }
     if(!p.civ.project){
-      const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationHousingRequirement()):24;
-      let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2?'food-storage':p.water.sites<1?'water-site':null;
+      const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationPopulationRequirement()):24;
+      let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2&&p.craft.points.gte(4)?'food-storage':p.water.sites<1?'water-site':null;
       if(next && !economy.canStartProject(next))next=p.water.sites<1?'water-site':null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);
     }

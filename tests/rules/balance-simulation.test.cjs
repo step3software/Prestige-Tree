@@ -16,7 +16,7 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   if(p.civ.project)e.cancelProject();
   for(const id of ['gather','fish','hunt','farm']){
    if(p.civ.actions[id].remaining)e.recall(id);
-   if(p.civ.actions[id].repeat)e.toggleRepeat(id);
+   e.setRepeat(id,0);
   }
   let shortageSeconds=0;
   while(p.points.gt(1)&&shortageSeconds<600){engine.advance(1);shortageSeconds++;}
@@ -25,13 +25,18 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   const target=p.shelter.points.toNumber();
   const baselineMinimum=(target-p.points.toNumber()-p.civ.growth)*e.growthSettings.secondsPerPerson;
   assert.ok(target>=48);
+  assert.equal(e.setRepeat('gather',1),false,'One survivor cannot staff both Overseer and a crew');
+  assert.equal(e.dispatch('gather'),true);
+  let manualRecoverySeconds=0;
+  while(p.points.lt(2)&&manualRecoverySeconds<60){engine.advance(1);manualRecoverySeconds++;}
+  assert.ok(p.points.gte(2),'One manual Gather restores room for an Overseer');
   let orders=0;
   for(const id of ['gather','fish','hunt','farm']){
    const action=e.actionDefinition(id);
-   if(action.unlocked&&action.repeatAvailable&&!action.repeat&&e.toggleRepeat(id))orders++;
+   if(action.unlocked&&action.repeatAvailable&&!action.repeat&&e.setRepeat(id,1))orders++;
   }
   assert.ok(orders>=3);
-  let recoverySeconds=0,peak=1;
+  let recoverySeconds=manualRecoverySeconds,peak=1;
   while(p.points.lt(target)&&recoverySeconds<300){
    engine.advance(1);recoverySeconds++;
    peak=Math.max(peak,e.supply().abundance.multiplier);
@@ -41,6 +46,83 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   assert.ok(peak>=7&&peak<=10);
   assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
   console.log(strategy+' actual-starvation recovery: 1 -> '+target+' in '+recoverySeconds+'s after '+orders+' repeat orders; old unbuffed minimum '+baselineMinimum+'s; peak '+peak.toFixed(2)+'x (synthetic).');
+ }
+});
+
+test('earned Food and hut orders can run five fully staffed jobs after legal active and regular progression',t=>{
+ for(const strategy of ['active-balanced','regular']){
+  const run=simulate({strategy,horizonSeconds:14400});
+  assert.equal(run.status,'endgame');
+  const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
+  const p=engine.player,e=engine.session.modRules.civilization;
+  const cadence=strategy==='regular'?300:5;
+  // Continue the reached settlement rather than prestiging again. Commands use
+  // its earned buildings, managers, tools and flow; no state or currency grants.
+  for(const id of ['gather','fish','farm'])e.setRepeat(id,1);
+  let time=0;
+  for(;time<3600&&p.points.lt(20);time+=cadence)engine.advance(cadence);
+  assert.ok(p.points.gte(20));
+  for(const id of ['gather','hunt','fish','farm']){
+   for(const other of ['gather','hunt','fish','farm'])e.setRepeat(other,0);
+   for(let wait=0;wait<600&&['gather','hunt','fish','farm'].some(key=>p.civ.actions[key].remaining>0);wait+=cadence)engine.advance(cadence);
+   const completed=p.civ.actions[id].completed;
+   assert.equal(e.setRepeat(id,5),true);
+   let observed=false;
+   for(let wait=0;wait<1200;wait+=cadence){
+    engine.advance(cadence);
+    const state=p.civ.actions[id];
+    if(state.jobs===5){
+     observed=true;
+     assert.equal(state.workers,e.actionDefinition(id).workers*5);
+    }
+    if(state.completed>=completed+5)break;
+   }
+   assert.ok(observed||p.civ.actions[id].completed>=completed+5,'Observed five-job batch or its completion at manual cadence');
+   assert.ok(p.civ.actions[id].completed>=completed+5,id);
+  }
+  for(const id of ['gather','hunt','fish','farm'])e.setRepeat(id,0);
+  e.setRepeat('gather',1);e.setRepeat('farm',1);
+  const huts=p.shelter.homes;
+  assert.equal(e.setHutRepeat(5),true);
+  for(let wait=0;wait<3600&&p.shelter.homes<huts+5;wait+=cadence)engine.advance(cadence);
+  assert.ok(p.shelter.homes>=huts+5);
+  assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
+  assert.ok(e.supply().laborUsed<=p.points.toNumber());
+  engine.exportPlayer();engine.assertIsolated();
+  console.log(strategy+' legal five-job Food and hut scenario completed from opening '+run.simulatedSeconds+'s (no grants).');
+ }
+});
+
+test('legal active and regular play earn hearths and scale their Food benefits to twenty people',t=>{
+ for(const strategy of ['active-balanced','regular']){
+  const engine=createBalanceEngine();t.after(engine.dispose);
+  const p=engine.player,e=engine.session.modRules.civilization;
+  const policy=createPolicy(engine,strategies[strategy]);
+  const cadence=strategy==='regular'?20:5;
+  let time=0;
+  for(;time<7200;time+=cadence){
+   policy.act(time);
+   if(p.civ.improvements.hearth && p.points.gte(10))break;
+   engine.advance(cadence);
+  }
+  assert.ok(time<7200,'Purchased hearths and reached ten people without grants');
+  const enteredAt=time;
+  // Keep this earned settlement instead of prestiging: build housing and send
+  // real crews at the same manual cadence to measure the next Food threshold.
+  for(;time<enteredAt+1800;time+=cadence){
+   if(!p.civ.project && e.supply().support<24)e.startProject('shelter-home');
+   for(const id of ['water','gather','fish','hunt','farm'])e.dispatch(id);
+   engine.advance(cadence);
+   if(p.points.gte(20))break;
+  }
+  assert.ok(p.points.gte(20));
+  assert.equal(e.supply().hearth.foodStorage,10);
+  assert.equal(e.supply().passiveProduction.food,2);
+  assert.ok(e.supply().passiveProduction.food<e.supply().demand,'Hearths supplement staffed Food routes');
+  assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
+  assert.ok(p.civ.actions.gather.completed>0);
+  engine.assertIsolated();
+  console.log(strategy+' legal hearths: ten people by '+enteredAt+'s, twenty by '+(time+cadence)+'s; +10 storage/+2 Food per minute.');
  }
 });
 

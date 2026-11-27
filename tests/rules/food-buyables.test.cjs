@@ -107,9 +107,9 @@ test('larger hunting crews round-trip, retain active contracts and wait safely o
     assert.equal(restored.player.civ.actions.hunt.workers, 5);
     e.recall('hunt');
     p.points = new Decimal(5);
-    assert.equal(e.toggleRepeat('hunt'), true);
+    assert.equal(e.setRepeat('hunt',1), true);
     engine.advance(1);
-    assert.equal(p.civ.actions.hunt.repeat, true);
+    assert.equal(p.civ.actions.hunt.repeat, 1);
     assert.equal(p.civ.actions.hunt.remaining, 0);
     p.points = new Decimal(12);
     engine.advance(1);
