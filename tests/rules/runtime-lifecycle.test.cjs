@@ -1,10 +1,10 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
+const { historicalSources } = require('../support/historical-sources.cjs');
 const { test } = require('node:test');
 const { createHash } = require('node:crypto');
-const { createRuntime, loadedRuntime, root, scripts } = require('../support/game-runtime.cjs');
+const { createRuntime, loadedRuntime, root } = require('../support/game-runtime.cjs');
 
 const listenerCount = r => [...r.listeners.values()].reduce((sum, set) => sum + set.size, 0);
 const callbacks = r => [...r.callbacks.map(item => item.fn), ...[...r.listeners.values()].flatMap(set => [...set])];
@@ -22,7 +22,7 @@ test('script evaluation owns no timers, runtime listeners or title effects; fail
   for (const page of ['index.html','demo.html']) {
     const html = fs.readFileSync(path.join(root,page),'utf8');
     assert.ok(html.includes('src="js/game-runtime.js"'));
-    assert.ok(html.includes('onload="load()"'));
+    assert.ok(html.includes('onload="gameUI.commands.load('));
   }
 });
 
@@ -30,13 +30,13 @@ test('explicit elapsed advancement replays real rules without clock, DOM, storag
   const results = [];
   for (let repeat = 0; repeat < 2; repeat++) {
     const r = loadedRuntime(); t.after(r.dispose); prepareProgress(r);
-    r.run(`gameRuntime.stop(); var session = createGameSession();
+    r.run(`gameRuntime.stop(); var session = captureGameIdentity();
       Date.now = () => { throw new Error('clock'); };
       document = localStorage = new Proxy({}, {get() {throw new Error('I/O');}});
       alert = prompt = confirm = setInterval = setTimeout = () => {throw new Error('effect');};
-      for (let seconds of [0, 0.05, 1, 2]) advanceGame(session, seconds);
+      for (let seconds of [0, 0.05, 1, 2]) advanceActiveGame(session, seconds);
       player.points = new Decimal(40); updateTemp(); doReset('p');
-      advanceGame(session, 1);`);
+      advanceActiveGame(session, 1);`);
     assert.equal(r.run('player.points.eq(1) && player.p.upgrades.includes(11) && player.p.points.gte(2)'), true);
     assert.equal(r.run('ticking'), false);
     assert.equal(r.intervals.size, 0);
@@ -47,19 +47,19 @@ test('explicit elapsed advancement replays real rules without clock, DOM, storag
 
 test('elapsed argument and session identity are validated before mutation', t => {
   const r = loadedRuntime(); t.after(r.dispose); prepareProgress(r);
-  r.run('gameRuntime.stop(); var session = createGameSession();');
+  r.run('gameRuntime.stop(); var session = captureGameIdentity();');
   const before = r.run('JSON.stringify(player)');
-  for (const elapsed of ['NaN','Infinity','-1','"1"']) assert.throws(() => r.run(`advanceGame(session, ${elapsed})`), /elapsed seconds/);
+  for (const elapsed of ['NaN','Infinity','-1','"1"']) assert.throws(() => r.run(`advanceActiveGame(session, ${elapsed})`), /elapsed seconds/);
   r.run('session.disposed = true;');
-  assert.throws(() => r.run('advanceGame(session, 1)'), /Superseded/);
+  assert.throws(() => r.run('advanceActiveGame(session, 1)'), /Superseded/);
   assert.equal(r.run('JSON.stringify(player)'), before);
 });
 
 test('a direct advancement failure propagates without I/O while latching save protection', t => {
   const r = loadedRuntime(); t.after(r.dispose); prepareProgress(r);
-  r.run('save(); gameRuntime.stop(); var session = createGameSession(); gameLoop = () => { player.points = new Decimal(999); throw new Error("direct failure"); };');
+  r.run('save(); gameRuntime.stop(); var session = captureGameIdentity(); gameLoop = () => { player.points = new Decimal(999); throw new Error("direct failure"); };');
   const original = r.data.get('ptr');
-  assert.throws(() => r.run('advanceGame(session, 1)'), /direct failure/);
+  assert.throws(() => r.run('advanceActiveGame(session, 1)'), /direct failure/);
   assert.equal(r.run('tickFaulted && !ticking'), true);
   assert.equal(r.alerts.length, 0);
   assert.equal(r.run('save()'), false);
@@ -172,7 +172,7 @@ for (const [name, injection, milliseconds] of [
 test('partial startup resource failure cleans acquired timers and listeners', t => {
   const r = loadedRuntime(); t.after(r.dispose);
   r.run(`gameRuntime.dispose(); var scheduled = 0;
-    gameRuntime = createGameRuntime({session:createGameSession(),clock:{now:()=>123},
+    gameRuntime = createGameRuntime({session:captureGameIdentity(),clock:{now:()=>123},
       scheduler:{setInterval:(fn,ms)=>{if (++scheduled === 2) throw new Error('scheduler'); return setInterval(fn,ms);},clearInterval},
       resume:()=>{}, tick:()=>{}, refresh:()=>{}, autosave:()=>{}, onError:reportRuntimeFault});`);
   assert.equal(r.run('gameRuntime.start()'), false);
@@ -183,7 +183,7 @@ test('partial startup resource failure cleans acquired timers and listeners', t 
 test('input and refresh errors use the same lifecycle fault boundary; reporting failure cannot resume it', t => {
   for (const event of ['input','refresh']) {
     const r = loadedRuntime(); t.after(r.dispose);
-    r.run(`gameRuntime.dispose(); gameRuntime = createGameRuntime({session:createGameSession(),clock:{now:()=>123},
+    r.run(`gameRuntime.dispose(); gameRuntime = createGameRuntime({session:captureGameIdentity(),clock:{now:()=>123},
       scheduler:{setInterval,clearInterval},resume:()=>{},tick:()=>{},autosave:()=>{},
       refresh:()=>{throw new Error('refresh');}, listeners:[[document,'keydown',()=>{throw new Error('input');}]],
       onError:()=>{reportRuntimeFault(); throw new Error('report');}}); gameRuntime.start();`);
@@ -211,13 +211,12 @@ test('independent contexts retain separate lifecycle, clock and save ownership',
 });
 
 const parent = '199b14e622f2fdf7c2d1d2363874b0e38744121a';
-const beforeSources = Object.fromEntries(scripts.map(file => [file, file === 'js/game-runtime.js' ? ''
-  : execFileSync('git',['show',`${parent}:${file}`],{cwd:root,encoding:'utf8'})]));
+const beforeOptions = historicalSources(parent);
 for (const scenario of ['progression-reset','offline-return','huge-decimals']) {
   test(`before/after ${scenario} preserves complete player state for the same ordered actions/time`, t => {
     const outcomes = [];
-    for (const sources of [beforeSources,{}]) {
-      const r = loadedRuntime({sources}); t.after(r.dispose);
+    for (const options of [beforeOptions,{}]) {
+      const r = loadedRuntime(options); t.after(r.dispose);
       prepareProgress(r);
       if (scenario === 'huge-decimals') {
         const fixture = require('../fixtures/representative-save.json');

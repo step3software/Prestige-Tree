@@ -8,6 +8,10 @@ For development, start with [AGENTS.md](AGENTS.md), the
 shared Orcha standards follow current published `main`.
 
 Run locked regression checks from the [development guide](docs/developer-guide.md#verify-a-focused-change).
+Build and preview the static Vue 3 package with `npm ci`, `npm run build`, then
+`npm run serve` from the isolated worktree root. See the
+[current interface/package owners](docs/developer-guide.md#vue-interface-and-packaging)
+and [UI01 verification](docs/milestones/UI01.verification.md).
 See [TST01 verification](docs/milestones/TST01.verification.md) for the implemented
 test foundation, fixed defects and evidence limits.
 
@@ -30,4 +34,4 @@ A modified version of The Prestige Tree that is much easier to mod. It still req
 
 [Look here for a tutorial on getting started with modding with TMT](docs/getting-started.md)
 
-You can look in the [documentation](docs/!general-info.md) for more information on how it all works, or look at the code in [js/layers.js](js/layers.js) to see what it all looks like.
+You can look in the [documentation](docs/!general-info.md) for feature reference, or start at the current [layer manifest](js/layers/manifest.js) and [state ownership guide](docs/developer-guide.md#state-and-command-ownership).

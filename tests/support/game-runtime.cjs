@@ -5,10 +5,10 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const scripts = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)]
-  .map(match => match[1]).filter(source => !source.startsWith('http'));
+  .map(match => match[1]).filter(source => !source.startsWith('http') && source !== 'vendor/vue.global.prod.js');
 
 /** Fresh real-script engine. Adapters model only browser I/O, never game rules. */
-function createRuntime({ storage = {}, sources = {} } = {}) {
+function createRuntime({ storage = {}, sources = {}, scriptOrder = scripts, bridge = true, vue } = {}) {
   const data = new Map(Object.entries(storage));
   const intervals = new Map();
   const alerts = [];
@@ -29,11 +29,16 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
   const elements = Object.fromEntries(['styleStuff', 'save-status', 'save-recovery', 'save-original', 'app'].map(id => [id, { hidden: true, textContent: '', value: '' }]));
   let nextTimer = 0;
   class ControlledDate extends Date { static now() { return clock.now; } }
+  // UI is intentionally inert in rule fixtures. Constructor/component/set exist
+  // only for immutable historical graphs; actual browser tests use dist bytes.
   function Vue() {}
   Vue.component = () => {};
   Vue.set = (object, key, value) => { object[key] = value; };
+  Vue.reactive = value => value;
+  Vue.markRaw = value => value;
+  Vue.createApp = () => ({component() {}, config:{}, mount:()=>({$forceUpdate(){}})});
   const context = vm.createContext({
-    console, Date: ControlledDate, Vue,
+    console, Date: ControlledDate, Vue: vue || Vue,
     document: {
       ...eventTarget("document"),
       body: { style: { setProperty() {} }, appendChild() {}, removeChild() {} },
@@ -61,9 +66,10 @@ function createRuntime({ storage = {}, sources = {} } = {}) {
     prompt: () => io.prompt, confirm: () => io.confirm,
     alert: message => alerts.push(message),
   });
-  for (const script of scripts) {
+  for (const script of scriptOrder) {
     vm.runInContext(sources[script] ?? fs.readFileSync(path.join(root, script), 'utf8'), context, { filename: script });
   }
+  if (bridge) vm.runInContext(`(${require('./session-bridge.cjs').installSessionBridge.toString()})()`, context);
   const run = code => vm.runInContext(code, context, { timeout: 10000 });
   const fire = ms => {
     const timer = [...intervals.values()].find(item => item.ms === ms);

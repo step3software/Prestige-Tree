@@ -26,40 +26,40 @@ async function saveThroughOptions(page) {
 
 test('one real-page runtime survives repeated start/load, stops input/time, and resumes controlled offline seconds once',async ({page}) => {
   await begin(page);
-  expect(await page.evaluate(() => startGameRuntime() && gameRuntime.start() && gameRuntime.state === 'running')).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.runtimeServices.startGameRuntime() && gameUI.session.runtimeServices.gameRuntime.start() && gameUI.session.runtimeServices.gameRuntime.state === 'running')).toBe(true);
   await page.clock.runFor(1000);
-  expect(await page.evaluate(() => player.points.toNumber())).toBeCloseTo(1,10);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.toNumber())).toBeCloseTo(1,10);
   await saveThroughOptions(page);
-  await page.evaluate(() => { load(); load(); });
+  await page.evaluate(() => { gameUI.session.saveCommands.load(); gameUI.session.saveCommands.load(); });
   await page.clock.runFor(1000);
-  expect(await page.evaluate(() => player.points.toNumber())).toBeCloseTo(2,10);
-  await page.evaluate(() => { gameRuntime.stop(); gameRuntime.stop(); });
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.toNumber())).toBeCloseTo(2,10);
+  await page.evaluate(() => { gameUI.session.runtimeServices.gameRuntime.stop(); gameUI.session.runtimeServices.gameRuntime.stop(); });
   await page.clock.runFor(5000);
-  expect(await page.evaluate(() => player.points.toNumber())).toBeCloseTo(2,10);
-  await page.evaluate(() => { player.points = new Decimal(40); updateTemp(); });
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.toNumber())).toBeCloseTo(2,10);
+  await page.evaluate(() => { gameUI.session.saveState.player.points = new Decimal(40); gameUI.session.derivedState.updateTemp(); });
   await page.keyboard.press('p');
-  expect(await page.evaluate(() => player.points.eq(40))).toBe(true);
-  await page.evaluate(() => { gameRuntime.start(); gameRuntime.start(); });
-  expect(await page.evaluate(() => player.offTime.remain)).toBe(5);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(40))).toBe(true);
+  await page.evaluate(() => { gameUI.session.runtimeServices.gameRuntime.start(); gameUI.session.runtimeServices.gameRuntime.start(); });
+  expect(await page.evaluate(() => gameUI.session.saveState.player.offTime.remain)).toBe(5);
   await page.clock.runFor(50);
-  expect(await page.evaluate(() => player.points.toNumber())).toBeCloseTo(40.55,10);
-  expect(await page.evaluate(() => player.offTime.remain)).toBe(4.5);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.toNumber())).toBeCloseTo(40.55,10);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.offTime.remain)).toBe(4.5);
   await page.keyboard.press('p');
-  expect(await page.evaluate(() => player.points.eq(0) && player.p.points.gte(2))).toBe(true);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(0) && gameUI.session.saveState.player.p.points.gte(2))).toBe(true);
   await page.screenshot({path:'test-results/sim01-runtime-running.png'});
 });
 
 test('real reload credits a capped offline return once and uses the existing progression and save path',async ({page}) => {
   await begin(page); await saveThroughOptions(page);
-  await page.evaluate(() => gameRuntime.stop());
+  await page.evaluate(() => gameUI.session.runtimeServices.gameRuntime.stop());
   await page.clock.setSystemTime(new Date(1700007200000));
   await page.reload(); await expect(page.locator('#p')).toBeVisible();
-  expect(await page.evaluate(() => player.offTime.remain)).toBe(3600);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.offTime.remain)).toBe(3600);
   await page.clock.runFor(50);
-  expect(await page.evaluate(() => player.points.eq(360.05) && player.offTime.remain === 3240)).toBe(true);
-  const total = await page.evaluate(() => player.points.toNumber() + player.offTime.remain);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(360.05) && gameUI.session.saveState.player.offTime.remain === 3240)).toBe(true);
+  const total = await page.evaluate(() => gameUI.session.saveState.player.points.toNumber() + gameUI.session.saveState.player.offTime.remain);
   await page.clock.runFor(50);
-  expect(await page.evaluate(() => player.points.toNumber() + player.offTime.remain)).toBeCloseTo(total + 0.05,8);
+  expect(await page.evaluate(() => gameUI.session.saveState.player.points.toNumber() + gameUI.session.saveState.player.offTime.remain)).toBeCloseTo(total + 0.05,8);
 });
 
 for (const width of [1280,320]) {
@@ -69,24 +69,24 @@ for (const width of [1280,320]) {
     const original = await page.evaluate(() => localStorage.getItem('ptr'));
     page.once('dialog',dialog => dialog.accept());
     await page.evaluate(() => {
-      gameLoop = () => {player.points = new Decimal(999); throw new Error('Synthetic runtime fault');};
+      gameUI.session.gameRules.gameLoop = () => {gameUI.session.saveState.player.points = new Decimal(999); throw new Error('Synthetic runtime fault');};
     });
     await page.clock.runFor(50);
     await expect(page.getByRole('status')).toContainText('Reload the page');
-    expect(await page.evaluate(() => gameRuntime.state === 'error' && !ticking && tickFaulted)).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.runtimeServices.gameRuntime.state === 'error' && !gameUI.session.gameRules.ticking && gameUI.session.gameRules.tickFaulted)).toBe(true);
     await page.getByRole('button',{name:'Save',exact:true}).focus();
     await page.keyboard.press('Enter');
     await page.clock.runFor(5000);
     expect(await page.evaluate(() => localStorage.getItem('ptr'))).toBe(original);
-    expect(await page.evaluate(() => player.points.eq(999) && gameRuntime.start() === false)).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(999) && gameUI.session.runtimeServices.gameRuntime.start() === false)).toBe(true);
     const status = await page.getByRole('status').boundingBox();
     const app = await page.locator('#app').boundingBox();
     expect(status.width).toBeLessThanOrEqual(width);
     expect(status.y + status.height).toBeLessThanOrEqual(app.y + 1);
     await page.screenshot({path:`test-results/sim01-fault-${width}.png`});
     await page.reload(); await expect(page.locator('#p')).toBeVisible();
-    expect(await page.evaluate(() => player.points.eq(0) && gameRuntime.state === 'running' && !tickFaulted)).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.eq(0) && gameUI.session.runtimeServices.gameRuntime.state === 'running' && !gameUI.session.gameRules.tickFaulted)).toBe(true);
     await page.clock.runFor(1000);
-    expect(await page.evaluate(() => player.points.gt(0))).toBe(true);
+    expect(await page.evaluate(() => gameUI.session.saveState.player.points.gt(0))).toBe(true);
   });
 }

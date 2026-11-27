@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
+const { historicalSources } = require('../tests/support/historical-sources.cjs');
 const { loadedRuntime, root } = require('../tests/support/game-runtime.cjs');
 const baseline = '077861d2d4479d77e6079fd5c8bdf5e4fe7821f8';
 
@@ -26,24 +26,23 @@ const checks = {
   },
 };
 
-function exercise(check, sources) {
-  const r = loadedRuntime({sources});
+function exercise(check, options) {
+  const r = loadedRuntime(options);
   try { check(r); } finally { r.dispose(); }
 }
-const files = ['js/game.js', 'js/utils.js'];
-const baselineSources = Object.fromEntries(files.map(file => [file,
-  execFileSync('git', ['show', `${baseline}:${file}`], {cwd: root, encoding: 'utf8'})]));
-// The immutable baseline predates extraction. Do not overlay new command owners
-// onto it, which would make a historical failure falsely appear repaired.
-for (const file of ['js/save-codec.js', 'js/save-storage.js', 'js/saves.js', 'js/game-runtime.js']) baselineSources[file] = '';
+// Loading must succeed before the expected behavioral failure. A missing moved
+// file or mixed-version script graph must never count as sensitivity evidence.
+function expectBehaviorFailure(check, options, message) {
+  const r = loadedRuntime(options);
+  try { assert.throws(() => check(r), undefined, message); } finally { r.dispose(); }
+}
+const baselineOptions = historicalSources(baseline);
 for (const [id, check] of Object.entries(checks)) {
   exercise(check, {});
-  assert.throws(() => exercise(check, baselineSources), undefined, `${id} did not fail at the immutable baseline`);
+  expectBehaviorFailure(check, baselineOptions, `${id} did not fail at the immutable baseline`);
   console.log(`${id}: fixed PASS; immutable ${baseline.slice(0, 7)} baseline FAIL detected`);
 }
-const predecessorSources = Object.fromEntries(files.map(file => [file,
-  execFileSync('git', ['show', `379241bd94cf50ca6423e07f1ad68c567edcb6a0:${file}`], {cwd: root, encoding: 'utf8'})]));
-for (const file of ['js/save-codec.js', 'js/save-storage.js', 'js/saves.js', 'js/game-runtime.js']) predecessorSources[file] = '';
+const predecessorOptions = historicalSources('379241bd94cf50ca6423e07f1ad68c567edcb6a0');
 const failedSelection = r => {
   r.run('allSaves.second = getStartPlayer(); save(); var previousPlayer = player;');
   const durable = r.data.get('ptr');
@@ -53,15 +52,15 @@ const failedSelection = r => {
   assert.equal(r.data.get('ptr'), durable);
 };
 exercise(failedSelection, {});
-assert.throws(() => exercise(failedSelection, predecessorSources), undefined, 'SAV01 selection boundary did not fail on TST01 source');
+expectBehaviorFailure(failedSelection, predecessorOptions, 'SAV01 selection boundary did not fail on TST01 source');
 console.log('SAV01 failed selection: current PASS; immutable TST01 379241b FAIL detected');
 
 function mutation(file, before, after, check) {
   const source = fs.readFileSync(path.join(root, file), 'utf8');
   assert.equal(source.split(before).length, 2, `Mutation anchor must occur exactly once: ${before}`);
-  assert.throws(() => exercise(check, {[file]: source.replace(before, after)}), undefined, 'Mutation escaped the behavioral assertion');
+  expectBehaviorFailure(check, {sources: {[file]: source.replace(before, after)}}, 'Mutation escaped the behavioral assertion');
 }
-mutation('js/saves.js', 'let decoded = saveCodec().decodePlayer(imported);', 'player = JSON.parse(atob(imported)); let decoded = saveCodec().decodePlayer(imported);', checks.F1);
+mutation('js/saves.js', 'let decoded = saveCommands.saveCodec().decodePlayer(imported);', 'saveState.activate({ ...saveState.allSaves, [saveState.allSaves.set]: JSON.parse(atob(imported)) }); let decoded = saveCommands.saveCodec().decodePlayer(imported);', checks.F1);
 console.log('Save-preservation mutation: FAIL detected (in-memory source only)');
 mutation('js/save-storage.js', 'if (!encoded.ok) return encoded;', 'if (!encoded.ok) return { ok: true, value: collection };', r => {
   r.run('save(); player.p = null;');
