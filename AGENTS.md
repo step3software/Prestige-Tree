@@ -3,7 +3,7 @@
 Resolve repository identity, project source and local contracts from
 [.orcha/repository.json](.orcha/repository.json). Development belongs in
 `step3software/Prestige-Tree`; `Jacorb90/Prestige-Tree` is upstream. The canonical
-project source is `master`. Preserve the upstream licenses and attribution.
+project source is `main`. Preserve the upstream licenses and attribution.
 
 For each new task, actually read current Orcha
 [AGENTS.md](https://github.com/Wisteria-Psychological-Services/project-management-orchestration/blob/main/AGENTS.md)
@@ -29,7 +29,7 @@ the exact branch/checkout before editing, using installed verified support and
 Orcha's [control definitions](https://github.com/Wisteria-Psychological-Services/project-management-orchestration/blob/main/docs/pr-development-coordination.md#branch-ownership-review-holds-and-integration-intent).
 Preserve other writers and uncertain publication outcomes. Do not activate a
 default-off coordinator. Publish focused changes as unmerged PRs to this fork's
-`master`; leave upstream and protected branches untouched. Release or transfer
+`main`; leave upstream and protected branches untouched. Release or transfer
 only owned protection after verified completion.
 
 Questions, investigations and reviews remain read-only. Onboarding does not
