@@ -6,7 +6,7 @@ const root = __dirname;
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const scripts = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)].map(match => match[1]).filter(file => !file.startsWith('http'));
 const vendor = 'js/technical/break_eternity.js';
-const authored = scripts.filter(file => file !== vendor);
+const authored = scripts.filter(file => file !== vendor && file !== 'vendor/vue.global.prod.js');
 // Only actual top-level declarations are shared between classic scripts. These
 // are factories/immutable entry points, never an accidental-variable allowlist.
 const declarations = {};
@@ -27,7 +27,7 @@ module.exports = [{
     ecmaVersion: 'latest', sourceType: 'script',
     globals: { ...declarations, Decimal:'readonly', Vue:'readonly', document:'readonly', window:'readonly',
       localStorage:'readonly', setInterval:'readonly', clearInterval:'readonly', prompt:'readonly', confirm:'readonly',
-      alert:'readonly', atob:'readonly', btoa:'readonly', console:'readonly' },
+      alert:'readonly', atob:'readonly', btoa:'readonly', console:'readonly', getComputedStyle:'readonly' },
   },
   rules: {
     'no-undef':'error', 'no-global-assign':'error', 'no-const-assign':'error', 'no-var':'error',

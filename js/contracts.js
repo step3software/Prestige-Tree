@@ -24,7 +24,8 @@
  * @typedef {{addEventListener(type:string, callback:Function):void, removeEventListener(type:string, callback:Function):void}} RuntimeEventTarget
  * @typedef {{session:GameIdentity, clock:{now():number}, scheduler:{setInterval(callback:()=>void,milliseconds:number):unknown,clearInterval(handle:unknown):void}, listeners?:Array<[RuntimeEventTarget,string,Function]>, resume(nowMs:number):void, tick(nowMs:number):void, autosave():void, refresh():void, onError(error:unknown):void, onStop?:()=>void}} RuntimePorts
  * @typedef {ReturnType<typeof createGameView>} GameViewPort
- * @typedef {{Date?:{now():number},setValue?:(object:object,key:string,value:unknown)=>void,document?:Document,window?:Window,localStorage?:StoragePort,setInterval?:(callback:()=>void,milliseconds:number)=>unknown,clearInterval?:(handle:unknown)=>void,alert?:(message:string)=>void}} HeadlessEffects
+ * @typedef {<T extends object>(value:T)=>T} ObserveState
+ * @typedef {{observe?:ObserveState,Date?:{now():number},setValue?:(object:object,key:string,value:unknown)=>void,document?:Document,window?:Window,localStorage?:StoragePort,setInterval?:(callback:()=>void,milliseconds:number)=>unknown,clearInterval?:(handle:unknown)=>void,alert?:(message:string)=>void}} HeadlessEffects
  * @typedef {{saveState:ReturnType<typeof createSaveState>,derivedState:ReturnType<typeof createDerivedState>,layerRegistry:ReturnType<typeof createLayerRegistry>,gameRules:ReturnType<typeof createGameRules>,gameHelpers:ReturnType<typeof createGameHelpers>,modRules:ReturnType<typeof createModRules>,softcapRules:ReturnType<typeof createSoftcapRules>,saveDefaults:ReturnType<typeof createSaveDefaults>,treeLayout:ReturnType<typeof createTreeLayout>,effects:HeadlessEffects}} GameLayerPorts
  */
 

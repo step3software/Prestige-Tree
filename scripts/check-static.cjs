@@ -22,6 +22,7 @@ async function lintGraph() {
   console.log(`Lexical/global contracts passed: all ${authored.length} shipped authored scripts`);
 }
 async function main() {
+  require('./check-package.cjs').verifyPackage();
   const config = JSON.parse(fs.readFileSync(path.join(root,'jsconfig.json'),'utf8'));
   if (JSON.stringify(config.files) !== JSON.stringify(scripts)) throw new Error('Compiler graph must exactly match shipped HTML');
   await lintGraph();

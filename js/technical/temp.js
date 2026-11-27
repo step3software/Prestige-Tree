@@ -5,7 +5,7 @@ function createDerivedState({ effects, gameHelpers, gameRules, helpContent, laye
  * properties are dynamically evaluated by this one canonical cache owner.
  * @type {Record<string,unknown> & Partial<{nerdMode:boolean,pointGen:DecimalValue,row1to6spd:DecimalValue,displayThings:string[]}>}
  */
-let tmp = {}
+let tmp = effects.observe({})
 
 // Tmp will not call these
 let activeFunctions = [
@@ -21,7 +21,7 @@ for (item in noCall) {
 
 function setupTemp() {
 	let layer;
-	tmp = {}
+	tmp = effects.observe({})
 	tmp.helpTab = NaN;
 	tmp.helpData = {};
 	tmp.nerdMode = false

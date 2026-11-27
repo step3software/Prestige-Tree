@@ -8,6 +8,10 @@ For development, start with [AGENTS.md](AGENTS.md), the
 shared Orcha standards follow current published `main`.
 
 Run locked regression checks from the [development guide](docs/developer-guide.md#verify-a-focused-change).
+Build and preview the static Vue 3 package with `npm ci`, `npm run build`, then
+`npm run serve` from the isolated worktree root. See the
+[current interface/package owners](docs/developer-guide.md#vue-interface-and-packaging)
+and [UI01 verification](docs/milestones/UI01.verification.md).
 See [TST01 verification](docs/milestones/TST01.verification.md) for the implemented
 test foundation, fixed defects and evidence limits.
 

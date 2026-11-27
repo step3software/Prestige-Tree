@@ -4,7 +4,7 @@ let needCanvasUpdate = true;
 // Vue observes this same rule-owned object; a computed scalar getter would
 // otherwise cache its first value without seeing the endgame transition.
 /** @type {{gameEnded:boolean|1}} */
-const status = { gameEnded: false };
+const status = effects.observe({ gameEnded: false });
 
 // Don't change this
 const TMT_VERSION = {
