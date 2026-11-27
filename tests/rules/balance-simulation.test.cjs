@@ -49,47 +49,41 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
  }
 });
 
-test('earned Food and hut orders can run five fully staffed jobs after legal active and regular progression',t=>{
+test('legal active and regular play drain five-repeat Food and hut queues without extra jobs',t=>{
  for(const strategy of ['active-balanced','regular']){
   const run=simulate({strategy,horizonSeconds:14400});
   assert.equal(run.status,'endgame');
   const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
   const p=engine.player,e=engine.session.modRules.civilization;
   const cadence=strategy==='regular'?300:5;
-  // Continue the reached settlement rather than prestiging again. Commands use
-  // its earned buildings, managers, tools and flow; no state or currency grants.
-  for(const id of ['gather','fish','farm'])e.setRepeat(id,1);
-  let time=0;
-  for(;time<3600&&p.points.lt(20);time+=cadence)engine.advance(cadence);
+  const routes=['gather','hunt','fish','farm'];
+  const support=except=>{for(const id of routes)if(id!==except)e.setRepeat(id,5);};
+  for(let time=0;time<3600&&p.points.lt(20);time+=cadence){support();engine.advance(cadence);}
   assert.ok(p.points.gte(20));
-  for(const id of ['gather','hunt','fish','farm']){
-   for(const other of ['gather','hunt','fish','farm'])e.setRepeat(other,0);
-   for(let wait=0;wait<600&&['gather','hunt','fish','farm'].some(key=>p.civ.actions[key].remaining>0);wait+=cadence)engine.advance(cadence);
+  for(const id of routes){
    const completed=p.civ.actions[id].completed;
    assert.equal(e.setRepeat(id,5),true);
-   let observed=false;
-   for(let wait=0;wait<1200;wait+=cadence){
-    engine.advance(cadence);
+   for(let wait=0;wait<1800;wait+=cadence){
+    support(id);engine.advance(cadence);
     const state=p.civ.actions[id];
-    if(state.jobs===5){
-     observed=true;
-     assert.equal(state.workers,e.actionDefinition(id).workers*5);
-    }
-    if(state.completed>=completed+5)break;
+    assert.ok(state.jobs<=1,'Automatic queues start one job at a time');
+    if(state.repeat===0&&state.remaining===0)break;
    }
-   assert.ok(observed||p.civ.actions[id].completed>=completed+5,'Observed five-job batch or its completion at manual cadence');
-   assert.ok(p.civ.actions[id].completed>=completed+5,id);
+   assert.equal(p.civ.actions[id].repeat,0,id+' queue drained');
+   assert.equal(p.civ.actions[id].remaining,0,id+' final job finished');
+   assert.ok(p.civ.actions[id].completed>=completed+5,id+' completed five queued repeats');
   }
-  for(const id of ['gather','hunt','fish','farm'])e.setRepeat(id,0);
-  e.setRepeat('gather',1);e.setRepeat('farm',1);
   const huts=p.shelter.homes;
   assert.equal(e.setHutRepeat(5),true);
-  for(let wait=0;wait<3600&&p.shelter.homes<huts+5;wait+=cadence)engine.advance(cadence);
-  assert.ok(p.shelter.homes>=huts+5);
+  for(let wait=0;wait<3600&&p.shelter.homes<huts+5;wait+=cadence){support();engine.advance(cadence);}
+  assert.equal(p.shelter.homes,huts+5);
+  assert.equal(p.civ.hutRepeat,0);
+  support();engine.advance(cadence);
+  assert.equal(p.shelter.homes,huts+5,'No sixth hut after the queue stops');
   assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
   assert.ok(e.supply().laborUsed<=p.points.toNumber());
   engine.exportPlayer();engine.assertIsolated();
-  console.log(strategy+' legal five-job Food and hut scenario completed from opening '+run.simulatedSeconds+'s (no grants).');
+  console.log(strategy+' legal finite Food/hut queues: five repeats each, all stopped at zero; opening '+run.simulatedSeconds+'s.');
  }
 });
 

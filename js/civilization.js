@@ -50,7 +50,7 @@ function createCivilizationRules({ saveState }) {
     const improvementDefinitions = {
         buckets: {resource: "water", name: "Carrying yokes", description: "Collection needs 1 worker instead of 2.", costs: {food: 12, water: 10, craft: 1}},
         wellLining: {resource: "water", name: "Well lining", description: "Increase collection yield and gravity-fed flow by 25%.", costs: {food: 15, craft: 1}},
-        hutForeman: {resource: "shelter", name: "Hut foreman", description: "Repeat up to 5 hut-building jobs. Enabled orders reserve one foreman, plus one builder per hut. Work still scales with huts owned.", costs: {food: 18, craft: 1}},
+        hutForeman: {resource: "shelter", name: "Hut foreman", description: "Queue up to 5 hut repeats, one at a time. Each successful start uses one repeat. Queued orders reserve one foreman; construction still needs its builder and full scaling work.", costs: {food: 18, craft: 1}},
         gravity: {resource: "water", name: "Gravity-fed spring", description: "Continuous reservoir refill, without orders or workers. Wells improve the flow.", costs: {food: 30, craft: 2, organization: 1}},
         sluice: {resource: "water", name: "Automatic sluice", description: "Unlock automatic irrigation from surplus water.", costs: {money: 8, education: 1, craft: 3}},
         waterReserves: {resource: "water", name: "Emergency cistern", description: "Double Water shortage grace and subsequent loss intervals: 20 seconds before the first loss.", costs: {water: 20, craft: 2}},
@@ -58,7 +58,7 @@ function createCivilizationRules({ saveState }) {
         relief: {resource: "shelter", name: "Mutual aid", description: "Loss intervals shrink by 10% instead of 20%, with at least 4 seconds between later losses.", costs: {craft: 3, organization: 1}},
         hunting: {resource: "food", name: "Coordinated hunting", description: "Reduce the base hunting crew from 3 to 2 before bigger-game scaling.", costs: {food: 20, craft: 1}},
         fishing: {resource: "food", name: "Fishing nets", description: "Fishing needs 1 worker instead of 2.", costs: {food: 20, craft: 1}},
-        overseer: {resource: "food", name: "Expedition overseer", description: "Repeat up to 5 jobs of each Food route. Enabled orders reserve one shared Overseer worker, plus every job's full crew.", costs: {food: 25, craft: 1, organization: 1}},
+        overseer: {resource: "food", name: "Expedition overseer", description: "Queue up to 5 repeats per Food route, one job at a time. Each successful start uses one repeat. Queues reserve one shared Overseer, plus every running job's full crew.", costs: {food: 25, craft: 1, organization: 1}},
         farming: {resource: "food", name: "Cultivated fields", description: "Unlock long, high-yield farming cycles. Repeat with the overseer; 3 workers remain occupied per cycle.", costs: {food: 45, water: 25, craft: 3, organization: 2}},
         autonomousFood: {resource: "food", name: "Autonomous food production", description: "All Food crews become worker-free. Repeat orders keep production running.", costs: {money: 120, freeTime: 10, craft: 12, education: 8}},
         hearth: {resource: "shelter", name: "Shared hearths", description: "Every 10 current Population adds +5 Food storage and +1 Food/min for the settlement. No extra workers needed.", costs: {food: 20, water: 15, craft: 1}},
@@ -127,8 +127,8 @@ function createCivilizationRules({ saveState }) {
             actions: Object.fromEntries(Object.keys(actionBase).map(id => [id, emptyAction()])),
             message: "Send a Food expedition and collect Water. Busy workers return when their action finishes."};
     }
-    const toolEffect = () => 1 + amount("craft") * 0.18 + amount("education") * 0.12;
-    const waterFlow = () => (24 + player().water.sites * 10) * toolEffect() * (owns("wellLining") ? 1.25 : 1);
+    const knowledgeEffect = () => 1 + amount("education") * 0.12;
+    const waterFlow = () => (24 + player().water.sites * 10) * knowledgeEffect() * (owns("wellLining") ? 1.25 : 1);
     function hearthBenefits() {
         const groups = owns("hearth") ? Math.floor(player().points.toNumber() / 10) : 0;
         return {foodStorage: groups * 5, foodProduction: groups};
@@ -246,7 +246,7 @@ function createCivilizationRules({ saveState }) {
         }
         duration *= crewSpeed;
         const irrigationBonus = base.resource === "food" && p.civ.irrigation > 0 ? 1.35 : 1;
-        const reward = base.reward * yieldMultiplier * toolEffect() * irrigationBonus *
+        const reward = base.reward * yieldMultiplier * knowledgeEffect() * irrigationBonus *
             (base.resource === "food" ? 1 + p.food.sites * 0.15 : owns("wellLining") ? 1.25 : 1);
         return {id, name: actionNames[id], ...base, workers, duration, reward, level, unlocked,
             automatic: id === "water" && owns("gravity"),
@@ -350,7 +350,7 @@ function createCivilizationRules({ saveState }) {
         return {population, upkeep, demand, ...labor, production, passiveProduction, hearth, storage, reserve, bottleneck,
             abundance: growthAbundance(population, demand, storage),
             growing: bottleneck === "Growing", support: housing(), capacity: production,
-            efficiency: {food: 3 * toolEffect(), water: 3.2 * toolEffect()},
+            efficiency: {food: 3 * knowledgeEffect(), water: 3.2 * knowledgeEffect()},
             idle: labor.spare, laborUsed: labor.workers.food + labor.workers.water + labor.builders + labor.foremanWorkers};
     }
     function projects(id) {
@@ -454,7 +454,7 @@ function createCivilizationRules({ saveState }) {
     }
     function chooseAutomaticProject() {
         const p = player();
-        if (p.points.toNumber() + 2 >= housing() && p.shelter.homes < 20) return startProject("shelter-home");
+        // Hut automation belongs exclusively to its finite repeat queue.
         if (p.food.sites < 2) return startProject("food-site");
         if (p.water.sites < 2) return startProject("water-site");
         if (p.food.storage < 3 && canStartProject("food-storage")) return startProject("food-storage");
@@ -484,11 +484,16 @@ function createCivilizationRules({ saveState }) {
         const p = player();
         if (p.civ.autoIrrigate && owns("sluice")) irrigate();
         // Construction reserves its builder before Food takes remaining workers.
-        if (p.civ.hutRepeat > 0 && owns("hutForeman") && !p.civ.project && !shortageStatus().active) startProject("shelter-home", p.civ.hutRepeat);
+        if (p.civ.hutRepeat > 0 && owns("hutForeman") && !p.civ.project && !shortageStatus().active && startProject("shelter-home")) p.civ.hutRepeat--;
         if (p.civ.autoBuild && autoBuildingAvailable() && !p.civ.project && !shortageStatus().active) chooseAutomaticProject();
         if (!owns("overseer")) return;
         const order = p.civ.priority === "food" ? ["farm", "hunt", "fish", "gather"] : ["gather", "fish", "hunt", "farm"];
-        for (const id of order) if (p.civ.actions[id].repeat && amount("food") < storageCapacity().food - 1) dispatch(id, p.civ.actions[id].repeat);
+        // Consume a queued repeat only after its single job actually starts.
+        // Busy routes, full stores and unavailable crews leave the count intact.
+        for (const id of order) {
+            const action = p.civ.actions[id];
+            if (action.repeat > 0 && amount("food") < storageCapacity().food - 1 && dispatch(id)) action.repeat--;
+        }
     }
     /** Spend only eligible growth time. Birth boundaries recheck the curves and
      * limits, so later tuning can exceed one person per simulation second. */
@@ -645,7 +650,6 @@ function createCivilizationRules({ saveState }) {
             next, advice: s.growing ? "Your supplies and housing support another person." :
                 s.bottleneck.includes("reserves") ? "Restore supplies before the shortage countdown runs out." :
                     "Build housing to support the next person.",
-            toolBonus: (1 + amount("craft") * 0.18 + amount("education") * 0.12),
             autoAvailable: autoBuildingAvailable()};
     }
     /** Convert historical action/upgrade records before typed hydration. Never

@@ -381,7 +381,7 @@ test('overseer controls repeat staffed trips and Water upgrades remove hauling w
     // reachability and pacing are covered by the balance policy tests.
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(10);p.organization.points=new Decimal(3);p.organization.total=new Decimal(6);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await page.getByRole('button',{name:/^Expedition overseer/}).click();
-    await page.getByLabel('Repeating Gather jobs:').focus();await page.keyboard.press('ArrowRight');
+    await page.getByLabel('Gather repeats remaining:').focus();await page.keyboard.press('End');
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(0);p.food.points=new Decimal(0);gameUI.session.advance(22);});
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.completed)).toBeGreaterThanOrEqual(2);
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.food)).toBe(2);
@@ -414,14 +414,15 @@ test('Hut foreman replaces Water keeper and repeats staffed construction with a 
     await node(page,'Shelter').click();
     const foreman=page.getByRole('button',{name:/^Hut foreman/});
     await foreman.click();
-    const slider=page.getByLabel('Repeating hut-building jobs:');
+    const slider=page.getByLabel('Hut repeats remaining:');
     await slider.focus();await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');
     await expect(slider).toHaveValue('2');
     await page.evaluate(()=>gameUI.session.advance(1));
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().foremanWorkers)).toBe(1);
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.projectWorkers)).toBe(2);
-    await slider.focus();await page.keyboard.press('Home');
-    await page.evaluate(()=>gameUI.session.advance(20));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.projectWorkers)).toBe(1);
+    await expect(slider).toHaveValue('1');
+    await page.evaluate(()=>gameUI.session.advance(40));
+    await expect(slider).toHaveValue('0');
     expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(2);
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().foremanWorkers)).toBe(0);
     await node(page,'Craft').click();
@@ -433,29 +434,39 @@ test('Hut foreman replaces Water keeper and repeats staffed construction with a 
 });
 
 
-test('Food job sliders share one Overseer and show five concurrent full crews with accessible narrow controls',async({page})=>{
+test('Food sliders count down queued repeats, finish current jobs and stop at zero',async({page})=>{
     const errors=await open(page);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(30);p.civ.improvements.overseer=true;p.civ.improvements.farming=true;p.food.points=new Decimal(10);p.water.points=new Decimal(50);gameUI.session.derivedState.updateTemp();});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(30);p.civ.improvements.overseer=true;p.civ.improvements.farming=true;p.civ.improvements.gravity=true;p.food.points=new Decimal(10);p.water.points=new Decimal(50);gameUI.session.derivedState.updateTemp();});
     for(const name of ['Gather','Hunt']){
-        const slider=page.getByLabel('Repeating '+name+' jobs:');
+        const slider=page.getByLabel(name+' repeats remaining:');
         await slider.focus();await page.keyboard.press('End');
         await expect(slider).toHaveValue('5');
     }
     await page.evaluate(()=>gameUI.session.advance(1));
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().overseerWorkers)).toBe(1);
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(5);
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.hunt.workers)).toBe(15);
-    const gather=page.getByLabel('Repeating Gather jobs:');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(1);
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.hunt.workers)).toBe(3);
+    await expect(page.getByLabel('Gather repeats remaining:')).toHaveValue('4');
+    await expect(page.getByLabel('Hunt repeats remaining:')).toHaveValue('4');
+    await page.evaluate(()=>gameUI.session.advance(1));
+    await expect(page.getByLabel('Gather repeats remaining:')).toHaveValue('4');
+    const gather=page.getByLabel('Gather repeats remaining:');
     await gather.focus();await page.keyboard.press('Home');
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(5);
-    await expect(page.getByLabel('Repeating Fish jobs:')).toHaveValue('0');
-    await expect(page.getByLabel('Repeating Farm jobs:')).toHaveValue('0');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(1);
+    await expect(page.getByLabel('Fish repeats remaining:')).toHaveValue('0');
+    await expect(page.getByLabel('Farm repeats remaining:')).toHaveValue('0');
     for(const width of [1280,320]){
         await page.setViewportSize({width,height:800});
-        await expect(page.getByLabel('Repeating Hunt jobs:')).toBeVisible();
+        await expect(page.getByLabel('Hunt repeats remaining:')).toBeVisible();
         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
         await page.screenshot({path:'test-results/food-orders-'+width+'.png',fullPage:true});
     }
+    await page.evaluate(()=>gameUI.session.advance(125));
+    await expect(page.getByLabel('Hunt repeats remaining:')).toHaveValue('0');
+    await page.evaluate(()=>{const s=gameUI.session;for(let i=0;i<100&&s.saveState.player.civ.actions.hunt.completed<5;i++)s.advance(1);});
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.hunt.completed)).toBe(5);
+    await page.evaluate(()=>gameUI.session.advance(30));
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.hunt.completed)).toBe(5);
     expect(errors).toEqual([]);
 });
 
@@ -472,5 +483,14 @@ test('Organization uses Population in its requirement, eligibility and exact nex
     await expect(page.getByTestId('population')).toHaveText('5');
     await expect(page.getByText(/16 Population; gain exactly 1 Organization/)).toBeVisible();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.organization.total.toNumber())).toBe(1);
+    expect(errors).toEqual([]);
+});
+
+
+test('Craft panel describes spending without an automatic production bonus',async({page})=>{
+    const errors=await open(page);
+    await node(page,'Craft').click();
+    await expect(page.getByText('Craft is spent on upgrades and construction. Holding Craft does not increase production.',{exact:true})).toBeVisible();
+    await expect(page.getByText(/Each Craft adds 18%/)).toHaveCount(0);
     expect(errors).toEqual([]);
 });

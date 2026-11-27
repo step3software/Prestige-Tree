@@ -4,7 +4,7 @@ Grow a civilization from five people. Population supplies shared labor; Food and
 
 For the civilization's historical grounding, start at the [research index](docs/research/README.md) and [game reference guide](docs/research/reference-guide.md). Build balance coverage alongside content using the [balance workflow](docs/balance-testing.md#add-balance-coverage-with-content).
 
-Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into water reserves; carrying upgrades and a gravity-fed spring free the hauling crew. Expedition Overseer sliders repeat up to five jobs per Food route with one shared Overseer and full crews; farming adds longer cycles, and every Food cycle still uses its crew. Build new huts for capacity. Every person is available for expeditions or construction; there is no domestic labor reservation.
+Send Gather, Hunt and Fish expeditions in parallel when workers are available. Collect Water into water reserves; carrying upgrades and a gravity-fed spring free the hauling crew. Expedition Overseer sliders queue up to five repeats per Food route, one job at a time with one shared Overseer and full crews; farming adds longer cycles, and every Food cycle still uses its crew. Build new huts for capacity. Every person is available for expeditions or construction; there is no domestic labor reservation.
 
 Shared hearths adds 5 Food storage and 1 continuous Food per game minute for every full 10 current Population. These settlement-wide bonuses supplement expeditions and reset to zero when prestige restarts at five people. See [Shelter rules](docs/civilization.md#shelter-expand-housing) and the [research rationale](docs/research/reference-guide.md#shared-hearths).
 
@@ -14,7 +14,7 @@ Each foundation starts with one available Craft upgrade. Organization milestones
 
 This game replaces the fork's original Prestige Tree Rewritten content. It runs on the retained session-bound Modding Tree engine with Vue 3 and Decimal arithmetic. Original attribution and both licenses are retained. The game retains the base project's dark theme, monospace typography, colored circular nodes and action-button styling.
 
-Empty Food or Water causes population loss after a ten-second grace period, then accelerating losses. Survival upgrades extend grace or slow acceleration. One survivor remains able to rebuild. Food repeat orders reserve one Overseer; hut repeat orders reserve one foreman plus one builder per hut. Both use 0–5 sliders and switch off after prestige. Water collection stays manual until Gravity-fed spring. Existing Water Keeper purchases become Hut Foreman in v0.7.
+Empty Food or Water causes population loss after a ten-second grace period, then accelerating losses. Survival upgrades extend grace or slow acceleration. One survivor remains able to rebuild. Food repeat orders reserve one Overseer; hut repeat orders reserve one foreman plus one builder per hut. Both use 0-5 sliders that count down after each successful automatic start and stop at zero; prestige clears the queues. Water collection stays manual until Gravity-fed spring. Existing Water Keeper purchases become Hut Foreman in v0.7.
 
 ## Play locally
 

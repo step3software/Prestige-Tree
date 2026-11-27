@@ -85,7 +85,7 @@ test('overseer repeats staffed Food and farming while purchases needing later re
     const r=game(t);prepared(r);
     assert.equal(r.run('e.dispatch("farm")'),false);
     assert.equal(r.run('e.buyUpgrade("autonomousFood")'),false);
-    r.run('e.buyUpgrade("overseer");p.craft.points=new Decimal(0);e.setRepeat("gather",1);p.food.points=new Decimal(0);s.advance(35)');
+    r.run('e.buyUpgrade("overseer");p.craft.points=new Decimal(0);e.setRepeat("gather",5);p.food.points=new Decimal(0);s.advance(35)');
     assert.ok(r.run('p.civ.actions.gather.completed')>=3);
     assert.equal(r.run('p.civ.actions.gather.workers'),1);
     r.run('p.craft.points=new Decimal(20);p.food.points=new Decimal(50);p.water.points=new Decimal(50);e.buyUpgrade("farming");e.recall("gather");e.dispatch("farm")');
@@ -199,13 +199,13 @@ test('prestige returns enough protected crews to fit the five-person workforce',
 test('failed purchases and locked investments do not spend resources',t=>{
     const r=game(t);
     const before=r.run('JSON.stringify(p)');
-    for(const command of ['e.buyUpgrade("missing")','e.buyUpgrade("gravity")','e.invest("education")','e.dispatch("farm")','e.setRepeat("gather",1)','e.prestige("money")'])assert.equal(r.run(command),false,command);
+    for(const command of ['e.buyUpgrade("missing")','e.buyUpgrade("gravity")','e.invest("education")','e.dispatch("farm")','e.setRepeat("gather",5)','e.prestige("money")'])assert.equal(r.run(command),false,command);
     assert.equal(r.run('JSON.stringify(p)'),before);
 });
 
 test('offline-like chunk sizes preserve batch completion, repeats, construction and irrigation',t=>{
     const a=game(t),b=game(t);
-    for(const r of [a,b]){prepared(r);r.run('e.buyUpgrade("overseer");e.setRepeat("gather",1);e.dispatch("hunt");e.startProject("shelter-home");e.irrigate()');}
+    for(const r of [a,b]){prepared(r);r.run('e.buyUpgrade("overseer");e.setRepeat("gather",5);e.dispatch("hunt");e.startProject("shelter-home");e.irrigate()');}
     a.run('s.advance(120.5)');
     b.run('for(let i=0;i<2410;i++)s.advance(.05)');
     for(const value of ['p.points.toString()','p.food.points.toString()','p.water.points.toString()','p.shelter.points.toString()','JSON.stringify(p.civ.actions)','p.civ.growth','p.civ.projectWork'])assert.equal(a.run(value),b.run(value),value);

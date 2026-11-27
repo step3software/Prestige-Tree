@@ -35,7 +35,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
     }
     for(const id of ['gather','fish','hunt','farm']){
       const action=economy.actionDefinition(id);
-      if(action.unlocked && action.repeatAvailable && !action.repeat && economy.setRepeat(id,1))record('automation',id,time);
+      if(action.unlocked && action.repeatAvailable && action.repeat<5 && economy.setRepeat(id,5))record('automation',id,time);
     }
     if(!p.civ.project){
       const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationPopulationRequirement()):24;
