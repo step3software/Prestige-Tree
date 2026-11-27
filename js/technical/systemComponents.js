@@ -16,7 +16,7 @@ let systemComponents = {
 		props: ['layer', 'abb', 'size'],
 		template: `
 		<button v-if="nodeShown(layer)"
-			v-bind:id="layer"
+			v-bind:id="layer" :aria-label="tmp[layer].name || layer"
 			v-on:click="function() {
 				layers[layer].onClick()
 			}"
@@ -36,7 +36,7 @@ let systemComponents = {
 				anim: (player.anim&&!player.oldStyle),
 				grad: (player.grad&&!player.oldStyle)
 			}"
-			v-bind:style="[tmp[layer].canClick ? {'background-color': tmp[layer].color} : {}, tmp[layer].nodeStyle]" v-bind:html="abb">
+			v-bind:style="[tmp[layer].canClick ? {'background-color': tmp[layer].color} : {}, tmp[layer].nodeStyle]" v-html="abb">
 		</button>
 		`
 	},
@@ -45,7 +45,7 @@ let systemComponents = {
 		props: ['layer', 'abb', 'size'],
 		template: `
 		<button v-if="nodeShown(layer)"
-			v-bind:id="layer"
+			v-bind:id="layer" :aria-label="tmp[layer].name || layer"
 			v-on:click="function() {
 				if (player.ma.selectionActive&&tmp[layer].row<tmp.ma.rowLimit&&tmp.ma.canBeMastered.includes(layer)&&player.ma.current===null) layers.ma.startMastery(layer);
 				showTab(layer)
@@ -78,7 +78,7 @@ let systemComponents = {
 	'layer-tab': {
 		props: ['layer', 'back', 'spacing'],
 		template: `<div v-bind:style="[tmp[layer].style ? tmp[layer].style : {}, (tmp[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat)) ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style : {}]">
-		<div v-if="back"><button v-bind:class="back == 'big' ? 'other-back' : 'back'" v-on:click="goBack()">←</button></div>
+		<div v-if="back"><button aria-label="Back" v-bind:class="back == 'big' ? 'other-back' : 'back'" v-on:click="goBack()">←</button></div>
 		<div v-if="!tmp[layer].tabFormat">
 			<div v-if="spacing" v-bind:style="{'height': spacing}"></div>
 			<info-box v-if="tmp[layer].infoboxes" :layer="layer" :data="Object.keys(tmp[layer].infoboxes)[0]"></info-box>
@@ -128,7 +128,7 @@ let systemComponents = {
 		<br>
 		<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
 		<h2  class="overlayThing" id="points">{{format(player.points)}}</h2>
-		<span v-if="player.points.lt('1e1e6')"  class="overlayThing"> {{modInfo.pointsName}}</span>
+		<span v-if="player.points.lt('1e1e6')"  class="overlayThing">&nbsp;{{modInfo.pointsName}}</span>
 		<br>
 		<span v-if="canGenPoints()"  class="overlayThing">({{format(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
@@ -160,13 +160,13 @@ let systemComponents = {
         <br><br>
         Time Played: {{ formatTime(player.timePlayed) }}<br><br>
         <h3>Hotkeys</h3><br>
-        <span v-for="key in hotkeys" v-if="player[key.layer].unlocked"><br>{{key.description}}</span></div>
+        <template v-for="(key, name) in hotkeys" :key="name"><span v-if="player[key.layer].unlocked"><br>{{key.description}}</span></template></div>
     `
     },
 
     'options-tab': {
         template: `
-        <table>
+        <table><tbody>
             <tr>
                 <td><button class="opt" onclick="gameUI.commands.save()">Save</button></td>
                 <td><button class="opt" onclick="gameUI.commands.toggleOpt('autosave')">Autosave: {{ player.autosave?"ON":"OFF" }}</button></td>
@@ -186,12 +186,12 @@ let systemComponents = {
                     <td><button class="opt" onclick="gameUI.commands.toggleOpt('hideChallenges')">Completed Challenges: {{ player.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
                 <!--	<td><button class="opt" onclick="gameUI.commands.toggleOpt('oldStyle')">Style: {{ player.oldStyle?"v1.0":"NEW" }}</button></td>-->
             </tr> 
-        </table>`
+        </tbody></table>`
     },
 
     'back-button': {
         template: `
-        <button v-bind:class="back" onclick="gameUI.commands.goBack()">←</button>
+        <button aria-label="Back" v-bind:class="back" onclick="gameUI.commands.goBack()">←</button>
         `
     }
 }

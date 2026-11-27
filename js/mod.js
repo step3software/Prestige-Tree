@@ -1,5 +1,5 @@
 // Session-bound modRules owner; composition supplies only the named ports.
-function createModRules({ derivedState, gameHelpers, saveState }) {
+function createModRules({ derivedState, effects, gameHelpers, saveState }) {
 let modInfo = {
 	name: "Prestige Tree Rewritten",
 	id: "ptr",
@@ -94,7 +94,7 @@ function maxTickLength() {
 }
 
 // Variables that must be defined to display notifications
-let activeNotifications = [];
+let activeNotifications = effects.observe([]);
 let notificationID = 0;
 
 // Function to show notifications

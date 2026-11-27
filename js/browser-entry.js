@@ -9,7 +9,10 @@ function createBrowserGame(options = {}) {
         get window() { return window; },
         get localStorage() { return localStorage; },
         get Vue() { return Vue; },
-        setValue: (object, key, value) => Vue.set(object, key, value),
+        // Decimal methods return class instances. Keep them outside proxy identity
+        // while making each canonical plain state owner reactive, before use.
+        observe: value => { Vue.markRaw(Decimal.prototype); return Vue.reactive(value); },
+        setValue: (object, key, value) => { Reflect.set(object, key, value); },
         setInterval: (callback, milliseconds) => setInterval(callback, milliseconds),
         clearInterval: id => clearInterval(id),
         prompt: message => prompt(message),

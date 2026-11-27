@@ -524,5 +524,180 @@
       "authority": "Original explicit authorization covers bounded preparation refinement and implementation for UI01; no new scope/owner answer/native acceptance is inferred.",
       "timing": "Validated and writer scope extended before creating interface.css. Historical 30-file pre-code contract remains immutable in ceba73a."
     }
-  ]
+  ],
+  "governing_project_documents": [
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "AGENTS.md",
+      "sha256": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": ".orcha/repository.json",
+      "sha256": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "README.md",
+      "sha256": "d4feeb1c1f9d7a0fc299c00ab46db02079065a5ed32247282ead4b29b057aff4"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "docs/developer-guide.md",
+      "sha256": "0b98d734110d0396c6bb01f56d26b7a4261ede36e119ccf927da5095d262f190"
+    },
+    {
+      "revision": "077861d2d4479d77e6079fd5c8bdf5e4fe7821f8",
+      "path": "docs/!general-info.md",
+      "sha256": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "AGENTS.md",
+      "sha256": "d20ce19cdbd8382daa4f2b881d6d2788d602b11cd8f4107158c161dd70b3fdc9"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": ".orcha/repository.json",
+      "sha256": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "README.md",
+      "sha256": "e2031be14634f092e131dbf05227ef81bec0c969f46071f618bf2a27a4ba6ca3"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/developer-guide.md",
+      "sha256": "184a8ad15af256e99a5e0530e72af3ad54b966fba45cf015307b8f20b6024f51"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/!general-info.md",
+      "sha256": "d9ef6aac54df6cd2b85dc0f0b406e9a6d4d9e4090e872db178850cf959af3db7"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/UI01.md",
+      "sha256": "c59d54d35ccf9e9afd47077e14194fea53783493164c32e06826886ea3e44438"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/UI01.plan.json",
+      "sha256": "31d0047297f6704cd72cc2d6f84731278d085d5d0a19bba297b4bf2b43245965"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/DEV01.verification.md",
+      "sha256": "46d8897b984fb01db848dc21f3238d3e148452cd3cefaf9c4ee20f846d317230"
+    },
+    {
+      "revision": "51a9b96c9949e6d0f96a65d5650ecac575fb9da8",
+      "path": "docs/milestones/DEV01.preparation.json",
+      "sha256": "b173bd058deeeaac799095721e22865154162f93686e34fc2a6bc4a3367884a7"
+    }
+  ],
+  "verification_observation": {
+    "local": "Full npm test passed: 147 rules, 30 Chromium journeys, all package/compiler/static/negative/sensitivity checks",
+    "syntax": "55 game scripts and 31 test/config/demo scripts; packaged Vue is independently upstream-byte verified",
+    "package": "154 game/vendor/license assets plus generated manifest; 56 HTML scripts; 46 registered/page templates",
+    "performance": {
+      "before": {
+        "artifact": "DEV01 inherited baseline",
+        "environment": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "browser": "159.0.8154.6",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          }
+        },
+        "method": "Five fresh contexts; synthetic early save at fixed game Date.now; loopback cold page load (navigation to control-ready), 20 explicit 0.05-second real ticks, then awaited canonical points DOM mutation. Real performance clock; no retries or target.",
+        "samples": [
+          {
+            "startupMs": 550.9000000059605,
+            "twentyTicksMs": 315.79999999701977,
+            "renderUpdateMs": 1.7999999970197678,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 408,
+            "twentyTicksMs": 311.3999999910593,
+            "renderUpdateMs": 2.3999999910593033,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 420.79999999701977,
+            "twentyTicksMs": 304.3999999910593,
+            "renderUpdateMs": 2,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 337.20000000298023,
+            "twentyTicksMs": 288.5,
+            "renderUpdateMs": 4.4000000059604645,
+            "vue": "2.6.12"
+          },
+          {
+            "startupMs": 342.79999999701977,
+            "twentyTicksMs": 258.5,
+            "renderUpdateMs": 4.299999997019768,
+            "vue": "2.6.12"
+          }
+        ]
+      },
+      "after": {
+        "artifact": "UI01 packaged artifact",
+        "environment": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "browser": "159.0.8154.6",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          }
+        },
+        "method": "Five fresh contexts; synthetic early save at fixed game Date.now; loopback cold page load (navigation to control-ready), 20 explicit 0.05-second real ticks, then awaited canonical points DOM mutation. Real performance clock; no retries or target.",
+        "samples": [
+          {
+            "startupMs": 545.5999999940395,
+            "twentyTicksMs": 430.5,
+            "renderUpdateMs": 0.7000000029802322,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 458.8999999910593,
+            "twentyTicksMs": 458.5,
+            "renderUpdateMs": 1.0999999940395355,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 449.19999998807907,
+            "twentyTicksMs": 430.40000000596046,
+            "renderUpdateMs": 0.6000000089406967,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 447.59999999403954,
+            "twentyTicksMs": 476.70000000298023,
+            "renderUpdateMs": 1.1000000089406967,
+            "vue": "3.5.46"
+          },
+          {
+            "startupMs": 470.29999999701977,
+            "twentyTicksMs": 406.40000000596046,
+            "renderUpdateMs": 1.2000000029802322,
+            "vue": "3.5.46"
+          }
+        ]
+      },
+      "before_sha256": "843c10692c30d61846a2adce908362874f16f4d70f3540cd6a1b7da611c39ca9",
+      "after_sha256": "625cbda9677064b1edb810199a4120b9fee74e66902ad74f17157abb9a28f914",
+      "measurement_script_sha256": "4f5d2b753ceae041dae16d90af471cc507b5443f76e14efd606e57cc22d10e6c",
+      "interpretation": "Five representative observations, no target or general improvement claim. Startup and tick medians are slower; DOM update median is faster."
+    },
+    "native_acceptance": false,
+    "next_defined_milestone": null
+  }
 }

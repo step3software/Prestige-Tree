@@ -12,6 +12,7 @@
 
 
 .notification-container {
+	pointer-events: none;
 	position: absolute;
 	z-index: 999999999999999999999999999999999999999999999999999999999999999999;
 	right: 30px;
@@ -41,10 +42,18 @@
 	transition: opacity .3s
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter-from, .fade-leave-to {
 	opacity: 0
 }
 
 .redtext {
 	color: red;
+}
+
+@media (max-width: 600px) {
+    .notification-container { right: 8px; width: min(300px, calc(100% - 16px)); }
+    .notification { width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .fade-enter-active, .fade-leave-active { transition: none; }
 }

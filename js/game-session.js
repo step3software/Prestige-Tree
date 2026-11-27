@@ -2,8 +2,9 @@
 /** One selected collection; only activation replaces its player identity.
  * Callers supply saveDefaults or codec-validated collections. Nothing is serialized
  * from this owner itself: SAV01 continues to own validation and persistence.
+ * @param {ObserveState} [observe]
  */
-function createSaveState() {
+function createSaveState(observe = value => value) {
     /** @type {SaveCollection|undefined} */
     let collection;
     return {
@@ -13,7 +14,7 @@ function createSaveState() {
             return typeof selected === 'string' ? undefined : selected;
         },
         /** @param {SaveCollection} next */
-        activate(next) { collection = next; },
+        activate(next) { collection = observe(next); },
     };
 }
 
@@ -40,7 +41,9 @@ function connectGamePort(port, owner) {
  */
 function createGameSession({ now = 0, effects = {}, content = registerGameLayers,
     modFactory = createModRules, layoutFactory = createTreeLayout, initialize = true } = {}) {
-    const saveState = createSaveState();
+    /** @type {ObserveState} */
+    const observe = effects.observe || (value => value);
+    const saveState = createSaveState(observe);
     let disposed = false;
     // Circular collaborators are allocated before construction. Their shapes
     // come from the actual owners, not hand-maintained shadow interfaces.
@@ -59,12 +62,13 @@ function createGameSession({ now = 0, effects = {}, content = registerGameLayers
     // Headless rule evaluation needs a property setter, not Vue or a fake DOM.
     /** @type {HeadlessEffects} */
     const integration = Object.create(effects);
+    integration.observe = observe;
     if (!('Date' in integration)) integration.Date = { now: () => now };
     if (!('setValue' in integration)) integration.setValue = (object, key, value) => { Reflect.set(object, key, value); };
     const treeLayout = layoutFactory({});
 
     connectGamePort(layerRegistry, createLayerRegistry({ gameHelpers, gameRules, saveState }));
-    connectGamePort(modRules, modFactory({ derivedState, gameHelpers, saveState }));
+    connectGamePort(modRules, modFactory({ derivedState, effects: integration, gameHelpers, saveState }));
     connectGamePort(softcapRules, createSoftcapRules({ derivedState, gameHelpers, saveState }));
     connectGamePort(helpContent, createHelpData({ saveState }));
     connectGamePort(saveDefaults, createSaveDefaults({ treeLayout, modRules, layerRegistry }));
@@ -73,7 +77,7 @@ function createGameSession({ now = 0, effects = {}, content = registerGameLayers
     connectGamePort(derivedState, createDerivedState({ effects: integration, helpContent, gameHelpers, modRules, layerRegistry, gameRules, saveState }));
     connectGamePort(treeCanvas, createTreeCanvas({ derivedState, effects: integration, layerRegistry, gameRules }));
     const componentDefinitions = createSystemComponents({});
-    connectGamePort(gameView, createGameView({ componentDefinitions, derivedState, effects: integration, gameHelpers, modRules, layerRegistry, gameRules, saveState, helpContent, saveCommands }));
+    connectGamePort(gameView, createGameView({ componentDefinitions, derivedState, effects: integration, gameHelpers, modRules, layerRegistry, gameRules, saveState, helpContent, saveCommands, runtimeServices }));
     connectGamePort(saveCommands, createSaveCommands({ saveDefaults, derivedState, effects: integration, gameHelpers, modRules, layerRegistry, gameRules, runtimeServices, saveState, gameView }));
     connectGamePort(runtimeServices, createRuntimeServices({ treeCanvas, derivedState, effects: integration, gameHelpers, modRules, gameRules, saveCommands, saveState, isLive: () => !disposed }));
 
@@ -119,6 +123,9 @@ function createGameSession({ now = 0, effects = {}, content = registerGameLayers
             const result = saveCommands.saveCodec().decodePlayer(encoded);
             if (!result.ok) return result;
             runtimeServices.disposeAll();
+            // The result is also a public state reference. Return the canonical
+            // observed identity, so mutations by its caller remain visible.
+            result.value = observe(result.value);
             saveState.activate({ ...collection, [collection.set]: result.value });
             settleDerived();
             return result;

@@ -9,28 +9,48 @@ its historical file paths should be checked against the current source map here.
 
 ## Run locally
 
-The game uses plain JavaScript, HTML and CSS, Vue **2.6.12** loaded by
-`index.html` from jsDelivr, and a checked-in `break_eternity.js` Decimal library.
-There is no application build step. The regression tools use Node **24.22.1**
+The game uses plain JavaScript, HTML and CSS, Vue **3.5.46** packaged locally,
+and a checked-in `break_eternity.js` Decimal library.
+The static packaging step uses Node **24.22.1**
 ([.node-version](../.node-version)), npm **11.19.1**, Playwright **1.65.1** and
 Chromium pinned by that Playwright release. DEV01 adds ESLint **10.15.0**
-and TypeScript **7.0.2** as JavaScript checking tools; application code remains JavaScript. The test-only Vue dependency is exactly
-**2.6.12**, matching the shipped page; this change does not migrate Vue.
+and TypeScript **7.0.2** as JavaScript checking tools; application code remains JavaScript.
+Vue is an exact application dependency, shared by the delivered artifact and tests.
 
-From an isolated worktree root, open `index.html` in a current browser. The
-[upstream tutorial](getting-started.md) describes that file-opening step, but its
-fork creation, mod ID changes and direct commits/pushes to `master` do not apply
-to development in this existing fork. Follow this guide and `AGENTS.md` instead.
-For a consistent local HTTP origin, with Python 3 installed, run:
+From an isolated worktree root, run:
 
 ```powershell
-python -m http.server 8000 --bind 127.0.0.1
+npm ci
+npm run build
+npm run serve
+```
+
+Open `http://127.0.0.1:8000/`; stop the preview server with Ctrl+C. The build
+copies the actual game scripts, images, styles and upstream licenses into ignored
+`dist/`, together with the locked Vue global production build and its license.
+`dist/package-manifest.json` records every asset digest and the runtime version.
+The checked-in HTML/component templates require Vue's included template compiler;
+there is no SFC toolchain, backend or production compatibility build.
+Serve/copy this artifact as static files under the existing hosting authority;
+building or previewing does not publish or deploy it. You can also open
+`dist/index.html` locally; automated startup evidence uses HTTP, not file URLs.
+
+The [upstream tutorial](getting-started.md) describes that file-opening step, but its
+fork creation, mod ID changes and direct commits/pushes to `master` do not apply
+to development in this existing fork. Follow this guide and `AGENTS.md` instead.
+For a Python-based preview of the same built package, run:
+
+```powershell
+python -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
 Open `http://127.0.0.1:8000/`. This command starts a local server; stop it with
 Ctrl+C. Expected result: the Prestige Tree Rewritten game renders, its tree/tabs
-respond, and the console has no new errors. Vue and Google Fonts require network
-access; a checkout alone does not establish offline availability. Git fetch/push
+respond, and the console has no new errors. No runtime CDN or Google Fonts request
+is required; the existing font stack uses its local monospace fallback. External
+Discord/upstream links contact their destinations only when followed. Package
+checks and Chromium start with all external requests blocked; this is not PWA,
+service-worker or universal offline support. Git fetch/push
 and PR commands contact GitHub; serving files locally does not publish the game.
 
 Use a disposable browser profile/origin with synthetic saves. Saves are local
@@ -44,6 +64,7 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 | Task | Owning implementation | Relevant reference |
 | --- | --- | --- |
 | Page startup and script order | `index.html` → `gameUI.commands.load()` in `js/browser-entry.js` → `js/saves.js` | [Main mod info](main-mod-info.md) |
+| Static artifact and preview | `scripts/build.cjs` → `dist/`; `scripts/serve.cjs` | [Package verification below](#vue-interface-and-packaging) |
 | Game identity, version, point rules | `js/mod.js` | [Main mod info](main-mod-info.md) |
 | Layer costs, rewards, upgrades and progression | `js/layers/manifest.js` → named `js/layers/` factories; purchases in `js/utils.js` | [Layers](basic-layer-breakdown.md), [upgrades](upgrades.md) |
 | Explicit advancement and resets | `js/game-session.js` → session-bound `js/game.js`; derived values in `js/technical/temp.js` | [Layer features](layer-features.md) |
@@ -58,7 +79,8 @@ export/import, reset, Decimal arithmetic and offline progress behavior.
 The feature reference is engine guidance, not proof of current implementation.
 `Old Code/` is historical reference and is not loaded by the main page.
 `demo.html` and `js/Demo/` are engine examples, not an automated regression suite.
-No generated source is identified in the baseline; preserve vendored library
+`dist/` is generated from these tracked owners and the exact npm dependency;
+never edit generated assets. Preserve vendored library
 attribution in both [licenses](../LICENSE) and [Prestige Tree license](../Prestige-tree-license).
 
 ## Layer content and registration
@@ -201,11 +223,14 @@ continues through SAV01’s atomic commands and reload. It cannot clear a tick f
 The [rendered tests](../tests/browser/session-ownership.spec.cjs) exercise active
 progression after independent sessions, import and save selection.
 
-`npm run test:static` derives lint scope from the actual main HTML graph and checks
-every authored shipped script. Only the identified vendor is outside lint;
+`npm run test:static` first verifies the built package, then derives lint scope from
+the actual main HTML graph and checks every authored shipped script. Only the
+identified Decimal and packaged Vue vendors are outside authored lint;
 demo/archive code is not main-page shipped code. Factory declarations are read-only;
 duplicate declarations, unexpected global state, undeclared writes and `var` fail.
-`jsconfig.json` contains that exact graph (including the vendor for type loading).
+`jsconfig.json` contains the exact game graph (including Decimal for type loading).
+Package verification accounts separately for the exact npm Vue asset at the first
+HTML script position; no authored script may be omitted or ignored.
 Checked JavaScript is scoped to `@ts-check` state composition, runtime, storage and
 the shared contracts; typed layer inputs and actual module return types supply
 their boundary shapes. Dynamic content bodies remain JavaScript with full-graph
@@ -227,6 +252,8 @@ From a dedicated worktree root on Windows or the Ubuntu CI runner:
 ```powershell
 npm ci
 npx playwright install chromium
+npm run build
+npm run test:package
 npm run test:syntax
 npm run test:static
 npm run test:static-sensitivity
@@ -266,10 +293,9 @@ IDs and dormant-layer state. The sensitivity command also reads immutable baseli
 history available (`fetch-depth: 0` in CI); it changes no checked-out game source.
 
 Browser tests create fresh Chromium contexts and start/stop their own loopback
-server on **127.0.0.1:4173**. That server serves the actual game page and scripts,
-substituting the locked local Vue asset and omitting Google Fonts in its test
-response. External requests are blocked. This is a test adapter, not evidence the
-shipped CDN-based game works offline. Tests control game time instead of waiting
+server on **127.0.0.1:4173**. That server uses the same static preview implementation
+to serve the exact `dist/` bytes. It performs no HTML, font or Vue substitution;
+the former `/test-vue.js` route is gone. External requests are blocked. Tests control game time instead of waiting
 for progression. No command reads a real browser profile or existing player save.
 
 Generated `node_modules/`, `rule-results.xml`, `playwright-report/` and `test-results/` are ignored;
@@ -313,6 +339,73 @@ py -3 -B "$orchaCheckout\standards_check.py" --repository . --orcha "$orchaCheck
 This observes remote Orcha `main` and checks manifest/reference integrity. Success
 reports `reference_valid: true`; it does not certify workflow exercise, game
 correctness, domain compliance or milestone acceptance.
+
+## Vue interface and packaging
+
+Follow README → this guide → `createBrowserGame` in `js/browser-entry.js` →
+`createGameSession` in `js/game-session.js` → `createGameView` in
+`js/components.js`. `loadVue()` creates one Vue 3 application, registers this
+view's components with `application.component`, and mounts once. Repeated load
+rebinds the existing instance. `js/technical/systemComponents.js` owns shared
+templates; dynamic layouts use `<component :is>` and explicit loop/condition
+scopes. The Options, information and help controls are native buttons. The save
+menu provides a close action, Escape, contained Tab navigation and focus return.
+At narrow widths, the tree and active pane stack as separately scrollable areas.
+`interface.css` keeps these migration/focus rules active across both existing
+style choices; `style.css` and `oldStyle.css` retain their original theme bytes.
+Scoped scroll/resize handlers call the session's existing canvas owner.
+
+The browser supplies a generic `observe(value)` port using `Vue.reactive`.
+The selected collection is observed at activation; derived caches, rule status,
+notifications and the view binding are observed when allocated. Every engine/UI
+consumer uses these same canonical references. Observing an extra UI copy would
+miss mutations to the raw original and is not supported. Headless construction
+uses the identity function and still samples no clock/storage/DOM or resources.
+`Vue.markRaw(Decimal.prototype)` excludes all existing/future Decimal instances
+from proxies with nonenumerable metadata; their arithmetic, identity, class,
+enumerable fields and serialized values remain unchanged. No vendor source is
+modified. Vue render/event errors dispose the session's owned drivers and use
+the existing reload-only fault/status gate; they cannot silently save partial state.
+
+For a component change, inspect its registration/template, trace its command to
+the owning session, then run from the worktree root:
+
+```powershell
+npm run build
+npm run test:package
+npx playwright test tests/browser/vue-interface.spec.cjs
+```
+
+Expected result: exact runtime/source/asset/license identity, every actual
+registered/page template compiles without diagnostics, and the rendered journeys
+pass. `npm run test:static` and `npm run test:static-sensitivity` keep the inherited
+full authored graph and scoped checked-JavaScript/negative contracts. Final delivery
+uses `npm test`, which builds before all package/static/rule/sensitivity/browser checks.
+After changing source, rebuild before running a browser-only command.
+
+`tests/rules/vue-interface.test.cjs` uses real Vue reactivity with only DOM mount
+omitted; its state/tick/save checkpoints compare immutable DEV01. The actual-browser
+suite uses the production global build and package, with no runtime substitution.
+The constructor/`component`/`set` stubs left in `tests/support/game-runtime.cjs`
+exist solely to load immutable Vue 2 predecessors before behavioral assertions;
+they are outside the production runtime. Historical graph loading remains unchanged.
+
+The production build includes Vue's compiler because the existing trusted authored
+templates are compiled in the browser. A server Content Security Policy must permit
+that established compilation model; no CSP or hosting permission is changed here.
+The build installs dependencies from npm only during `npm ci`; preview and game
+startup require local package bytes. `dist/vendor/Vue-LICENSE` and both game licenses
+travel with the artifact. No paid tooling, runner, service or deployment is used.
+
+Rollback means serving the prior DEV01 code artifact at `51a9b96`, after the
+normal human publication gate. Save key/schema and Decimal representation did
+not change, so rollback requires no destructive data conversion. Keep recoverable
+save exports and use the same codec/storage policy; do not clear `ptr`.
+The [UI01 verification](milestones/UI01.verification.md) records exact measurements,
+fixtures, standards/criteria/path coverage and known limits. Representative tests
+do not establish full late-game balance, other engines, actual-user usability,
+assistive-technology behavior or the OS clipboard. The demonstration page's broader
+rendering and pre-existing lowercase `js/demo/` portability remain unverified.
 
 ## Simulation and runtime lifecycle
 
@@ -468,3 +561,11 @@ then PR #4/#3/#2. Keep all parents intact while unmerged; final integration rema
 `master`. [Preparation](milestones/DEV01.preparation.json) and
 [verification](milestones/DEV01.verification.md) bind exact scope, standards and
 criterion evidence. Publication is not native acceptance, merge or activation.
+
+UI01 continues this authorized stack: `codex/ui01-vue-interface` targets
+`codex/dev01-state-contracts` ([PR #6](https://github.com/step3software/Prestige-Tree/pull/6)),
+then PR #5/#4/#3/#2. Preserve every parent while unmerged; final integration remains
+`master`. [Preparation](milestones/UI01.preparation.json) and
+[verification](milestones/UI01.verification.md) retain the exact file contract,
+canonical authority correction, source/standards evidence and delivered checks.
+UI01 is the last milestone in the defined roadmap; no successor is inferred.

@@ -1,9 +1,10 @@
 // Session-bound gameView owner; composition supplies only the named ports.
-function createGameView({ componentDefinitions, derivedState, effects, gameHelpers, gameRules, helpContent, layerRegistry, modRules, saveCommands, saveState }) {
+function createGameView({ componentDefinitions, derivedState, effects, gameHelpers, gameRules, helpContent, layerRegistry, modRules, saveCommands, saveState, runtimeServices }) {
 let app;
+let application;
 
 // Vue observes these references, never a cloned persistent or derived model.
-const binding = { player: undefined, allSaves: undefined, tmp: undefined, ruleStatus: gameRules.status };
+const binding = effects.observe({ player: undefined, allSaves: undefined, tmp: undefined, ruleStatus: gameRules.status });
 function bind() {
     binding.player = saveState.player;
     binding.allSaves = saveState.allSaves;
@@ -67,13 +68,25 @@ const uiBindings = {
         "unlockUpg"() { return gameHelpers.unlockUpg; },
 };
 function registerComponent(name, definition) {
-    effects.Vue.component(name, { ...definition,
+    application.component(name, { ...definition,
         mixins: [{ data: () => ({ sessionBinding: binding }), computed: uiBindings }, ...(definition.mixins || [])] });
 }
 
 
 function loadVue() {
     gameView.bind();
+    if (app) return app;
+    application = effects.Vue.createApp({
+        data: () => ({ sessionBinding: binding }),
+        computed: uiBindings,
+    });
+    // Vue schedules render/event work outside the driver callback. Route those
+    // failures to the same reload-only protection instead of silently continuing.
+    application.config.errorHandler = error => {
+        if (gameRules.tickFaulted) return;
+        try { runtimeServices.disposeAll(); }
+        finally { runtimeServices.reportRuntimeFault(error); }
+    };
 	// data = a function returning the content (actually HTML)
 	registerComponent('display-text', {
 		props: ['layer', 'data'],
@@ -125,9 +138,9 @@ function loadVue() {
 		<div class="upgTable instant" >
 			<div class="upgRow">
 				<div v-for="item in data">
-				<div v-if="!Array.isArray(item)" v-bind:is="item" :layer= "layer" v-bind:style="tmp[layer].componentStyles[item]"></div>
-				<div v-else-if="item.length==3" v-bind:style="[tmp[layer].componentStyles[item[0]], (item[2] ? item[2] : {})]" v-bind:is="item[0]" :layer= "layer" :data= "item[1]"></div>
-				<div v-else-if="item.length==2" v-bind:is="item[0]" :layer= "layer" :data= "item[1]" v-bind:style="tmp[layer].componentStyles[item[0]]"></div>
+				<component v-if="!Array.isArray(item)" v-bind:is="item" :layer= "layer" v-bind:style="tmp[layer].componentStyles[item]"></component>
+				<component v-else-if="item.length==3" v-bind:style="[tmp[layer].componentStyles[item[0]], (item[2] ? item[2] : {})]" v-bind:is="item[0]" :layer= "layer" :data= "item[1]"></component>
+				<component v-else-if="item.length==2" v-bind:is="item[0]" :layer= "layer" :data= "item[1]" v-bind:style="tmp[layer].componentStyles[item[0]]"></component>
 				</div>
 			</div>
 		</div>
@@ -141,9 +154,9 @@ function loadVue() {
 		<div class="upgTable instant">
 			<div class="upgCol">
 				<div v-for="item in data">
-					<div v-if="!Array.isArray(item)" v-bind:is="item" :layer= "layer" v-bind:style="(item=='prestige-button')?{}:tmp[layer].componentStyles[item]"></div>
-					<div v-else-if="item.length==3" v-bind:style="[(item[0]=='prestige-button')?{}:tmp[layer].componentStyles[item[0]], (item[2] ? item[2] : {})]" v-bind:is="item[0]" :layer= "layer" :data= "item[1]"></div>
-					<div v-else-if="item.length==2" v-bind:is="item[0]" :layer= "layer" :data= "item[1]" v-bind:style="(item[0]=='prestige-button')?{}:tmp[layer].componentStyles[item[0]]"></div>
+					<component v-if="!Array.isArray(item)" v-bind:is="item" :layer= "layer" v-bind:style="(item=='prestige-button')?{}:tmp[layer].componentStyles[item]"></component>
+					<component v-else-if="item.length==3" v-bind:style="[(item[0]=='prestige-button')?{}:tmp[layer].componentStyles[item[0]], (item[2] ? item[2] : {})]" v-bind:is="item[0]" :layer= "layer" :data= "item[1]"></component>
+					<component v-else-if="item.length==2" v-bind:is="item[0]" :layer= "layer" :data= "item[1]" v-bind:style="(item[0]=='prestige-button')?{}:tmp[layer].componentStyles[item[0]]"></component>
 				</div>
 			</div>
 		</div>
@@ -171,7 +184,7 @@ function loadVue() {
 	registerComponent('h-line', {
 		props: ['layer', 'data'],
 			template:`
-				<hr class="instant" v-bind:style="data ? {'width': data} : {}" class="hl">
+				<hr class="instant hl" v-bind:style="data ? {'width': data} : {}">
 			`
 		})
 
@@ -179,7 +192,7 @@ function loadVue() {
 	registerComponent('v-line', {
 		props: ['layer', 'data'],
 		template: `
-			<div class="instant" v-bind:style="data ? {'height': data} : {}" class="vl2"></div>
+			<div class="instant vl2" v-bind:style="data ? {'height': data} : {}"></div>
 		`
 	})
 
@@ -277,11 +290,11 @@ function loadVue() {
 		props: ['layer'],
 		template: `
 		<div v-if="tmp[layer].milestones">
-			<table>
-				<tr v-for="id in Object.keys(tmp[layer].milestones)"><div v-if="tmp[layer].milestones[id]!== undefined && tmp[layer].milestones[id].unlocked"
+			<table><tbody>
+				<tr v-for="id in Object.keys(tmp[layer].milestones)" :key="id">
 					<milestone :layer = "layer" :data = "id" :cl = "hasMilestone(layer, id)?'milestoneDone':'milestone'"  :shown = "milestoneShown(layer, id)" :locked = "!(tmp[layer].milestones[id].unlocked)" v-bind:style="tmp[layer].componentStyles.milestone"></milestone>
-				</tr></div>
-			</table>
+				</tr>
+			</tbody></table>
 			<br>
 		</div>
 		`
@@ -291,10 +304,10 @@ function loadVue() {
 	registerComponent('milestone', {
 		props: ['layer', 'data', 'cl', 'shown', 'locked'],
 		template: `
-		<td v-if="tmp[layer].milestones && tmp[layer].milestones[data]!== undefined && shown" v-bind:style="[locked ? {'visibility': 'hidden'} : {}, tmp[layer].milestones[data].style]" v-bind:class="{milestone: cl=='milestone', milestoneDone: cl=='milestoneDone', anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}">
+		<td v-if="tmp[layer].milestones && tmp[layer].milestones[data]!== undefined && tmp[layer].milestones[data].unlocked && shown" v-bind:style="[locked ? {'visibility': 'hidden'} : {}, tmp[layer].milestones[data].style]" v-bind:class="{milestone: cl=='milestone', milestoneDone: cl=='milestoneDone', anim: (player.anim&&!player.oldStyle), grad: (player.grad&&!player.oldStyle)}">
 			<h3 v-html="tmp[layer].milestones[data].requirementDescription"></h3><br>
 			<span v-html="tmp[layer].milestones[data].effectDescription"></span><br>
-		<span v-if="(tmp[layer].milestones[data].toggles)&&(hasMilestone(layer, data))" v-for="toggle in tmp[layer].milestones[data].toggles"><toggle :data= "toggle" :type="((toggle instanceof Array)?'normal':'multi')" v-bind:style="tmp[layer].componentStyles.toggle"></toggle>&nbsp;</span></td></tr>
+		<span v-if="(tmp[layer].milestones[data].toggles)&&(hasMilestone(layer, data))" v-for="toggle in tmp[layer].milestones[data].toggles"><toggle :data= "toggle" :type="((toggle instanceof Array)?'normal':'multi')" v-bind:style="tmp[layer].componentStyles.toggle"></toggle>&nbsp;</span></td>
 		`
 	})
 
@@ -501,13 +514,15 @@ function loadVue() {
 	registerComponent('tree', {
 		props: ['layer', 'data'],
 		template: `<div>
-		<span class="nodeRow" v-for="row in data"><table>
-			<span v-for="node in row">
-				<layer-node v-if="tmp[node].isLayer" :layer='node' :abb='tmp[node].symbol'></layer-node>
-				<button-node v-else :layer='node' :abb='tmp[node].symbol'></button-node>
-			</span>
-			<tr><table><button class="treeNode hidden"></button></table></tr>
-		</span></div>
+		<template v-for="(row, rowIndex) in data" :key="rowIndex">
+            <span class="nodeRow">
+                <span v-for="node in row" :key="node">
+                    <layer-node v-if="tmp[node].isLayer" :layer="node" :abb="tmp[node].symbol"></layer-node>
+                    <button-node v-else :layer="node" :abb="tmp[node].symbol"></button-node>
+                </span>
+            </span>
+            <button class="treeNode hidden" tabindex="-1" aria-hidden="true"></button>
+        </template></div>
 
 	`
 	})
@@ -528,18 +543,37 @@ function loadVue() {
 	
 	// For the save menu popup
 	registerComponent('saves', {
+		data: () => ({ previousFocus: undefined }),
+		watch: {
+			'player.saveMenuOpen'(open) {
+				if (open) {
+					this.previousFocus = effects.document.activeElement;
+					this.$nextTick(() => this.$refs.closeSaveMenu?.focus());
+				} else if (this.previousFocus?.isConnected) this.previousFocus.focus();
+			},
+		},
+		methods: {
+			closeMenu() { this.player.saveMenuOpen = false; },
+			trapSaveFocus(event) {
+				if (event.key !== 'Tab') return;
+				const controls = [...this.$el.querySelectorAll('button')].filter(button => button.getClientRects().length && getComputedStyle(button).visibility !== 'hidden');
+				const first = controls[0], last = controls[controls.length - 1];
+				if (event.shiftKey && effects.document.activeElement === first) { event.preventDefault(); last.focus(); }
+				else if (!event.shiftKey && effects.document.activeElement === last) { event.preventDefault(); first.focus(); }
+			},
+		},
 		template: `
-		<div class="popup" v-if="!(!player.saveMenuOpen)">
-			<div class="popupBlocker" onclick="gameUI.session.saveState.player.saveMenuOpen = false;"></div>
-			<div class="popup-content"><br>
-				<div class="upgRow" style="width: 100%;" v-for="(data, name) in allSaves" v-if="name!='set' && data!==undefined">
+		<div class="popup" v-if="!(!player.saveMenuOpen)" role="dialog" aria-modal="true" aria-label="Save files" v-on:keydown="trapSaveFocus" v-on:keydown.esc.stop.prevent="closeMenu">
+			<div class="popupBlocker" aria-hidden="true" v-on:click="closeMenu"></div>
+			<div class="popup-content"><button ref="closeSaveMenu" class="popupBtn can" v-on:click="closeMenu">Close save files</button><br>
+				<template v-for="(data, name) in allSaves" :key="name"><div class="upgRow" style="width: 100%;" v-if="name!='set' && data!==undefined">
 					<div v-bind:class="{ activeSave: (allSaves.set==name), widthLock: true }">{{name}}</div>
 					<button v-on:click="loadSave(name);" class="popupBtn can">Load</button>
 					<button v-on:click="renameSave(name)" class="popupBtn can">Rename</button>
 					<button v-on:click="deleteSave(name)" class="popupBtn can">Delete</button>
 					<div><button class="popupBtnMini can" v-on:click="moveSave(name, -1)" v-bind:style="{ visibility: (showMoveSaveBtn(name, 'up')?'visible':'hidden')}">▲</button><button class="popupBtnMini can" v-on:click="moveSave(name, 1)" v-bind:style="{ visibility: (showMoveSaveBtn(name, 'down')?'visible':'hidden')}">▼</button></div>
 				</div>
-				<div class="upgRow" style="width: 100%;"><button onclick="gameUI.commands.newSave()" class="popupBtn can">New Save</button></div>
+				</template><div class="upgRow" style="width: 100%;"><button onclick="gameUI.commands.newSave()" class="popupBtn can">New Save</button></div>
 			</div>
 		</div>
 	`
@@ -556,11 +590,7 @@ function loadVue() {
 	registerComponent('options-tab', componentDefinitions.systemComponents['options-tab'])
 
 
-	app = new effects.Vue({
-		el: "#app",
-		data: () => ({ sessionBinding: binding }),
-		computed: uiBindings,
-	})
+	app = application.mount('#app');
 }
 
  
