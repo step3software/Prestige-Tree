@@ -8,6 +8,35 @@ async function open(page,established=true){
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
 
+test('Timber frames previews exact retained huts and cancel, confirm and reload agree',async({page})=>{
+ const errors=await open(page,false);
+ await page.evaluate(()=>{
+  const p=gameUI.session.saveState.player;
+  p.points=new Decimal(20);p.organization.points=new Decimal(3);p.organization.best=new Decimal(3);
+  p.shelter.homes=6;p.shelter.points=new Decimal(32);p.craft.points=new Decimal(2);
+  gameUI.session.modRules.civilization.buyUpgrade('joinery');
+ });
+ await node(page,'Shelter').click();
+ await expect(page.getByRole('button',{name:/^Timber frames/})).toContainText('Keep 1 built hut per earned Organization milestone');
+ await node(page,'Organization').click();
+ await expect(page.getByTestId('prestige-keep-preview')).toContainText('4 built huts (24 housing)');
+ await expect(page.getByTestId('prestige-reset-preview')).toContainText('2 built huts; housing capacity becomes 24');
+ page.once('dialog',async dialog=>{
+  expect(dialog.message()).toContain('4 built huts (24 housing)');
+  await dialog.dismiss();
+ });
+ await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(6);
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(4);
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.points.toNumber())).toBe(24);
+ await page.evaluate(()=>gameUI.commands.save());await page.reload();
+ await expect(page.getByRole('heading',{name:'Population',exact:false})).toBeVisible();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(4);
+ expect(errors).toEqual([]);
+});
+
 test('spending Organization retains milestones while lowering Population requirements through reload',async({page})=>{
  const errors=await open(page,false);
  await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(50);p.organization.points=new Decimal(3);p.points=new Decimal(20);p.shelter.homes=3;p.shelter.points=new Decimal(20);p.civ.improvements.overseer=true;p.civ.improvements.hutForeman=true;});
@@ -198,7 +227,7 @@ test('Water storage is crafted earthenware with one Craft and a timed builder re
 
 test('the opening uses every worker, sells baskets for one Craft each and hides later resources',async({page})=>{
     const errors=await open(page);
-    await expect(page.locator('.chapter')).toContainText('v0.8');
+    await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.getByTestId('available-workers')).toContainText('5 workers available');
     await expect(page.getByTestId('worker-ledger')).not.toContainText('domestic');
     for(const name of ['Money','Time','Education','Culture'])await expect(node(page,name)).toHaveCount(0);
@@ -588,13 +617,13 @@ test('Craft panel describes spending without an automatic production bonus',asyn
 
 
 for(const version of ['v06','v07']){
- test('v0.8 browser startup accepts the historical '+version+' save',async({page})=>{
+ test('v0.9 browser startup accepts the historical '+version+' save',async({page})=>{
     const input=require('../fixtures/civ-v08-migration.json')[version];
     await page.addInitScript(encoded=>localStorage.setItem('civ-prestige-tree',encoded),input);
     const errors=await open(page);
-    await expect(page.locator('.chapter')).toContainText('v0.8');
+    await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.locator('#save-recovery')).toBeHidden();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.8');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.9');
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
     expect(errors).toEqual([]);

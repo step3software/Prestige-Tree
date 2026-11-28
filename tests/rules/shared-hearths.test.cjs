@@ -47,7 +47,7 @@ test('Food benefits use whole tens of current Population, independently of huts 
     }
     p.organization.total=new Decimal(3);p.organization.points=new Decimal(3); p.food.points = new Decimal(25); p.craft.points = new Decimal(2);
     assert.equal(e.buyUpgrade('joinery'), true);
-    assert.equal(e.supply().support, 26);
+    assert.equal(e.supply().support, 20);
     assert.equal(e.supply().storage.food, 130);
 });
 

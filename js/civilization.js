@@ -67,7 +67,7 @@ function createCivilizationRules({ saveState }) {
         farming: {resource: "food", name: "Cultivated fields", description: "Unlock long, high-yield farming cycles. Repeat with the overseer; 3 workers remain occupied per cycle.", costs: {food: 45, water: 25, craft: 3, organization: 2}},
         autonomousFood: {resource: "food", name: "Autonomous food production", description: "All Food crews become worker-free. Repeat orders keep production running.", costs: {money: 120, freeTime: 10, craft: 12, education: 8}},
         hearth: {resource: "shelter", name: "Shared hearths", description: "Every 10 current Population adds +5 Food storage and +1 Food/min for the settlement. No extra workers needed.", costs: {food: 20, water: 15, craft: 1}},
-        joinery: {resource: "shelter", name: "Timber frames", description: "Every purchased home provides 6 housing instead of 4, including existing homes.", costs: {craft: 2}},
+        joinery: {resource: "shelter", name: "Timber frames", description: "Keep 1 built hut per earned Organization milestone on tier 2 resets (Craft and Organization).", costs: {craft: 2}},
         builderTools: {resource: "shelter", name: "Construction tools", description: "Double construction speed. Projects still reserve a builder.", costs: {craft: 3}},
     };
     const owns = id => player().civ.improvements[id];
@@ -429,7 +429,7 @@ function createCivilizationRules({ saveState }) {
             {id: "water-storage", name: "Craft earthenware jars", craftCost: 1, description: "Hand-shaped, fired clay jars. +40 Water storage. Costs 1 Craft per purchase, paid when construction starts.", work: work(12, p.water.storage)},
         ];
         if (id === "shelter" && (includeLocked || featureAvailable("huts"))) return [
-            {id: "shelter-home", name: "Build a new hut", description: "+" + (owns("joinery") ? 6 : 4) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
+            {id: "shelter-home", name: "Build a new hut", description: "+4 housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
         ];
         return [];
     }
@@ -479,7 +479,7 @@ function createCivilizationRules({ saveState }) {
         if (kind === "tools") player().food.routes[resource]++;
         else if (kind === "home") {
             player().shelter.homes += player().civ.projectJobs;
-            player().shelter.points = new Decimal(8 + player().shelter.homes * (owns("joinery") ? 6 : 4));
+            player().shelter.points = new Decimal(8 + player().shelter.homes * 4);
         } else if (kind === "site") player()[resource].sites++;
         else player()[resource].storage++;
         player().civ.project = "";
@@ -506,7 +506,6 @@ function createCivilizationRules({ saveState }) {
         player().organization.best = player().organization.best.max(player().organization.points);
         for (const [resource, cost] of Object.entries(definition.costs)) player()[resource].points = player()[resource].points.sub(cost);
         player().civ.improvements[id] = true;
-        if (id === "joinery") player().shelter.points = new Decimal(8 + player().shelter.homes * 6);
         player().civ.message = id === "abundance" ? "Abundance purchased. Surplus supplies and spare housing can now accelerate growth." : definition.name + " purchased. Upgrades apply to the next dispatched crew.";
         return true;
     }
@@ -625,6 +624,8 @@ function createCivilizationRules({ saveState }) {
         const organizationTotal = amountTotal("organization") + (id === "organization" ? gain : 0);
         const organizationHeld = amount("organization") + (id === "organization" ? gain : 0);
         const kept = Object.fromEntries(Object.keys(buyableNames).map(buyable => [buyable, retention(buyable, organizationHeld)]));
+        const earnedMilestones = organizationMilestones(organizationHeld).filter(reward => reward.earned).length;
+        const retainedHuts = kept["shelter-home"] ? p.shelter.homes : Math.min(p.shelter.homes, owns("joinery") ? earnedMilestones : 0);
         const resetBuyables = Object.keys(kept).filter(resource => !kept[resource]);
         const keptBuyables = Object.keys(kept).filter(resource => kept[resource]);
         const resetConstruction = !!p.civ.project && !kept[p.civ.project];
@@ -643,15 +644,16 @@ function createCivilizationRules({ saveState }) {
             committed -= p.civ.actions[action].workers;
         }
         const reset = ["Population returns to " + startingSettlement.population, "Food and Water stores restart at " + startingSettlement.food + " each", "growth, irrigation and shortage countdown", "Food and hut repeat orders switch off; Overseer and foreman released"];
-        const ownedResetBuyables = resetBuyables.filter(buyable => buyableLevel(buyable) > 0);
+        const ownedResetBuyables = resetBuyables.filter(buyable => buyable !== "shelter-home" && buyableLevel(buyable) > 0);
         reset.push(ownedResetBuyables.length ? "buyables: " + ownedResetBuyables.map(buyable => buyableNames[buyable]).join(", ") : "unprotected buyables (none currently owned)");
-        if (!kept["shelter-home"] && p.shelter.homes > 0) reset.push("housing capacity returns to 8");
+        if (p.shelter.homes > retainedHuts) reset.push((p.shelter.homes - retainedHuts) + " built huts; housing capacity becomes " + (8 + retainedHuts * 4));
         if (resetConstruction) reset.push("current construction progress");
         if (recalledActions.length) reset.push(recalledActions.map(action => actionNames[action]).join(", ") + " trips return without yield");
         const keep = ["permanent upgrades", "Craft, Organization and later resources"];
+        if (retainedHuts > 0) keep.push(retainedHuts + " built huts (" + (8 + retainedHuts * 4) + " housing)");
         if (keptBuyables.length) keep.push("protected buyables: " + keptBuyables.map(buyable => buyableNames[buyable]).join(", "));
         if (p.civ.project && !resetConstruction) keep.push("current construction");
-        return {gain, organizationTotal, organizationHeld, kept, resetBuyables, keptBuyables, resetConstruction, recalledActions, startingSettlement,
+        return {gain, organizationTotal, organizationHeld, retainedHuts, kept, resetBuyables, keptBuyables, resetConstruction, recalledActions, startingSettlement,
             resetText: reset.join("; "), keepText: keep.join("; ")};
     }
     function prestige(id) {
@@ -662,7 +664,8 @@ function createCivilizationRules({ saveState }) {
         const p = player();
         if (organizationProgress() >= 3) { p.civ.improvements.overseer = true; p.civ.improvements.hutForeman = true; }
         for (const buyable of plan.resetBuyables) resetBuyable(buyable);
-        p.shelter.points = new Decimal(8 + p.shelter.homes * (owns("joinery") ? 6 : 4));
+        p.shelter.homes = plan.retainedHuts;
+        p.shelter.points = new Decimal(8 + p.shelter.homes * 4);
         if (plan.resetConstruction) { p.civ.preparedHut = false; p.civ.project = ""; p.civ.projectWork = 0; p.civ.projectWorkers = 1; p.civ.projectJobs = 1; }
         for (const action of plan.recalledActions) Object.assign(p.civ.actions[action], {remaining: 0, duration: 0, workers: 0, reward: 0, jobs: 0});
         p.points = new Decimal(startingSettlement.population);
@@ -723,6 +726,12 @@ function createCivilizationRules({ saveState }) {
     /** Convert historical action/upgrade records before typed hydration. Never
      * touch live state: the codec owns the detached candidate and atomic commit. */
     function migrateData(data) {
+        // Validate the historical capacity before converting this detached save.
+        if (Number(data.version || 0) < 0.9 && data.civ?.improvements?.joinery === true && data.shelter) {
+            const homes = data.shelter.homes;
+            if (!Number.isSafeInteger(homes) || homes < 0 || !new Decimal(data.shelter.points).eq(8 + homes * 6)) throw new Error("Invalid historical housing capacity");
+            data.shelter.points = String(8 + homes * 4);
+        }
         if (data.civ && !Object.hasOwn(data.civ, "features")) {
             data.civ.features = {huts: true, hunting: true, fishing: true, buyables: true};
         }
@@ -795,7 +804,7 @@ function createCivilizationRules({ saveState }) {
         if (Object.keys(civ.overseers).sort().join() !== "food,huts" || Object.values(civ.overseers).some(value => !Number.isInteger(value) || value < 1 || value > (civ.improvements.workRosters ? 5 : 1))) throw new Error("Invalid overseer staffing");
         if (Object.keys(civ.expeditionMultipliers).sort().join() !== "farm,fish,gather,hunt" || Object.values(civ.expeditionMultipliers).some(value => !Number.isInteger(value) || value < 1 || value > (civ.improvements.extendedExpeditions ? 5 : 1))) throw new Error("Invalid expedition multiplier");
         if (typeof civ.preparedHut !== "boolean" || (civ.preparedHut && (civ.project !== "shelter-home" || !civ.improvements.preparedMaterials))) throw new Error("Invalid prepared construction");
-        if (!count(data.shelter.homes) || !count(data.shelter.comfort) || !data.shelter.points.eq(8 + data.shelter.homes * (civ.improvements.joinery ? 6 : 4))) throw new Error("Invalid housing capacity");
+        if (!count(data.shelter.homes) || !count(data.shelter.comfort) || !data.shelter.points.eq(8 + data.shelter.homes * 4)) throw new Error("Invalid housing capacity");
         if (Object.keys(data.food.routes).sort().join() !== "farm,fish,gather,hunt" || !Object.values(data.food.routes).every(count)) throw new Error("Invalid Food routes");
         const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "gather-tools", "hunt-tools", "fish-tools", "farm-tools"];
         if (!["balanced", "food"].includes(civ.priority) ||

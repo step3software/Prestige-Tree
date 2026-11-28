@@ -7,7 +7,7 @@ function stage(p,D,total=3){p.organization.total=new D(total);p.organization.poi
 test('the actual pre-redesign v0.8 codec export keeps discovered activities and paid work',t=>{
  const fixture=require('../fixtures/civ-pre-ms123-v08.json'),raw=JSON.parse(atob(fixture.player));
  const {engine,p,e}=game(t,fixture.player);
- assert.equal(p.version,'0.8');assert.equal(p.points.toString(),raw.points);
+ assert.equal(p.version,'0.9');assert.equal(p.points.toString(),raw.points);
  assert.equal(p.food.points.toString(),raw.food.points);assert.equal(p.craft.points.toString(),raw.craft.points);
  assert.equal(p.civ.project,raw.civ.project);assert.equal(p.civ.projectWork,raw.civ.projectWork);
  assert.equal(p.civ.preparedHut,false);
@@ -52,7 +52,7 @@ test('early upgrades spend exact Craft or Organization and never change lifetime
  p.shelter.homes=2;p.shelter.points=new D(16);const before=e.projects('shelter')[0].work;
  buy('lashings','craft',1);assert.ok(e.projects('shelter')[0].work<before);
  assert.equal(e.projects('shelter')[0].work,16*1.25**2);
- buy('joinery','craft',2);assert.equal(p.shelter.points.toNumber(),20);buy('builderTools','craft',3);
+ buy('joinery','craft',2);assert.equal(p.shelter.points.toNumber(),16);buy('builderTools','craft',3);
  buy('digging','craft',1);assert.equal(e.actionDefinition('gather').reward,7.5);
  buy('hunting','craft',2);assert.equal(e.actionDefinition('hunt').workers,2);
  buy('butchery','craft',3);assert.equal(e.actionDefinition('hunt').reward,36);
