@@ -924,16 +924,12 @@ function createCivilizationRules({ saveState }) {
             if (!Object.hasOwn(action, "jobs")) action.jobs = action.remaining > 0 ? 1 : 0;
         }
         if (crews + oldKeeper > Number(data.points)) throw new Error("Overcommitted historical workers");
-        const repeating = ["gather", "hunt", "fish", "farm"].some(id => civ.actions[id]?.repeat > 0);
-        if (repeating && Number(data.organization?.points) >= 3 && crews + 1 > Number(data.points)) {
-            for (const id of ["gather", "hunt", "fish", "farm"]) if (civ.actions[id]) civ.actions[id].repeat = 0;
-            civ.message = "Food repeat orders paused to make room for their dedicated Overseer. Existing crews and progress were kept.";
-        }
     }
     /** Retire fishing at detached ingress. The owner selected cancellation with
      * no Food or Craft compensation; removing its records releases its workers.
      * Validate retired values first so a damaged save still enters recovery. */
     function migrateData(data) {
+        if (data.civ && Object.hasOwn(data.civ, "message") && typeof data.civ.message !== "string") throw new Error("Invalid civilization message");
         migratePreviousData(data);
         if (Number(data.version || 0) >= 0.92 || !data.civ) return;
         const civ = data.civ;
@@ -941,6 +937,11 @@ function createCivilizationRules({ saveState }) {
             data.food?.routes?.fish > 0 || civ.project === "fish-tools";
         const count = value => Number.isSafeInteger(value) && value >= 0;
         const finite = value => Number.isFinite(value) && value >= 0;
+        // Validate commitments even when the Fish record was omitted and would
+        // hydrate as idle. Cancelling a trap build must not hide overbooking.
+        const originalCrews = Object.values(civ.actions || {}).reduce((total, action) => total + Number(action?.workers || 0), 0) +
+            Number(civ.fireTenders || 0) + (civ.project ? Number(civ.projectWorkers ?? 1) : 0);
+        if (originalCrews > Number(data.points)) throw new Error("Overcommitted historical workers");
         if (civ.features && Object.hasOwn(civ.features, "fishing")) {
             if (typeof civ.features.fishing !== "boolean") throw new Error("Invalid retired fishing discovery");
             delete civ.features.fishing;
@@ -966,11 +967,6 @@ function createCivilizationRules({ saveState }) {
                 state.cookingBonus > state.reward * (civ.improvements?.copperPots ? 5 : 4) + 1e-8 ||
                 (state.cookingBonus > 0 && !civ.improvements?.cooking) ||
                 !count(state.repeat) || state.repeat > 5 * (civ.overseers?.food ?? 1)) throw new Error("Invalid retired fishing state");
-            // Check original commitments before cancelling, rather than hiding
-            // invalid overbooking by freeing a crew during migration.
-            const crews = Object.values(civ.actions).reduce((total, action) => total + Number(action?.workers || 0), 0) +
-                Number(civ.fireTenders || 0) + (civ.project ? Number(civ.projectWorkers ?? 1) : 0);
-            if (crews > Number(data.points)) throw new Error("Overcommitted historical workers");
             delete civ.actions.fish;
         }
         if (civ.project === "fish-tools") {
@@ -981,6 +977,17 @@ function createCivilizationRules({ saveState }) {
             civ.projectWork = 0;
             civ.projectWorkers = 1;
             civ.projectJobs = 1;
+        }
+        // The pre-0.7 dedicated-Overseer conversion must use the remaining
+        // workforce, after fishing crews and trap builders have been released.
+        if (Number(data.version || 0) < 0.7 && civ.actions) {
+            const crews = Object.values(civ.actions).reduce((total, action) => total + Number(action?.workers || 0), 0) +
+                Number(civ.fireTenders || 0) + (civ.project ? Number(civ.projectWorkers ?? 1) : 0);
+            const repeating = ["gather", "hunt", "farm"].some(id => civ.actions[id]?.repeat > 0);
+            if (repeating && Number(data.organization?.points) >= 3 && crews + 1 > Number(data.points)) {
+                for (const id of ["gather", "hunt", "farm"]) if (civ.actions[id]) civ.actions[id].repeat = 0;
+                civ.message = "Food repeat orders paused to make room for their dedicated Overseer. Existing crews and progress were kept.";
+            }
         }
         if (retiredWork) civ.message = "Fishing removed: trips, repeat orders and river traps cancelled without compensation. Their workers are available again.";
     }

@@ -82,6 +82,8 @@ test('malformed retired fishing fields reject atomically before any live replace
         raw => { raw.civ.projectWork = null; },
         raw => { raw.civ.projectWorkers = 2; },
         raw => { raw.civ.projectJobs = 2; },
+        raw => { delete raw.civ.actions.fish; raw.points = '1'; },
+        raw => { raw.civ.message = 42; },
     ];
     for (const mutate of mutations) {
         const raw = JSON.parse(atob(fixture.save));
@@ -93,6 +95,23 @@ test('malformed retired fishing fields reject atomically before any live replace
         assert.equal(engine.exportPlayer(), before);
         assert.equal(JSON.stringify(raw), original, 'Ingress never mutates the input');
     }
+});
+
+test('pre-0.7 migration preserves other repeat orders when retiring fishing frees their Overseer', t => {
+    const {engine} = game(t);
+    const raw = JSON.parse(atob(fixture.save));
+    raw.version = '0.6';
+    raw.points = '4';
+    raw.civ.actions.gather.repeat = true;
+    raw.civ.actions.fish.repeat = false;
+    raw.civ.improvements.overseer = true;
+    const result = engine.session.saveCommands.saveCodec().decodePlayer(raw);
+    assert.equal(result.ok, true, result.error);
+    assert.equal(result.value.civ.actions.gather.repeat, 1);
+    assert.equal(result.value.civ.actions.gather.remaining, raw.civ.actions.gather.remaining);
+    const restored = game(t, engine.session.saveCommands.saveCodec().encodePlayer(result.value).text);
+    assert.equal(restored.e.supply().overseerWorkers, 1);
+    assert.equal(restored.p.civ.actions.gather.repeat, 1);
 });
 
 test('current saves reject reintroduced fishing instead of retaining an old runtime mode', t => {
