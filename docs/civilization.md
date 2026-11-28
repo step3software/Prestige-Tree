@@ -4,7 +4,7 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 ## First minutes
 
-Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; buy Crafting for 10 Craft to reveal repeatable equipment, then build Wooden spears to unlock hunting. Both overseer queues arrive at 3; Food/Water buyables use Craft capability rather than milestone 6. Existing discovered fishing remains usable while its new milestone is undecided. Dispatching a busy route or overbooking workers fails without spending anything.
+Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; buy Crafting for 10 Craft to reveal repeatable equipment, then build Wooden spears to unlock hunting. The two expedition buyables arrive at Organization 2 and both overseer queues at 3. Equipment is purchased in Craft. Fishing and river traps remain removed. Dispatching a busy route or overbooking workers fails without spending anything.
 
 Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. After purchasing Abundance, a free Shelter upgrade unlocked at Organization milestone 8, independent Food, Water and Shelter bonuses can raise the rate to 10 times normal. Before purchase, growth remains at the base rate. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
 
@@ -81,7 +81,7 @@ Each loss recalculates the shared labor budget. Construction can pause with its 
 | Farm, after fields unlock | 3 | 60s | 75 Food |
 | Collect water | 2 | 8s | 14 Water |
 
-Each route saves its active job snapshot separately from a remaining-repeat counter capped at five per assigned overseer. Each successful automatic start dispatches one job and decrements the counter by exactly one. Busy routes, full storage and unavailable crews do not consume repeats. At zero, no further job starts; an active final job still finishes normally. Changing or clearing a slider leaves current work unchanged. Recall cancels active work and clears its queue. New equipment/irrigation affects the next dispatch; saved snapshots retain their remaining time, crew and reward. Existing multi-job snapshots still finish without duplicating yield.
+Each route saves its active job snapshot separately from a remaining-repeat counter capped at five per assigned overseer. Each successful automatic start dispatches one job and decrements the counter by exactly one. Busy routes, full storage and unavailable crews do not consume repeats. At zero, no further job starts; an active final job still finishes normally. Changing or clearing a repeat selection leaves current work unchanged. Recall cancels active work and clears its queue. New equipment/irrigation affects the next dispatch; saved snapshots retain their remaining time, crew and reward. Existing multi-job snapshots still finish without duplicating yield.
 
 The two expedition buyables unlock at Organization milestone 2 and retain the trip tradeoffs and per-level requirements described below. Removed Provisioning, Food baskets, river traps and Farming tools no longer have purchase paths or ongoing effects. Their migrated active trips retain their saved contracts.
 
@@ -146,7 +146,7 @@ There are no building slots and no Shelter milestone track.
 
 There is no domestic work or household labor reservation. Every person can join a crew or build. The ledger counts active crews, the shared Food Overseer, the hut foreman, Fire tenders and every reserved builder once. Only whole available workers can join a crew.
 
-One construction job runs at a time for new queued work. Other buyables retain their single builder. Existing saved multi-hut snapshots keep their work and builders until completion. Population loss can pause construction without losing progress; it resumes when enough builders are available. Organization and Construction tools still affect construction work. Canceling releases builders and clears progress; spent Craft and Fire are not refunded. Canceling current construction does not consume another queued repeat; set the slider to zero to stop further automatic starts.
+One construction job runs at a time for new queued work. Other buyables retain their single builder. Existing saved multi-hut snapshots keep their work and builders until completion. Population loss can pause construction without losing progress; it resumes when enough builders are available. Organization and Construction tools still affect construction work. Canceling releases builders and clears progress; spent Craft and Fire are not refunded. Canceling current construction does not consume another queued repeat; set the repeat selection to zero to stop further automatic starts.
 
 ## Prestige and later resources
 

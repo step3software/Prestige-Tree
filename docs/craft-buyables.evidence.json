@@ -1,0 +1,129 @@
+{
+  "action": "fix",
+  "repository": "step3software/Prestige-Tree",
+  "source_branch": "main",
+  "initial_source_revision": "280caf5edf6f20c9d5a30eda1b6c77c13b0de710",
+  "reconciled_source_revision": "e0b37887a06e7c19d83f42ccb8fb3208ae8090f3",
+  "authority": [
+    "Owner requested repeatable Craft equipment replacing base buyables, both prestige cost resets and removal of Fire buyables.",
+    "Owner confirmed main despite stale master registry/manifest.",
+    "Owner confirmed one-time material knowledge and repeatable equipment.",
+    "Published fishing removal retains its no-compensation decision."
+  ],
+  "shared_standards": {
+    "repository": "Wisteria-Psychological-Services/project-management-orchestration",
+    "branch": "main",
+    "revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "resolver_status": "loaded",
+    "documents": [
+      {
+        "path": "docs/pr-development-coordination.md",
+        "sha256": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+        "module": "coordination"
+      },
+      {
+        "path": "docs/agent-workflows/intent-routing.md",
+        "sha256": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+        "module": "intent-routing"
+      },
+      {
+        "path": "docs/agent-workflows/fix.md",
+        "sha256": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6",
+        "module": "intent-routing"
+      },
+      {
+        "path": "docs/standards/no-legacy-modes.md",
+        "sha256": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+        "module": "data-migration"
+      },
+      {
+        "path": "docs/standards/readable-code.md",
+        "sha256": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+        "module": "readable-code"
+      },
+      {
+        "path": "docs/agent-workflows/review.md",
+        "sha256": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+        "module": "intent-routing"
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888"
+      },
+      {
+        "path": "README.md",
+        "sha256": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5"
+      },
+      {
+        "path": "standards/catalog.json",
+        "sha256": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651"
+      },
+      {
+        "path": "config/repositories.json",
+        "sha256": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86"
+      },
+      {
+        "path": "docs/development-workflow.md",
+        "sha256": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6"
+      }
+    ]
+  },
+  "project_documents": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6"
+    },
+    {
+      "path": ".orcha/repository.json",
+      "sha256": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585"
+    },
+    {
+      "path": "README.md",
+      "sha256": "a458fe58ea411d6af303c40ad1eb486640130a4c28aa3f292ed90471452ddee6"
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "sha256": "5279f795eb8e07bcf8ad0c3f5d21543ed6ee8d594c7407549501be0a604d7f0e"
+    },
+    {
+      "path": "docs/!general-info.md",
+      "sha256": "cb43c339d4d4846066e850fabd4e223d3342f64aeb2ad00c5795a001004f80bd"
+    },
+    {
+      "path": "docs/civilization.md",
+      "sha256": "5c5deb6d8678481f96b81f0c26cd84c0c14f4c8a95398dc45008bc07f784cf1e"
+    },
+    {
+      "path": "docs/balance-testing.md",
+      "sha256": "9033318520eb5715955f127469461a5d683f8f86cecd52b27620973f47ff6e0b"
+    },
+    {
+      "path": "docs/remove-fishing.verification.md",
+      "sha256": "2c939db24437951457876eddea06d1fc1a8c6cdb1018db5c0290b98f5240de4e"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "tests/fixtures/civ-pre-repeatables-v091.json",
+      "sha256": "a2fcdeea94af3388500ca05d9e520cf1d3b26206ddc5c2fa6b872e0ba67eae65"
+    },
+    {
+      "path": "tests/fixtures/civ-pre-repeatables-v092.json",
+      "sha256": "ef97602890232dd8c33bbf70f966037371eb78f397ef4ed8f92cc965b24fa5ed"
+    }
+  ],
+  "well_diagnosis": {
+    "source": "323e5a3 (same retained water-site rule as initial main)",
+    "level": 2,
+    "work_before": 29.160000000000004,
+    "held_5_after_prestige": {
+      "level": 0,
+      "work": 16
+    },
+    "held_6_after_prestige": {
+      "level": 2,
+      "work": 29.160000000000004
+    },
+    "cause": "Milestone 6 explicitly retained water-site, which also owns its scaling work price. The obsolete well and its retention rule are removed; no well repair is shipped."
+  }
+}
