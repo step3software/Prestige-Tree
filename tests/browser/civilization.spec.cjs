@@ -15,10 +15,14 @@ test('Organization upgrades drive expedition length and separate 25/10 overseer 
  await node(page,'Organization').click();await page.getByRole('button',{name:/^Work rosters/}).click();
  await node(page,'Shelter').click();await page.getByRole('button',{name:/^Prepared materials/}).click();
  expect(await page.evaluate(()=>gameUI.session.saveState.player.organization.points.toNumber())).toBe(0);
- await page.getByLabel('Hut overseer workers').selectOption('2');
+ const foreman=page.getByRole('slider',{name:/^Hut foreman:/});
+ await expect(foreman).toHaveAttribute('min','1');await expect(foreman).toHaveAttribute('max','5');
+ await foreman.focus();await page.keyboard.press('ArrowRight');await expect(foreman).toHaveValue('2');
  await page.getByLabel('Hut repeats remaining:').focus();await page.keyboard.press('End');
  await expect(page.getByLabel('Hut repeats remaining:')).toHaveAttribute('max','10');
- await node(page,'Food').click();await page.getByLabel('Food overseer workers').selectOption('5');
+ await node(page,'Food').click();
+ const planner=page.getByRole('slider',{name:/^Expedition planner:/});
+ await planner.focus();await page.keyboard.press('End');await expect(planner).toHaveValue('5');
  await page.getByLabel('Gather expedition length').selectOption('5');
  const slider=page.getByLabel('Gather repeats remaining:');await slider.focus();await page.keyboard.press('End');
  await expect(slider).toHaveValue('25');await expect(slider).toHaveAttribute('max','25');
@@ -29,12 +33,31 @@ test('Organization upgrades drive expedition length and separate 25/10 overseer 
  expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().foremanWorkers)).toBe(2);
  expect(await page.evaluate(()=>gameUI.session.modRules.civilization.summary().project.work)).toBeCloseTo(16*1.35**6*.75,8);
  await page.reload();await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());
- await expect(page.getByLabel('Food overseer workers')).toHaveValue('5');
+ await expect(planner).toHaveValue('5');
  await expect(page.getByLabel('Gather expedition length')).toHaveValue('5');
  await expect(slider).toHaveAttribute('max','25');
- await expect(page.getByLabel('Food overseer workers').locator('option[value="1"]')).toBeDisabled();
- for(const width of [1280,320]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
- await page.screenshot({path:'test-results/ms123-controls.png',fullPage:true});
+ await expect(planner).toHaveAttribute('min','5');
+ await planner.focus();await page.keyboard.press('Home');await expect(planner).toHaveValue('5');
+ await slider.focus();await page.keyboard.press('Home');
+ await planner.focus();await page.keyboard.press('Home');await expect(planner).toHaveValue('1');
+ await expect(slider).toHaveAttribute('max','5');
+ // Active queues cannot increase staffing beyond the shared free labor budget.
+ await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.civ.actions.gather.repeat=1;p.points=new Decimal(6);});
+ await expect(planner).toHaveAttribute('max','2');
+ await planner.focus();await page.keyboard.press('End');await expect(planner).toHaveValue('2');
+ expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().availableWorkers)).toBe(0);
+ await node(page,'Shelter').click();await expect(foreman).toHaveValue('2');
+ await expect(foreman).toHaveAttribute('min','2');await expect(foreman).toHaveAttribute('max','2');
+ await foreman.focus();await page.keyboard.press('Home');await expect(foreman).toHaveValue('2');
+ for(const panel of ['Food','Shelter']){
+  await node(page,panel).click();
+  for(const width of [1280,320]){
+   await page.setViewportSize({width,height:900});
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+   await expect(panel==='Food'?planner:foreman).toBeVisible();
+   await page.screenshot({path:`test-results/staffing-${panel}-${width}.png`,fullPage:true});
+  }
+ }
  expect(errors).toEqual([]);
 });
 

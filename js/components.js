@@ -17,6 +17,16 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         player() { return binding.player; }, allSaves() { return binding.allSaves; },
         civ() { return binding.player && modRules.civilization.summary(); },
         selected() { return modRules.civilization.node(binding.player.tab); },
+        overseerStaffing() {
+            const food = this.selected.id === 'food';
+            const kind = food ? 'food' : 'huts';
+            const repeats = food ? Math.max(...Object.values(this.player.civ.actions).map(action => action.repeat)) : this.player.civ.hutRepeat;
+            const occupied = food ? this.civ.overseerWorkers : this.civ.foremanWorkers;
+            const workers = this.player.civ.overseers[kind];
+            return {kind, name: food ? 'Expedition planner' : 'Hut foreman', workers,
+                min: Math.max(1, Math.ceil(repeats / 5)),
+                max: occupied ? Math.min(5, occupied + this.civ.availableWorkers) : 5};
+        },
         rows() { return [0,1,2,3].map(tier => this.civ.nodes.filter(node => node.tier === tier)); },
         frozen() { return binding.ruleStatus.gameEnded || gameRules.tickFaulted; },
     };
