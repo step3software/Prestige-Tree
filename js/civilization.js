@@ -39,11 +39,10 @@ function createCivilizationRules({ saveState }) {
     const tier = id => ["food", "water", "shelter"].includes(id) ? 0 :
         ["craft", "organization"].includes(id) ? 1 : ["money", "freeTime"].includes(id) ? 2 : 3;
 
-    const actionNames = {gather: "Gather", hunt: "Hunt", fish: "Fish", farm: "Farm", water: "Collect water"};
+    const actionNames = {gather: "Gather", hunt: "Hunt", farm: "Farm", water: "Collect water"};
     const actionBase = {
         gather: {resource: "food", workers: 1, duration: 10, reward: 6},
         hunt: {resource: "food", workers: 3, duration: 25, reward: 24},
-        fish: {resource: "food", workers: 2, duration: 18, reward: 14},
         farm: {resource: "food", workers: 3, duration: 60, reward: 75},
         water: {resource: "water", workers: 2, duration: 8, reward: 14},
     };
@@ -102,7 +101,7 @@ function createCivilizationRules({ saveState }) {
     const vesselDiscount = () => owns("clayPots") || owns("copperPots") ? 0.75 : 1;
     const cookingBonusFactor = () => owns("copperPots") ? 1.25 : 1;
     const buyableNames = {
-        "gather-tools": "Explore farther afield", "hunt-tools": "Hunt bigger game", "fish-tools": "Weave river traps",
+        "gather-tools": "Explore farther afield", "hunt-tools": "Hunt bigger game",
         "farm-tools": "Farming tools", "food-site": "Provisioning", "food-storage": "Food baskets",
         "water-site": "Well improvements", get "water-storage"() { return owns("jars") ? "Earthenware jars" : "Woven baskets"; },
         "shelter-home": "Huts", "fire-fuel": "Fuel stores", "fire-hearths": "Improved hearths", "fire-charcoal": "Charcoal clamps",
@@ -118,7 +117,7 @@ function createCivilizationRules({ saveState }) {
         {id: "well-records", requirement: 6, name: "Well records", upgrades: [], retains: "water-site", reward: "Keep well improvements. Craft spending unlocks buyables."},
         {id: "gathering-records", requirement: 7, name: "Farming", upgrades: ["farming"], retains: "gather-tools", reward: "Unlock Cultivated fields. Keep exploration levels."},
         {id: "hunting-records", requirement: 8, name: "Abundance", upgrades: ["abundance", "rationing", "relief"], retains: "hunt-tools", reward: "Unlock free Abundance, Emergency rations and Mutual aid. Keep bigger-game levels."},
-        {id: "fishing-records", requirement: 9, name: "Irrigation", upgrades: ["sluice"], retains: "fish-tools", reward: "Irrigate Farming cycles. Keep river trap levels."},
+        {id: "irrigation", requirement: 9, name: "Irrigation", upgrades: ["sluice"], retains: "", reward: "Irrigate Farming cycles."},
         {id: "settlement-orders", requirement: 10, name: "Settlement orders", upgrades: ["autonomousFood"], retains: "shelter-home", reward: "Unlock auto-building. Keep huts."},
     ];
     function organizationProgress(held = amount("organization")) {
@@ -175,8 +174,8 @@ function createCivilizationRules({ saveState }) {
     }
     function defaults() {
         return {fireBuyables: {fuel: 0, hearths: 0, charcoal: 0}, fire: 0, fireTenders: 0, cookingLevel: 1, growth: 0, tickRemainder: 0, project: "", projectWork: 0, projectWorkers: 1, projectJobs: 1, hutRepeat: 0,
-            features: {huts: false, hunting: false, fishing: false, buyables: false},
-            overseers: {food: 1, huts: 1}, expeditionMultipliers: {gather: 1, hunt: 1, fish: 1, farm: 1},
+            features: {huts: false, hunting: false, buyables: false},
+            overseers: {food: 1, huts: 1}, expeditionMultipliers: {gather: 1, hunt: 1, farm: 1},
             preparedHut: false, priority: "balanced", autoBuild: false, irrigation: 0, autoIrrigate: false, shortage: {elapsed: 0, losses: 0},
             improvements: Object.fromEntries(Object.keys(improvementDefinitions).map(id => [id, false])),
             actions: Object.fromEntries(Object.keys(actionBase).map(id => [id, emptyAction()])),
@@ -275,7 +274,7 @@ function createCivilizationRules({ saveState }) {
             paused = true;
         }
         if ((overbooked() || p.points.lte(2)) && foodOrdersAvailable() && Object.values(p.civ.actions).some(action => action.repeat > 0)) {
-            for (const id of ["gather", "hunt", "fish", "farm"]) p.civ.actions[id].repeat = 0;
+            for (const id of ["gather", "hunt", "farm"]) p.civ.actions[id].repeat = 0;
             overseerStopped = true;
         }
         if ((overbooked() || p.points.lte(2)) && p.civ.hutRepeat > 0) {
@@ -345,7 +344,7 @@ function createCivilizationRules({ saveState }) {
         if (id === "hunt" && owns("hunting")) workers = 2;
         if (id === "hunt") workers = huntingCrew(workers, level);
         if (base.resource === "food" && owns("autonomousFood")) workers = 0;
-        const unlocked = id === "hunt" ? featureAvailable("hunting") : id === "fish" ? featureAvailable("fishing") : id !== "farm" || owns("farming");
+        const unlocked = id === "hunt" ? featureAvailable("hunting") : id !== "farm" || owns("farming");
         const soloWater = id === "water" && workers > p.points.toNumber();
         const crewSpeed = soloWater ? workers : 1;
         if (soloWater) workers = 1;
@@ -354,7 +353,7 @@ function createCivilizationRules({ saveState }) {
         if (id === "gather") {
             duration *= Math.pow(1.2, level);
             yieldMultiplier = Math.pow(1.5, level);
-        } else if (id === "hunt" || id === "fish") {
+        } else if (id === "hunt") {
             yieldMultiplier = Math.pow(2, level);
         } else {
             duration = Math.max(4, duration / (1 + level * 0.08));
@@ -520,8 +519,6 @@ function createCivilizationRules({ saveState }) {
                 description: "Exploration level " + p.food.routes.gather + ": reach richer ground. Each level multiplies trip time by 1.2 and yield by 1.5; crew unchanged.", work: work(14, p.food.routes.gather)},
             {id: "hunt-tools", name: buyableNames["hunt-tools"],
                 description: "Bigger-game level " + p.food.routes.hunt + ": each level multiplies the crew by 1.5, rounded up, and yield by 2; trip time unchanged. Craft equipment replaces Organization-level requirements.", work: 14},
-            {id: "fish-tools", name: buyableNames["fish-tools"], craftCost: Math.pow(2, p.food.routes.fish),
-                description: "River trap level " + p.food.routes.fish + ": each level doubles the catch with the same crew and trip time. Costs " + Math.pow(2, p.food.routes.fish) + " Craft, paid when construction starts.", work: 14},
             ...(owns("farming") ? [{id: "farm-tools", name: buyableNames["farm-tools"],
                 description: "Route level " + p.food.routes.farm + ": +35% base yield and faster trips per level.", work: work(14, p.food.routes.farm)}] : []),
             {id: "food-site", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
@@ -690,7 +687,7 @@ function createCivilizationRules({ saveState }) {
         if (p.civ.hutRepeat > 0 && occupiedWorkers().foremanWorkers > 0 && !p.civ.project && !shortageStatus().active && startProject("shelter-home", 1, true)) p.civ.hutRepeat--;
         if (p.civ.autoBuild && autoBuildingAvailable() && !p.civ.project && !shortageStatus().active) chooseAutomaticProject();
         if (!foodOrdersAvailable() || !occupiedWorkers().overseerWorkers) return;
-        const order = p.civ.priority === "food" ? ["farm", "hunt", "fish", "gather"] : ["gather", "fish", "hunt", "farm"];
+        const order = p.civ.priority === "food" ? ["farm", "hunt", "gather"] : ["gather", "hunt", "farm"];
         // Consume a queued repeat only after its single job actually starts.
         // Busy routes, full stores and unavailable crews leave the count intact.
         for (const id of order) {
@@ -866,7 +863,7 @@ function createCivilizationRules({ saveState }) {
     }
     /** Convert historical action/upgrade records before typed hydration. Never
      * touch live state: the codec owns the detached candidate and atomic commit. */
-    function migrateData(data) {
+    function migratePreviousData(data) {
         // Convert validated old housing on the detached codec candidate only.
         if (Number(data.version || 0) < 0.91 && data.civ?.improvements?.joinery === true && data.shelter) {
             const homes = data.shelter.homes, perHut = housingPerHut(data.civ.improvements);
@@ -892,8 +889,8 @@ function createCivilizationRules({ saveState }) {
             }
             if (old.features && Object.hasOwn(old.features, "buyables")) old.features.buyables = false;
         }
-        if (data.civ && !Object.hasOwn(data.civ, "features")) {
-            data.civ.features = {huts: false, hunting: Math.max(Number(data.organization?.points), Number(data.organization?.best || 0)) >= 2, fishing: true, buyables: false};
+        if (Number(data.version || 0) < 0.92 && data.civ && !Object.hasOwn(data.civ, "features")) {
+            data.civ.features = {huts: false, hunting: Math.max(Number(data.organization?.points), Number(data.organization?.best || 0)) >= 2, buyables: false};
         }
         if (Number(data.version || 0) >= 0.8) return;
         const civ = data.civ;
@@ -927,11 +924,72 @@ function createCivilizationRules({ saveState }) {
             if (!Object.hasOwn(action, "jobs")) action.jobs = action.remaining > 0 ? 1 : 0;
         }
         if (crews + oldKeeper > Number(data.points)) throw new Error("Overcommitted historical workers");
-        const repeating = ["gather", "hunt", "fish", "farm"].some(id => civ.actions[id]?.repeat > 0);
-        if (repeating && Number(data.organization?.points) >= 3 && crews + 1 > Number(data.points)) {
-            for (const id of ["gather", "hunt", "fish", "farm"]) if (civ.actions[id]) civ.actions[id].repeat = 0;
-            civ.message = "Food repeat orders paused to make room for their dedicated Overseer. Existing crews and progress were kept.";
+    }
+    /** Retire fishing at detached ingress. The owner selected cancellation with
+     * no Food or Craft compensation; removing its records releases its workers.
+     * Validate retired values first so a damaged save still enters recovery. */
+    function migrateData(data) {
+        if (data.civ && Object.hasOwn(data.civ, "message") && typeof data.civ.message !== "string") throw new Error("Invalid civilization message");
+        migratePreviousData(data);
+        if (Number(data.version || 0) >= 0.92 || !data.civ) return;
+        const civ = data.civ;
+        const retiredWork = civ.actions?.fish?.remaining > 0 || civ.actions?.fish?.repeat > 0 ||
+            data.food?.routes?.fish > 0 || civ.project === "fish-tools";
+        const count = value => Number.isSafeInteger(value) && value >= 0;
+        const finite = value => Number.isFinite(value) && value >= 0;
+        // Validate commitments even when the Fish record was omitted and would
+        // hydrate as idle. Cancelling a trap build must not hide overbooking.
+        const originalCrews = Object.values(civ.actions || {}).reduce((total, action) => total + Number(action?.workers || 0), 0) +
+            Number(civ.fireTenders || 0) + (civ.project ? Number(civ.projectWorkers ?? 1) : 0);
+        if (originalCrews > Number(data.points)) throw new Error("Overcommitted historical workers");
+        if (civ.features && Object.hasOwn(civ.features, "fishing")) {
+            if (typeof civ.features.fishing !== "boolean") throw new Error("Invalid retired fishing discovery");
+            delete civ.features.fishing;
         }
+        if (civ.expeditionMultipliers && Object.hasOwn(civ.expeditionMultipliers, "fish")) {
+            const factor = civ.expeditionMultipliers.fish;
+            if (!Number.isInteger(factor) || factor < 1 || factor > (civ.improvements?.extendedExpeditions ? 5 : 1)) throw new Error("Invalid retired fishing multiplier");
+            delete civ.expeditionMultipliers.fish;
+        }
+        if (data.food?.routes && Object.hasOwn(data.food.routes, "fish")) {
+            if (!count(data.food.routes.fish)) throw new Error("Invalid retired river traps");
+            delete data.food.routes.fish;
+        }
+        if (civ.actions && Object.hasOwn(civ.actions, "fish")) {
+            const raw = civ.actions.fish, defaults = emptyAction();
+            if (!raw || typeof raw !== "object" || Array.isArray(raw) || Object.keys(raw).some(key => !Object.hasOwn(defaults, key))) throw new Error("Invalid retired fishing record");
+            const state = {...defaults, ...raw};
+            if (![state.remaining, state.duration, state.reward, state.cookingBonus].every(finite) ||
+                state.remaining > state.duration || !count(state.workers) || !count(state.completed) ||
+                !count(state.jobs) || state.jobs > 5 || state.workers > state.jobs * 2 ||
+                (state.remaining > 0 && (!state.jobs || (!state.workers && !civ.improvements?.autonomousFood))) ||
+                (!state.remaining && (state.duration || state.workers || state.reward || state.cookingBonus || state.jobs)) ||
+                state.cookingBonus > state.reward * (civ.improvements?.copperPots ? 5 : 4) + 1e-8 ||
+                (state.cookingBonus > 0 && !civ.improvements?.cooking) ||
+                !count(state.repeat) || state.repeat > 5 * (civ.overseers?.food ?? 1)) throw new Error("Invalid retired fishing state");
+            delete civ.actions.fish;
+        }
+        if (civ.project === "fish-tools") {
+            const project = {projectWork: 0, projectWorkers: 1, projectJobs: 1, preparedHut: false, ...civ};
+            if (!finite(project.projectWork) || ![0, 1].includes(project.projectWorkers) ||
+                project.projectJobs !== 1 || project.preparedHut !== false) throw new Error("Invalid retired river trap construction");
+            civ.project = "";
+            civ.projectWork = 0;
+            civ.projectWorkers = 1;
+            civ.projectJobs = 1;
+        }
+        // The pre-0.7 dedicated-Overseer conversion must use the remaining
+        // workforce, after fishing crews and trap builders have been released.
+        if (Number(data.version || 0) < 0.7 && civ.actions) {
+            const crews = Object.values(civ.actions).reduce((total, action) => total + Number(action?.workers || 0), 0) +
+                Number(civ.fireTenders || 0) + (civ.project ? Number(civ.projectWorkers ?? 1) : 0);
+            const repeating = ["gather", "hunt", "farm"].some(id => civ.actions[id]?.repeat > 0);
+            if (repeating && Number(data.organization?.points) >= 3 && crews + 1 > Number(data.points)) {
+                for (const id of ["gather", "hunt", "farm"]) if (civ.actions[id]) civ.actions[id].repeat = 0;
+                civ.message = "Food repeat orders paused to make room for their dedicated Overseer. Existing crews and progress were kept.";
+            }
+        }
+        if (retiredWork) civ.message = "Fishing removed: trips, repeat orders and river traps cancelled without compensation. Their workers are available again.";
     }
     /** Defaults add the new fields to 0.1 saves once at codec ingress. Old
      * infrastructure and in-flight construction retain their meaningful values;
@@ -971,13 +1029,13 @@ function createCivilizationRules({ saveState }) {
         if (["water", "shelter"].includes(civ.priority)) civ.priority = "balanced";
         if (Object.keys(civ.improvements).some(id => !Object.hasOwn(improvementDefinitions, id)) ||
             Object.values(civ.improvements).some(value => typeof value !== "boolean")) throw new Error("Invalid improvements");
-        if (Object.keys(civ.features).sort().join() !== "buyables,fishing,hunting,huts" || Object.values(civ.features).some(value => typeof value !== "boolean")) throw new Error("Invalid feature discoveries");
+        if (Object.keys(civ.features).sort().join() !== "buyables,hunting,huts" || Object.values(civ.features).some(value => typeof value !== "boolean")) throw new Error("Invalid feature discoveries");
         if (Object.keys(civ.overseers).sort().join() !== "food,huts" || Object.values(civ.overseers).some(value => !Number.isInteger(value) || value < 1 || value > (civ.improvements.workRosters ? 5 : 1))) throw new Error("Invalid overseer staffing");
-        if (Object.keys(civ.expeditionMultipliers).sort().join() !== "farm,fish,gather,hunt" || Object.values(civ.expeditionMultipliers).some(value => !Number.isInteger(value) || value < 1 || value > (civ.improvements.extendedExpeditions ? 5 : 1))) throw new Error("Invalid expedition multiplier");
+        if (Object.keys(civ.expeditionMultipliers).sort().join() !== "farm,gather,hunt" || Object.values(civ.expeditionMultipliers).some(value => !Number.isInteger(value) || value < 1 || value > (civ.improvements.extendedExpeditions ? 5 : 1))) throw new Error("Invalid expedition multiplier");
         if (typeof civ.preparedHut !== "boolean" || (civ.preparedHut && (civ.project !== "shelter-home" || !civ.improvements.preparedMaterials))) throw new Error("Invalid prepared construction");
         if (!count(data.shelter.homes) || !count(data.shelter.comfort) || !data.shelter.points.eq(8 + data.shelter.homes * housingPerHut(civ.improvements))) throw new Error("Invalid housing capacity");
-        if (Object.keys(data.food.routes).sort().join() !== "farm,fish,gather,hunt" || !Object.values(data.food.routes).every(count)) throw new Error("Invalid Food routes");
-        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "gather-tools", "hunt-tools", "fish-tools", "farm-tools", "fire-fuel", "fire-hearths", "fire-charcoal"];
+        if (Object.keys(data.food.routes).sort().join() !== "farm,gather,hunt" || !Object.values(data.food.routes).every(count)) throw new Error("Invalid Food routes");
+        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "gather-tools", "hunt-tools", "farm-tools", "fire-fuel", "fire-hearths", "fire-charcoal"];
         if (!["balanced", "food"].includes(civ.priority) ||
             (civ.project !== "" && !projectIds.includes(civ.project)) || (civ.project === "farm-tools" && !civ.improvements.farming) ||
             !finite(civ.projectWork) || !count(civ.projectJobs) || civ.projectJobs < 1 || civ.projectJobs > 5 ||
@@ -985,7 +1043,7 @@ function createCivilizationRules({ saveState }) {
             (civ.project !== "shelter-home" && civ.projectJobs !== 1) ||
             !count(civ.hutRepeat) || civ.hutRepeat > 5 * civ.overseers.huts || !finite(civ.growth) || civ.growth >= 1 ||
             !finite(civ.tickRemainder) || civ.tickRemainder >= 1 + 1e-8 || !finite(civ.irrigation) || civ.irrigation > 45) throw new Error("Invalid civilization progress");
-        if (Object.keys(civ.actions).sort().join() !== "farm,fish,gather,hunt,water") throw new Error("Invalid action types");
+        if (Object.keys(civ.actions).sort().join() !== "farm,gather,hunt,water") throw new Error("Invalid action types");
         if (!count(civ.shortage.losses) || !finite(civ.shortage.elapsed) || civ.shortage.elapsed > 20) throw new Error("Invalid shortage countdown");
         let crews = civ.fireTenders + (civ.project ? civ.projectWorkers : 0);
         for (const [id, state] of Object.entries(civ.actions)) {

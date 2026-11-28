@@ -62,7 +62,7 @@ test('Fire projects use builders, add no stock, improve output/efficiency and re
 });
 test('legacy Fire save migrates without charging or discarding active paid work',t=>{
  const fixture=require('../fixtures/civ-pre-fire-v08.json');const g=game(t,fixture.player),{p,engine}=g;
- assert.equal(p.version,'0.91');assert.ok(p.civ.improvements.crafting);assert.deepEqual(p.civ.fireBuyables,{fuel:0,hearths:0,charcoal:0});
+ assert.equal(p.version,'0.92');assert.ok(p.civ.improvements.crafting);assert.deepEqual(p.civ.fireBuyables,{fuel:0,hearths:0,charcoal:0});
  const loaded=game(t,engine.exportPlayer());assert.equal(loaded.engine.exportPlayer(),engine.exportPlayer());
 });
 test('save validation rejects malformed material tiers and Fire levels without changing live state',t=>{

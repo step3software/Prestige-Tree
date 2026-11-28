@@ -5,7 +5,7 @@ const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t){
     const engine=createBalanceEngine();
     // Established-settlement fixture: retain activities already discovered before this test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);t.after(engine.dispose);
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);t.after(engine.dispose);
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 function shortage(p,resource='food',population=10){
@@ -125,14 +125,15 @@ test('Overseer reserves one worker for all enabled Food sliders and cannot overb
 });
 
 test('a shortage releases the Overseer before recalling a critical Food crew',t=>{
-    const {engine,p,e}=game(t);shortage(p,'food',6);
+    const {engine,p,e}=game(t);shortage(p,'food',5);
     p.civ.improvements.overseer=true;p.organization.points=p.organization.points.max(3);
-    e.setRepeat('hunt',1);e.dispatch('hunt');e.dispatch('fish');
+    p.civ.improvements.extendedExpeditions=true;e.setExpeditionMultiplier('gather',2);
+    e.setRepeat('hunt',1);e.dispatch('hunt');e.dispatch('gather');
     engine.advance(10);
-    assert.equal(p.points.toNumber(),5);
+    assert.equal(p.points.toNumber(),4);
     assert.equal(p.civ.actions.hunt.repeat,0);
     assert.ok(p.civ.actions.hunt.remaining>0);
-    assert.ok(e.supply().laborUsed<=5);
+    assert.ok(e.supply().laborUsed<=4);
 });
 
 test('both prestiges reset Population to five, seed ten supplies and switch Food and hut orders off',t=>{

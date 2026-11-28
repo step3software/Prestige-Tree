@@ -3,7 +3,7 @@ async function open(page,established=true){
     const errors=[];page.on('pageerror',error=>errors.push(error.message));
     await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
     await page.goto('/');await expect(page.getByRole('heading',{name:'Population',exact:false})).toBeVisible();
-    await page.evaluate(established=>{gameUI.session.runtimeServices.gameRuntime.stop();if(established){Object.assign(gameUI.session.saveState.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});gameUI.session.saveState.player.civ.improvements.crafting=true;gameUI.session.saveState.player.organization.points=new Decimal(7);}},established);
+    await page.evaluate(established=>{gameUI.session.runtimeServices.gameRuntime.stop();if(established){Object.assign(gameUI.session.saveState.player.civ.features,{huts:true,hunting:true,buyables:false});gameUI.session.saveState.player.civ.improvements.crafting=true;gameUI.session.saveState.player.organization.points=new Decimal(7);}},established);
     return errors;
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
@@ -267,33 +267,34 @@ test('Food buyables show distinct tradeoffs and enforce Craft and current Organi
     const errors=await open(page);
     const explore=page.getByRole('button',{name:/^Explore farther afield/});
     const hunt=page.getByRole('button',{name:/^Hunt bigger game/});
-    const traps=page.getByRole('button',{name:/^Weave river traps/});
+    const baskets=page.getByRole('button',{name:/^Weave food baskets/});
     await expect(explore).toContainText('trip time by 1.2 and yield by 1.5');
     await expect(hunt).not.toContainText('Requires 1 current Organization');
     await expect(hunt).toBeEnabled();
-    await expect(traps).toContainText('1 Craft');
-    await expect(traps).toBeDisabled();
+    await expect(page.getByRole('button',{name:/^Weave river traps/})).toHaveCount(0);
+    await expect(baskets).toContainText('1 Craft');
+    await expect(baskets).toBeDisabled();
     await page.evaluate(()=>{
         const s=gameUI.session,p=s.saveState.player;
         p.craft.points=new Decimal(1);p.organization.total=new Decimal(100);p.organization.points=new Decimal(7);
         s.derivedState.updateTemp();
     });
     await expect(hunt).toBeEnabled();
-    await expect(traps).toBeEnabled();
-    await traps.click();
+    await expect(baskets).toBeEnabled();
+    await baskets.click();
     await expect(page.locator('.event-log')).toContainText('Spent 1 Craft');
-    await expect(traps).toBeDisabled();
+    await expect(baskets).toBeDisabled();
     await page.evaluate(()=>gameUI.session.advance(14));
-    await expect(traps).toContainText('River trap level 1');
-    await expect(traps).toContainText('2 Craft');
-    await expect(traps).toBeDisabled();
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.food.storage)).toBe(1);
+    await expect(baskets).toContainText('1 Craft');
+    await expect(baskets).toBeDisabled();
     await hunt.click();
     await page.evaluate(()=>gameUI.session.advance(14));
     await expect(hunt).not.toContainText('Requires 2 current Organization');
     await expect(hunt).toBeEnabled();
     for(const width of [1280,320]){
         await page.setViewportSize({width,height:800});
-        await expect(traps).toBeVisible();
+        await expect(baskets).toBeVisible();
         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
         await page.screenshot({path:'test-results/food-buyables-'+width+'.png',fullPage:true});
     }
@@ -473,10 +474,10 @@ test('runtime faults disable the visible economy and retain the last durable sav
 
 test('expedition controls reserve parallel crews, block overbooking and release workers',async({page})=>{
     const errors=await open(page);
-    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(7);});
+    await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(5);});
     await page.getByRole('button',{name:'Send Gather',exact:true}).click();
     await page.getByRole('button',{name:'Send Hunt',exact:true}).click();
-    await page.getByRole('button',{name:'Send Fish',exact:true}).click();
+    await expect(page.getByRole('button',{name:'Send Fish',exact:true})).toHaveCount(0);
     await expect(page.getByRole('button',{name:'Recall Gather',exact:true})).toBeVisible();
     await node(page,'Water').click();
     await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeDisabled();
@@ -566,7 +567,7 @@ test('Food checkboxes count down queued repeats, finish current jobs and stop at
     const gather=page.locator('#repeat-gather input[value="1"]');
     await gather.click();await gather.click();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(1);
-    await expect(page.locator('#repeat-fish input:checked')).toHaveCount(0);
+    await expect(page.locator('#repeat-fish')).toHaveCount(0);
     await expect(page.locator('#repeat-farm input:checked')).toHaveCount(0);
     for(const width of [1280,320]){
         await page.setViewportSize({width,height:800});
@@ -616,7 +617,7 @@ for(const version of ['v06','v07']){
     const errors=await open(page);
     await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.locator('#save-recovery')).toBeHidden();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.91');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.92');
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
     expect(errors).toEqual([]);
