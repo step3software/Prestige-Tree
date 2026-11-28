@@ -19,8 +19,8 @@ for(const name of ['energy','craft'])test('actual '+name+' save opens with compa
   return {version:p.version,craft:p.craft.points.toString(),equipment:{...p.civ.equipment},project:p.civ.project,work:p.civ.projectWork,bonus:p.civ.actions.gather.cookingBonus,cooks:p.civ.cooks};
  });
  expect(before.version).toBe('0.94');expect(before.project).toBe(name==='craft'?'roofs':'');
- await page.getByRole('button',{name:/^Craft,/}).click();
- await expect(page.getByTestId('material-crafting').getByRole('button',{name:/^Woven baskets/})).toContainText('Owned level: '+before.equipment['water-storage']);
+ await page.getByRole('button',{name:/^Water,/}).click();
+ await expect(page.getByTestId('water-buyables').getByRole('button',{name:/^Woven baskets/})).toContainText('Owned level: '+before.equipment['water-storage']);
  await page.getByRole('button',{name:'Save',exact:true}).click();await page.reload();await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());
  const after=await page.evaluate(()=>{
   const p=gameUI.session.saveState.player;

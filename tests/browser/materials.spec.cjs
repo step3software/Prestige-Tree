@@ -39,11 +39,17 @@ test('all twelve buyables stay on their resource tabs and cooking panel after le
  }
  const shelter=page.getByTestId('shelter-buyables'),bricks=shelter.getByRole('button',{name:/^Bricks/});await expect(bricks).toBeDisabled();
  await shelter.getByRole('button',{name:/^Thatched roofs/}).click();await page.evaluate(()=>gameUI.session.advance(12));await expect(bricks).toBeEnabled();
+ await expect(page.getByTestId('cooking-vessels')).toHaveCount(0);await node(page,'Energy').click();
  const vessels=page.getByTestId('cooking-vessels');await expect(vessels.getByRole('button')).toHaveCount(2);
- await expect(vessels.getByRole('button',{name:/^Clay cooking pots/})).toBeDisabled();
- await page.locator('.fire-upgrades').getByRole('button',{name:/^Cooking /}).click();
+ await expect(vessels.getByRole('button',{name:/^Clay cooking pots/})).toBeEnabled();
+ await expect(page.getByRole('button',{name:/^Cooking /})).toHaveCount(0);
  await vessels.getByRole('button',{name:/^Clay cooking pots/}).press('Enter');await page.evaluate(()=>gameUI.session.advance(12));
  await expect(vessels.getByRole('button',{name:/^Clay cooking pots/})).toContainText('Owned level: 1');
  await expect(vessels.getByRole('button',{name:/^Copper pots/})).toBeEnabled();
+ for(const width of [1280,320]){
+  await page.setViewportSize({width,height:900});await expect(vessels).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:'test-results/energy-vessels-'+width+'.png',fullPage:true});
+ }
  await expect(page.getByRole('button',{name:/^Fuel stores|^Improved hearths|^Charcoal clamps/})).toHaveCount(0);expect(errors).toEqual([]);
 });
