@@ -7,9 +7,9 @@ const near=(a,b,tolerance=1e-8)=>assert.ok(Math.abs(a-b)<tolerance,`${a} expecte
 
 test('Fire unlocks at four with Cooking/hearths while jar access moves to Clay',t=>{
  const {p,e,D}=game(t);p.civ.fire=10;assert.equal(e.fireStatus().available,false);assert.equal(e.buyUpgrade('cooking'),false);
- p.organization.total=new D(4);p.organization.points=new D(4);assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['cooking',1],['hearth',3]]);
+ p.organization.total=new D(4);p.organization.points=new D(4);assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['hearth',3]]);
  assert.equal(e.buyUpgrade('jars'),false);
- for(const [id,cost] of [['cooking',1],['hearth',3]]){p.civ.fire=cost;assert.equal(e.buyUpgrade(id),true);assert.equal(p.civ.fire,0);assert.equal(e.buyUpgrade(id),false);}
+ for(const [id,cost] of [['hearth',3]]){p.civ.fire=cost;assert.equal(e.buyUpgrade(id),true);assert.equal(p.civ.fire,0);assert.equal(e.buyUpgrade(id),false);}
  assert.deepEqual(e.projects('water'),[]);p.craft.points=new D(10);assert.equal(e.buyUpgrade('crafting'),true);assert.ok(e.projects('water').length>0);
  assert.equal(e.buyUpgrade('abundance'),false);p.organization.total=new D(8);p.organization.points=new D(8);assert.equal(e.buyUpgrade('abundance'),true);
 });
@@ -35,17 +35,18 @@ test('empty, half and full Fire use the proposed gain formula and never exceed c
 });
 
 test('Cooking follows 45 Food/min cost table and consumes nothing without Food work',t=>{
- const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.equipment.digging=1;p.civ.fire=10;
- assert.equal(e.setCookingLevel(5),true);engine.advance(2);assert.equal(p.civ.fire,10);
+ const {engine,p,e,D}=game(t);stage(p,D);p.civ.equipment.digging=1;p.civ.fire=10;
+ assert.equal(e.setCooks(5),true);engine.advance(2);assert.equal(p.civ.fire,10);
  assert.equal(e.dispatch('gather'),true);
  for(let level=1;level<=5;level++){
-  e.setCookingLevel(level);near(e.fireStatus().uncookedProduction,45);near(e.fireStatus().consumption,.3*(level-1)**2);near(e.supply().production.food,45*level);
+  e.setCooks(level);near(e.fireStatus().uncookedProduction,45);near(e.fireStatus().consumption,.3*(level-1)**2);near(e.supply().production.food,45*level);
  }
- for(const bad of [0,6,2.5,NaN])assert.equal(e.setCookingLevel(bad),false);
+ assert.equal(e.setCooks(0),true);
+ for(const bad of [-1,6,2.5,NaN])assert.equal(e.setCooks(bad),false);
 });
 
 test('Cooking spends during work, stores bonus until completion, and keeps base Food after fuel depletion',t=>{
- const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.fire=.016;e.setCookingLevel(5);p.food.points=new D(0);
+ const {engine,p,e,D}=game(t);stage(p,D);p.civ.fire=.016;e.setCooks(5);p.food.points=new D(0);
  assert.equal(e.dispatch('gather'),true);engine.advance(1);
  near(p.civ.fire,0);near(p.civ.actions.gather.cookingBonus,.6);assert.equal(p.food.points.toNumber(),0);
  assert.equal(e.fireStatus().fuelLimited,true);near(e.supply().production.food,36);
@@ -53,28 +54,28 @@ test('Cooking spends during work, stores bonus until completion, and keeps base 
 });
 
 test('fivefold expeditions plus fivefold Cooking pay 25x Food over 5x time, with scaling fuel cost',t=>{
- const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.improvements.extendedExpeditions=true;
- p.civ.fire=10;p.food.points=new D(0);e.setCookingLevel(5);e.setExpeditionMultiplier('gather',5);
+ const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.extendedExpeditions=true;
+ p.civ.fire=10;p.food.points=new D(50);e.setCooks(5);e.setExpeditionMultiplier('gather',5);
  const base=e.actionDefinition('gather');assert.equal(base.duration,50);assert.equal(base.reward,30);assert.equal(base.workers,1);
- e.dispatch('gather');near(e.fireStatus().consumption,3.84);engine.advance(50);
- near(p.food.total.toNumber(),60);near(p.civ.fire,6.8);
+ e.dispatch('gather');near(e.fireStatus().consumption,3.84);engine.advance(49);near(p.civ.actions.gather.cookingBonus,117.6);
+ engine.advance(1);assert.equal(p.civ.actions.gather.completed,1);near(p.food.points.toNumber(),50-e.supply().demand/60);near(p.civ.fire,6.8);
 });
 
 test('changing Cooking mid-job applies only to fueled work and recall forfeits its accumulated bonus',t=>{
- const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.fire=10;p.food.points=new D(0);
- e.setCookingLevel(5);e.dispatch('gather');engine.advance(5);near(p.civ.actions.gather.cookingBonus,12);
- e.setCookingLevel(1);engine.advance(5);near(p.food.total.toNumber(),28);near(p.civ.fire,9.68);
- e.setCookingLevel(5);e.dispatch('gather');engine.advance(2);assert.ok(p.civ.actions.gather.cookingBonus>0);e.recall('gather');assert.equal(p.civ.actions.gather.cookingBonus,0);
+ const {engine,p,e,D}=game(t);stage(p,D);p.civ.fire=10;p.food.points=new D(0);
+ e.setCooks(5);e.dispatch('gather');engine.advance(5);near(p.civ.actions.gather.cookingBonus,12);
+ e.setCooks(1);engine.advance(5);near(p.food.total.toNumber(),28);near(p.civ.fire,9.68);
+ e.setCooks(5);e.dispatch('gather');engine.advance(2);assert.ok(p.civ.actions.gather.cookingBonus>0);e.recall('gather');assert.equal(p.civ.actions.gather.cookingBonus,0);
 });
 
 test('both prestiges clear Fire and tenders, retaining upgrades and safe accumulated active Food',t=>{
  for(const id of ['craft','organization']){
   const {engine,p,e,D}=game(t);stage(p,D);p.points=new D(28);p.civ.fire=10;
-  for(const key of ['cooking','hearth'])p.civ.improvements[key]=true;
-  e.setFireTenders(3);e.setCookingLevel(5);e.dispatch('gather');engine.advance(2);
+  for(const key of ['hearth'])p.civ.improvements[key]=true;
+  e.setFireTenders(3);e.setCooks(5);e.dispatch('gather');engine.advance(2);
   assert.match(e.prestigePreview(id).resetText,/stored Fire resets to 0/);assert.equal(e.prestige(id),true);
-  assert.equal(p.civ.fire,0);assert.equal(p.civ.fireTenders,0);assert.equal(e.fireStatus().maximum,10);
-  for(const key of ['cooking','hearth'])assert.equal(p.civ.improvements[key],true);
+  assert.equal(p.civ.fire,0);assert.equal(p.civ.fireTenders,0);assert.equal(p.civ.cooks,0);assert.equal(e.fireStatus().maximum,10);
+  for(const key of ['hearth'])assert.equal(p.civ.improvements[key],true);
   assert.equal(e.supply().storage.water,50);engine.exportPlayer();
  }
 });
@@ -88,7 +89,7 @@ test('Population loss releases tenders before survival crews and leaves a valid 
 test('actual PR12 codec export migrates once without retroactive fuel charges or changes to paid work',t=>{
  const fixture=require('../fixtures/civ-pre-fire-v08.json'),raw=JSON.parse(atob(fixture.player));
  const {engine,p,e}=game(t,fixture.player);
- assert.equal(p.civ.fire,0);assert.equal(p.civ.fireTenders,0);assert.equal(p.civ.cookingLevel,1);
+ assert.equal(p.civ.fire,0);assert.equal(p.civ.fireTenders,0);assert.equal(p.civ.cooks,0);
  assert.equal(p.civ.project,'water-storage');assert.equal(p.civ.projectWork,raw.civ.projectWork);
  assert.equal(p.civ.actions.gather.reward,raw.civ.actions.gather.reward);assert.equal(p.civ.actions.gather.remaining,raw.civ.actions.gather.remaining);assert.equal(p.civ.actions.gather.cookingBonus,0);
  assert.equal(p.civ.improvements.hearth,true);assert.equal(e.supply().storage.food,100);assert.equal(e.supply().passiveProduction.food,0);
@@ -96,9 +97,9 @@ test('actual PR12 codec export migrates once without retroactive fuel charges or
 });
 
 test('invalid Fire and cooked snapshots reject without changing live state; chunks and reloads stay identical',t=>{
- const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.fire=1;e.setFireTenders(2);e.setCookingLevel(5);e.dispatch('gather');engine.advance(2.25);
+ const {engine,p,e,D}=game(t);stage(p,D);p.points=new D(12);p.shelter.homes=1;p.shelter.points=new D(12);p.civ.fire=1;e.setFireTenders(2);e.setCooks(5);e.dispatch('gather');engine.advance(2.25);
  const encoded=engine.exportPlayer();
- for(const change of [x=>x.civ.fire=-1,x=>x.civ.fire=11,x=>x.civ.fireTenders=6,x=>x.civ.fireTenders=2.5,x=>x.civ.cookingLevel=6,x=>x.civ.actions.water.cookingBonus=1,x=>x.civ.actions.gather.cookingBonus=25,x=>x.points='2']){
+ for(const change of [x=>x.civ.fire=-1,x=>x.civ.fire=13,x=>x.civ.fireTenders=6,x=>x.civ.fireTenders=2.5,x=>x.civ.cooks=6,x=>x.civ.actions.water.cookingBonus=1,x=>x.civ.actions.gather.cookingBonus=25,x=>x.points='2']){
   const raw=JSON.parse(atob(encoded));change(raw);assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,false);assert.equal(engine.exportPlayer(),encoded);
  }
  const one=game(t,encoded),chunks=game(t,encoded);one.engine.advance(70.75);
@@ -112,10 +113,10 @@ test('two huts and three tenders reproduce the proposed fill and upgrade timing 
   let elapsed=0;
   while(elapsed<600){
    engine.advance(1);elapsed++;
-   if(spend)for(const id of ['cooking','hearth']){if(!p.civ.improvements[id]){e.buyUpgrade(id);break;}}
+   if(spend)for(const id of ['hearth']){if(!p.civ.improvements[id]){e.buyUpgrade(id);break;}}
    if(spend?p.civ.improvements.hearth:p.civ.fire===14)break;
   }
   assert.ok(spend?elapsed>0&&elapsed<338:elapsed>=338&&elapsed<=341);
-  console.log(`Synthetic two-hut/three-tender ${spend?'three upgrade purchases':'full Fire'}: ${elapsed}s; 1× Cooking, one-second simulation.`);
+  console.log(`Synthetic two-hut/three-tender ${spend?'Shared hearths purchase':'full Fire'}: ${elapsed}s; 1× Cooking, one-second simulation.`);
  }
 });

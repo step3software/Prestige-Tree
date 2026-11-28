@@ -16,7 +16,7 @@ function prepared(r) {
 
 test('fresh Population grows into housing, without automatic Food or Water production',t=>{
     const r=game(t);
-    assert.deepEqual(read(r,'s.layerRegistry.LAYERS'),['food','water','shelter','craft','organization','money','freeTime','education','culture']);
+    assert.deepEqual(read(r,'s.layerRegistry.LAYERS'),['food','water','shelter','craft','organization','money','freeTime','education','culture','energy']);
     r.run('s.advance(40)');
     assert.equal(r.run('p.points.toNumber()'),8);
     assert.equal(r.run('e.supply().bottleneck'),'Shelter');

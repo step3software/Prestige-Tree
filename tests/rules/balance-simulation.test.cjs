@@ -138,7 +138,7 @@ test('legal active and regular play earn hearths and scale their Food benefits t
    engine.advance(cadence);
   }
   assert.ok(time<7200,'Purchased hearths and reached ten people without grants');
-  for(const id of ['cooking','hearth'])assert.equal(p.civ.improvements[id],true, 'Fire upgrades are bought through real commands');
+  for(const id of ['hearth'])assert.equal(p.civ.improvements[id],true, 'Fire upgrades are bought through real commands');
   const enteredAt=time;
   // Keep this earned settlement instead of prestiging: build housing and send
   // real crews at the same manual cadence to measure the next Food threshold.
@@ -156,6 +156,14 @@ test('legal active and regular play earn hearths and scale their Food benefits t
   assert.ok(p.civ.actions.gather.completed>0);
   engine.assertIsolated();
   console.log(strategy+' legal hearths: ten people by '+enteredAt+'s, twenty by '+(time+cadence)+'s; +50 storage/up to +8 Food per minute with Fire fullness.');
+  // Use this legally earned settlement to staff Cooks through real commands.
+  for(const id of ['water','gather','hunt','farm'])e.recall(id);
+  e.setHutRepeat(0);e.cancelProject();e.setFireTenders(0);
+  assert.equal(e.setCooks(5),true);assert.equal(e.setFireTenders(3),true);assert.equal(e.dispatch('gather'),true);
+  assert.equal(e.supply().cooks,5);assert.ok(e.supply().laborUsed<=p.points.toNumber());
+  engine.advance(1);assert.ok(p.civ.actions.gather.cookingBonus>0);
+  assert.equal(e.setCooks(0),true);engine.exportPlayer();
+  console.log(strategy+' legal Cooks: 5 cooks + 3 tenders + Gather crew staffed at '+time+'s; fueled bonus earned, then cooks released (synthetic).');
  }
 });
 

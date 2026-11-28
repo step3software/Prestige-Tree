@@ -15,7 +15,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['crafting','clay','copper','preparedMaterials','extendedExpeditions','workRosters','cooking','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
+    for(const id of ['crafting','clay','copper','preparedMaterials','extendedExpeditions','workRosters','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const finishedEquipment=['roofs','hunting','digging','jars','bricks','clayPots','pipes','copperAxes','butchery','copperPots','sickles'].every(id=>p.civ.equipment[id]>0);

@@ -32,7 +32,7 @@ test('v0.91 cancels fishing and paid trap work without compensation and preserve
     assert.equal(original.civ.actions.fish.repeat, 3);
     assert.equal(original.civ.project, 'fish-tools');
     const {engine, p, e} = game(t, fixture.save);
-    assert.equal(p.version, '0.93');
+    assert.equal(p.version, '0.94');
     for (const [record, key] of [[p.civ.actions, 'fish'], [p.food.routes, 'fish'],
         [p.civ.features, 'fishing'], [p.civ.expeditionMultipliers, 'fish']]) assert.equal(Object.hasOwn(record, key), false);
     assert.equal(p.civ.project, '');
