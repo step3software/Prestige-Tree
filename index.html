@@ -59,7 +59,7 @@
                 <progress :value="player.civ.growth" max="1" aria-label="Progress toward the next person"></progress>
                 <p v-if="civ.growing">{{civ.advice}}</p><p v-else><button class="text-button" @click="select(civ.next)">{{civ.bottleneck}}</button> is limiting growth. {{civ.advice}}</p>
                 <p class="small-note" data-testid="abundance-growth" v-if="civ.abundance.enabled">Abundance: {{number(civ.abundance.multiplier,2)}}× growth<span v-if="!civ.growing"> · paused</span></p>
-                <p v-if="!civ.abundance.enabled" class="small-note">Abundance is a free Shelter upgrade unlocked at Organization 8.</p>
+                <p v-if="!civ.abundance.enabled" class="small-note">Abundance is a free Shelter upgrade unlocked at Organization 7.</p>
                 <details v-if="civ.abundance.enabled" class="small-note" data-testid="abundance-details"><summary>Abundance breakdown</summary>
                     <p>Food: +{{number(civ.abundance.food.bonus * 100,0)}}% · {{number(civ.abundance.food.coverageSeconds,0)}}s in reserve. Bonus starts above {{number(civ.abundance.food.thresholdSeconds,0)}}s of current upkeep.</p>
                     <p>Water: +{{number(civ.abundance.water.bonus * 100,0)}}% · {{number(civ.abundance.water.coverageSeconds,0)}}s in reserve. Bonus starts above {{number(civ.abundance.water.thresholdSeconds,0)}}s of current upkeep.</p>
@@ -68,6 +68,14 @@
                     <p>Bonuses add to normal {{number(civ.abundance.secondsPerPerson,0)}}s-per-person growth, up to {{number(civ.abundance.maximumMultiplier,0)}}×. Housing and supply limits still pause growth.</p>
                 </details>
             </div>
+        </section>
+        <section v-if="civ.councilAvailable" class="fire-panel" aria-labelledby="council-title" data-testid="council-panel">
+            <h2 id="council-title">Settlement Council</h2>
+            <div class="fire-controls"><label for="worker-scale">Worker scale: {{player.civ.councilScale}}× · {{player.civ.councilScale}} Council workers
+                <input id="worker-scale" type="range" min="1" max="5" step="1" :value="player.civ.councilScale" :aria-valuetext="player.civ.councilScale + ' times, ' + player.civ.councilScale + ' Council workers'" aria-describedby="worker-scale-help" @change="setCouncilScale($event)">
+            </label></div>
+            <p id="worker-scale-help" class="small-note">Raises worker limits to {{civ.workerLimit}}; assign actual Food overseers, Hut overseers and Fire tenders separately. Work rosters is still required for extra overseers. Each overseer supports 5 repeats. Expedition length and Cooking stay separate.</p>
+            <p class="small-note" data-testid="council-staffing">{{civ.councilWorkers}} Council workers reserved.<span v-if="!civ.councilWorkers"> Staffing suspended to preserve existing work and leave a recovery worker; the selected scale and queues are kept.</span> Lower affected assignments and repeats before reducing Worker scale.</p>
         </section>
         <section v-if="civ.shortage.active" class="shortage-warning" role="alert" aria-labelledby="shortage-title" data-testid="shortage-warning"><h2 id="shortage-title">{{civ.shortage.resources.join(' and ')}} depleted</h2>
             <p v-if="civ.shortage.lastSurvivor">One survivor remains protected. Gather Food and collect Water to rebuild.</p>
@@ -80,8 +88,8 @@
             <progress class="fire-bar" :value="civ.fire.current" :max="civ.fire.maximum" :aria-label="'Fire: ' + number(civ.fire.current,3) + ' / ' + number(civ.fire.maximum)"></progress>
             <p class="small-note" data-testid="fire-rates">Tending +{{number(civ.fire.gain,3)}} / min · Consumption −{{number(civ.fire.actualConsumption,3)}} / min · Net {{signed(civ.fire.net)}} / min<span v-if="civ.fire.current >= civ.fire.maximum && civ.fire.net > 0"> · storage full</span></p>
             <div class="fire-controls">
-                <label for="fire-tenders">Fire tenders: {{player.civ.fireTenders}} / 5
-                    <input id="fire-tenders" type="range" min="0" max="5" step="1" :value="player.civ.fireTenders" :aria-valuetext="player.civ.fireTenders + ' Fire tenders'" @change="setFireTenders($event)">
+                <label for="fire-tenders">Fire tenders: {{player.civ.fireTenders}} / {{civ.workerLimit}}
+                    <input id="fire-tenders" type="range" min="0" :max="civ.workerLimit" step="1" :value="player.civ.fireTenders" :aria-valuetext="player.civ.fireTenders + ' Fire tenders'" @change="setFireTenders($event)">
                 </label>
                 <label v-if="civ.fire.cookingAvailable" for="cooking-level">Cooking: {{player.civ.cookingLevel}}×
                     <input id="cooking-level" type="range" min="1" max="5" step="1" :value="player.civ.cookingLevel" :aria-valuetext="player.civ.cookingLevel + ' times Cooking'" @change="setCookingLevel($event)">
@@ -174,7 +182,7 @@
                     <template v-if="['craft','organization'].includes(selected.id)"><div class="prestige-box"><p class="eyebrow">REORGANIZE, THEN REBUILD</p><h3>Gain {{selected.prestigeGain}} {{selected.id === 'craft' ? 'Craft' : 'coordination'}}</h3><p>Requires {{selected.requirement}}.</p><dl class="reset-preview"><div><dt>Restart</dt><dd data-testid="prestige-reset-preview">{{selected.prestigePreview.resetText}}</dd></div><div><dt>Keep</dt><dd data-testid="prestige-keep-preview">{{selected.prestigePreview.keepText}}</dd></div></dl><button class="reset primary" :class="{can:selected.canPrestige,locked:!selected.canPrestige}" :style="{backgroundColor:selected.canPrestige ? selected.color : undefined}" :disabled="!selected.canPrestige" @click="prestige(selected.id)">Develop {{selected.name}}</button></div>
                         <p v-if="selected.id === 'craft'" class="small-note">Craft is spent on upgrades and construction. Holding Craft does not increase production.</p><p v-else class="small-note">Coordination reduces upkeep and speeds construction. Current Coordination unlocks milestones permanently and determines the next Population requirement.</p>
                     </template>
-                    <div v-if="selected.id === 'organization'" class="organization-milestones"><h3>Organization milestones</h3><p class="small-note">{{number(selected.organizationHeld,0)}} Coordination held · {{number(selected.organizationEarned,0)}} earned over time. Milestones stay unlocked after spending Coordination, which lowers the next Population requirement. Upgrades still need to be purchased.</p>
+                    <div v-if="selected.id === 'organization'" class="organization-milestones"><h3>Organization milestones</h3><p class="small-note">{{number(selected.organizationHeld,0)}} Coordination held · {{number(selected.organizationEarned,0)}} earned over time. Milestones stay unlocked after spending Coordination, which lowers the next Population requirement. Council alone unlocks at nine lifetime Organization. Upgrades still need to be purchased.</p>
                         <div v-for="milestone in selected.organizationMilestones" :key="milestone.id" class="milestone" :class="{milestoneDone:milestone.earned}" :data-earned="milestone.earned"><strong>{{milestone.requirement}} Organization · {{milestone.name}} · {{milestone.earned ? 'Active' : 'Locked'}}</strong><p>{{milestone.reward}}</p></div>
                     </div>
 
@@ -185,7 +193,7 @@
         </div>
         <section class="workbench" aria-labelledby="work-heading"><div><p class="eyebrow">SHARED LABOR</p><h2 id="work-heading">{{civ.project ? civ.project.name : 'What will you build next?'}}</h2><p>{{civ.project ? (civ.project.paused ? 'Construction paused for lack of workers. Progress is kept; it resumes after supplies and labor recover.' : civ.project.workers + ' builders reserved for ' + civ.project.jobs + ' jobs until completion.') : 'Choose an improvement in Food, Water, Shelter or Fire.'}}</p></div>
             <div v-if="civ.project" class="construction-progress"><div><span>{{number(player.civ.projectWork)}} / {{number(civ.project.work)}} work</span><button class="text-button" @click="cancelProject">Cancel project</button></div><progress :value="civ.project.progress" max="1" aria-label="Construction progress"></progress></div>
-            <p class="worker-ledger" data-testid="worker-ledger">{{civ.availableWorkers}} workers available · {{civ.workers.food + civ.workers.water - civ.overseerWorkers}} on trips · {{civ.overseerWorkers}} Expedition planner · {{civ.foremanWorkers}} Hut foreman · {{civ.fireTenders}} Fire tenders · {{civ.builders}} building</p><div class="labor-controls"><label for="priority">Repeat order priority</label><select id="priority" :value="player.civ.priority" @change="setPriority"><option value="balanced">Short trips first</option><option value="food">Large harvests first</option></select><button v-if="civ.autoAvailable" :aria-pressed="player.civ.autoBuild" @click="toggleAutomation">Auto-build: {{player.civ.autoBuild ? 'on' : 'off'}}</button></div>
+            <p class="worker-ledger" data-testid="worker-ledger">{{civ.availableWorkers}} workers available · {{civ.workers.food + civ.workers.water - civ.overseerWorkers}} on trips · {{civ.overseerWorkers}} Expedition planner · {{civ.foremanWorkers}} Hut foreman · {{civ.fireTenders}} Fire tenders · {{civ.councilWorkers}} Council · {{civ.builders}} building</p><div class="labor-controls"><label for="priority">Repeat order priority</label><select id="priority" :value="player.civ.priority" @change="setPriority"><option value="balanced">Short trips first</option><option value="food">Large harvests first</option></select><button v-if="civ.autoAvailable" :aria-pressed="player.civ.autoBuild" @click="toggleAutomation">Auto-build: {{player.civ.autoBuild ? 'on' : 'off'}}</button></div>
         </section>
         <p class="event-log" role="status">{{player.civ.message}}</p>
         <p class="offline-note" v-if="player.offTime && player.offTime.remain > 0">Applying {{number(player.offTime.remain)}} seconds of offline progress.</p>

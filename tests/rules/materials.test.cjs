@@ -100,9 +100,10 @@ test('an imported active Fire project requires its permanent Craft material',t=>
 
 
 test('saved pending supervisors share Fire and active crews without overbooking after permanent unlocks',t=>{
- const g=game(t),{p,e,engine,D}=g;funded(g);p.points=new D(7);p.civ.features.hunting=true;
+ const g=game(t),{p,e,engine,D}=g;funded(g);p.organization.total=new D(8);p.points=new D(7);p.civ.features.hunting=true;
  assert.equal(e.setFireTenders(2),true);assert.equal(e.dispatch('hunt'),true);assert.equal(e.dispatch('water'),true);
- p.food.points=new D(10);p.civ.actions.gather.repeat=4;p.civ.hutRepeat=4;
+ p.organization.total=new D(9);p.food.points=new D(10);p.civ.actions.gather.repeat=4;p.civ.hutRepeat=4;
+ assert.equal(e.supply().councilWorkers,0,'Newly unlocked Council yields to existing paid crews');
  const loaded=game(t,engine.exportPlayer());assert.equal(loaded.e.supply().overseerWorkers,0);assert.equal(loaded.e.supply().foremanWorkers,0);
  for(let i=0;i<30;i++){loaded.engine.advance(1);assert.ok(loaded.e.supply().laborUsed<=loaded.p.points.toNumber());}
  assert.ok(loaded.p.civ.actions.gather.repeat<4);loaded.engine.exportPlayer();

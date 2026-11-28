@@ -1,5 +1,7 @@
 const {test,expect}=require('@playwright/test');
+const {installPausedClock}=require('../support/paused-clock.cjs');
 async function open(page){
+ await installPausedClock(page);
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
  await page.goto('/');await expect(page.getByTestId('population')).toBeVisible();

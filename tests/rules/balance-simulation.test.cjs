@@ -247,6 +247,8 @@ test('both active branch orders and adaptive regular play reach the opening usin
   assert.equal(run.sections.find(row=>row.id==='endgame').status,'reached');
   assert.ok(run.actions.prestige>=2&&run.actions.construction>=3);
   assert.ok(run.actions.automation>=1);
+  assert.ok(run.actions['council-scale']>=1,'Legal policy assigns Council workers');
+  assert.equal(run.sections.find(row=>row.id==='council-staffed').status,'reached');
   for(const id of Array.from({length:10},(_,index)=>'organization-'+(index+1)))assert.equal(run.sections.find(row=>row.id===id).status,'reached',strategy+' '+id);
   assert.ok(run.sections.every(row=>row.sectionSeconds===null||row.sectionSeconds>=0));
   console.log(strategy+' opening complete at '+run.simulatedSeconds+' simulated seconds');
@@ -260,9 +262,15 @@ test('legal developed settlements need hauling above sustainable spring supply a
  for(let time=0;time<600&&p.points.lt(e.supply().support);time+=5){for(const id of ['gather','hunt','farm'])e.setRepeat(id,5);e.dispatch('water');engine.advance(5);}
  assert.ok(e.supply().passiveProduction.water<e.supply().demand,'Eight-person baseline and finite wells do not supply unlimited population');
  p.civ.autoBuild=false;for(const id of ['gather','hunt','farm'])e.setRepeat(id,0);
- const before=p.water.points.toNumber();engine.advance(60);assert.ok(p.water.points.toNumber()<before);
- e.setFireTenders(0);if(p.civ.actions.water.active)e.recall('water');assert.equal(e.dispatch('water'),true);
- const returning=p.civ.actions.water.reward;engine.advance(e.actionDefinition('water').duration);assert.ok(returning>0);assert.ok(p.water.points.gt(0));
+ // Finish a real haul before measuring drawdown. No in-flight delivery may
+ // mask passive insufficiency, and the shorter window avoids a population
+ // collapse changing upkeep into a surplus during the measurement itself.
+ e.setFireTenders(0);if(p.civ.actions.water.remaining>0)e.recall('water');assert.equal(e.dispatch('water'),true);
+ engine.advance(Math.ceil(e.actionDefinition('water').duration)+1);
+ assert.equal(p.civ.actions.water.remaining,0);
+ const before=p.water.points.toNumber();assert.ok(before>0);engine.advance(10);assert.ok(p.water.points.toNumber()<before);
+ assert.equal(e.dispatch('water'),true);
+ const returning=p.civ.actions.water.reward;engine.advance(Math.ceil(e.actionDefinition('water').duration)+1);assert.ok(returning>0);assert.ok(p.water.points.gt(0));
  assert.equal(e.summary().autoAvailable,true);engine.exportPlayer();
 });
 
@@ -298,6 +306,36 @@ test('saved checkpoints are validated, isolated and cannot inject development sp
  assert.throws(()=>createBalanceEngine('invalid'));
  const raw=JSON.parse(atob(a.exportPlayer()));raw.devSpeed=2;
  assert.throws(()=>createBalanceEngine(btoa(JSON.stringify(raw))),/devSpeed 1/);
+});
+
+test('Council supports exactly 125 finite repeats with 25 paid supervisors across active/regular cadences and reload',t=>{
+ // Constructed section fixture grants MS8, nine lifetime Organization, rosters,
+ // 40 people, eight huts and supply stores. This isolates capacity/exhaustion;
+ // the fresh-game policy test above establishes legal Council reachability.
+ const seed=createBalanceEngine();t.after(seed.dispose);
+ const p=seed.player,D=p.points.constructor,e=seed.session.modRules.civilization;
+ p.organization.total=new D(9);p.organization.best=new D(8);p.organization.points=new D(3);
+ p.civ.improvements.workRosters=true;p.points=new D(40);p.shelter.homes=8;p.shelter.points=new D(40);
+ p.food.storage=50;p.water.storage=50;p.food.points=new D(1500);p.water.points=new D(1500);
+ assert.equal(e.setCouncilScale(5),true);assert.equal(e.setOverseers('food',25),true);
+ assert.equal(e.setRepeat('gather',125),true);assert.equal(e.setRepeat('gather',126),false);
+ assert.equal(e.supply().overseerWorkers,25);assert.equal(e.supply().councilWorkers,5);assert.equal(e.supply().availableWorkers,10);
+ const start=seed.exportPlayer();
+ for(const cadence of [5,20]){
+  const outcomes=[];
+  for(const step of [1,5]){
+   let engine=createBalanceEngine(start);t.after(()=>engine.dispose());
+   for(let elapsed=0;elapsed<1400;elapsed+=cadence){
+    for(let time=0;time<cadence;time+=step)engine.advance(Math.min(step,cadence-time));
+    if(elapsed+cadence===700){const save=engine.exportPlayer();engine.dispose();engine=createBalanceEngine(save);}
+   }
+   assert.equal(engine.player.civ.actions.gather.completed,125);assert.equal(engine.player.civ.actions.gather.repeat,0);
+   assert.equal(engine.player.civ.actions.gather.remaining,0);assert.equal(engine.player.points.toNumber(),40);
+   assert.equal(engine.session.modRules.civilization.supply().overseerWorkers,0);
+   outcomes.push(engine.exportPlayer());engine.assertIsolated();
+  }
+  assert.equal(outcomes[0],outcomes[1]);
+ }
 });
 
 test('completed calibration keeps a delayed terminal observation instead of falsely censoring coverage',()=>{
