@@ -262,9 +262,15 @@ test('legal developed settlements need hauling above sustainable spring supply a
  for(let time=0;time<600&&p.points.lt(e.supply().support);time+=5){for(const id of ['gather','hunt','farm'])e.setRepeat(id,5);e.dispatch('water');engine.advance(5);}
  assert.ok(e.supply().passiveProduction.water<e.supply().demand,'Eight-person baseline and finite wells do not supply unlimited population');
  p.civ.autoBuild=false;for(const id of ['gather','hunt','farm'])e.setRepeat(id,0);
- const before=p.water.points.toNumber();engine.advance(60);assert.ok(p.water.points.toNumber()<before);
+ // Finish a real haul before measuring drawdown. No in-flight delivery may
+ // mask passive insufficiency, and the shorter window avoids a population
+ // collapse changing upkeep into a surplus during the measurement itself.
  e.setFireTenders(0);if(p.civ.actions.water.remaining>0)e.recall('water');assert.equal(e.dispatch('water'),true);
- const returning=p.civ.actions.water.reward;engine.advance(e.actionDefinition('water').duration);assert.ok(returning>0);assert.ok(p.water.points.gt(0));
+ engine.advance(Math.ceil(e.actionDefinition('water').duration)+1);
+ assert.equal(p.civ.actions.water.remaining,0);
+ const before=p.water.points.toNumber();assert.ok(before>0);engine.advance(10);assert.ok(p.water.points.toNumber()<before);
+ assert.equal(e.dispatch('water'),true);
+ const returning=p.civ.actions.water.reward;engine.advance(Math.ceil(e.actionDefinition('water').duration)+1);assert.ok(returning>0);assert.ok(p.water.points.gt(0));
  assert.equal(e.summary().autoAvailable,true);engine.exportPlayer();
 });
 

@@ -989,7 +989,7 @@ function createCivilizationRules({ saveState }) {
         if (Number(data.version) >= 0.9 && ((imp.jars || imp.bricks || imp.clayPots || imp.pipes) && !imp.clay ||
             (imp.copperAxes || imp.butchery || imp.copperPots || imp.sickles) && !imp.copper ||
             (imp.roofs || imp.hunting || imp.digging || Object.values(civ.fireBuyables).some(value => value > 0)) && !imp.crafting)) throw new Error("Equipment material is locked");
-        if (!finite(civ.fire) || civ.fire > 10 + 2 * data.shelter.homes + 10 * civ.fireBuyables.fuel || !count(civ.fireTenders) || civ.fireTenders > workerLimit(5, data) ||
+        if (!finite(civ.fire) || civ.fire > 10 + 2 * data.shelter.homes + 10 * civ.fireBuyables.fuel || !count(civ.fireTenders) || civ.fireTenders > workerLimit(5, data) || (civ.fireTenders > 0 && !fireAvailable(data)) ||
             !Number.isInteger(civ.cookingLevel) || civ.cookingLevel < 1 || civ.cookingLevel > 5 ||
             (!civ.improvements.cooking && civ.cookingLevel !== 1)) throw new Error("Invalid Fire state");
         if (Number(data.version) < 0.6) {

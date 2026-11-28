@@ -91,3 +91,10 @@ test('progression exposes Farming, Abundance, Irrigation and Council at the plan
  p.organization.total=new D(9);assert.equal(e.councilAvailable(),true);
  assert.deepEqual(e.organizationMilestones().slice(3,9).map(x=>x.name),['Fire','Gravity-fed spring','Farming','Abundance','Irrigation','Settlement Council']);
 });
+
+test('lifetime Council does not bypass the Fire gate in commands or detached save validation',t=>{
+ const {engine,p,e,D}=game(t);p.organization.total=new D(9);p.organization.best=new D(3);p.organization.points=new D(0);
+ assert.equal(e.setCouncilScale(2),true);assert.equal(e.setFireTenders(1),false);
+ const before=engine.exportPlayer(),candidate=JSON.parse(atob(before));candidate.civ.fireTenders=1;
+ assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(candidate))).ok,false);assert.equal(engine.exportPlayer(),before);
+});
