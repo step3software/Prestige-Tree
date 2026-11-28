@@ -8,7 +8,7 @@ async function open(page,established=true){
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
 
-test('spending Organization updates held milestones and Population requirements immediately and after reload',async({page})=>{
+test('spending Organization retains milestones while lowering Population requirements through reload',async({page})=>{
  const errors=await open(page,false);
  await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(50);p.organization.points=new Decimal(3);p.points=new Decimal(20);p.shelter.homes=3;p.shelter.points=new Decimal(20);p.civ.improvements.overseer=true;p.civ.improvements.hutForeman=true;});
  await node(page,'Organization').click();
@@ -17,7 +17,7 @@ test('spending Organization updates held milestones and Population requirements 
  await node(page,'Shelter').click();await page.getByRole('button',{name:/^Prepared materials/}).click();
  await node(page,'Organization').click();
  await expect(page.getByText(/16 Population; gain exactly 1 Organization/)).toBeVisible();
- await expect(page.getByText('3 Organization · Overseers · Locked',{exact:true})).toBeVisible();
+ await expect(page.getByText('3 Organization · Overseers · Active',{exact:true})).toBeVisible();
  await expect(page.getByText(/2 Coordination held/)).toBeVisible();
  await page.evaluate(()=>{gameUI.session.saveState.player.organization.points=new Decimal(3);});
  await page.getByRole('button',{name:/^Work rosters/}).click();
@@ -26,6 +26,7 @@ test('spending Organization updates held milestones and Population requirements 
  await page.getByRole('button',{name:'Save',exact:true}).click();await page.reload();await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());
  await expect(page.getByText(/8 Population; gain exactly 1 Organization/)).toBeVisible();
  await expect(page.getByText(/0 Coordination held/)).toBeVisible();
+ await expect(page.getByText('3 Organization · Overseers · Active',{exact:true})).toBeVisible();
  expect(await page.evaluate(()=>gameUI.session.saveState.player.organization.total.toNumber())).toBe(50);
  expect(errors).toEqual([]);
 });
@@ -339,7 +340,7 @@ test('Organization previews exact buyable protection earned by the next mileston
     expect(await page.evaluate(()=>gameUI.session.saveState.player.water.sites)).toBe(0);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.food.routes.gather)).toBe(0);
     await page.evaluate(()=>{gameUI.session.saveState.player.organization.points=new Decimal(0);});
-    await expect(page.getByText('4 Organization · Gravity-fed spring · Locked',{exact:true})).toBeVisible();
+    await expect(page.getByText('4 Organization · Gravity-fed spring · Active',{exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:/^Auto-build:/})).toHaveCount(0);
     expect(errors).toEqual([]);
 });
