@@ -26,7 +26,7 @@ test('fresh Population grows into housing, without automatic Food or Water produ
 });
 
 test('parallel expeditions reserve distinct crews, reject overbooking and release on completion',t=>{
-    const r=game(t);prepared(r);r.run('e.startProject("food-site")');
+    const r=game(t);prepared(r);r.run('e.startProject("water-storage")');
     assert.equal(r.run('e.dispatch("gather")'),true);
     assert.equal(r.run('e.dispatch("hunt")'),true);
     assert.equal(r.run('e.dispatch("fish")'),true);
@@ -135,9 +135,9 @@ test('timely recovery crews restore empty stores before grace expires',t=>{
 
 test('prestige resets buyables, Population and construction while providing starting supplies',t=>{
     const r=game(t);prepared(r);
-    r.run('p.organization.total=new Decimal(0);p.organization.points=new Decimal(0);p.points=new Decimal(12);p.food.sites=2;p.food.storage=2;p.food.routes.gather=3;p.water.sites=2;p.water.storage=1;p.shelter.comfort=3;p.civ.improvements.buckets=true;e.dispatch("gather");e.dispatch("water");e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
+    r.run('p.organization.total=new Decimal(0);p.organization.points=new Decimal(0);p.points=new Decimal(12);p.food.routes.gather=3;p.civ.equipment.digging=2;p.shelter.comfort=3;p.civ.improvements.buckets=true;e.dispatch("gather");e.dispatch("water");e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
     assert.equal(r.run('e.prestige("craft")'),true);
-    for(const field of ['p.food.sites','p.food.storage','p.food.routes.gather','p.water.sites','p.water.storage','p.shelter.homes','p.civ.projectWork','p.civ.actions.gather.remaining','p.civ.actions.water.remaining'])assert.equal(r.run(field),0,field);
+    for(const field of ['p.food.routes.gather','p.shelter.homes','p.civ.projectWork','p.civ.actions.gather.remaining','p.civ.equipment.digging'])assert.equal(r.run(field),0,field);
     assert.equal(r.run('p.points.toNumber()'),5);
     assert.equal(r.run('p.shelter.points.toNumber()'),8);
     assert.equal(r.run('e.supply().bottleneck'),'Growing');
@@ -149,13 +149,13 @@ test('prestige resets buyables, Population and construction while providing star
 
 test('milestones retain Food equipment, protected construction and trips while holding the required Organization',t=>{
     const r=game(t);prepared(r);r.run('p.points=new Decimal(12)');
-    r.run('p.organization.total=new Decimal(7);p.organization.points=new Decimal(7);p.food.routes.gather=2;p.food.storage=1;p.food.sites=0;p.water.storage=2;e.dispatch("gather");e.startProject("gather-tools");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
+    r.run('p.organization.total=new Decimal(7);p.organization.points=new Decimal(7);p.food.routes.gather=2;e.dispatch("gather");e.startProject("gather-tools");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
     const remaining=r.run('p.civ.actions.gather.remaining'),work=r.run('p.civ.projectWork');
     assert.equal(r.run('e.prestige("craft")'),true);
     assert.equal(r.run('p.food.routes.gather'),2);
-    assert.equal(r.run('p.food.storage'),1);
+
     assert.equal(r.run('p.food.sites'),0);
-    assert.equal(r.run('p.water.storage'),2);
+
     assert.equal(r.run('p.civ.actions.gather.remaining'),remaining);
     assert.equal(r.run('p.civ.project'),'gather-tools');
     assert.equal(r.run('p.civ.projectWork'),work);
@@ -166,10 +166,10 @@ test('milestones retain Food equipment, protected construction and trips while h
 test('milestone ten keeps only named buyables on both prestiges',t=>{
     for(const id of ['craft','organization']){
         const r=game(t);prepared(r);r.run('p.points=new Decimal(52)');
-        r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.food.routes.gather=2;p.food.routes.hunt=2;p.food.routes.fish=2;p.food.routes.farm=2;p.food.storage=2;p.food.sites=1;p.water.sites=2;p.water.storage=2;p.shelter.homes=11;p.shelter.points=new Decimal(52);p.shelter.comfort=2;e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
+        r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.food.routes.gather=2;p.food.routes.hunt=2;p.shelter.homes=11;p.shelter.points=new Decimal(52);p.shelter.comfort=2;e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
         const work=r.run('p.civ.projectWork');
         assert.equal(r.run('e.prestige("'+id+'")'),true);
-        for(const field of ['p.food.routes.gather','p.food.routes.hunt','p.food.routes.fish','p.food.storage','p.water.sites','p.water.storage'])assert.equal(r.run(field),2,field);
+        for(const field of ['p.food.routes.gather','p.food.routes.hunt'])assert.equal(r.run(field),2,field);
         for(const field of ['p.food.routes.farm','p.food.sites'])assert.equal(r.run(field),0,field);
         assert.equal(r.run('p.shelter.homes'),11);
         assert.equal(r.run('p.civ.project'),'shelter-home');

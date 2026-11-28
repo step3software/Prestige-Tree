@@ -10,11 +10,11 @@ function open(t, options = {}) {
 test('Civ storage is independent of the untouched original ptr value', t => {
     const original='original-opaque-prestige-save';
     const r=open(t,{storage:{ptr:original}});
-    r.run('e.startProject("food-site");s.advance(30);gameUI.commands.save()');
+    r.run('p.craft.points=new Decimal(1);e.startProject("digging");s.advance(30);gameUI.commands.save()');
     assert.equal(r.data.get('ptr'),original);
     assert.ok(r.data.has(key));
     const restored=open(t,{storage:Object.fromEntries(r.data)});
-    assert.equal(restored.run('p.food.sites'),1);
+    assert.equal(restored.run('p.civ.equipment.digging'),1);
     assert.equal(restored.run('p.points.toString()'),r.run('p.points.toString()'));
     assert.equal(restored.alerts.length,0);
 });
@@ -45,12 +45,12 @@ test('corrupt startup protects original bytes and starts no runtime', t => {
     assert.equal(r.elements['save-recovery'].hidden,false);
 });
 test('export/import round trip retains the simulation remainder and building progress', t => {
-    const r=open(t);r.run('e.startProject("water-site");s.advance(2.5);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
+    const r=open(t);r.run('p.craft.points=new Decimal(1);e.startProject("water-storage");s.advance(2.5);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
     const encoded=r.run('encoded');
     const target=open(t);target.io.prompt=encoded;
     assert.equal(target.run('gameUI.commands.importSave()'),true);
     const revived=open(t,{storage:Object.fromEntries(target.data)});
-    assert.equal(revived.run('p.civ.project'),'water-site');
+    assert.equal(revived.run('p.civ.project'),'water-storage');
     assert.equal(revived.run('p.civ.tickRemainder'),.5);
     assert.equal(revived.run('p.civ.projectWork'),r.run('p.civ.projectWork'));
 });
@@ -71,9 +71,9 @@ test('active crews and repeat orders survive a codec round trip without duplicat
 
 test('0.1 Civ saves acquire current action defaults while retaining infrastructure and construction',t=>{
     const r=open(t);
-    r.run(`e.startProject('water-site');s.advance(2);var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));raw.version='0.1';delete raw.food.routes;delete raw.shelter.comfort;for(var key of ['actions','improvements','projectWorkers','irrigation','autoIrrigate'])delete raw.civ[key];var result=s.saveCommands.saveCodec().decodePlayer(raw);`);
+    r.run(`p.craft.points=new Decimal(1);e.startProject('water-storage');s.advance(2);var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));raw.version='0.1'; delete raw.civ.equipment;delete raw.food.routes;delete raw.shelter.comfort;for(var key of ['actions','improvements','projectWorkers','irrigation','autoIrrigate'])delete raw.civ[key];var result=s.saveCommands.saveCodec().decodePlayer(raw);`);
     assert.equal(r.run('result.ok'),true);
-    assert.equal(r.run('result.value.civ.project'),'water-site');
+    assert.equal(r.run('result.value.civ.project'),'water-storage');
     assert.equal(r.run('result.value.civ.projectWork'),r.run('raw.civ.projectWork'));
     assert.equal(r.run('result.value.civ.actions.gather.remaining'),0);
     assert.equal(r.run('result.value.civ.projectWorkers'),1);
@@ -96,10 +96,10 @@ test('malformed action contracts and overcommitted crews are rejected before act
 
 test('spent Organization keeps history but locks milestones across saving and reload',t=>{
     const r=open(t);
-    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
+    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.gather=2;gameUI.commands.save()');
     const restored=open(t,{storage:Object.fromEntries(r.data)});
     assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),0);
     assert.equal(restored.run('e.prestigePreview("craft").kept["shelter-home"]'),false);
-    assert.equal(restored.run('p.food.routes.fish'),2);
+    assert.equal(restored.run('p.food.routes.gather'),2);
     assert.equal(restored.run('e.summary().autoAvailable'),false);
 });

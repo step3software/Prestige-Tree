@@ -46,39 +46,9 @@ test('every later upgrade rejects affordable purchases before its milestone is f
     }
 });
 
-test('each retention milestone immediately keeps its exact buyable and protected construction',t=>{
-    const retained=[['water-storage',4],['food-storage',5],['water-site',6],['gather-tools',7],['hunt-tools',8],['fish-tools',9],['shelter-home',10]];
-    const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
-    for(const [id,threshold] of retained){
-        const {p,e}=game(t);
-        Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;
-        p.civ.improvements.farming=true;
-        p.points=new Decimal(12+4*(threshold-1));
-        p.shelter.homes=threshold;p.shelter.points=new Decimal(8+threshold*4);p.shelter.comfort=1;
-        p.food.sites=1;p.food.storage=1;p.water.sites=1;p.water.storage=1;
-        for(const route of Object.keys(p.food.routes))p.food.routes[route]=1;
-        p.food.points=new Decimal(50);p.water.points=new Decimal(50);
-        p.organization.total=new Decimal(threshold-1);p.organization.points=new Decimal(threshold-1);
-        assert.equal(e.prestigePreview('craft').kept[id],false);
-        p.craft.points=new Decimal(4);
-        p.organization.points=new Decimal(7);
-        assert.equal(e.startProject(id),true);
-        p.organization.points=new Decimal(threshold-1);
-        p.civ.projectWork=2;
-        const plan=e.prestigePreview('organization');
-        assert.equal(plan.kept[id],true);
-        assert.equal(e.prestige('organization'),true);
-        for(const buyable of all)assert.equal(get(p,buyable),plan.kept[buyable]?(buyable==='shelter-home'?threshold:1):0,id+' / '+buyable);
-        assert.equal(p.civ.project,id);
-        assert.equal(p.civ.projectWork,2);
-        assert.equal(p.points.toNumber(),5);
-        assert.equal(p.organization.total.toNumber(),threshold);
-    }
-});
-
 test('auto-building remains inactive through milestone nine, including a previously saved enabled toggle',t=>{
     const {engine,p,e}=game(t);
-    p.civ.improvements.crafting=true;p.civ.autoBuild=true;
+    p.civ.improvements.crafting=true;p.civ.autoBuild=true;p.craft.points=new Decimal(1);
     p.organization.total=new Decimal(9);p.organization.points=new Decimal(9);
     engine.advance(1);
     assert.equal(e.summary().autoAvailable,false);
@@ -102,7 +72,7 @@ test('earlier owned upgrades remain usable on load while new purchases obey curr
     const {engine,p,e}=game(t);
     p.civ.improvements.gravity=true;
     const raw=JSON.parse(atob(engine.exportPlayer()));
-    raw.version='0.3';
+    raw.version='0.3'; delete raw.civ.equipment;
     const loaded=engine.session.loadPlayer(btoa(JSON.stringify(raw)));
     assert.equal(loaded.ok,true);
     const current=engine.player;

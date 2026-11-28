@@ -6,11 +6,11 @@ function game(t,save){const engine=createBalanceEngine(save);t.after(engine.disp
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} expected ${b}`);
 
 test('hearth storage uses current whole tens and income uses Fire fullness, without housing or labor changes',t=>{
- const {p,e}=game(t);p.food.storage=2;p.shelter.homes=3;p.shelter.points=new Decimal(20);
+ const {p,e}=game(t);p.shelter.homes=3;p.shelter.points=new Decimal(20);
  for(const population of [1,5,9,10,19,20,29,30,49,50,100,19,9])for(const fill of [0,.5,1]){
   p.points=new Decimal(population);p.civ.fire=16*fill;p.civ.improvements.hearth=true;
   const groups=Math.floor(population/10),s=e.supply();
-  assert.equal(s.storage.food,130+25*groups);near(s.passiveProduction.food,4*groups*fill);
+  assert.equal(s.storage.food,50+25*groups);near(s.passiveProduction.food,4*groups*fill);
   assert.equal(s.support,20);assert.equal(s.availableWorkers,population);
  }
 });

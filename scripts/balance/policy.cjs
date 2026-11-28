@@ -15,12 +15,12 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['crafting','clay','copper','roofs','bricks','clayPots','copperPots','copperAxes','sickles','pipes','digging','hunting','butchery','preparedMaterials','extendedExpeditions','workRosters','cooking','jars','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
+    for(const id of ['crafting','clay','copper','preparedMaterials','extendedExpeditions','workRosters','cooking','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
-    const finishedEquipment=['roofs','hunting','digging','jars','bricks','clayPots','pipes','copperAxes','butchery','copperPots','sickles'].every(id=>p.civ.improvements[id]);
-    const fireStarted=Object.values(p.civ.fireBuyables).some(level=>level>0)||p.civ.project.startsWith('fire-');
-    const nextMaterial=!p.civ.improvements.crafting?12:!p.civ.improvements.clay?25:!p.civ.improvements.copper?35:finishedEquipment?4:8;
+    const finishedEquipment=['roofs','hunting','digging','jars','bricks','clayPots','pipes','copperAxes','butchery','copperPots','sickles'].every(id=>p.civ.equipment[id]>0);
+    const developingEquipment=p.organization.points.gte(10)&&Object.values(p.civ.equipment).some(level=>level>0);
+    const nextMaterial=!p.civ.improvements.crafting?12:!p.civ.improvements.clay?25:!p.civ.improvements.copper?35:finishedEquipment?0:35;
     // Before staffed orders, retain the original legal Organization/Craft bootstrap.
     // Later bank material purchases in bounded population cycles rather than
     // spending every earned Craft on optional storage.
@@ -32,16 +32,15 @@ function createPolicy(engine,settings,onAction=()=>{}){
     }else if(p.organization.points.lt(3)){
       if(economy.prestigeGain('organization')&&economy.prestige('organization'))record('prestige','organization',time);
     }else{
-      const saving=p.craft.points.lt(nextMaterial);
+      const saving=!developingEquipment&&p.craft.points.lt(nextMaterial);
       const craftPopulation=Math.min(24,economy.organizationPopulationRequirement()+4);
-      if(saving && (!fireStarted || Object.values(p.civ.fireBuyables).every(level=>level>0)) && p.points.gte(craftPopulation)){
+      if(saving && p.points.gte(craftPopulation)){
         if(economy.prestige('craft'))record('prestige','craft',time);
       }else if(p.organization.points.lt(10)&&(!saving||p.civ.improvements.crafting&&p.organization.points.lt(10))&&economy.prestigeGain('organization')){
         if(economy.prestige('organization'))record('prestige','organization',time);
       }
     }
-    if(finishedEquipment)p.civ.autoBuild=false;
-    if(!finishedEquipment && economy.summary().autoAvailable && !p.civ.autoBuild){p.civ.autoBuild=true;record('automation','organization',time);}
+    p.civ.autoBuild=false; // This policy buys one level per equipment family explicitly.
     for(const id of ['education','culture']){
       const target=id==='education'?8:1;
       const held=id==='education'?p[id].points:p[id].total;
@@ -68,16 +67,11 @@ function createPolicy(engine,settings,onAction=()=>{}){
     }
     if(!p.civ.project){
       const targetHousing=p.organization.points.lt(10)?Math.max(12,economy.organizationPopulationRequirement(),p.craft.points.lt(nextMaterial)?24:0):24;
-      const optional=p.civ.improvements.copper;
-      const fireBudget=finishedEquipment&&(p.craft.points.gte(4)||fireStarted);
-      let next=p.shelter.points.lt(targetHousing)?'shelter-home':
-        p.water.storage<1&&p.civ.improvements.crafting?'water-storage':
-        p.water.sites<2&&p.civ.improvements.crafting?'water-site':
-        optional&&p.food.storage<3&&p.craft.points.gte(9)?'food-storage':
-        fireBudget&&economy.fireStatus().available&&p.civ.fireBuyables.fuel<1?'fire-fuel':
-        fireBudget&&economy.fireStatus().available&&p.civ.fireBuyables.hearths<1?'fire-hearths':
-        fireBudget&&economy.fireStatus().available&&p.civ.fireBuyables.charcoal<1?'fire-charcoal':null;
-      if(next && !economy.canStartProject(next))next=p.water.sites<1?'water-site':null;
+      // Save for permanent knowledge before optional physical equipment, which
+      // resets on prestige. After milestone ten build one of each family.
+      const equipment=economy.projects('craft').find(item=>item.level<1&&economy.canStartProject(item.id));
+      const next=p.shelter.points.lt(targetHousing)?'shelter-home':
+        p.organization.points.gte(10)&&(p.craft.points.gte(35)||developingEquipment)&&equipment?equipment.id:null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);
     }
     for(const id of ['water','gather','hunt','fish','farm']){

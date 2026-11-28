@@ -7,7 +7,7 @@ function stage(p,D,total=3){p.organization.total=new D(total);p.organization.poi
 test('the actual pre-redesign v0.8 codec export keeps discovered activities and paid work',t=>{
  const fixture=require('../fixtures/civ-pre-ms123-v08.json'),raw=JSON.parse(atob(fixture.player));
  const {engine,p,e}=game(t,fixture.player);
- assert.equal(p.version,'0.91');assert.equal(p.points.toString(),raw.points);
+ assert.equal(p.version,'0.92');assert.equal(p.points.toString(),raw.points);
  assert.equal(p.food.points.toString(),raw.food.points);assert.equal(p.craft.points.toString(),raw.craft.points);
  assert.equal(p.civ.project,raw.civ.project);assert.equal(p.civ.projectWork,raw.civ.projectWork);
  assert.equal(p.civ.preparedHut,false);
@@ -30,13 +30,13 @@ test('twenty-five repeats exhaust once each with five overseers, including a mid
 test('fresh play retains eight-person hut bootstrap and moves hunting to Craft spending',t=>{
  const {engine,p,e,D}=game(t);assert.deepEqual(e.projects('shelter'),[]);assert.equal(e.dispatch('hunt'),false);
  engine.advance(36);assert.equal(e.prestige('organization'),true);assert.equal(e.startProject('shelter-home'),true);e.cancelProject();
- p.organization.total=new D(2);p.organization.points=new D(2);assert.equal(e.dispatch('hunt'),false);p.craft.points=new D(11);assert.equal(e.buyUpgrade('crafting'),true);assert.equal(e.buyUpgrade('hunting'),true);assert.equal(e.dispatch('hunt'),true);e.recall('hunt');
+ p.organization.total=new D(2);p.organization.points=new D(2);assert.equal(e.dispatch('hunt'),false);p.craft.points=new D(11);assert.equal(e.buyUpgrade('crafting'),true);assert.equal(e.buyUpgrade('hunting'),true);engine.advance(12);assert.equal(e.dispatch('hunt'),true);e.recall('hunt');
  p.organization.total=new D(3);p.organization.points=new D(3);assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);engine.exportPlayer();
 });
 
 test('material equipment and retained Organization upgrades charge their actual currencies once',t=>{
- const {p,e,D}=game(t);stage(p,D);p.craft.points=new D(100);e.buyUpgrade('crafting');e.buyUpgrade('clay');e.buyUpgrade('copper');
- const buy=(id,currency,cost)=>{const before=p[currency].points.toNumber(),total=p.organization.total.toNumber();assert.equal(e.buyUpgrade(id),true);assert.equal(p[currency].points.toNumber(),before-cost);assert.equal(p.organization.total.toNumber(),total);assert.equal(e.buyUpgrade(id),false);};
+ const {engine,p,e,D}=game(t);stage(p,D);p.craft.points=new D(100);e.buyUpgrade('crafting');e.buyUpgrade('clay');e.buyUpgrade('copper');
+ const buy=(id,currency,cost)=>{const before=p[currency].points.toNumber(),total=p.organization.total.toNumber();assert.equal(e.buyUpgrade(id),true);assert.equal(p[currency].points.toNumber(),before-cost);assert.equal(p.organization.total.toNumber(),total);assert.equal(e.buyUpgrade(id),false);if(Object.hasOwn(p.civ.equipment,id))engine.advance(12);};
  buy('roofs','craft',1);buy('bricks','craft',2);buy('copperAxes','craft',3);buy('digging','craft',1);buy('hunting','craft',1);buy('butchery','craft',3);
  assert.equal(e.actionDefinition('gather').reward,7.5);assert.equal(e.actionDefinition('hunt').reward,36);assert.equal(e.actionDefinition('hunt').workers,2);
  for(const [id,cost] of [['preparedMaterials',1],['extendedExpeditions',2],['workRosters',3]])buy(id,'organization',cost);
@@ -99,13 +99,4 @@ test('irrigation affects Farming only, including with extended expeditions',t=>{
  for(const id of ['gather','hunt','fish'])assert.equal(e.actionDefinition(id).reward,before[id]);
  assert.equal(e.actionDefinition('farm').reward,before.farm*1.35);
  e.setExpeditionMultiplier('farm',5);assert.ok(Math.abs(e.actionDefinition('farm').reward-before.farm*1.35*5)<1e-8);
-});
-
-
-test('paid work can load below its current gate but cannot start again',t=>{
- const {engine,e}=game(t),raw=JSON.parse(atob(engine.exportPlayer()));
- raw.civ.project='water-site';
- assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,true);
- assert.equal(e.summary().project.id,'water-site');engine.advance(16);
- assert.equal(engine.player.water.sites,1);assert.equal(e.startProject('water-site'),false);
 });

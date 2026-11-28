@@ -89,7 +89,7 @@ test('normal growth remains twelve seconds per person while full abundance reach
     assert.equal(baseline.p.points.toNumber(),8);
     close(baseline.p.civ.growth,0);
     const rich=game(t);housing(rich.p,11);
-    rich.p.food.storage=2;rich.p.water.storage=2;
+    rich.p.civ.improvements.hearth=true;rich.p.civ.improvements.crafting=true;rich.p.civ.equipment["water-storage"]=2;
     rich.p.food.points=new Decimal(130);rich.p.water.points=new Decimal(130);
     rich.engine.advance(12);
     assert.equal(rich.p.points.toNumber(),15);
@@ -112,7 +112,7 @@ test('abundance never bypasses empty supplies or housing capacity', t => {
 
 test('raising only curve weights can produce multiple births per second without invalid progress or excess housing', t => {
     const {engine,p} = game(t);housing(p,11);
-    p.food.storage=2;p.water.storage=2;
+    p.civ.improvements.hearth=true;p.civ.improvements.crafting=true;p.civ.equipment["water-storage"]=2;
     p.food.points=new Decimal(130);p.water.points=new Decimal(130);
     // A source-only tuning experiment in memory; the actual game is unchanged.
     const fs=require('node:fs'),path=require('node:path');
@@ -133,7 +133,7 @@ test('raising only curve weights can produce multiple births per second without 
 
 test('abundance and partial growth stay deterministic across offline chunks and save/load', t => {
     const a=game(t);housing(a.p,11);
-    a.p.food.storage=2;a.p.water.storage=2;
+    a.p.civ.improvements.hearth=true;a.p.civ.improvements.crafting=true;a.p.civ.equipment["water-storage"]=2;
     a.p.food.points=new Decimal(130);a.p.water.points=new Decimal(130);a.p.civ.growth=0.37;
     const seed=a.engine.exportPlayer();
     const b=createBalanceEngine(seed);t.after(b.dispose);
