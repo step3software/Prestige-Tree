@@ -998,6 +998,15 @@ function createCivilizationRules({ saveState }) {
         }
         if (!data.civ) return;
         const civ = data.civ, improvements = civ.improvements || {};
+        const retiringProject = ["fire-fuel", "fire-hearths", "fire-charcoal", "food-site", "food-storage", "water-site", "farm-tools"].includes(civ.project);
+        if (retiringProject) {
+            const project = {projectWork: 0, projectWorkers: 1, projectJobs: 1, preparedHut: false, ...civ};
+            if (!Number.isFinite(project.projectWork) || project.projectWork < 0 || ![0, 1].includes(project.projectWorkers) ||
+                project.projectJobs !== 1 || project.preparedHut !== false) throw new Error("Invalid retired construction");
+        }
+        const committedWorkers = Object.values(civ.actions || {}).reduce((total, action) => total + Number(action?.workers || 0), 0) +
+            Number(civ.fireTenders || 0) + (civ.project ? Number(civ.projectWorkers ?? 1) : 0);
+        if (committedWorkers > Number(data.points)) throw new Error("Overcommitted historical workers");
         const fireLevels = Object.hasOwn(civ, "fireBuyables") ? civ.fireBuyables : {fuel: 0, hearths: 0, charcoal: 0};
         if (!fireLevels || typeof fireLevels !== "object" || Array.isArray(fireLevels) || Object.keys(fireLevels).sort().join() !== "charcoal,fuel,hearths" ||
             Object.values(fireLevels).some(value => !Number.isSafeInteger(value) || value < 0)) throw new Error("Invalid historical Fire buyables");

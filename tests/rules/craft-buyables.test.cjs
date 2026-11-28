@@ -126,9 +126,11 @@ test('retired base and Fire purchases migrate once, refund known Craft and prese
 test('malformed historical purchases reject before refunds or replacement of live state',t=>{
     const fixture=require('../fixtures/civ-pre-repeatables-v091.json'),g=game(t),before=g.engine.exportPlayer();
     for(const mutate of [raw=>raw.civ.fireBuyables=null,raw=>raw.civ.fireBuyables.fuel=-1,raw=>raw.water.storage='2',
-        raw=>raw.civ.improvements.roofs=1,raw=>raw.shelter.points='999',raw=>raw.civ.fire=1000]) {
+        raw=>raw.civ.improvements.roofs=1,raw=>raw.shelter.points='999',raw=>raw.civ.fire=1000,
+        raw=>raw.civ.projectWork=-1,raw=>raw.civ.projectWork=null,raw=>raw.civ.projectWorkers=2,
+        raw=>raw.civ.projectJobs=2,raw=>{raw.civ.project='water-site';raw.civ.projectWork=-1;}]) {
         const raw=JSON.parse(atob(fixture.player));mutate(raw);const original=JSON.stringify(raw);
-        assert.equal(g.engine.session.loadPlayer(raw).ok,false);assert.equal(JSON.stringify(raw),original);
+        assert.equal(g.engine.session.loadPlayer(raw).ok,false,mutate.toString());assert.equal(JSON.stringify(raw),original);
         assert.equal(g.engine.exportPlayer(),before);
     }
 });
