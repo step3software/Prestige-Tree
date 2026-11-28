@@ -20,7 +20,7 @@ test('Civ storage is independent of the untouched original ptr value', t => {
 });
 test('invalid content, foreign saves and negative supplies cannot replace durable or live state', t => {
     const r=open(t);r.run('gameUI.commands.save()');const durable=r.data.get(key);
-    for(const mutation of ["candidate.tab='help'","candidate.points='-1'","candidate.food.points='-1'","candidate.civ.priority='unknown'","candidate.civ.project='unknown'","candidate.shelter.points='999'","candidate.versionType='ptr'"]){
+    for(const mutation of ["candidate.tab='help'","candidate.points='-1'","candidate.food.points='-1'","candidate.civ.priority='unknown'","candidate.shelter.points='999'","candidate.versionType='ptr'"]){
         r.run(`var candidate=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));${mutation};var result=s.saveCommands.saveCodec().decodePlayer(candidate);`);
         assert.equal(r.run('result.ok'),false,mutation);
         assert.equal(r.data.get(key),durable);

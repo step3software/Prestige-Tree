@@ -69,6 +69,7 @@ test('actual v0.7 save preserves the remaining repeat count and active job throu
 
 test('malformed retired upgrade data is rejected before replacing the current save',t=>{
     const {engine,p}=game(t);
+    engine.session.modRules.saveMigrationMode='prod';
     const old=JSON.parse(atob(fixtures.v07));old.civ.improvements.fishing='yes';
     const before=JSON.stringify(p);
     assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(old))).ok,false);

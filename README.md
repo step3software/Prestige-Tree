@@ -33,7 +33,7 @@ Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivi
 - [CIV01 delivery scope](docs/milestones/CIV01.md), [preparation](docs/milestones/CIV01.preparation.json) and [verification](docs/milestones/CIV01.verification.md).
 - [Agent instructions](AGENTS.md), [Orcha manifest](.orcha/repository.json) and [engine feature reference](docs/!general-info.md).
 
-Civ uses `civ-prestige-tree` browser storage. The previous game's `ptr` saves are neither read nor changed. Export Civ saves through Settings to back them up. Incompatible imports are rejected; malformed or inaccessible storage opens recovery without overwriting the original.
+Civ uses `civ-prestige-tree` browser storage. The previous game's `ptr` saves are neither read nor changed. Export Civ saves through Settings to back them up. **Save migration is currently in dev mode**: keep content that still exists, drop removed content and unfinished removed projects, and give no refunds or replacement purchases. Loss between development versions is acceptable. Prod mode requires explicit, tested migrations to preserve meaningful progress and rejects unhandled content. Both modes reject malformed current data and protect failed loads. See [save migration policy and configuration](docs/developer-guide.md#save-migration-modes).
 
 The owner selected current `main` for this replacement. The branch was reconciled with `d7d260f`, including its AGENTS source correction and balance-testing workflow. The retained manifest/Orcha registry still name `master`; no native lifecycle authority is changed.
 

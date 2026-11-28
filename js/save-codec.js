@@ -9,7 +9,8 @@ function optionalPlayerFields() {
 // Pure ingress/egress boundary. Configuration/defaults (including time) are
 // supplied by the caller. No storage, active player, clock, UI or timer effects.
 /** @returns {SaveCodec} */
-function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePlayer = () => {}, validatePlayer = () => {} }) {
+function createSaveCodec({ defaults, layerDefinitions, version, modId, migrationMode = "prod", migratePlayer = (data, mode) => {}, validatePlayer = () => {} }) {
+	if (!["dev", "prod"].includes(migrationMode)) throw new Error("Unknown save migration mode.");
 	const playerDefaults = Object.assign({}, defaults, { version: String(version.num) });
 	const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 	const record = value => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -73,6 +74,16 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePl
 		return value;
 	}
 
+	// Current defaults own fixed content dictionaries. Empty dictionaries (such as
+	// notifications) have reference-specific validation below. No balances change.
+	function dropRemovedFields(value, template) {
+		if (!record(value) || !record(template) || template instanceof Decimal || !Object.keys(template).length) return;
+		for (const key of Object.keys(value)) {
+			if (!own(template, key)) delete value[key];
+			else dropRemovedFields(value[key], template[key]);
+		}
+	}
+
 	function checkReferences(data) {
 		for (let id of Object.keys(layerDefinitions)) {
 			let layer = data[id];
@@ -80,16 +91,20 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePl
 			for (let field of ["upgrades", "milestones", "achievements", "primeMiles", "pseudoUpgs"]) {
 				if (layer[field] === undefined) continue;
 				let source = field === "pseudoUpgs" ? "upgrades" : field === "primeMiles" ? "milestones" : field;
+				if (migrationMode === "dev") layer[field] = layer[field].filter(entry => own(definition[source] || {}, entry));
 				check(layer[field].every(entry => own(definition[source] || {}, entry)), "Unknown " + id + " " + field + " reference.");
 			}
 			for (let field of ["buyables", "clickables", "challenges"]) {
 				for (let key of Object.keys(layer[field])) {
+					if (migrationMode === "dev" && !own(defaults[id][field], key)) { delete layer[field][key]; continue; }
 					check(own(defaults[id][field], key), "Unknown " + id + " " + field + " reference.");
 					if (field === "challenges") check(Number.isInteger(layer[field][key]) && layer[field][key] >= 0, "Invalid challenge count.");
 				}
 			}
 			if (layer.activeChallenge !== undefined && layer.activeChallenge !== null) {
-				check((typeof layer.activeChallenge === "number" || typeof layer.activeChallenge === "string") && own(definition.challenges || {}, layer.activeChallenge), "Unknown active challenge.");
+				check(typeof layer.activeChallenge === "number" || typeof layer.activeChallenge === "string", "Invalid active challenge.");
+				if (migrationMode === "dev" && !own(definition.challenges || {}, layer.activeChallenge)) layer.activeChallenge = null;
+				else check(own(definition.challenges || {}, layer.activeChallenge), "Unknown active challenge.");
 			}
 			// Engine defaults are the owner of subtab names. Preserve the existing
 			// repair of removed tabs; malformed records are rejected by hydrate.
@@ -102,22 +117,28 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePl
 		}
 
 		for (let key of Object.keys(data.notify)) {
+			if (migrationMode === "dev" && !knownTab(key)) { delete data.notify[key]; continue; }
 			check(knownTab(key) && [false, true, 0, 1].includes(data.notify[key]), "Invalid notification.");
 		}
 		for (let id of Object.keys(data.infoboxes)) {
+			if (migrationMode === "dev" && !own(defaults.infoboxes, id)) { delete data.infoboxes[id]; continue; }
 			check(own(defaults.infoboxes, id) && record(data.infoboxes[id]), "Unknown infobox record.");
 			for (let key of Object.keys(data.infoboxes[id])) {
+				if (migrationMode === "dev" && !own(defaults.infoboxes[id], key)) { delete data.infoboxes[id][key]; continue; }
 				check(own(defaults.infoboxes[id], key) && typeof data.infoboxes[id][key] === "boolean", "Invalid infobox state.");
 			}
 		}
 		for (let id of Object.keys(data.subtabs)) {
+			if (migrationMode === "dev" && !own(defaults.subtabs, id)) { delete data.subtabs[id]; continue; }
 			check(own(defaults.subtabs, id) && record(data.subtabs[id]), "Unknown subtab record.");
 			for (let group of Object.keys(data.subtabs[id])) {
+				if (migrationMode === "dev" && !own(defaults.subtabs[id], group)) { delete data.subtabs[id][group]; continue; }
 				let emptyGroup = defaults.subtabs[id][group] === undefined && data.subtabs[id][group] === undefined;
 				check(own(defaults.subtabs[id], group) && (emptyGroup || typeof data.subtabs[id][group] === "string"), "Invalid subtab state.");
 			}
 		}
 		for (let key of ["tab", "navTab", "lastSafeTab"]) {
+			if (migrationMode === "dev" && !knownTab(data[key])) data[key] = defaults[key];
 			check(knownTab(data[key]), "Unknown tab.");
 		}
 	}
@@ -127,6 +148,7 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePl
 		let data = copy(raw);
 		check(data.versionType === modId, "This save belongs to a different game. Original Prestige Tree saves cannot be imported into Civ.");
 		for (let key of Object.keys(data)) {
+			if (migrationMode === "dev" && !own(defaults, key) && !own(optionalFields, key)) { delete data[key]; continue; }
 			check(own(defaults, key) || own(optionalFields, key), "Unsupported player field: " + key);
 		}
 		// Historical numeric versions and authored Gear empty-zero sentinels are
@@ -141,12 +163,19 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePl
 			if (!record(data[id])) continue; // hydrate rejects malformed present records.
 			for (let key of Object.keys(data[id])) {
 				if (own(defaults[id], key)) continue;
+				if (migrationMode === "dev" && !own(addedLayerFields, key)) { delete data[id][key]; continue; }
 				check(own(addedLayerFields, key), "Unsupported " + id + " field: " + key);
 				data[id][key] = hydrate(data[id][key], addedLayerFields[key]);
 			}
 		}
+		if (migrationMode === "dev") {
+			for (const key of Object.keys(defaults)) {
+				const template = own(layerDefinitions, key) ? {...defaults[key], ...addedLayerFields} : defaults[key];
+				dropRemovedFields(data[key], template);
+			}
+		}
 		let oldVersion = data.version;
-		migratePlayer(data);
+		migratePlayer(data, migrationMode);
 		data = hydrate(data, playerDefaults);
 		for (let field of ["devSpeed", "hqTree", "timePlayedReset"]) {
 			if (data[field] !== undefined) data[field] = hydrate(data[field], optionalFields[field]);

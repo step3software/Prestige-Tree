@@ -95,6 +95,7 @@ function createCivilizationRules({ saveState }) {
         hearths: {name: "Improved hearths", craftCost: 1, baseWork: 16, description: "+20% base tender production per level; tenders still required."},
         charcoal: {name: "Charcoal clamps", craftCost: 2, baseWork: 24, description: "Fuel use divided by 1 + 0.15 per level. Fixed technology costs stay unchanged."},
     };
+    const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "gather-tools", "hunt-tools", "fish-tools", "farm-tools", "fire-fuel", "fire-hearths", "fire-charcoal"];
     const housingPerHut = improvements => 4 + (improvements.bricks ? 2 : improvements.roofs ? 1 : 0);
     function updateHousing() { player().shelter.points = new Decimal(8 + player().shelter.homes * housingPerHut(player().civ.improvements)); }
     const personUpkeep = () => 1 / (1 + amount("organization") * 0.06 + amount("culture") * 0.04);
@@ -866,7 +867,11 @@ function createCivilizationRules({ saveState }) {
     }
     /** Convert historical action/upgrade records before typed hydration. Never
      * touch live state: the codec owns the detached candidate and atomic commit. */
-    function migrateData(data) {
+    function migrateData(data, migrationMode = "prod") {
+        if (migrationMode === "dev" && typeof data.civ?.project === "string" && data.civ.project && !projectIds.includes(data.civ.project)) {
+            // Removed construction simply ends: no replacement, yield or refund.
+            Object.assign(data.civ, {project: "", projectWork: 0, projectWorkers: 1, projectJobs: 1, preparedHut: false});
+        }
         // Convert validated old housing on the detached codec candidate only.
         if (Number(data.version || 0) < 0.91 && data.civ?.improvements?.joinery === true && data.shelter) {
             const homes = data.shelter.homes, perHut = housingPerHut(data.civ.improvements);
@@ -907,8 +912,8 @@ function createCivilizationRules({ saveState }) {
         }
         if (Number(data.version || 0) >= 0.7) return;
         const waterRepeat = civ.actions?.water?.repeat === true;
-        const oldKeeper = waterRepeat && improvements?.waterOrders && Number(data.version) >= 0.5 ? 1 : 0;
-        if (waterRepeat && (!improvements?.waterOrders || improvements.gravity)) throw new Error("Invalid historical Water orders");
+        const oldKeeper = migrationMode === "prod" && waterRepeat && improvements?.waterOrders && Number(data.version) >= 0.5 ? 1 : 0;
+        if (migrationMode === "prod" && waterRepeat && (!improvements?.waterOrders || improvements.gravity)) throw new Error("Invalid historical Water orders");
         if (improvements && Object.hasOwn(improvements, "waterOrders")) {
             if (typeof improvements.waterOrders !== "boolean") throw new Error("Invalid historical Water keeper");
             if (improvements.waterOrders) improvements.hutForeman = true;
@@ -977,7 +982,6 @@ function createCivilizationRules({ saveState }) {
         if (typeof civ.preparedHut !== "boolean" || (civ.preparedHut && (civ.project !== "shelter-home" || !civ.improvements.preparedMaterials))) throw new Error("Invalid prepared construction");
         if (!count(data.shelter.homes) || !count(data.shelter.comfort) || !data.shelter.points.eq(8 + data.shelter.homes * housingPerHut(civ.improvements))) throw new Error("Invalid housing capacity");
         if (Object.keys(data.food.routes).sort().join() !== "farm,fish,gather,hunt" || !Object.values(data.food.routes).every(count)) throw new Error("Invalid Food routes");
-        const projectIds = ["food-site", "food-storage", "water-site", "water-storage", "shelter-home", "gather-tools", "hunt-tools", "fish-tools", "farm-tools", "fire-fuel", "fire-hearths", "fire-charcoal"];
         if (!["balanced", "food"].includes(civ.priority) ||
             (civ.project !== "" && !projectIds.includes(civ.project)) || (civ.project === "farm-tools" && !civ.improvements.farming) ||
             !finite(civ.projectWork) || !count(civ.projectJobs) || civ.projectJobs < 1 || civ.projectJobs > 5 ||

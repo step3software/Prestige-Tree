@@ -12,7 +12,7 @@ function getStartPlayer(now = effects.Date.now()) {
 }
 
 function saveCodec(now = effects.Date.now()) {
-	return saveDefaults.createSaveCodec({ defaults: saveCommands.getStartPlayer(now), layerDefinitions: layerRegistry.layers, version: modRules.VERSION, modId: modRules.modInfo.id, migratePlayer: modRules.migratePlayerData, validatePlayer: modRules.validatePlayerData });
+	return saveDefaults.createSaveCodec({ defaults: saveCommands.getStartPlayer(now), layerDefinitions: layerRegistry.layers, version: modRules.VERSION, modId: modRules.modInfo.id, migrationMode: modRules.saveMigrationMode, migratePlayer: modRules.migratePlayerData, validatePlayer: modRules.validatePlayerData });
 }
 
 function reportSaveStatus(state, message) {

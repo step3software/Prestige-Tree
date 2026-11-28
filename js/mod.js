@@ -6,8 +6,11 @@ function createModRules({ derivedState, effects, gameHelpers, saveState }) {
         changelogLink: "https://github.com/step3software/Prestige-Tree"};
     /** @type {{num:string,name:string,withoutName:string,withName:string,beta?:number,pre?:number,patch?:number}} */
     const VERSION = {num: "0.91", name: "Materials and fire", withoutName: "v0.9.1", withName: "v0.9.1 - Materials and fire"};
+    // Release policy, independent of the dev server and never read from a save.
+    /** @type {'dev'|'prod'} */
+    const saveMigrationMode = "dev";
     const activeNotifications = effects.observe([]);
-    return {modInfo, VERSION, civilization, activeNotifications,
+    return {modInfo, VERSION, saveMigrationMode, civilization, activeNotifications,
         doNotCallTheseFunctionsEveryTick: [], alwaysKeepTheseVariables: [], displayThings: [],
         getStartPoints: () => new Decimal(civilization.startingSettlement.population), canGenPoints: () => false,
         getPointGen: () => new Decimal(0), getRow1to6Speed: () => new Decimal(1),

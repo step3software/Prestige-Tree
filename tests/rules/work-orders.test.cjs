@@ -150,7 +150,10 @@ test('0.6 purchases, trips and repeat orders migrate once without starting huts 
     for(const action of Object.values(raw.civ.actions)){delete action.jobs;action.repeat=false;}
     raw.civ.actions.water.repeat=true;
     Object.assign(raw.civ.actions.gather,{remaining:5,duration:10,workers:1,reward:6,repeat:true});
-    const restored=game(t,btoa(JSON.stringify(raw)));
+    const restored=game(t);
+    restored.engine.session.modRules.saveMigrationMode='prod';
+    assert.equal(restored.engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,true);
+    restored.p=restored.engine.player;
     assert.equal(restored.p.civ.improvements.hutForeman,true);
     assert.equal(restored.p.civ.improvements.overseer,true);
     assert.equal('waterOrders' in restored.p.civ.improvements,false);
