@@ -10,6 +10,8 @@ const sections = [
   {id:'organization',name:'First Organization',test:p=>p.organization.points.gte(1)},
   ...['crafting','clay','copper'].map(id=>({id:'material-'+id,name:id+' learned',test:p=>p.civ.improvements[id]})),
   {id:'fire-buyables',name:'Fire infrastructure built',test:p=>Object.values(p.civ.fireBuyables).every(value=>value>0)},
+  {id:'council',name:'Settlement Council unlocked',test:p=>p.organization.total.gte(9)},
+  {id:'council-staffed',name:'Council scale raised with actual workers',test:p=>p.organization.total.gte(9)&&p.civ.councilScale>=2},
   {id:'endgame',name:'Opening chapter complete',test:p=>p.civ.improvements.overseer && p.civ.improvements.gravity && p.civ.improvements.farming && p.organization.points.gte(10) && p.civ.improvements.copper && p.civ.improvements.copperPots && Object.values(p.civ.fireBuyables).every(value=>value>0)},
 ];
 const progressionLayers=['food','water','shelter','craft','organization'];

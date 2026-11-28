@@ -29,25 +29,25 @@ test('spending lowers Population requirements while retaining milestones and ord
     assert.equal(p.civ.hutRepeat,4);
     assert.equal(engine.exportPlayer(),loaded.exportPlayer());
 });
-test('lifetime earnings and discovery flags cannot unlock a never-held milestone', t => {
+test('lifetime earnings unlock only Council while discovery flags cannot unlock other never-held milestones', t => {
     const {p,e,D} = game(t);
     p.organization.total = new D(100); p.organization.points = new D(0); p.craft.points = new D(100);
     Object.assign(p.civ.features,{huts:true,hunting:true,buyables:true});
-    assert.equal(e.organizationMilestones().some(m=>m.earned),false);
+    assert.deepEqual(e.organizationMilestones().filter(m=>m.earned).map(m=>m.requirement),[9]);
     assert.equal(e.startProject('shelter-home'),false);
     assert.equal(e.dispatch('hunt'),false);
     assert.equal(e.buyUpgrade('lashings'),false);
     assert.equal(e.setRepeat('gather',1),false);
     assert.equal(e.summary().autoAvailable,false);
     p.organization.best = new D(2);
-    assert.deepEqual(e.organizationMilestones().filter(m=>m.earned).map(m=>m.requirement),[1,2]);
+    assert.deepEqual(e.organizationMilestones().filter(m=>m.earned).map(m=>m.requirement),[1,2,9]);
     assert.equal(e.setRepeat('gather',1),false);
 });
-test('all ten unlocks survive spending, both prestiges and codec reload without lifetime-based unlocks', t => {
+test('peak-held unlocks and lifetime Council survive spending, both prestiges and codec reload', t => {
     for(let threshold=1;threshold<=10;threshold++) {
         const {engine,p,e,D} = game(t);
         p.organization.best = new D(threshold); p.organization.points = new D(0); p.organization.total = new D(100);
-        const expected = e.organizationMilestones().map(m=>m.requirement<=threshold);
+        const expected = e.organizationMilestones().map(m=>m.requirement===9 || m.requirement<=threshold);
         assert.deepEqual(e.organizationMilestones().map(m=>m.earned),expected);
         p.points = new D(12); assert.equal(e.prestige('craft'),true);
         assert.deepEqual(e.organizationMilestones().map(m=>m.earned),expected);

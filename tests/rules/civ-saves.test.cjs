@@ -94,11 +94,12 @@ test('malformed action contracts and overcommitted crews are rejected before act
     }
 });
 
-test('spent Organization keeps history but locks milestones across saving and reload',t=>{
+test('lifetime Organization unlocks only Council when no held milestone was recorded across reload',t=>{
     const r=open(t);
     r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
     const restored=open(t,{storage:Object.fromEntries(r.data)});
-    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),0);
+    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),1);
+    assert.equal(restored.run('e.organizationMilestones().find(m=>m.earned).name'),'Settlement Council');
     assert.equal(restored.run('e.prestigePreview("craft").kept["shelter-home"]'),false);
     assert.equal(restored.run('p.food.routes.fish'),2);
     assert.equal(restored.run('e.summary().autoAvailable'),false);

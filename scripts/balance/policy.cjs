@@ -51,8 +51,12 @@ function createPolicy(engine,settings,onAction=()=>{}){
       const target=Math.max(0,Math.min(3,p.points.toNumber()-7,economy.supply().availableWorkers+p.civ.fireTenders));
       if(target!==p.civ.fireTenders && economy.setFireTenders(target))record('fire-tending','fire',time);
     }
+    if(economy.councilAvailable()){
+      const scale=Math.min(5,1+Math.floor(p.points.toNumber()/15));
+      if(scale>p.civ.councilScale && economy.setCouncilScale(scale))record('council-scale','organization',time);
+    }
     if(p.civ.improvements.workRosters){
-      const workers=Math.max(1,Math.min(5,Math.floor(p.points.toNumber()/6)));
+      const workers=Math.max(1,Math.min(economy.workerLimit(),Math.floor(p.points.toNumber()/6)));
       if(economy.setOverseers('food',workers))record('staffing','food',time);
     }
     for(const id of ['gather','fish','hunt','farm']){

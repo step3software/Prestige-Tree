@@ -25,7 +25,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
             const workers = this.player.civ.overseers[kind];
             return {kind, name: food ? 'Expedition planner' : 'Hut foreman', workers,
                 min: Math.max(1, Math.ceil(repeats / 5)),
-                max: occupied ? Math.min(5, occupied + this.civ.availableWorkers) : 5};
+                max: occupied ? Math.min(this.civ.workerLimit, occupied + this.civ.availableWorkers) : this.civ.workerLimit};
         },
         rows() { return [0,1,2,3].map(tier => this.civ.nodes.filter(node => node.tier === tier)); },
         frozen() { return binding.ruleStatus.gameEnded || gameRules.tickFaulted; },
@@ -45,6 +45,14 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
             const changed = actionable(() => modRules.civilization.setFireTenders(Number(event.target.value)));
             event.target.value = String(saveState.player.civ.fireTenders);
             if (!changed) saveState.player.civ.message = "Fire tending needs available workers. Release a crew or choose fewer tenders.";
+            return changed;
+        },
+        setCouncilScale(event) {
+            const scale = Number(event.target.value);
+            const problem = modRules.civilization.councilScaleProblem(scale);
+            const changed = actionable(() => modRules.civilization.setCouncilScale(scale));
+            event.target.value = String(saveState.player.civ.councilScale);
+            if (!changed && problem) saveState.player.civ.message = problem;
             return changed;
         },
         setCookingLevel(event) { return actionable(() => modRules.civilization.setCookingLevel(Number(event.target.value))); },
