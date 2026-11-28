@@ -6,6 +6,7 @@ const Decimal = require('../../js/technical/break_eternity.js');
 function game(t, save) {
     const engine = createBalanceEngine(save);
     Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
+    engine.player.organization.points=new Decimal(0);
     t.after(engine.dispose);
     return {engine, p: engine.player, e: engine.session.modRules.civilization};
 }
@@ -16,7 +17,7 @@ test('Shared hearths keeps its guarded cost and never changes housing or labor',
     const before = JSON.stringify(p);
     assert.equal(e.buyUpgrade('hearth'), false);
     assert.equal(JSON.stringify(p), before);
-    p.organization.total=new Decimal(6);
+    p.organization.total=new Decimal(6);p.organization.points=new Decimal(6);
     p.points = new Decimal(12);
     p.food.points = new Decimal(30); p.water.points = new Decimal(25); p.craft.points = new Decimal(1);
     assert.equal(e.buyUpgrade('hearth'), true);
@@ -44,7 +45,7 @@ test('Food benefits use whole tens of current Population, independently of huts 
         assert.equal(e.supply().storage.water, 50);
         assert.equal(e.supply().support, 20);
     }
-    p.organization.total = new Decimal(3); p.food.points = new Decimal(25); p.craft.points = new Decimal(2);
+    p.organization.total=new Decimal(3);p.organization.points=new Decimal(3); p.food.points = new Decimal(25); p.craft.points = new Decimal(2);
     assert.equal(e.buyUpgrade('joinery'), true);
     assert.equal(e.supply().support, 26);
     assert.equal(e.supply().storage.food, 130);
@@ -90,7 +91,7 @@ test('both prestiges retain the upgrade but derive zero bonuses from the five-pe
         const {p,e} = game(t);
         p.points = new Decimal(id === 'organization' ? 48 : 20); p.civ.improvements.hearth = true;
         p.shelter.homes = 10; p.shelter.points = new Decimal(48);
-        p.organization.total = new Decimal(9);
+        p.organization.total=new Decimal(9);p.organization.points=new Decimal(9);
         assert.equal(e.prestige(id), true);
         assert.equal(p.civ.improvements.hearth, true);
         assert.equal(p.points.toNumber(), 5);
@@ -136,7 +137,7 @@ test('hearth growth, threshold loss and Food accrual match across online and off
 
 test('hearth storage feeds the Food abundance curve while passive income cannot fake stored reserves', t => {
     const {p,e} = game(t);
-    p.organization.total = new Decimal(5); e.buyUpgrade('abundance');
+    p.organization.total=new Decimal(5);p.organization.points=new Decimal(5); e.buyUpgrade('abundance');
     p.points = new Decimal(20); p.food.points = new Decimal(50); p.water.points = new Decimal(50);
     p.shelter.homes = 12; p.shelter.points = new Decimal(56);
     const before = e.supply().abundance;

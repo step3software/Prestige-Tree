@@ -4,7 +4,7 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 const key = 'civ-prestige-tree';
 function open(t, options = {}) {
     const r=createRuntime({bridge:false,...options});r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
-    r.run('if(p)Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true})');
+    if(!options.storage || !options.storage[key])r.run('if(p){Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});p.organization.points=new Decimal(7)}');
     t.after(()=>{r.run('s.dispose()');r.dispose();});return r;
 }
 test('Civ storage is independent of the untouched original ptr value', t => {
@@ -57,7 +57,7 @@ test('export/import round trip retains the simulation remainder and building pro
 
 test('active crews and repeat orders survive a codec round trip without duplicate yield',t=>{
     const r=open(t);
-    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.organization.total=new Decimal(5);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.setRepeat("gather",1);e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
+    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.organization.total=new Decimal(5);p.organization.points=new Decimal(5);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.setRepeat("gather",1);e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
     const target=open(t);target.io.prompt=r.run('encoded');
     assert.equal(target.run('gameUI.commands.importSave()'),true);
     target.run('p=s.saveState.player');
@@ -74,7 +74,7 @@ test('0.1 Civ saves acquire current action defaults while retaining infrastructu
     r.run(`e.startProject('water-site');s.advance(2);var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));raw.version='0.1';delete raw.food.routes;delete raw.shelter.comfort;for(var key of ['actions','improvements','projectWorkers','irrigation','autoIrrigate'])delete raw.civ[key];var result=s.saveCommands.saveCodec().decodePlayer(raw);`);
     assert.equal(r.run('result.ok'),true);
     assert.equal(r.run('result.value.civ.project'),'water-site');
-    assert.equal(r.run('result.value.civ.projectWork'),2);
+    assert.equal(r.run('result.value.civ.projectWork'),r.run('raw.civ.projectWork'));
     assert.equal(r.run('result.value.civ.actions.gather.remaining'),0);
     assert.equal(r.run('result.value.civ.projectWorkers'),1);
     assert.equal(r.run('result.value.shelter.comfort'),0);
@@ -94,12 +94,12 @@ test('malformed action contracts and overcommitted crews are rejected before act
     }
 });
 
-test('spent Organization retains milestone progress across saving and reload',t=>{
+test('spent Organization keeps history but locks milestones across saving and reload',t=>{
     const r=open(t);
-    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
+    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
     const restored=open(t,{storage:Object.fromEntries(r.data)});
-    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),10);
-    assert.equal(restored.run('e.prestigePreview("craft").kept["shelter-home"]'),true);
+    assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),0);
+    assert.equal(restored.run('e.prestigePreview("craft").kept["shelter-home"]'),false);
     assert.equal(restored.run('p.food.routes.fish'),2);
-    assert.equal(restored.run('e.summary().autoAvailable'),true);
+    assert.equal(restored.run('e.summary().autoAvailable'),false);
 });

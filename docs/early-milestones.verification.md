@@ -1,3 +1,5 @@
+> Historical verification for `8032e91` before current-Coordination gating. See [current Coordination fix](current-coordination.verification.md).
+
 # MS1-3 delivery and verification
 
 Source: `step3software/Prestige-Tree`, canonical main `8333e6d535cad36361f261e8005861cfde6ed5c1`; implementation branch `codex/v08-upgrades` continued from `394b2f8e131d56e448f8df665060b2350642abe1`, dedicated worktree `prestige-v08-upgrades`. Exclusive writer fence 2720. Publication is the existing draft PR 12 to main. No merge, deployment, user-save access or change to native delivery authority is included.

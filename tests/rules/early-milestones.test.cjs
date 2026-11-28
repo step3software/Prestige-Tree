@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t,save){const engine=createBalanceEngine(save);t.after(engine.dispose);const p=engine.player;return {engine,p,e:engine.session.modRules.civilization,D:p.points.constructor};}
-function stage(p,D,total=3){p.organization.total=new D(total);p.organization.points=new D(10);p.craft.points=new D(20);p.points=new D(30);p.shelter.homes=10;p.shelter.points=new D(48);p.food.points=new D(50);p.water.points=new D(50);}
+function stage(p,D,total=3){p.organization.total=new D(total);p.organization.points=new D(total);p.organization.points=new D(10);p.craft.points=new D(20);p.points=new D(30);p.shelter.homes=10;p.shelter.points=new D(48);p.food.points=new D(50);p.water.points=new D(50);}
 
 test('the actual pre-redesign v0.8 codec export keeps discovered activities and paid work',t=>{
  const fixture=require('../fixtures/civ-pre-ms123-v08.json'),raw=JSON.parse(atob(fixture.player));
@@ -13,7 +13,7 @@ test('the actual pre-redesign v0.8 codec export keeps discovered activities and 
  assert.equal(p.civ.preparedHut,false);
  assert.equal(p.civ.actions.hunt.reward,raw.civ.actions.hunt.reward);assert.equal(p.civ.actions.hunt.remaining,raw.civ.actions.hunt.remaining);
  assert.equal(p.civ.actions.gather.repeat,raw.civ.actions.gather.repeat);
- assert.equal(e.actionDefinition('fish').unlocked,true);assert.ok(e.projects('food').length);
+ assert.equal(e.actionDefinition('fish').unlocked,true);assert.equal(e.projects('food').length,0,'Below the current buyable gate, existing work remains valid');
  assert.deepEqual(p.civ.overseers,{food:1,huts:1});
  const loaded=game(t,engine.exportPlayer());assert.deepEqual(loaded.p.civ.features,p.civ.features);
 });
@@ -36,11 +36,11 @@ test('fresh play unlocks huts at eight people and hunting only at milestone two'
  engine.advance(36);assert.equal(p.points.toNumber(),8);assert.equal(e.prestige('organization'),true);
  assert.equal(p.organization.total.toNumber(),1);assert.equal(e.startProject('shelter-home'),true);
  assert.deepEqual(e.upgrades('shelter').map(u=>[u.id,u.costs.craft]),[['lashings',1],['joinery',2],['builderTools',3]]);
- assert.equal(e.dispatch('hunt'),false);p.organization.total=new D(2);
+ assert.equal(e.dispatch('hunt'),false);p.organization.total=new D(2);p.organization.points=new D(2);
  assert.equal(e.dispatch('hunt'),true);
  assert.deepEqual(e.upgrades('food').map(u=>[u.id,u.costs.craft]),[['digging',1],['hunting',2],['butchery',3]]);
  assert.equal(e.setRepeat('gather',1),false);assert.equal(e.setHutRepeat(1),false);
- p.organization.total=new D(3);e.cancelProject();e.recall('hunt');
+ p.organization.total=new D(3);p.organization.points=new D(3);e.cancelProject();e.recall('hunt');
  assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);
  assert.equal(e.supply().overseerWorkers,1);assert.equal(e.supply().foremanWorkers,1);
  engine.exportPlayer();
@@ -120,10 +120,10 @@ test('irrigation affects Farming only, including with extended expeditions',t=>{
 });
 
 
-test('current saves reject active work for undiscovered features without replacing live data',t=>{
- const {engine}=game(t),before=engine.exportPlayer(),raw=JSON.parse(atob(before));
- for(const modify of [r=>r.civ.project='water-site',r=>r.civ.project='shelter-home',r=>Object.assign(r.civ.actions.hunt,{remaining:1,duration:25,reward:24,jobs:1,workers:3})]){
-  const candidate=structuredClone(raw);modify(candidate);
-  assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(candidate))).ok,false);assert.equal(engine.exportPlayer(),before);
- }
+test('paid work can load below its current gate but cannot start again',t=>{
+ const {engine,e}=game(t),raw=JSON.parse(atob(engine.exportPlayer()));
+ raw.civ.project='water-site';
+ assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,true);
+ assert.equal(e.summary().project.id,'water-site');engine.advance(16);
+ assert.equal(engine.player.water.sites,1);assert.equal(e.startProject('water-site'),false);
 });

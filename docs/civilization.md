@@ -10,7 +10,7 @@ Food and Water are consumed continuously. Normal growth takes 12 supported game 
 
 ## Abundance growth curves
 
-Abundance is purchased once for no resources after five lifetime Organization; its ownership survives prestige.
+Abundance is purchased once for no resources after five currently held Organization; its ownership survives prestige.
 
 `growthSettings` in `js/civilization.js` owns the base period and each input's
 independent weight, thresholds and shape exponent. All three currently contribute
@@ -87,7 +87,7 @@ Each route saves its active job snapshot separately from a remaining-repeat coun
 Food routes have distinct repeatable projects, each reserving one builder:
 
 - **Explore farther afield** (`gather-tools`): each level multiplies gathering time by 1.2 and yield by 1.5 with the same one-person crew. Work starts at 14 and scales by 1.35 per level.
-- **Hunt bigger game** (`hunt-tools`): each level multiplies the crew by 1.5, rounding up after each level, and doubles yield. Duration stays 25 seconds. The next tier requires 1 + current level lifetime Organization (not spent); work stays 14. Spear hunting applies before scaling: crews grow 2, 3, 5, 8 instead of 3, 5, 8, 12.
+- **Hunt bigger game** (`hunt-tools`): each level multiplies the crew by 1.5, rounding up after each level, and doubles yield. Duration stays 25 seconds. The next tier requires 1 + current level held Organization (not spent); work stays 14. Spear hunting applies before scaling: crews grow 2, 3, 5, 8 instead of 3, 5, 8, 12.
 - **Weave river traps** (`fish-tools`): each level doubles the catch with the same crew and 18-second trip. Craft costs start at 1 and double per level; work stays 14. Craft is spent when construction starts, with no refund on cancellation or lost construction at prestige.
 - **Farming tools** retain their +35% base yield and faster-cycle effect; work scales by 1.35 per level.
 
@@ -97,7 +97,7 @@ Spear hunting reduces the base crew from 3 to 2 before bigger-game scaling. Digg
 
 ## Early Organization milestones
 
-New games expose Gather and Collect water. Huts unlock at lifetime Organization 1, Hunt at 2, and both Food and Hut overseer queues at 3 without a separate purchase. The first Organization point requires 8 Population; subsequent requirements are `8 + 4 * lifetime Organization`. Craft still starts at 12 Population. Unlocks survive spending/resetting currencies.
+New games expose Gather and Collect water. Huts unlock at current Organization 1, Hunt at 2, and both Food and Hut overseer queues at 3 without a separate purchase. The first Organization point requires 8 Population; subsequent requirements are `8 + 4 * current Organization`. Craft still starts at 12 Population. Spending Coordination can lock milestones again; purchased upgrades and paid work remain. The population requirement falls immediately with the held balance.
 
 | Milestone | Feature | Upgrade 1 | Upgrade 2 | Upgrade 3 |
 | --- | --- | --- | --- | --- |
@@ -136,13 +136,15 @@ One construction job runs at a time for new queued work. Other buyables retain t
 
 Craft requires only Population: 12 gives 1 Craft, 14 gives 2, 16 gives 3, and every additional two people add one Craft. It has no Food, Water or housing eligibility requirement.
 
-Organization requires only current Population: the next point needs `8 + 4 × lifetime Organization earned` people. The sequence is 8, 12, 16, 20 and onward. It grants exactly one point per action even with excess Population; spending Organization cannot lower the next requirement. Extra empty housing alone cannot qualify, and stocks/housing do not otherwise gate the prestige command.
+Organization requires only current Population: the next point needs `8 + 4 × current Organization held` people. The sequence is 8, 12, 16, 20 and onward. It grants exactly one point per action even with excess Population; spending Organization immediately lowers the next requirement. Extra empty housing alone cannot qualify, and stocks/housing do not otherwise gate the prestige command.
+
+Milestones use the current held balance for visibility, new feature access, new upgrade purchases, automatic starts and prestige retention. Lifetime totals remain historical statistics. Spending does not delete bought upgrades, constructed infrastructure, paid construction or active trip snapshots. Their ongoing effects remain; automatic milestone features (huts, hunting, overseer orders and auto-building) require their current threshold for new starts. Pending repeat counts remain paused, release supervisors, survive reload, and become eligible again when the current balance permits. Prestige itself still clears queues according to its existing contract. Construction lookup includes locked definitions so an already-paid project can finish after spending; new starts use the current gate.
 
 Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
 
 New games have no initially purchasable upgrades. The early Organization milestone table owns the first nine upgrades and their currencies. Later gates remain explicit in `organizationRewards`; a milestone reveals upgrades without buying them.
 
-| Lifetime Organization | Feature / upgrades | Specific buyable retained |
+| Current Organization | Feature / upgrades | Specific buyable retained |
 | --- | --- | --- |
 | 1 | Huts; Cord lashings, Timber frames, Construction tools | None |
 | 2 | Hunting; Digging sticks, Spear hunting, Butchery tools | None |
@@ -169,7 +171,7 @@ Money, Time, Education and Culture are locked and hidden for now, with no in-gam
 
 The canonical owner is createCivilizationRules in js/civilization.js. The registered Food update advances the entire economy, once, in one-second internal steps. Population is player.points; the Time resource uses freeTime because player.time is the runtime timestamp.
 
-Current version 0.8 accepts v0.6/v0.7 and earlier Civ saves through the same detached codec. Before hydration, retired Fishing nets and Well lining Boolean fields are validated and removed, and Water keeper ownership becomes Hut foreman ownership for pre-0.7 saves; hut automation starts off. Historical Boolean Food orders become targets of one; active trips become one-job batch snapshots with unchanged crew, remaining time and yield. If the new dedicated Food Overseer cannot fit, orders pause while active crews/progress remain. Invalid historical/current overbooking is rejected. Abundance defaults to unpurchased in migrated saves and is available free if milestone 5 is earned. Existing active rewards/crews retain their snapshots; new trips use the current full Fishing crew and unlined Water output. Before hydration, saves predating the feature-discovery record preserve their previously available huts, hunting, fishing and buyables as current discovered capabilities. New saves retain their explicit discovery record and default to the new milestone gates. Configured overseers default to one per type, expedition multipliers default to one, and existing construction receives no retroactive Prepared materials discount. Current saves store discoveries, configured staffing, expedition factors, prepared construction, integer targets and batch counts; no alternate legacy runtime remains. Earlier home-improvement retirement, hidden later-resource flags and missing 0.1 defaults still migrate at ingress. Stocks, Population, construction, bought upgrades and lifetime Organization remain meaningful; eligibility uses the new Population rule. Malformed records fail before activation, preserving prior live/durable bytes. Original ptr data remains untouched.
+Current version 0.8 accepts v0.6/v0.7 and earlier Civ saves through the same detached codec. Before hydration, retired Fishing nets and Well lining Boolean fields are validated and removed, and Water keeper ownership becomes Hut foreman ownership for pre-0.7 saves; hut automation starts off. Historical Boolean Food orders become targets of one; active trips become one-job batch snapshots with unchanged crew, remaining time and yield. If the new dedicated Food Overseer cannot fit, orders pause while active crews/progress remain. Invalid historical/current overbooking is rejected. Abundance defaults to unpurchased in migrated saves and is available free if milestone 5 is earned. Existing active rewards/crews retain their snapshots; new trips use the current full Fishing crew and unlined Water output. Before hydration, saves predating the feature-discovery record preserve their activity records, stocks and paid work. Current Organization gates govern new huts, hunting, buyables and overseer starts even if an earlier save recorded them as discovered; previously discovered fishing remains usable. New saves retain their explicit discovery record and default to the new milestone gates. Configured overseers default to one per type, expedition multipliers default to one, and existing construction receives no retroactive Prepared materials discount. Current saves store discoveries, configured staffing, expedition factors, prepared construction, integer targets and batch counts; no alternate legacy runtime remains. Earlier home-improvement retirement, hidden later-resource flags and missing 0.1 defaults still migrate at ingress. Stocks, Population, construction, bought upgrades and lifetime Organization remain meaningful; eligibility uses the new Population rule. Malformed records fail before activation, preserving prior live/durable bytes. Original ptr data remains untouched.
 
 The base dark theme, monospace type, circular nodes and native upg/tabButton treatments are retained. Tests cover parallel crews, overbooking, recall, timed yields, the separate automation stages, irrigation, Shelter, prestige retention, saves and offline chunk parity. Balance profiles use real commands: active decisions every 5 seconds; regular decisions every 20 seconds until overseer, gravity flow and the milestone-10 auto-builder are earned, then every 300 seconds. This cadence change is owner-requested. Synthetic pacing is not human enjoyment evidence.
 

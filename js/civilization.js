@@ -91,19 +91,19 @@ function createCivilizationRules({ saveState }) {
         {id: "fishing-records", requirement: 9, name: "Irrigation", upgrades: ["sluice"], retains: "fish-tools", reward: "Irrigate Farming cycles. Keep river trap levels."},
         {id: "settlement-orders", requirement: 10, name: "Settlement orders", upgrades: ["autonomousFood"], retains: "shelter-home", reward: "Unlock auto-building. Keep huts."},
     ];
-    function organizationMilestones(total = amountTotal("organization")) {
-        return organizationRewards.map(reward => ({...reward, earned: total >= reward.requirement}));
+    function organizationMilestones(held = amount("organization")) {
+        return organizationRewards.map(reward => ({...reward, earned: held >= reward.requirement}));
     }
     function amountTotal(id) { return player()[id].total.toNumber(); }
-    function retention(buyable, total = amountTotal("organization")) {
-        return organizationMilestones(total).some(reward => reward.retains === buyable && reward.earned);
+    function retention(buyable, held = amount("organization")) {
+        return organizationMilestones(held).some(reward => reward.retains === buyable && reward.earned);
     }
     function featureAvailable(id) {
         const requirements = {huts: 1, hunting: 2, buyables: 7};
-        return player().civ.features[id] || (requirements[id] !== undefined && amountTotal("organization") >= requirements[id]);
+        return requirements[id] !== undefined ? amount("organization") >= requirements[id] : !!player().civ.features[id];
     }
-    function foodOrdersAvailable() { return owns("overseer") || amountTotal("organization") >= 3; }
-    function hutOrdersAvailable() { return owns("hutForeman") || amountTotal("organization") >= 3; }
+    function foodOrdersAvailable() { return amount("organization") >= 3; }
+    function hutOrdersAvailable() { return amount("organization") >= 3; }
     function repeatCap(kind) { return 5 * (owns("workRosters") ? player().civ.overseers[kind] : 1); }
     function upgradeRequirement(id) {
         if (["overseer", "hutForeman"].includes(id)) return 3;
@@ -111,7 +111,7 @@ function createCivilizationRules({ saveState }) {
         const milestone = organizationRewards.find(reward => reward.upgrades.includes(id));
         return milestone ? milestone.requirement : Infinity;
     }
-    function autoBuildingAvailable() { return amountTotal("organization") >= 10; }
+    function autoBuildingAvailable() { return amount("organization") >= 10; }
     function buyableLevel(id) {
         const [resource, kind] = id.split("-");
         if (kind === "tools") return player().food.routes[resource];
@@ -391,14 +391,14 @@ function createCivilizationRules({ saveState }) {
             efficiency: {food: 3 * knowledgeEffect(), water: 3.2 * knowledgeEffect()},
             idle: labor.spare, laborUsed: labor.workers.food + labor.workers.water + labor.builders + labor.foremanWorkers};
     }
-    function projects(id) {
+    function projects(id, includeLocked = false) {
         const p = player(), work = (base, level) => base * Math.pow(1.35, level);
-        if (["food", "water"].includes(id) && !featureAvailable("buyables")) return [];
+        if (!includeLocked && ["food", "water"].includes(id) && !featureAvailable("buyables")) return [];
         if (id === "food") return [
             {id: "gather-tools", name: buyableNames["gather-tools"],
                 description: "Exploration level " + p.food.routes.gather + ": reach richer ground. Each level multiplies trip time by 1.2 and yield by 1.5; crew unchanged.", work: work(14, p.food.routes.gather)},
             {id: "hunt-tools", name: buyableNames["hunt-tools"], organizationRequired: 1 + p.food.routes.hunt,
-                description: "Bigger-game level " + p.food.routes.hunt + ": each level multiplies the crew by 1.5, rounded up, and yield by 2; trip time unchanged. Requires " + (1 + p.food.routes.hunt) + " lifetime Organization (not spent).", work: 14},
+                description: "Bigger-game level " + p.food.routes.hunt + ": each level multiplies the crew by 1.5, rounded up, and yield by 2; trip time unchanged. Requires " + (1 + p.food.routes.hunt) + " current Organization (not spent).", work: 14},
             {id: "fish-tools", name: buyableNames["fish-tools"], craftCost: Math.pow(2, p.food.routes.fish),
                 description: "River trap level " + p.food.routes.fish + ": each level doubles the catch with the same crew and trip time. Costs " + Math.pow(2, p.food.routes.fish) + " Craft, paid when construction starts.", work: 14},
             ...(owns("farming") ? [{id: "farm-tools", name: buyableNames["farm-tools"],
@@ -410,13 +410,13 @@ function createCivilizationRules({ saveState }) {
             {id: "water-site", name: "Improve the well", description: "Improve collection yield and speed; +10 base Water/min once gravity-fed.", work: work(16, p.water.sites)},
             {id: "water-storage", name: "Craft earthenware jars", craftCost: 1, description: "Hand-shaped, fired clay jars. +40 Water storage. Costs 1 Craft per purchase, paid when construction starts.", work: work(12, p.water.storage)},
         ];
-        if (id === "shelter" && featureAvailable("huts")) return [
+        if (id === "shelter" && (includeLocked || featureAvailable("huts"))) return [
             {id: "shelter-home", name: "Build a new hut", description: "+" + (owns("joinery") ? 6 : 4) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
         ];
         return [];
     }
     function projectDefinition(id) {
-        const project = ["food", "water", "shelter"].flatMap(projects).find(item => item.id === id);
+        const project = ["food", "water", "shelter"].flatMap(resource => projects(resource, true)).find(item => item.id === id);
         if (project && id === "shelter-home" && player().civ.project === id) {
             let work = 0;
             for (let job = 0; job < player().civ.projectJobs; job++) work += project.work * Math.pow(owns("lashings") ? 1.25 : 1.35, job);
@@ -426,8 +426,10 @@ function createCivilizationRules({ saveState }) {
     }
     function canStartProject(id) {
         const project = projectDefinition(id);
-        return !!project && !player().civ.project && occupiedWorkers().availableWorkers >= 1 &&
-            amountTotal("organization") >= (project.organizationRequired || 0) &&
+        const prefix = id.split("-")[0];
+        const resource = Object.hasOwn(actionBase, prefix) ? actionBase[prefix].resource : prefix;
+        return !!project && projects(resource).some(item => item.id === id) && !player().civ.project && occupiedWorkers().availableWorkers >= 1 &&
+            amount("organization") >= (project.organizationRequired || 0) &&
             player().craft.points.gte(project.craftCost || 0);
     }
     function startProject(id, requestedJobs = 1, supervised = false) {
@@ -471,7 +473,7 @@ function createCivilizationRules({ saveState }) {
     }
     function upgrades(resource) {
         return Object.entries(improvementDefinitions).filter(([id, item]) => item.resource === resource && !["overseer", "hutForeman"].includes(id)).map(([id, item]) => {
-            const available = owns(id) || (amountTotal("organization") >= upgradeRequirement(id) && Object.keys(item.costs).every(resourceAvailable));
+            const available = owns(id) || (amount("organization") >= upgradeRequirement(id) && Object.keys(item.costs).every(resourceAvailable));
             return {id, ...item, available, organizationRequired: upgradeRequirement(id), owned: owns(id),
                 canBuy: available && !owns(id) && Object.entries(item.costs).every(([key, cost]) => player()[key].points.gte(cost)),
                 costText: Object.entries(item.costs).map(([key, cost]) => cost + " " + names[key]).join(" · ") || "Free"};
@@ -480,7 +482,7 @@ function createCivilizationRules({ saveState }) {
     }
     function buyUpgrade(id) {
         const definition = improvementDefinitions[id];
-        if (!definition || ["overseer", "hutForeman"].includes(id) || owns(id) || amountTotal("organization") < upgradeRequirement(id) || !Object.keys(definition.costs).every(resourceAvailable)) return false;
+        if (!definition || ["overseer", "hutForeman"].includes(id) || owns(id) || amount("organization") < upgradeRequirement(id) || !Object.keys(definition.costs).every(resourceAvailable)) return false;
         if (!Object.entries(definition.costs).every(([resource, cost]) => player()[resource].points.gte(cost))) return false;
         for (const [resource, cost] of Object.entries(definition.costs)) player()[resource].points = player()[resource].points.sub(cost);
         player().civ.improvements[id] = true;
@@ -490,7 +492,7 @@ function createCivilizationRules({ saveState }) {
     }
     function irrigate() {
         const p = player(), reserve = supply().reserve;
-        if (amountTotal("organization") < 9 || !owns("farming") || p.civ.irrigation > 0 || p.water.points.lt(20 + reserve)) return false;
+        if (amount("organization") < 9 || !owns("farming") || p.civ.irrigation > 0 || p.water.points.lt(20 + reserve)) return false;
         p.water.points = p.water.points.sub(20);
         p.civ.irrigation = 45;
         p.civ.message = "Irrigation: new Farming cycles gain 35% yield for 45 seconds.";
@@ -592,7 +594,7 @@ function createCivilizationRules({ saveState }) {
         if (id === "organization") return player().points.gte(organizationPopulationRequirement()) ? 1 : 0;
         return 0;
     }
-    function organizationPopulationRequirement() { return 8 + 4 * amountTotal("organization"); }
+    function organizationPopulationRequirement() { return 8 + 4 * amount("organization"); }
     function prestigeRequirements(id) {
         return id === "craft" ? "12 Population gives 1 Craft, then +1 per 2 Population (14 gives 2, 16 gives 3)" : organizationPopulationRequirement() + " Population; gain exactly 1 Organization";
     }
@@ -601,7 +603,8 @@ function createCivilizationRules({ saveState }) {
     function prestigePreview(id) {
         const p = player(), gain = prestigeGain(id);
         const organizationTotal = amountTotal("organization") + (id === "organization" ? gain : 0);
-        const kept = Object.fromEntries(Object.keys(buyableNames).map(buyable => [buyable, retention(buyable, organizationTotal)]));
+        const organizationHeld = amount("organization") + (id === "organization" ? gain : 0);
+        const kept = Object.fromEntries(Object.keys(buyableNames).map(buyable => [buyable, retention(buyable, organizationHeld)]));
         const resetBuyables = Object.keys(kept).filter(resource => !kept[resource]);
         const keptBuyables = Object.keys(kept).filter(resource => kept[resource]);
         const resetConstruction = !!p.civ.project && !kept[p.civ.project];
@@ -628,7 +631,7 @@ function createCivilizationRules({ saveState }) {
         const keep = ["permanent upgrades", "Craft, Organization and later resources"];
         if (keptBuyables.length) keep.push("protected buyables: " + keptBuyables.map(buyable => buyableNames[buyable]).join(", "));
         if (p.civ.project && !resetConstruction) keep.push("current construction");
-        return {gain, organizationTotal, kept, resetBuyables, keptBuyables, resetConstruction, recalledActions, startingSettlement,
+        return {gain, organizationTotal, organizationHeld, kept, resetBuyables, keptBuyables, resetConstruction, recalledActions, startingSettlement,
             resetText: reset.join("; "), keepText: keep.join("; ")};
     }
     function prestige(id) {
@@ -637,7 +640,7 @@ function createCivilizationRules({ saveState }) {
         addResource(id, gain);
         player()[id].unlocked = true;
         const p = player();
-        if (amountTotal("organization") >= 3) { p.civ.improvements.overseer = true; p.civ.improvements.hutForeman = true; }
+        if (amount("organization") >= 3) { p.civ.improvements.overseer = true; p.civ.improvements.hutForeman = true; }
         for (const buyable of plan.resetBuyables) resetBuyable(buyable);
         p.shelter.points = new Decimal(8 + p.shelter.homes * (owns("joinery") ? 6 : 4));
         if (plan.resetConstruction) { p.civ.preparedHut = false; p.civ.project = ""; p.civ.projectWork = 0; p.civ.projectWorkers = 1; p.civ.projectJobs = 1; }
@@ -650,7 +653,7 @@ function createCivilizationRules({ saveState }) {
         p.civ.hutRepeat = 0;
         player().civ.growth = 0;
         p.civ.irrigation = 0;
-        player().civ.message = names[id] + " increased by " + gain + ". " + (plan.resetBuyables.length ? "Unprotected buyables reset. " : "All buyables retained. ") + "Organization milestones use lifetime earnings.";
+        player().civ.message = names[id] + " increased by " + gain + ". " + (plan.resetBuyables.length ? "Unprotected buyables reset. " : "All buyables retained. ") + "Organization milestones and the next Population requirement use current held Coordination.";
         return true;
     }
     function investments(id) {
@@ -681,7 +684,7 @@ function createCivilizationRules({ saveState }) {
                 id === "organization" ? "coordination" : id === "education" ? "knowledge" : id === "culture" ? "influence" : "",
             requirement: isPrestige ? prestigeRequirements(id) : tier(id) === 2 ? "Earn Craft and Organization" : "Earn 5 Money and 3 free hours in total",
             canPrestige: prestigeGain(id) > 0, prestigeGain: prestigeGain(id), prestigePreview: isPrestige ? prestigePreview(id) : null,
-            organizationMilestones: id === "organization" ? organizationMilestones() : [], organizationEarned: amountTotal("organization"),
+            organizationMilestones: id === "organization" ? organizationMilestones() : [], organizationEarned: amountTotal("organization"), organizationHeld: amount("organization"),
             buyableRetention: buyableRetentionText(id),
             projects: projects(id).map(project => ({...project, canStart: canStartProject(project.id)})), upgrades: upgrades(id),
             actions: Object.keys(actionBase).filter(key => actionBase[key].resource === id && (actionDefinition(key).unlocked || player().civ.actions[key].remaining > 0)).map(key => ({...actionDefinition(key), canDispatch: canDispatch(key)})),
@@ -690,7 +693,7 @@ function createCivilizationRules({ saveState }) {
     function summary() {
         const p = player(), s = supply(), project = projectDefinition(p.civ.project);
         const next = s.bottleneck.startsWith("Water") ? "water" : s.bottleneck.startsWith("Food") || s.bottleneck === "Production" ? "food" : "shelter";
-        return {...s, shortage: shortageStatus(), irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), hutRepeatAvailable: hutOrdersAvailable(), foodOrdersAvailable: foodOrdersAvailable(), rostersAvailable: owns("workRosters"), hutRepeatCap: repeatCap("huts"), foodRepeatCap: repeatCap("food"), irrigationAvailable: amountTotal("organization") >= 9 && owns("farming"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).filter(resourceAvailable).map(node),
+        return {...s, shortage: shortageStatus(), irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), hutRepeatAvailable: hutOrdersAvailable(), foodOrdersAvailable: foodOrdersAvailable(), foodOrdersPaused: !foodOrdersAvailable() && Object.values(p.civ.actions).some(action => action.repeat > 0), hutOrdersPaused: !hutOrdersAvailable() && p.civ.hutRepeat > 0, rostersAvailable: owns("workRosters"), hutRepeatCap: repeatCap("huts"), foodRepeatCap: repeatCap("food"), irrigationAvailable: amount("organization") >= 9 && owns("farming"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).filter(resourceAvailable).map(node),
             project: project ? {...project, jobs: p.civ.projectJobs, workers: p.civ.projectWorkers, paused: p.civ.projectWorkers === 0, progress: Math.min(1, p.civ.projectWork / project.work)} : null,
             next, advice: s.growing ? "Your supplies and housing support another person." :
                 s.bottleneck.includes("reserves") ? "Restore supplies before the shortage countdown runs out." :
@@ -736,7 +739,7 @@ function createCivilizationRules({ saveState }) {
         }
         if (crews + oldKeeper > Number(data.points)) throw new Error("Overcommitted historical workers");
         const repeating = ["gather", "hunt", "fish", "farm"].some(id => civ.actions[id]?.repeat > 0);
-        if (repeating && crews + 1 > Number(data.points)) {
+        if (repeating && Number(data.organization?.points) >= 3 && crews + 1 > Number(data.points)) {
             for (const id of ["gather", "hunt", "fish", "farm"]) if (civ.actions[id]) civ.actions[id].repeat = 0;
             civ.message = "Food repeat orders paused to make room for their dedicated Overseer. Existing crews and progress were kept.";
         }
@@ -780,14 +783,13 @@ function createCivilizationRules({ saveState }) {
             !finite(civ.projectWork) || !count(civ.projectJobs) || civ.projectJobs < 1 || civ.projectJobs > 5 ||
             ![0, civ.projectJobs].includes(civ.projectWorkers) || (!civ.project && (civ.projectWorkers !== 1 || civ.projectJobs !== 1)) ||
             (civ.project !== "shelter-home" && civ.projectJobs !== 1) ||
-            !count(civ.hutRepeat) || civ.hutRepeat > 5 * civ.overseers.huts || (civ.hutRepeat > 0 && !civ.improvements.hutForeman && data.organization.total.lt(3)) || !finite(civ.growth) || civ.growth >= 1 ||
+            !count(civ.hutRepeat) || civ.hutRepeat > 5 * civ.overseers.huts || !finite(civ.growth) || civ.growth >= 1 ||
             !finite(civ.tickRemainder) || civ.tickRemainder >= 1 + 1e-8 || !finite(civ.irrigation) || civ.irrigation > 45) throw new Error("Invalid civilization progress");
-        const discovered = (id, requirement) => civ.features[id] || data.organization.total.gte(requirement);
-        if (civ.project && !(civ.project === "shelter-home" ? discovered("huts", 1) : discovered("buyables", 7))) throw new Error("Construction feature is locked");
         if (Object.keys(civ.actions).sort().join() !== "farm,fish,gather,hunt,water") throw new Error("Invalid action types");
         if (!count(civ.shortage.losses) || !finite(civ.shortage.elapsed) || civ.shortage.elapsed > 20) throw new Error("Invalid shortage countdown");
-        const overseer = Object.values(civ.actions).some(action => action.repeat > 0) ? civ.overseers.food : 0;
-        let crews = (civ.project ? civ.projectWorkers : 0) + overseer + (civ.hutRepeat > 0 ? civ.overseers.huts : 0);
+        const ordersAvailable = data.organization.points.gte(3);
+        const overseer = ordersAvailable && Object.values(civ.actions).some(action => action.repeat > 0) ? civ.overseers.food : 0;
+        let crews = (civ.project ? civ.projectWorkers : 0) + overseer + (ordersAvailable && civ.hutRepeat > 0 ? civ.overseers.huts : 0);
         for (const [id, state] of Object.entries(civ.actions)) {
             if (![state.remaining, state.duration, state.reward].every(finite) || !count(state.workers) || !count(state.completed) ||
                 !count(state.jobs) || state.jobs > (id === "water" ? 1 : 5) || (state.remaining > 0 && state.jobs < 1) ||
@@ -796,9 +798,7 @@ function createCivilizationRules({ saveState }) {
                 (!state.remaining && (state.duration || state.workers || state.reward || state.jobs)) ||
                 (id === "farm" && state.remaining && !civ.improvements.farming) ||
                 !count(state.repeat) || state.repeat > 5 * civ.overseers.food || (id === "water" && state.repeat !== 0) ||
-                (state.repeat > 0 && (!civ.improvements.overseer && data.organization.total.lt(3) || (id === "farm" && !civ.improvements.farming)))) throw new Error("Invalid action state");
-            if ((state.remaining > 0 || state.repeat > 0) &&
-                ((id === "hunt" && !discovered("hunting", 2)) || (id === "fish" && !civ.features.fishing))) throw new Error("Expedition feature is locked");
+                (state.repeat > 0 && id === "farm" && !civ.improvements.farming)) throw new Error("Invalid action state");
             crews += state.workers;
         }
         if (crews > data.points.toNumber() + 1e-9) throw new Error("Overcommitted workers");
