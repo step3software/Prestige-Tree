@@ -32,6 +32,8 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         recall(id) { return actionable(() => modRules.civilization.recall(id)); },
         setRepeat(id, event) { return actionable(() => modRules.civilization.setRepeat(id, Number(event.target.value))); },
         setHutRepeat(event) { return actionable(() => modRules.civilization.setHutRepeat(Number(event.target.value))); },
+        setOverseers(kind, event) { return actionable(() => modRules.civilization.setOverseers(kind, Number(event.target.value))); },
+        setExpeditionMultiplier(id, event) { return actionable(() => modRules.civilization.setExpeditionMultiplier(id, Number(event.target.value))); },
         buyUpgrade(id) { return actionable(() => modRules.civilization.buyUpgrade(id)); },
         irrigate() { return actionable(() => modRules.civilization.irrigate()); },
         toggleIrrigation() { return actionable(() => { if (modRules.civilization.summary().autoIrrigateAvailable) binding.player.civ.autoIrrigate = !binding.player.civ.autoIrrigate; }); },

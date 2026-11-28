@@ -155,6 +155,14 @@ Survival regressions exercise zero Food/Water, combined shortages, exact grace d
 
 The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded settlement through ordinary active/regular play, then constructs exploration, bigger-game hunting and river traps through real guarded commands while maintaining supplies. It grants no resources or levels and checks the new trip/crew contracts. Work, lifetime Organization and Craft are distinct scaling axes; no enjoyment or target pacing range is asserted.
 
+## MS1-3 progression and orders
+
+The current policy earns Organization at eight people before attempting Craft or huts, purchases the nine new early upgrades through real guarded commands, and selects staffing/expedition lengths within available labor, reserves and storage. It never grants activities or currencies. Active 5-second checks complete the existing opening in 2410s; regular 20-second checks switch to 300s after earned automation and finish in 2960s. These are synthetic observations, not accepted human pacing targets. The detailed first-three-milestone checkpoints are recorded in [verification](early-milestones.verification.md).
+
+New games have Gather, Hunt from milestone 2 and Farm from 8; Fishing remains a discovered activity only in existing saves pending its new milestone. The legal buyable scenario therefore develops gathering, hunting and farming after their gates. Finite queue tests provision additional wells before five new huts, and recovery tests select one overseer and short expeditions before solo rebuilding. A complete earned settlement recovers 1 to 44 in 93s/92s for active/regular play, after three Food repeat orders. The ten-minute idle check first uses legal manual checks to finish purchases, establish larger queues and build reserves; no extra controls or survival guarantees are implied for an arbitrary five-repeat queue.
+
+The following sections are historical measurements for the pre-MS1-3 rules at `394b2f8`; they do not describe the current unlock gates or pacing.
+
 ## Combined work orders and abundance balance
 
 The v0.8 branch starts at current main `8333e6d535cad36361f261e8005861cfde6ed5c1`, carrying forward the missing PR 11 changes and the requested upgrade simplification. It gates the independent 1-10x abundance curves behind the free Shelter upgrade at Organization 1 and adds the population-scaled hearth bonus, staffed finite Food/hut repeat counters, Population-based Organization and removal of the automatic Craft yield/flow bonus. Fixed and rough runs cover every milestone; cadence remains 5s for active play and 20s/300s for regular play. No enjoyment or target-duration threshold has been accepted.

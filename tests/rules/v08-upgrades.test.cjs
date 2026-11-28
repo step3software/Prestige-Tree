@@ -5,13 +5,13 @@ const Decimal=require('../../js/technical/break_eternity.js');
 const fixtures=require('../fixtures/civ-v08-migration.json');
 function game(t,input){const engine=createBalanceEngine(input);t.after(engine.dispose);return {engine,p:engine.player,e:engine.session.modRules.civilization};}
 
-test('Abundance is unavailable before milestone one and free in Shelter after it',t=>{
+test('Abundance is unavailable before milestone five and free in Shelter after it',t=>{
     const {p,e}=game(t);
     const before=JSON.stringify(p);
     assert.equal(e.buyUpgrade('abundance'),false);
     assert.equal(JSON.stringify(p),before);
     assert.equal(e.upgrades('shelter').some(u=>u.id==='abundance'),false);
-    p.organization.total=new Decimal(1);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
+    p.organization.total=new Decimal(5);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
     const upgrade=e.upgrades('shelter').find(u=>u.id==='abundance');
     assert.equal(upgrade.canBuy,true);assert.equal(upgrade.costText,'Free');
     assert.deepEqual(upgrade.costs,{});
@@ -26,22 +26,18 @@ test('stock and housing cannot accelerate growth until Abundance is purchased',t
     p.shelter.homes=11;p.shelter.points=new Decimal(52);
     assert.equal(e.supply().abundance.enabled,false);assert.equal(e.supply().abundance.multiplier,1);
     engine.advance(12);assert.equal(p.points.toNumber(),6);
-    p.organization.total=new Decimal(1);assert.equal(e.buyUpgrade('abundance'),true);
+    p.organization.total=new Decimal(5);assert.equal(e.buyUpgrade('abundance'),true);
     assert.equal(e.supply().abundance.multiplier,10);
     engine.advance(12);assert.equal(p.points.toNumber(),16);
     assert.equal(e.prestige('craft'),true);
     assert.equal(p.civ.improvements.abundance,true);
 });
 
-test('Expedition overseer unlocks at Organization two and retains its explicit purchase costs',t=>{
-    const {p,e}=game(t);
-    for(const id of ['food','craft','organization'])p[id].points=new Decimal(50);
-    p.organization.total=new Decimal(1);assert.equal(e.buyUpgrade('overseer'),false);
-    assert.equal(e.upgrades('food').some(u=>u.id==='overseer'),false);
-    p.organization.total=new Decimal(2);assert.equal(e.buyUpgrade('overseer'),true);
-    assert.equal(p.food.points.toNumber(),25);assert.equal(p.craft.points.toNumber(),49);assert.equal(p.organization.points.toNumber(),49);
-    assert.equal(e.setRepeat('gather',5),true);
-    assert.equal(e.supply().overseerWorkers,1);
+test('both overseers unlock with milestone three without an extra purchase',t=>{
+ const {p,e}=game(t);p.organization.total=new Decimal(2);assert.equal(e.setRepeat('gather',5),false);assert.equal(e.setHutRepeat(5),false);
+ p.organization.total=new Decimal(3);assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);
+ assert.equal(p.craft.points.toNumber(),0);assert.equal(p.organization.points.toNumber(),0);
+ assert.equal(e.supply().overseerWorkers,1);assert.equal(e.supply().foremanWorkers,1);
 });
 
 test('actual v0.6 save loads into v0.8 without losing stocks, paid construction or active crews',t=>{

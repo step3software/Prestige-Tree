@@ -17,19 +17,19 @@ const get=(p,id)=>{
     return p[resource][kind==='site'?'sites':'storage'];
 };
 
-test('each foundation starts with exactly one upgrade and the first three milestones unlock more',t=>{
+test('first three milestones each expose exactly three upgrades in the expected currency',t=>{
     const {p,e}=game(t);
-    for(const [resource,id] of [['food','hunting'],['water','buckets'],['shelter','hearth']]){
-        assert.deepEqual(e.upgrades(resource).map(upgrade=>upgrade.id),[id]);
-        assert.ok(e.upgrades(resource)[0].costs.craft>=1);
-    }
+    for(const resource of ['food','water','shelter'])assert.deepEqual(e.upgrades(resource),[]);
     rich(p);
-    for(const [total,resource,id] of [[1,'shelter','abundance'],[2,'food','overseer'],[3,'shelter','joinery']]){
-        p.organization.total=new Decimal(total);
-        assert.ok(e.upgrades(resource).some(upgrade=>upgrade.id===id));
-        assert.equal(p.civ.improvements[id],false,'Unlocking must not purchase '+id);
-        assert.equal(Object.values(e.prestigePreview('craft').kept).some(Boolean),false,'The first three milestones retain no buyables');
-        assert.equal(e.summary().autoAvailable,false);
+    const sets=[['lashings','joinery','builderTools'],['digging','hunting','butchery'],['preparedMaterials','extendedExpeditions','workRosters']];
+    for(let index=0;index<3;index++){
+        p.organization.total=new Decimal(index+1);
+        const reward=e.organizationMilestones()[index];assert.deepEqual(reward.upgrades,sets[index]);
+        const upgrades=['food','water','shelter','organization'].flatMap(id=>e.upgrades(id));
+        for(const [slot,id] of sets[index].entries()){
+            const upgrade=upgrades.find(u=>u.id===id);assert.ok(upgrade);assert.equal(upgrade.costs[index===2?'organization':'craft'],slot+1);
+        }
+        assert.equal(Object.values(e.prestigePreview('craft').kept).some(Boolean),false);
     }
 });
 
@@ -56,6 +56,8 @@ test('each retention milestone immediately keeps its exact buyable and protected
     const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
     for(const [id,threshold] of retained){
         const {p,e}=game(t);
+        Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
+        p.civ.improvements.farming=true;
         p.points=new Decimal(12+4*(threshold-1));
         p.shelter.homes=threshold;p.shelter.points=new Decimal(8+threshold*4);p.shelter.comfort=1;
         p.food.sites=1;p.food.storage=1;p.water.sites=1;p.water.storage=1;

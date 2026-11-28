@@ -1,3 +1,5 @@
+> Historical verification for `394b2f8` before the MS1-3 redesign. Current behavior and checks are in [early milestone verification](early-milestones.verification.md).
+
 # v0.8 upgrade and save verification
 
 Source: `step3software/Prestige-Tree` main at `8333e6d535cad36361f261e8005861cfde6ed5c1`. Work branch `codex/v08-upgrades`, dedicated worktree `prestige-v08-upgrades`, exclusive writer fence 2719. Publication targets **main directly**, not the closed PR 9 branch. The manifest's historical master entry is unchanged; current AGENTS and the owner's explicit main request govern this work.

@@ -5,6 +5,8 @@ const Decimal = require('../../js/technical/break_eternity.js');
 
 function game(t) {
     const engine = createBalanceEngine();
+    // Established-settlement fixture: retain activities already discovered before this test.
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
     t.after(engine.dispose);
     return {engine, p: engine.player, e: engine.session.modRules.civilization};
 }

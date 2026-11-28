@@ -3,7 +3,8 @@ const assert = require('node:assert/strict');
 const {createBalanceEngine} = require('../../scripts/balance/engine.cjs');
 const Decimal = require('../../js/technical/break_eternity.js');
 function game(t, save) {
-    const engine = createBalanceEngine(save); t.after(engine.dispose);
+    const engine = createBalanceEngine(save);
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true}); t.after(engine.dispose);
     return {engine, p:engine.player, e:engine.session.modRules.civilization};
 }
 

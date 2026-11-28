@@ -3,7 +3,9 @@ const assert=require('node:assert/strict');
 const Decimal=require('../../js/technical/break_eternity.js');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t){
-    const engine=createBalanceEngine();t.after(engine.dispose);
+    const engine=createBalanceEngine();
+    // Established-settlement fixture: retain activities already discovered before this test.
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});t.after(engine.dispose);
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 function shortage(p,resource='food',population=10){
@@ -162,7 +164,7 @@ test('Organization requires only Population, advances by four lifetime people an
     const {p,e}=game(t);shortage(p,'both',1);
     for(let earned=0;earned<3;earned++){
         p.organization.points=new Decimal(0);
-        const required=12+4*earned;
+        const required=8+4*earned;
         assert.equal(e.organizationPopulationRequirement(),required);
         p.shelter.homes=248;p.shelter.points=new Decimal(1000);
         p.points=new Decimal(required-1);assert.equal(e.prestigeGain('organization'),0);
