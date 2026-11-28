@@ -38,16 +38,14 @@ test('MS4 reveals a red Fire bar, exact upgrades and separate keyboard tending/C
  expect(errors).toEqual([]);
 });
 
-test('jar upgrade gives immediate MS4 capacity; MS6 construction displays and charges Fire once',async({page})=>{
- const errors=await open(page);await stage(page);await page.evaluate(()=>gameUI.session.saveState.player.civ.fire=10);
- await page.getByRole('button',{name:/^Earthenware jars/}).click();await page.getByRole('button',{name:/^Water,/}).click();
- await expect(page.locator('.storage-line')).toContainText('/ 100');await expect(page.getByRole('button',{name:/^Craft earthenware jars/})).toHaveCount(0);
- await page.evaluate(()=>gameUI.session.saveState.player.organization.total=new Decimal(6));
- const jar=page.getByRole('button',{name:/^Craft earthenware jars/});await expect(jar).toContainText('+120 Water storage');await expect(jar.locator('.project-cost')).toContainText('0.5 Fire');
- await jar.click();expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.fire)).toBe(7.5);
- await page.evaluate(()=>gameUI.session.advance(12));await expect(page.locator('.storage-line')).toContainText('/ 220');await expect(jar.locator('.project-cost')).toContainText('0.75 Fire');
- await page.evaluate(()=>gameUI.session.saveState.player.civ.fire=.74);await expect(jar).toBeDisabled();
- expect(errors).toEqual([]);
+test('Clay upgrades an existing Water basket to jars and construction charges the current recipe once',async({page})=>{
+ const errors=await open(page);await stage(page);await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;p.water.storage=1;p.civ.fire=10;});
+ await page.getByRole('button',{name:/^Craft,/}).click();await page.getByTestId('material-clay').getByRole('button',{name:/^Earthenware jars/}).click();
+ await page.getByRole('button',{name:/^Water,/}).click();await expect(page.locator('.storage-line')).toContainText('/ 220');
+ const jar=page.getByRole('button',{name:/^Earthenware jars/});await expect(jar).toContainText('+120 Water storage');await expect(jar.locator('.project-cost')).toContainText('0.75 Fire');await expect(jar.locator('.project-cost')).toContainText('2 Craft');
+ await jar.click();expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.fire)).toBe(9.25);
+ await page.evaluate(()=>gameUI.session.advance(17));await expect(page.locator('.storage-line')).toContainText('/ 340');
+ await page.evaluate(()=>gameUI.session.saveState.player.civ.fire=1.12);await expect(jar).toBeDisabled();expect(errors).toEqual([]);
 });
 
 test('empty Fire leaves Food running, rejected staffing restores the slider and prestige explains its reset',async({page})=>{

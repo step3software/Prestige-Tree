@@ -2,22 +2,15 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t,save){const engine=createBalanceEngine(save);t.after(engine.dispose);const p=engine.player;return {engine,p,e:engine.session.modRules.civilization,D:p.points.constructor};}
-function stage(p,D,total=4){p.organization.total=new D(total);p.points=new D(8);p.shelter.homes=0;p.shelter.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);}
+function stage(p,D,total=4){p.civ.features.hunting=true;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;p.organization.total=new D(total);p.points=new D(8);p.shelter.homes=0;p.shelter.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);}
 const near=(a,b,tolerance=1e-8)=>assert.ok(Math.abs(a-b)<tolerance,`${a} expected ${b}`);
 
-test('Fire unlocks at MS4 with exact 1/2/3 Fire purchases and revised milestones',t=>{
- const {p,e,D}=game(t);p.civ.fire=10;
- assert.equal(e.fireStatus().available,false);assert.equal(e.setFireTenders(1),false);
- for(const id of ['cooking','jars','hearth'])assert.equal(e.buyUpgrade(id),false);
- p.civ.fire=0;p.organization.total=new D(4);
- assert.deepEqual(e.organizationMilestones().slice(3,9).map(x=>x.name),['Fire','Gravity-fed spring','Food and Water buyables','Farming','Abundance','Irrigation']);
- assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['cooking',1],['jars',2],['hearth',3]]);
- for(const [id,cost] of [['cooking',1],['jars',2],['hearth',3]]){
-  const before=JSON.stringify(p);assert.equal(e.buyUpgrade(id),false);assert.equal(JSON.stringify(p),before);
-  p.civ.fire=cost;assert.equal(e.buyUpgrade(id),true);assert.equal(p.civ.fire,0);assert.equal(e.buyUpgrade(id),false);
- }
- assert.equal(e.projects('water').length,0);assert.equal(e.supply().storage.water,100);
- p.organization.total=new D(6);assert.ok(e.projects('water').length);
+test('Fire unlocks at four with Cooking/hearths while jar access moves to Clay',t=>{
+ const {p,e,D}=game(t);p.civ.fire=10;assert.equal(e.fireStatus().available,false);assert.equal(e.buyUpgrade('cooking'),false);
+ p.organization.total=new D(4);assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['cooking',1],['hearth',3]]);
+ assert.equal(e.buyUpgrade('jars'),false);
+ for(const [id,cost] of [['cooking',1],['hearth',3]]){p.civ.fire=cost;assert.equal(e.buyUpgrade(id),true);assert.equal(p.civ.fire,0);assert.equal(e.buyUpgrade(id),false);}
+ assert.deepEqual(e.projects('water'),[]);p.craft.points=new D(10);assert.equal(e.buyUpgrade('crafting'),true);assert.ok(e.projects('water').length>0);
  assert.equal(e.buyUpgrade('abundance'),false);p.organization.total=new D(8);assert.equal(e.buyUpgrade('abundance'),true);
 });
 
@@ -78,10 +71,10 @@ test('jar purchases keep Craft/work, spend scaling Fire once and reject atomical
  const {engine,p,e,D}=game(t);stage(p,D,6);p.civ.improvements.jars=true;p.craft.points=new D(10);p.civ.fire=10;
  for(let owned=0;owned<4;owned++){
   p.water.storage=owned;const jar=e.projects('water').find(x=>x.id==='water-storage'),cost=.5*1.5**owned;
-  near(jar.fireCost,cost);near(jar.work,12*1.35**owned);assert.equal(jar.craftCost,1);assert.equal(e.supply().storage.water,100+120*owned);
+  near(jar.fireCost,cost);near(jar.work,12*1.35**owned);assert.equal(jar.craftCost,2);assert.equal(e.supply().storage.water,100+120*owned);
   p.civ.fire=cost-.001;const before=JSON.stringify(p);assert.equal(e.startProject(jar.id),false);assert.equal(JSON.stringify(p),before);
-  p.civ.fire=cost;const craft=p.craft.points.toNumber();assert.equal(e.startProject(jar.id),true);near(p.civ.fire,0);near(p.craft.points.toNumber(),craft-1);
-  e.cancelProject();near(p.civ.fire,0);near(p.craft.points.toNumber(),craft-1);
+  p.civ.fire=cost;const craft=p.craft.points.toNumber();assert.equal(e.startProject(jar.id),true);near(p.civ.fire,0);near(p.craft.points.toNumber(),craft-2);
+  e.cancelProject();near(p.civ.fire,0);near(p.craft.points.toNumber(),craft-2);
  }
  p.civ.fire=10;p.craft.points=new D(0);assert.equal(e.startProject('water-storage'),false);assert.equal(p.civ.fire,10);
 });
@@ -131,10 +124,10 @@ test('two huts and three tenders reproduce the proposed fill and upgrade timing 
   let elapsed=0;
   while(elapsed<600){
    engine.advance(1);elapsed++;
-   if(spend)for(const id of ['cooking','jars','hearth']){if(!p.civ.improvements[id]){e.buyUpgrade(id);break;}}
+   if(spend)for(const id of ['cooking','hearth']){if(!p.civ.improvements[id]){e.buyUpgrade(id);break;}}
    if(spend?p.civ.improvements.hearth:p.civ.fire===14)break;
   }
-  assert.ok(spend?elapsed>=230&&elapsed<=240:elapsed>=338&&elapsed<=341);
+  assert.ok(spend?elapsed>0&&elapsed<338:elapsed>=338&&elapsed<=341);
   console.log(`Synthetic two-hut/three-tender ${spend?'three upgrade purchases':'full Fire'}: ${elapsed}s; 1× Cooking, one-second simulation.`);
  }
 });

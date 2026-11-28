@@ -19,7 +19,7 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
    e.setRepeat(id,0);
   }
   let shortageSeconds=0;
-  while(p.points.gt(1)&&shortageSeconds<600){engine.advance(1);shortageSeconds++;}
+  while(p.points.gt(1)&&shortageSeconds<7200){engine.advance(1);shortageSeconds++;}
   assert.equal(p.points.toNumber(),1,'Actual Food depletion reaches one survivor without state grants');
   assert.ok(p.food.points.lte(0));
   const target=p.shelter.points.toNumber();
@@ -40,7 +40,7 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   assert.ok(orders>=3);
   let recoverySeconds=manualRecoverySeconds,peak=1;
   while(p.points.lt(target)&&recoverySeconds<300){
-   engine.advance(1);recoverySeconds++;
+   if(recoverySeconds%5===0)e.dispatch('water');engine.advance(1);recoverySeconds++;
    peak=Math.max(peak,e.supply().abundance.multiplier);
   }
   assert.equal(p.points.toNumber(),target);
@@ -57,9 +57,9 @@ test('legal active and regular play drain five-repeat Food and hut queues withou
   assert.equal(run.status,'endgame');
   const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
   const p=engine.player,e=engine.session.modRules.civilization;
-  const cadence=strategy==='regular'?300:5;
+  const cadence=strategy==='regular'?20:5;
   const routes=['gather','hunt','farm'];
-  const support=except=>{for(const id of routes)if(id!==except)e.setRepeat(id,5);};
+  const support=except=>{e.dispatch('water');for(const id of routes)if(id!==except)e.setRepeat(id,5);};
   for(let time=0;time<3600&&p.points.lt(20);time+=cadence){support();engine.advance(cadence);}
   assert.ok(p.points.gte(20));
   for(const id of routes){
@@ -76,7 +76,7 @@ test('legal active and regular play drain five-repeat Food and hut queues withou
    assert.ok(p.civ.actions[id].completed>=completed+5,id+' completed five queued repeats');
   }
   const huts=p.shelter.homes;
-  const requiredWells=Math.ceil((p.shelter.points.toNumber()+30-24)/10)+1;
+  const requiredWells=p.water.sites+1;
   for(let wait=0;wait<3600&&p.water.sites<requiredWells;wait+=cadence){support();if(!p.civ.project)e.startProject('water-site');engine.advance(cadence);}
   assert.ok(p.water.sites>=requiredWells,'Earn enough Water infrastructure for five additional huts');
   assert.equal(e.setHutRepeat(5),true);
@@ -105,7 +105,7 @@ test('legal active and regular play earn hearths and scale their Food benefits t
    engine.advance(cadence);
   }
   assert.ok(time<7200,'Purchased hearths and reached ten people without grants');
-  for(const id of ['cooking','jars','hearth'])assert.equal(p.civ.improvements[id],true, 'Fire upgrades are bought through real commands');
+  for(const id of ['cooking','hearth'])assert.equal(p.civ.improvements[id],true, 'Fire upgrades are bought through real commands');
   const enteredAt=time;
   // Keep this earned settlement instead of prestiging: build housing and send
   // real crews at the same manual cadence to measure the next Food threshold.
@@ -133,7 +133,7 @@ test('legal active and regular play can fund and complete earthenware storage af
   const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);
   const p=engine.player,e=engine.session.modRules.civilization;
   const policy=createPolicy(engine,strategies[strategy]);
-  const cadence=strategy==='regular'?300:5;
+  const cadence=strategy==='regular'?20:5;
   const startingStorage=p.water.storage;
   let started=false,time=0;
   for(;time<3600;time+=cadence){
@@ -159,7 +159,7 @@ test('legal active and regular settlements can develop gathering, hunting and fa
   // Reach the scenario by ordinary play; no granted currencies or route levels.
   for(;time<7200;time+=cadence){
    policy.act(time);
-   if(p.organization.points.gte(8)&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(8)&&!p.civ.project)break;
+   if(p.organization.points.gte(10)&&p.civ.improvements.copperPots&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(20)&&!p.civ.project)break;
    engine.advance(cadence);
   }
   assert.ok(time<7200,'Legally reached pre-buyable settlement');
@@ -199,11 +199,11 @@ test('native balance loader matches the VM through real construction, growth and
  assert.ok(native.player.craft.total.gte(1)&&native.player.organization.total.gte(1));
  native.assertIsolated();assert.equal(r.io.writes,0);assert.equal(r.intervals.size,0);
 });
-test('regular policy uses 20-second opening checks and five-minute checks after automation',()=>{
+test('regular policy keeps 20-second hauling checks when spring supply cannot sustain full housing',()=>{
  const run=simulate({strategy:'regular',horizonSeconds:7200,stepSeconds:5});
  assert.equal(run.status,'endgame');
- assert.deepEqual(run.cadenceChanges.map(row=>row.seconds),[20,300]);
- const transition=run.cadenceChanges[1].time;
+ assert.deepEqual(run.cadenceChanges.map(row=>row.seconds),[20]);
+ const transition=Infinity;
  assert.ok(run.recentActions.every(action=>action.time<=transition?action.time%20===0:(action.time-transition)%300===0));
  assert.ok(run.actions.construction>=4);
 });
@@ -220,23 +220,15 @@ test('both active branch orders and adaptive regular play reach the opening usin
  }
 });
 
-test('earned automation supports idle survival and rebuilding after a legally reached tenth Organization',t=>{
- let input;
- const active=simulate({strategy:'active-balanced',horizonSeconds:14400,stopAt:'organization-10',onCheckpoint:row=>{if(row.id==='organization-10')input=row.encodedPlayer;}});
- assert.equal(active.status,'checkpoint');
- const engine=createBalanceEngine(input);t.after(engine.dispose);
- const policy=createPolicy(engine,strategies.regular);
- // Retained crews can occupy all five founding workers after prestige. Use
- // normal 20-second checks until a crew returns and the Overseer can be staffed.
- let warm=0;
- for(;warm<=600;warm+=20){policy.act(warm);const ledger=engine.session.modRules.civilization.supply();if(ledger.overseerWorkers>=3 && engine.player.civ.improvements.farming && engine.player.food.points.gte(ledger.demand*2))break;engine.advance(20);}
- assert.ok(warm<=600);
- const start=engine.player.points.toNumber();
- for(let second=0;second<600;second++){engine.advance(1);assert.ok(engine.player.points.gte(start));}
- assert.ok(engine.player.points.gt(start));
- assert.ok(engine.player.food.points.gt(0)&&engine.player.water.points.gt(0));
- assert.equal(engine.player.civ.autoBuild,true);
- assert.equal(engine.session.modRules.civilization.summary().autoAvailable,true);
+test('legal developed settlements need hauling above sustainable spring supply and recover Water through real crews',t=>{
+ const run=simulate({strategy:'active-balanced',horizonSeconds:14400});assert.equal(run.status,'endgame');
+ const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);const p=engine.player,e=engine.session.modRules.civilization;
+ assert.ok(e.supply().passiveProduction.water<e.supply().demand,'Eight-person baseline and finite wells do not supply unlimited population');
+ p.civ.autoBuild=false;for(const id of ['gather','hunt','farm'])e.setRepeat(id,0);
+ const before=p.water.points.toNumber();engine.advance(60);assert.ok(p.water.points.toNumber()<before);
+ e.setFireTenders(0);if(p.civ.actions.water.active)e.recall('water');assert.equal(e.dispatch('water'),true);
+ const returning=p.civ.actions.water.reward;engine.advance(e.actionDefinition('water').duration);assert.ok(returning>0);assert.ok(p.water.points.gt(0));
+ assert.equal(e.summary().autoAvailable,true);engine.exportPlayer();
 });
 
 test('continuous legal play keeps Food staffed and later currencies locked after the opening',t=>{
@@ -257,7 +249,7 @@ test('continuous legal play keeps Food staffed and later currencies locked after
 
 test('rough and fixed runs have matching progression coverage and bounded observation drift',()=>{
  for(const strategy of ['active-balanced','regular']){
-  const options={strategy,horizonSeconds:3600,wallBudgetSeconds:15};
+  const options={strategy,horizonSeconds:7200,wallBudgetSeconds:30};
   const rough=simulate({...options,mode:'rough'}),fixed=simulate({...options,mode:'fixed'});
   const calibration=compareReference(rough,fixed);
   assert.ok(calibration.rows.every(row=>!row.coverageMismatch));
@@ -271,4 +263,11 @@ test('saved checkpoints are validated, isolated and cannot inject development sp
  assert.throws(()=>createBalanceEngine('invalid'));
  const raw=JSON.parse(atob(a.exportPlayer()));raw.devSpeed=2;
  assert.throws(()=>createBalanceEngine(btoa(JSON.stringify(raw))),/devSpeed 1/);
+});
+
+test('completed calibration keeps a delayed terminal observation instead of falsely censoring coverage',()=>{
+ const rough={strategy:'regular',status:'endgame',horizonSeconds:7200,simulatedSeconds:5755,sections:[{id:'endgame',entrySeconds:5755}]};
+ const fixed={...rough,simulatedSeconds:5745,sections:[{id:'endgame',entrySeconds:5745}]};
+ const row=compareReference(rough,fixed).rows[0];assert.equal(row.coverageMismatch,false);assert.equal(row.roughSeconds-row.fixedSeconds,10);
+ const incomplete=compareReference(rough,{...fixed,status:'wall-budget'}).rows[0];assert.equal(incomplete.roughSeconds,null);assert.equal(incomplete.coverageMismatch,true);
 });

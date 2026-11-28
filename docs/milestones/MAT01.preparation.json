@@ -1,0 +1,426 @@
+{
+  "milestone_id": "step3software/Prestige-Tree#MAT01",
+  "plan_sha256": "2af696ab3c9b09bebc03ebfed8a6e414cde329d0bf0c923518d46e4c8c2c76a2",
+  "base_revision": "9d850b5d36366feef59980c20d49d74bc9b36ad3",
+  "implementation_branch": "docs/craft-materials-plan",
+  "validation_commands": [
+    "node --test tests/rules/materials.test.cjs",
+    "npm run test:balance",
+    "npm test",
+    "npm run balance -- --hours 4 --budget 30 --calibrate-minutes 60",
+    "git diff --check"
+  ],
+  "handoff_instructions": [
+    "Use existing exclusive branch writer; preserve main/upstream and parent ownership.",
+    "Keep domain state/commands in createCivilizationRules and one codec/runtime; exact fields derive from defaults.",
+    "D2 is answered: basic huts remain Organization 1; do not change Craft earnings.",
+    "Review all changes against current Orcha main and project rules, fix supported findings, rerun affected checks, commit and publish a draft PR; no merge/deployment."
+  ],
+  "open_questions": [],
+  "file_changes": [
+    {
+      "path": "js/civilization.js",
+      "operation": "modify",
+      "implementation": "Implement material catalog/guards, separate upgrade families, shared upkeep/Water and Cooking/Fire formulas, Fire construction, defaults/migration/validation and prestige retention.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "js/mod.js",
+      "operation": "modify",
+      "implementation": "Advance Civ version to 0.9 while retaining mod/storage identity and codec hooks.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "js/components.js",
+      "operation": "modify",
+      "implementation": "Bind material-row purchase actions to existing rules and retain fault guards.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "index.html",
+      "operation": "modify",
+      "implementation": "Render three material rows, tier state and requirements, Fire projects, truthful Water/manual controls and effective Cooking multipliers.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "civ.css",
+      "operation": "modify",
+      "implementation": "Add responsive material-row layout using existing native button treatments.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "scripts/balance/policy.cjs",
+      "operation": "modify",
+      "implementation": "Fund materials through legal prestige/production; buy tier prerequisites and Fire projects; haul above baseline and use safe cadence.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "scripts/balance/sections.cjs",
+      "operation": "modify",
+      "implementation": "Record material/Fire checkpoints and current completion requirements.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "README.md",
+      "operation": "modify",
+      "implementation": "Update current gameplay overview and routes.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/civilization.md",
+      "operation": "modify",
+      "implementation": "Replace moved Organization upgrade promises with canonical material/Fire/tier/Water/save formulas.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "operation": "modify",
+      "implementation": "Update exact human task-to-rule-to-test paths and version/migration guidance.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/balance-testing.md",
+      "operation": "modify",
+      "implementation": "Update legal policies, coverage, milestones and measured scope.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/milestones/MAT01.md",
+      "operation": "modify",
+      "implementation": "Record resolved D2 and authorized stages; clarify implementation choices without claiming human acceptance.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/milestones/MAT01.plan.json",
+      "operation": "modify",
+      "implementation": "Retain validated plan decisions, source/rebase provenance and exact execution authorization.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/milestones/MAT01.evidence.json",
+      "operation": "modify",
+      "implementation": "Record current hashes and actual validation/review results.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "docs/milestones/MAT01.verification.md",
+      "operation": "create",
+      "implementation": "Record criteria/standards mapping, rebase provenance, tests/review/fixes and limits.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/materials.test.cjs",
+      "operation": "create",
+      "implementation": "Add material/tier/fuel/Water/Fire project atomicity, migration, reset and chunk regression coverage.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/browser/materials.spec.cjs",
+      "operation": "create",
+      "implementation": "Add real packaged desktop/narrow/keyboard material, tier and Fire journeys.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/abundance-growth.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/balance-simulation.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/civ-runtime.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/civ-saves.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/civilization.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/early-milestones.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/fire.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/food-buyables.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/opening-economy.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/organization-progression.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/shared-hearths.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/survival.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/v08-upgrades.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/rules/work-orders.test.cjs",
+      "operation": "modify",
+      "implementation": "Reconcile affected synthetic preconditions and intentional progression/version/formula expectations; retain unchanged safety assertions and add behavior-specific coverage where needed.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/browser/civilization.spec.cjs",
+      "operation": "modify",
+      "implementation": "Update intentional labels, v0.9 save setup, material prerequisites and moved upgrade assertions while retaining journey/recovery coverage.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "tests/browser/fire.spec.cjs",
+      "operation": "modify",
+      "implementation": "Update intentional labels, v0.9 save setup, material prerequisites and moved upgrade assertions while retaining journey/recovery coverage.",
+      "verification": [
+        "Focused rule/browser coverage for affected behavior",
+        "npm test; standards/criteria review"
+      ]
+    },
+    {
+      "path": "scripts/balance/simulate.cjs",
+      "operation": "modify",
+      "implementation": "Use actual sustainable Water support to retain 20-second regular cadence until five-minute automation is safe; report the adaptive transition.",
+      "verification": [
+        "npm run test:balance",
+        "Matched active/regular rough/fixed runs"
+      ]
+    },
+    {
+      "path": "scripts/balance/report.cjs",
+      "operation": "modify",
+      "implementation": "Fix falsely censored final checkpoint when both calibrated runs reach endgame with a permitted observation delay; retain actual horizon censoring for incomplete runs. Update current policy description.",
+      "verification": [
+        "New comparator regression",
+        "Matched complete material/Fire rough/fixed runs",
+        "npm test"
+      ]
+    }
+  ],
+  "criteria_coverage": {
+    "MAT01-AC01": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC02": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC03": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC04": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC05": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC06": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC07": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC08": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC09": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC10": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC11": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC12": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC13": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC14": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ],
+    "MAT01-AC15": [
+      "js/civilization.js",
+      "tests/rules/materials.test.cjs",
+      "tests/browser/materials.spec.cjs"
+    ]
+  },
+  "rollback": "Keep matching exported save and source artifact; do not load v0.9 data into an older artifact; ptr untouched.",
+  "source_main": "177c57962bf89de1fa85e9e72e6dac0d73543f90",
+  "rebase": {
+    "original_head": "e1b2c244466c01dbf698ff9f7981c2ba8f4c2475",
+    "old_parent": "8032e9122b85b2832bb587a4c87153ba328e3fe5",
+    "result_head": "9d850b5d36366feef59980c20d49d74bc9b36ad3",
+    "conflicts": "none; main tree exactly matched original parent tree"
+  },
+  "authority": "Direct-session artifacts validated locally; no native milestone enrollment or forged stage receipt.",
+  "prior_plan_sha256": "859bedb6e7cf8b1619cc818571f659f742bc969ee523208b463e5f686a3edfd6",
+  "reconciliation": "Corrected historical planning-only exclusion to reflect explicit full-cycle request; no gameplay scope/criteria change."
+}

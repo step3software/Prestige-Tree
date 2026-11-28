@@ -3,7 +3,7 @@ async function open(page,established=true){
     const errors=[];page.on('pageerror',error=>errors.push(error.message));
     await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
     await page.goto('/');await expect(page.getByRole('heading',{name:'Population',exact:false})).toBeVisible();
-    await page.evaluate(established=>{gameUI.session.runtimeServices.gameRuntime.stop();if(established){Object.assign(gameUI.session.saveState.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});gameUI.session.saveState.player.organization.points=new Decimal(7);}},established);
+    await page.evaluate(established=>{gameUI.session.runtimeServices.gameRuntime.stop();if(established){Object.assign(gameUI.session.saveState.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});gameUI.session.saveState.player.civ.improvements.crafting=true;gameUI.session.saveState.player.organization.points=new Decimal(7);}},established);
     return errors;
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
@@ -165,8 +165,8 @@ test('Water storage is crafted earthenware with one Craft and a timed builder re
     const errors=await open(page);
     await node(page,'Water').click();
     await expect(page.getByText('Water reserves 10 / 50',{exact:true})).toBeVisible();
-    const jars=page.getByRole('button',{name:/^Craft earthenware jars/});
-    await expect(jars).toContainText('Hand-shaped, fired clay jars');
+    const jars=page.getByRole('button',{name:/^Woven baskets/});
+    await expect(jars).toContainText('Tightly woven Water baskets');
     await expect(jars).toContainText('1 Craft');
     await expect(jars.locator('.project-cost')).toContainText('12');
     await expect(jars).toBeDisabled();
@@ -192,7 +192,7 @@ test('Water storage is crafted earthenware with one Craft and a timed builder re
 
 test('the opening uses every worker, sells baskets for one Craft each and hides later resources',async({page})=>{
     const errors=await open(page);
-    await expect(page.locator('.chapter')).toContainText('v0.8');
+    await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.getByTestId('available-workers')).toContainText('5 workers available');
     await expect(page.getByTestId('worker-ledger')).not.toContainText('domestic');
     for(const name of ['Money','Time','Education','Culture'])await expect(node(page,name)).toHaveCount(0);
@@ -232,7 +232,7 @@ test('Food buyables show distinct tradeoffs and enforce Craft and current Organi
     const hunt=page.getByRole('button',{name:/^Hunt bigger game/});
     const traps=page.getByRole('button',{name:/^Weave river traps/});
     await expect(explore).toContainText('trip time by 1.2 and yield by 1.5');
-    await expect(hunt).toContainText('Requires 1 current Organization');
+    await expect(hunt).not.toContainText('Requires 1 current Organization');
     await expect(hunt).toBeEnabled();
     await expect(traps).toContainText('1 Craft');
     await expect(traps).toBeDisabled();
@@ -252,11 +252,8 @@ test('Food buyables show distinct tradeoffs and enforce Craft and current Organi
     await expect(traps).toBeDisabled();
     await hunt.click();
     await page.evaluate(()=>gameUI.session.advance(14));
-    await expect(hunt).toContainText('Requires 2 current Organization');
+    await expect(hunt).not.toContainText('Requires 2 current Organization');
     await expect(hunt).toBeEnabled();
-    await page.evaluate(()=>{gameUI.session.saveState.player.organization.points=new Decimal(6);});
-    await expect(hunt).toHaveCount(0);
-    await page.evaluate(()=>{gameUI.session.saveState.player.organization.points=new Decimal(7);});
     for(const width of [1280,320]){
         await page.setViewportSize({width,height:800});
         await expect(traps).toBeVisible();
@@ -323,7 +320,7 @@ test('Organization previews exact buyable protection earned by the next mileston
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(24);p.shelter.homes=4;p.shelter.points=new Decimal(24);p.food.routes.gather=2;p.water.sites=2;p.water.storage=2;p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await node(page,'Organization').click();
     await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
-    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Earthenware jars');
+    await expect(page.getByTestId('prestige-keep-preview')).toContainText('Woven baskets');
     await expect(page.getByTestId('prestige-keep-preview')).not.toContainText('Well improvements');
     await expect(page.getByTestId('prestige-reset-preview')).toContainText('Explore farther afield');
     await expect(page.getByText('4 Organization · Fire · Locked',{exact:true})).toBeVisible();
@@ -339,25 +336,19 @@ test('Organization previews exact buyable protection earned by the next mileston
     expect(errors).toEqual([]);
 });
 
-test('fresh milestones reveal the agreed three upgrades and both overseers',async({page})=>{
- const errors=await open(page,false);
+test('fresh milestones retain huts and overseers while Craft spending reveals hunting',async({page})=>{
+ const errors=await open(page,false);await node(page,'Shelter').click();await expect(page.getByRole('button',{name:/Build a new hut/})).toHaveCount(0);
+ await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(1);});
+ await expect(page.getByRole('button',{name:/Build a new hut/})).toBeVisible();
+ await node(page,'Food').click();await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(2);});
  await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toHaveCount(0);
- await node(page,'Shelter').click();await expect(page.getByRole('button',{name:/Build a new hut/})).toHaveCount(0);
- await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(1);p.organization.points=new Decimal(1);gameUI.session.derivedState.updateTemp();});
- for(const name of ['Cord lashings','Timber frames','Construction tools'])await expect(page.getByRole('button',{name:new RegExp('^'+name)})).toBeVisible();
- await expect(page.getByRole('button',{name:/^Abundance/})).toHaveCount(0);
- await node(page,'Food').click();await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toHaveCount(0);
- await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(2);gameUI.session.saveState.player.organization.points=new Decimal(2);gameUI.session.derivedState.updateTemp();});
- await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toBeVisible();
- for(const name of ['Digging sticks','Spear hunting','Butchery tools'])await expect(page.getByRole('button',{name:new RegExp('^'+name)})).toBeVisible();
- await expect(page.getByRole('slider')).toHaveCount(0);
- await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(3);gameUI.session.saveState.player.organization.points=new Decimal(3);gameUI.session.derivedState.updateTemp();});
- await expect(page.getByLabel('Gather repeats remaining:')).toBeVisible();
- await expect(page.getByRole('button',{name:/^Extended expeditions/})).toContainText('2 Organization');
- await node(page,'Shelter').click();await expect(page.getByLabel('Hut repeats remaining:')).toBeVisible();
- await expect(page.getByRole('button',{name:/^Prepared materials/})).toContainText('1 Organization');
- await node(page,'Organization').click();await expect(page.getByRole('button',{name:/^Work rosters/})).toContainText('3 Organization');
- await expect(page.getByText(/Craft upgrades/)).toHaveCount(0);expect(errors).toEqual([]);
+ await node(page,'Craft').click();await page.evaluate(()=>{gameUI.session.saveState.player.craft.points=new Decimal(11);});
+ await page.getByTestId('material-crafting').locator('.material-unlock').click();await page.getByRole('button',{name:/^Wooden spears/}).click();
+ await node(page,'Food').click();await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toBeVisible();
+ await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(3);gameUI.session.saveState.player.organization.points=new Decimal(3);});
+ await expect(page.getByLabel('Gather repeats remaining:')).toBeVisible();await expect(page.getByRole('button',{name:/^Extended expeditions/})).toContainText('2 Organization');
+ await node(page,'Shelter').click();await expect(page.getByLabel('Hut repeats remaining:')).toBeVisible();await expect(page.getByRole('button',{name:/^Prepared materials/})).toContainText('1 Organization');
+ await node(page,'Organization').click();await expect(page.getByRole('button',{name:/^Work rosters/})).toContainText('3 Organization');expect(errors).toEqual([]);
 });
 
 test('save, reload, native save dialog and denied import preserve progress',async({page})=>{
@@ -474,7 +465,7 @@ test('overseer controls repeat staffed trips and Water upgrades remove hauling w
     await node(page,'Water').click();
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.food.points=new Decimal(50);p.craft.points=new Decimal(2);});
     await page.getByRole('button',{name:/^Gravity-fed spring/}).click();
-    await expect(page.getByText('Gravity-fed flow is fully automatic and uses 0 workers.',{exact:true})).toBeVisible();
+    await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeVisible();
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.water)).toBe(0);
     expect(errors).toEqual([]);
 });
@@ -582,13 +573,13 @@ test('Craft panel describes spending without an automatic production bonus',asyn
 
 
 for(const version of ['v06','v07']){
- test('v0.8 browser startup accepts the historical '+version+' save',async({page})=>{
+ test('v0.9 browser startup accepts the historical '+version+' save',async({page})=>{
     const input=require('../fixtures/civ-v08-migration.json')[version];
     await page.addInitScript(encoded=>localStorage.setItem('civ-prestige-tree',encoded),input);
     const errors=await open(page);
-    await expect(page.locator('.chapter')).toContainText('v0.8');
+    await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.locator('#save-recovery')).toBeHidden();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.8');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.9');
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
     expect(errors).toEqual([]);

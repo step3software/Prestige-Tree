@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 const Decimal=require('../../js/technical/break_eternity.js');
-function game(t,save){const engine=createBalanceEngine(save);t.after(engine.dispose);const p=engine.player;Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});return {engine,p,e:engine.session.modRules.civilization};}
+function game(t,save){const engine=createBalanceEngine(save);t.after(engine.dispose);const p=engine.player;Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;return {engine,p,e:engine.session.modRules.civilization};}
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} expected ${b}`);
 
 test('hearth storage uses current whole tens and income uses Fire fullness, without housing or labor changes',t=>{

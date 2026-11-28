@@ -11,7 +11,7 @@
       "Three proposed repeatable Fire projects for capacity, tender production and fuel efficiency"
     ],
     "exclude": [
-      "Production implementation in this planning task",
+      "Unrelated production changes beyond this validated material and Fire scope",
       "New raw-material stockpiles or harvesting loops; Bronze/Iron rows remain future suggestions",
       "New fishing discovery, farming/automation redesign, weather or water-quality simulation",
       "Native milestone enrollment, acceptance, merges, deployment and service activation"
@@ -35,7 +35,7 @@
     "MAT01-AC15: Cooking fuel UI and actual one-second consumption use identical vessel/charcoal discounts; Copper increases only the fueled Cooking bonus. Uncooked Food and Cooking level 1 remain unchanged. Sickles affect only newly dispatched Farming durations."
   ],
   "constraints": [
-    "Planning-only authorization; proposed tuning values are not recorded as owner answers",
+    "Implement only the validated material/Water/Cooking/Fire scope under the owner full-development-cycle request; preserve merge/deployment and human acceptance boundaries.",
     "One canonical civilization rules owner, one save model/runtime, session-bound state and normal codec ingress",
     "Preserve branch writers, old save recovery, upstream attribution and all unrelated Organization rewards",
     "Resolve the remaining hut-bootstrap decision D2 and validate exact-file preparation before any separately authorized implementation"
@@ -150,26 +150,33 @@
       "decided_by": "architect",
       "rationale": "Gives Fire distinct capacity, production and efficiency investments while preserving assigned workers and existing currencies.",
       "evidence_reference": "Current Fire capacity/tending/consumption owner; hash-verified Plant part 7 paragraphs 7-11; owner request for Fire buyables"
+    },
+    {
+      "id": "D2",
+      "question": "How do basic huts bootstrap Craft?",
+      "answer": "Keep basic huts at Organization 1, with their improvements moving to Craft.",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "Current user asynchronous answer: Keep basic huts at Organization 1 (recommended)"
+    },
+    {
+      "id": "FULL-CYCLE",
+      "question": "Which additional stages are authorized now?",
+      "answer": "Rebase onto main, resolve conflicts, then complete preparation, implementation, tests, review/fixes and unmerged development delivery for this plan.",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "Current user: Rebase on main and resolve conflicts. Then do a full development cycle on this plan."
     }
   ],
   "dependencies": [],
   "source_specification": "https://github.com/step3software/Prestige-Tree/blob/docs/craft-materials-plan/docs/milestones/MAT01.md",
-  "open_questions": [
-    {
-      "id": "D2",
-      "question": "How should huts bootstrap buyables that move to the Crafting row?",
-      "options": [
-        "Keep labor-only huts at Organization 1; move other buyables to Craft capabilities",
-        "Move huts too; make the first Craft reachable at 8 Population and add a 1-Craft starter hut capability outside material rows"
-      ],
-      "recommended_default": "Keep labor-only huts at Organization 1; move other buyables to Craft capabilities",
-      "consequence": "Current housing caps at 8 and Craft starts at 12. Requiring the 10-Craft Crafting tile for all hut construction would deadlock. Moving huts needs an explicit Craft-economy amendment before implementation.",
-      "status": "awaiting_owner",
-      "evidence_reference": "Current chat asynchronous hut-scope question; civilization.js startingSettlement, housing defaults, prestigeGain and featureAvailable"
-    }
-  ],
-  "implementation_authorization": null,
-  "status": "revised_draft_with_distinct_upgrade_chains_and_hut_bootstrap_open",
+  "open_questions": [],
+  "implementation_authorization": {
+    "approved_by": "user",
+    "scope": "approved_plan_after_preparation",
+    "evidence_reference": "Current user request: Rebase on main and resolve conflicts. Then do a full development cycle on this plan."
+  },
+  "status": "validated_for_authorized_direct_development",
   "material_rows": [
     {
       "id": "crafting",
@@ -260,31 +267,35 @@
   "source": {
     "branch": "docs/craft-materials-plan",
     "parent_branch": "codex/fire-ms4",
-    "revision": "2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a",
-    "published_main_observed": "8333e6d535cad36361f261e8005861cfde6ed5c1",
+    "revision": "9d850b5d36366feef59980c20d49d74bc9b36ad3",
+    "published_main_observed": "177c57962bf89de1fa85e9e72e6dac0d73543f90",
     "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
-    "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe"
+    "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe",
+    "rebased_fire": "82f8436"
   },
   "validation": {
-    "kind": "local structural and provenance validation only",
+    "kind": "development_flow.validate_plan local validation; no native lifecycle transition",
     "lifecycle_receipt": null,
-    "implementation_checks": "not run; plan correction only"
+    "implementation_checks": "pending"
   },
   "delivery_dependencies": [
     {
       "id": "local:codex/fire-ms4@2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a",
       "kind": "hard",
-      "reason": "Owner requested latest work; contains Fire and earthenware. Publication is not confirmed; preserve parent writer and local source."
+      "reason": "Owner requested latest work; contains Fire and earthenware. Publication is not confirmed; preserve parent writer and local source.",
+      "disposition": "resolved in rebased source or carried immutable research evidence; not a pending publication gate"
     },
     {
       "id": "step3software/Prestige-Tree#PR12",
       "kind": "hard",
-      "reason": "Ancestor gameplay stack at 8032e9122b85b2832bb587a4c87153ba328e3fe5; reconcile cumulative diff before later publication."
+      "reason": "Ancestor gameplay stack at 8032e9122b85b2832bb587a4c87153ba328e3fe5; reconcile cumulative diff before later publication.",
+      "disposition": "resolved in rebased source or carried immutable research evidence; not a pending publication gate"
     },
     {
       "id": "research@b42c39c84cd653fff166dca07b569c0fd0bddbbe",
       "kind": "soft",
-      "reason": "Use pinned Plant/water notes and verified original passages; do not require a research-branch merge."
+      "reason": "Use pinned Plant/water notes and verified original passages; do not require a research-branch merge.",
+      "disposition": "resolved in rebased source or carried immutable research evidence; not a pending publication gate"
     }
   ],
   "future_suggestions": [

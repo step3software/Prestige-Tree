@@ -1,6 +1,6 @@
 # MAT01: Material upgrades and Fire buyables
 
-Status: revised owner-requested implementation-plan draft. Latest corrections separate Water-storage and Cooking vessels, replace Communal cistern with Clay cooking pots, and replace Copper chisels/awls with pots/sickles. Hut bootstrap D2 remains open. This task changes planning documents only.
+Status: revised owner-requested implementation-plan draft. Latest corrections separate Water-storage and Cooking vessels, replace Communal cistern with Clay cooking pots, and replace Copper chisels/awls with pots/sickles. D2 is resolved by the owner: basic huts stay at Organization 1. The owner now authorizes the full development cycle, excluding merge/deployment.
 Repository: `step3software/Prestige-Tree`; branch `docs/craft-materials-plan`. Gameplay source remains local Fire commit `2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a`; previous plan commit `e8fa0a4` is retained in Git. Parent publication/writers remain unchanged.
 Companions: [structured plan](MAT01.plan.json), [revision/hash evidence](MAT01.evidence.json).
 
@@ -89,7 +89,7 @@ Crafting replaces the blanket Organization-6 basic Food/Water buyable gate, pres
 
 Organization retains automation, Fire availability, spring availability, Farming, Abundance, irrigation and exact existing physical-retention rewards. Update moved item descriptions without renumbering milestones. Spring retains Organization-5 availability and 2 Craft +1 Organization +30 Food cost. New Fire projects use material access, rather than a later Organization buyable milestone, after the Fire resource exists.
 
-**D2 remains open:** housing starts at 8, while Craft begins at 12. Requiring 10-Craft Crafting before any huts would deadlock. Recommended smallest change: keep labor-only huts at Organization 1, with their improvements purchased through Craft. Moving huts too needs an explicitly amended first-Craft threshold, starter capability and earnings formula. No owner answer is inferred from the material-chain corrections.
+**D2 resolved:** housing starts at 8, while Craft begins at 12. Requiring 10-Craft Crafting before any huts would deadlock. Recommended smallest change: keep labor-only huts at Organization 1, with their improvements purchased through Craft. Moving huts too needs an explicitly amended first-Craft threshold, starter capability and earnings formula. Owner explicitly selected keeping basic huts at Organization 1 in the asynchronous reply.
 
 ## Water formula and storage
 
@@ -115,7 +115,7 @@ Water-storage and hut levels keep their existing exact retention rules. Material
 
 ## Implementation sequence and owning files
 
-1. Resolve D2, validate exact plan bytes, and prepare the bounded file list against a fresh verified parent. Reuse this branch for later authorized stages; do not restart or alter the parent's writer. Verify the current Orcha snapshot afresh for the next task.
+1. Apply the owner-resolved D2 choice and validate exact plan bytes, and prepare the bounded file list against a fresh verified parent. Reuse this branch for later authorized stages; do not restart or alter the parent's writer. Verify the current Orcha snapshot afresh for the next task.
 2. In `js/civilization.js`, add a small explicit row/upgrade catalog and shared prerequisites; reuse existing upgrade/project commands. Implement the resolved bootstrap, exact costs and atomic spending, then migration/defaults/validation/prestige. Keep persisted state under the session-owned Civ record, with the existing Water storage count and separate cooking-vessel/housing tiers. Update `js/mod.js` version and existing type contracts under `types/` and layer defaults in `js/layers/resources.js` only where required. Preparation must identify exact type filenames, not authorize the whole directory.
 3. In the same rules owner, implement shared upkeep/passive flow, in-place storage tiers, pipes, Cooking vessels, Fire projects and continued hauling. UI commands in `js/components.js` and `index.html` derive availability/costs and render Craft material rows using existing native controls. Use `civ.css` only as needed for row layout. Keep domain decisions out of templates.
 4. Extend nearby organization/opening/food/Fire rule and save suites, focused Water/material tests, and `tests/browser/civilization.spec.cjs` / `fire.spec.cjs` (or a focused material journey). Retain survival/worker-budget regressions. Exact affected test filenames belong in preparation.
@@ -149,7 +149,7 @@ The player starts fresh or from a preserved Civ save, earns Craft legally, revea
 
 ## Decisions, provenance and documentation
 
-The owner explicitly selected the three separate upgrade chains, Clay cooking pots, removal of Communal cistern, Copper pots for Cooking, Copper sickles for Farming, and the need for Fire buyables. New coefficients and the three named Fire projects are architect proposals. D2 is the only current owner question in the structured plan. Planning-only authorization does not permit implementation or native lifecycle advancement.
+The owner explicitly selected the three separate upgrade chains, Clay cooking pots, removal of Communal cistern, Copper pots for Cooking, Copper sickles for Farming, and the need for Fire buyables. New coefficients and the three named Fire projects are architect proposals. D2 was answered by the owner; the current request authorizes preparation, implementation, review and fixes. Native lifecycle authority and merge/deployment remain separate.
 
 Research uses pinned Plant/Water notes at `b42c39c84cd653fff166dca07b569c0fd0bddbbe`. Hash-verified Plant part 7 paragraphs 7-11 discuss a reusable charcoal mound and the labor of fuel preparation; part 4 paragraphs 22-39 support tight water baskets; part 6 paragraphs 91-92 support thatched frames. These are practical reconstructions, not measured game coefficients. The [Smithsonian earthenware cooking pot](https://www.si.edu/object/cooking-pot%3Afsg_S2005.198) supplies a vessel example; it is a later ethnographic object, not an invention date. The [Milwaukee copper-tool collection](https://www.mpm.edu/research-collections/anthropology/online-collections-research/old-copper-culture/artifacts) supports several task-specific tools. [London Museum's sickle](https://www.londonmuseum.org.uk/collections/v/object-2493/sickle-socketed-sickle/) is explicitly copper alloy and Late Bronze Age; it does not establish pure-copper or universal technological superiority. The [Met's sickle discussion](https://www.metmuseum.org/art/collection/search/587605) explains continuing flint use. Keep Copper-row names/effects as game abstractions, without asserting a mandatory historical ladder.
 
