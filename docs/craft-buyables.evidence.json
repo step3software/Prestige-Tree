@@ -191,5 +191,53 @@
       ],
       "save_schema_changed": false
     }
+  },
+  "water_carrying_followup": {
+    "parent_head": "1f6593ffe7f8d2c0c4dcee560208f3bceb30ace1",
+    "request": "Keep buyables separate. Each basket adds 10 manual carrying. Each jar adds 20 manual carrying and 20 storage.",
+    "superseded": "Stack consolidation and the prior basket/jar storage multiplier.",
+    "standards_revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "verified_documents": [
+      {
+        "path": "docs/pr-development-coordination.md",
+        "sha256": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e"
+      },
+      {
+        "path": "docs/agent-workflows/intent-routing.md",
+        "sha256": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed"
+      },
+      {
+        "path": "docs/agent-workflows/fix.md",
+        "sha256": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6"
+      },
+      {
+        "path": "docs/standards/no-legacy-modes.md",
+        "sha256": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156"
+      },
+      {
+        "path": "docs/standards/readable-code.md",
+        "sha256": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e"
+      }
+    ],
+    "schema_changed": false,
+    "verification": {
+      "unique_rule_cases_passed": 166,
+      "full_rule_run_cases": 165,
+      "final_focused_cases": 19,
+      "chromium_journeys_passed": 34,
+      "browser_port": 4185,
+      "browser_port_reason": "Default port 4173 was occupied; a fresh server served the same rebuilt application.",
+      "checks": [
+        "build",
+        "package and Vue template compilation",
+        "syntax",
+        "checked JavaScript/static boundaries",
+        "negative static sensitivity",
+        "real Population-reset mutation",
+        "390px Water screenshot visual inspection"
+      ],
+      "opening_seconds": {"active": 7470, "regular": 8165},
+      "actual_starvation_recovery_seconds": {"active": 157, "regular": 133}
+    }
   }
 }

@@ -93,14 +93,14 @@ Crafting (10 Craft), Clay (20 Craft) and Copper working (30 Craft) are one-time 
 
 | Material | Equipment | Base Craft cost |
 | --- | --- | --- |
-| Crafting | Thatched roofs, Wooden spears, Woven baskets, Digging sticks | 1 each |
+| Crafting | Thatched roofs, Wooden spears, Tightly woven baskets, Digging sticks | 1 each |
 | Clay | Earthenware jars, Bricks, Clay cooking pots, Fired-clay pipes | 2 each |
 | Copper working | Copper axes, Copper knives, Copper pots, Copper sickles | 3 each |
 
 | Location | Equipment buyables |
 | --- | --- |
 | Food | Wooden spears, Digging sticks, Copper knives, Copper sickles |
-| Water | Woven baskets, Earthenware jars, Fired-clay pipes |
+| Water | Tightly woven baskets, Earthenware jars, Fired-clay pipes |
 | Shelter | Thatched roofs, Bricks, Copper axes |
 | Fire panel | Clay cooking pots, Copper pots |
 
@@ -108,7 +108,7 @@ Every equipment level costs `base Craft * 2^ownedLevels` and requires `12 * 1.35
 
 Roofs add 1 housing per hut per level; Bricks add 2. The two counts are independent. Wooden spears first unlocks hunting with a two-person base crew; later spear levels add 25% base hunting yield each. Digging sticks multiply gathering yield by 1.25 per level; Copper knives multiply hunting yield by 1.5 per level. Copper axes double hut building speed per level; Copper sickles multiply new Farming duration by 0.75 per level. Existing dispatched trips keep their saved contracts.
 
-Woven baskets add 40 Water capacity each. Each jar level adds 50 base capacity plus 80 per basket: `50 + 40*baskets + jars*(50 + 80*baskets)`. One basket and one jar therefore provide 220 capacity. Jars require a completed basket and available Fire. Bricks needs roofs; Clay pots needs Cooking; Copper pots needs Clay pots; sickles needs Farming. Material knowledge remains required for every new equipment purchase.
+Tightly woven baskets and Earthenware jars remain separate buyables. Each basket adds 10 manual Water carrying capacity; each jar adds 20 manual carrying capacity and 20 reservoir storage. The raw Collect water load is `14 + 10*baskets + 20*jars`; reservoir capacity is `50 + 20*jars`. One basket and one jar therefore give a 44-Water base trip and 70 storage. Basket count never multiplies the jar storage bonus. Existing Knowledge effects still apply to the base trip yield. Jars require a completed basket and available Fire. Bricks needs roofs; Clay pots needs Cooking; Copper pots needs Clay pots; sickles needs Farming. Material knowledge remains required for every new equipment purchase.
 
 Clay pots multiply Cooking fuel use by 0.75 per level. Copper pots add 25% to the fueled Cooking bonus per level. Pipes double spring flow per level. Jars spend `0.5 * 1.5^jarLevels` Fire at start; pipes spend 2 Fire per level. These payments do not create fuel or Water.
 
@@ -194,7 +194,7 @@ Money, Time, Education and Culture are locked and hidden for now, with no in-gam
 
 The canonical owner is createCivilizationRules in js/civilization.js. The registered Food update advances the entire economy, once, in one-second internal steps. Population is player.points; the Time resource uses freeTime because player.time is the runtime timestamp.
 
-Version 0.9.3 (save version 0.93) uses `player.civ.equipment` for the twelve integer levels. Improvement flags contain only permanent knowledge and upgrades. Older Civ saves migrate on a detached candidate before typed hydration. Old Boolean equipment becomes level 0/1; old roof tiers preserve their effective housing without double-counting. Old Water storage counts become basket levels and old jars become one jar level, preserving the old capacity. In-flight Water storage becomes the appropriate basket/jar project with its existing work and no retroactive payment.
+Version 0.9.3 (save version 0.93) uses `player.civ.equipment` for the twelve integer levels. Improvement flags contain only permanent knowledge and upgrades. Older Civ saves migrate on a detached candidate before typed hydration. Old Boolean equipment becomes level 0/1; old roof tiers preserve their effective housing without double-counting. Old Water storage counts become basket levels and old jars become one jar level, preserving the purchased counts; the current carrying/storage formulas apply. In-flight Water storage becomes the appropriate basket/jar project with its existing work and no retroactive payment.
 
 Removed Food baskets refund their known Craft recipe, including paid unfinished purchases. Fishing and river traps retain main’s earlier cancellation without compensation. Removed Fire infrastructure refunds 1 Craft per Fuel store/hearth and 2 per Charcoal clamp, plus an unfinished project's old recipe. Removed unpaid provisioning, wells and Farming tools have no currency payment to refund. Retired work is canceled and its builder released. Old Fire above the remaining hut-based capacity is capped after validating the historical capacity. Existing active trip snapshots, supplies, permanent knowledge, built huts and retained expedition levels remain. Retired counters become zero and cannot be purchased or regain effects. Malformed old flags, counts, capacity or present values reject before activating the new state; original bytes remain recoverable. Re-import/reload uses the single current model and cannot repeat refunds. Earlier Civ migrations remain at this ingress boundary. The distinct original `ptr` data stays untouched.
 

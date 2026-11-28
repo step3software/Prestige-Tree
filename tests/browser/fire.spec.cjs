@@ -48,7 +48,9 @@ test('Clay jars are repeatable Craft equipment with upfront Fire and a builder',
  await expect(jar).toContainText('2 Craft');await expect(jar).toContainText('0.5 Fire');await jar.click();
  expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.fire)).toBe(9.5);
  await page.evaluate(()=>gameUI.session.advance(12));await expect(jar).toContainText('Owned level: 1');await expect(jar).toContainText('4 Craft');
- await page.getByRole('button',{name:/^Water,/}).click();await expect(page.locator('.storage-line')).toContainText('/ 220');expect(errors).toEqual([]);
+ await expect(page.locator('.storage-line')).toContainText('/ 70');await expect(page.getByText(/44 base Water/)).toBeVisible();
+ await jar.click();await page.evaluate(()=>gameUI.session.advance(17));await expect(jar).toContainText('Owned level: 2');
+ await expect(page.locator('.storage-line')).toContainText('/ 90');await expect(page.getByText(/64 base Water/)).toBeVisible();expect(errors).toEqual([]);
 });
 
 test('empty Fire leaves Food running, rejected staffing restores the checkboxes and prestige explains its reset',async({page})=>{

@@ -14,22 +14,24 @@ test('Craft sells materials while Water equipment repeats and resets its display
  await page.getByTestId('material-crafting').locator('.material-unlock').press('Enter');
  await expect(page.getByTestId('material-rows').getByRole('button')).toHaveCount(3);
  await expect(page.getByTestId('craft-buyables')).toHaveCount(0);
- await node(page,'Water').click();const baskets=page.getByTestId('water-buyables').getByRole('button',{name:/^Woven baskets/});
+ await node(page,'Water').click();const baskets=page.getByTestId('water-buyables').getByRole('button',{name:/^Tightly woven baskets/});
  await expect(baskets).toContainText('1 Craft');await baskets.press('Enter');await expect(baskets).toBeDisabled();
  await page.evaluate(()=>gameUI.session.advance(12));await expect(baskets).toContainText('Owned level: 1');await expect(baskets).toContainText('2 Craft');
+ await expect(page.getByText(/24 base Water/)).toBeVisible();await expect(page.locator('.storage-line')).toContainText('/ 50');
  await expect(baskets).toBeEnabled();await baskets.click();await page.evaluate(()=>gameUI.session.advance(17));
  await expect(baskets).toContainText('Owned level: 2');await expect(baskets).toContainText('4 Craft');
+ await expect(page.getByText(/34 base Water/)).toBeVisible();await expect(page.locator('.storage-line')).toContainText('/ 50');
  await page.evaluate(()=>{gameUI.session.saveState.player.points=new Decimal(48);});await node(page,'Organization').click();
- await expect(page.getByTestId('prestige-reset-preview')).toContainText('Woven baskets');page.once('dialog',dialog=>dialog.accept());
+ await expect(page.getByTestId('prestige-reset-preview')).toContainText('Tightly woven baskets');page.once('dialog',dialog=>dialog.accept());
  await page.getByRole('button',{name:'Develop Organization',exact:true}).click();await node(page,'Water').click();
- await expect(baskets).toContainText('Owned level: 0');await expect(baskets).toContainText('1 Craft');
+ await expect(baskets).toContainText('Owned level: 0');await expect(baskets).toContainText('1 Craft');await expect(page.getByText(/14 base Water/)).toBeVisible();
  await page.evaluate(()=>gameUI.commands.save());await page.reload();await expect(baskets).toContainText('Owned level: 0');expect(errors).toEqual([]);
 });
 test('all twelve buyables stay on their resource tabs and cooking panel after learning materials',async({page})=>{
  const errors=[];page.on('pageerror',error=>errors.push(error.message));await settlement(page);
  for(const id of ['crafting','clay','copper'])await page.getByTestId('material-'+id).locator('.material-unlock').click();
  await expect(page.getByTestId('material-rows').getByRole('button')).toHaveCount(3);await expect(page.locator('.material-items')).toHaveCount(0);
- const groups={Food:['Wooden spears','Digging sticks','Copper knives','Copper sickles'],Water:['Woven baskets','Earthenware jars','Fired-clay pipes'],Shelter:['Thatched roofs','Bricks','Copper axes']};
+ const groups={Food:['Wooden spears','Digging sticks','Copper knives','Copper sickles'],Water:['Tightly woven baskets','Earthenware jars','Fired-clay pipes'],Shelter:['Thatched roofs','Bricks','Copper axes']};
  for(const [tab,names] of Object.entries(groups)){
   await node(page,tab).click();const panel=page.getByTestId(tab.toLowerCase()+'-buyables');
   for(const name of names)await expect(panel.getByRole('button',{name:new RegExp('^'+name)})).toBeVisible();

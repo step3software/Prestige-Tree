@@ -98,7 +98,7 @@ function createCivilizationRules({ saveState }) {
     const cookingBonusFactor = () => 1 + 0.25 * equipmentLevel("copperPots");
     const buyableNames = {
         "gather-tools": "Explore farther afield", "hunt-tools": "Hunt bigger game", "shelter-home": "Huts",
-        ...Object.fromEntries(equipmentIds.map(id => [id, id === "water-storage" ? "Woven baskets" : improvementDefinitions[id].name])),
+        ...Object.fromEntries(equipmentIds.map(id => [id, id === "water-storage" ? "Tightly woven baskets" : improvementDefinitions[id].name])),
     };
     // This one progression table owns unlock gates, specific retention and the
     // late auto-builder. The saved peak held balance preserves earned unlocks.
@@ -234,7 +234,7 @@ function createCivilizationRules({ saveState }) {
         return {foodStorage: groups * 25, foodProduction: groups * 4 * fill};
     }
     const storageCapacity = () => ({food: 50 + hearthBenefits().foodStorage,
-        water: 50 + 40 * equipmentLevel("water-storage") + equipmentLevel("jars") * (50 + 80 * equipmentLevel("water-storage"))});
+        water: 50 + 20 * equipmentLevel("jars")});
     function shortageStatus() {
         const p = player(), state = p.civ.shortage;
         const resources = ["food", "water"].filter(id => p[id].points.lte(0));
@@ -356,7 +356,8 @@ function createCivilizationRules({ saveState }) {
         duration *= expeditionMultiplier;
         const toolBonus = id === "gather" ? Math.pow(1.25, equipmentLevel("digging")) :
             id === "hunt" ? Math.pow(1.5, equipmentLevel("butchery")) * (1 + 0.25 * Math.max(0, equipmentLevel("hunting") - 1)) : 1;
-        const reward = base.reward * expeditionMultiplier * toolBonus * yieldMultiplier * knowledgeEffect() * irrigationBonus;
+        const carryingBonus = id === "water" ? 10 * equipmentLevel("water-storage") + 20 * equipmentLevel("jars") : 0;
+        const reward = (base.reward + carryingBonus) * expeditionMultiplier * toolBonus * yieldMultiplier * knowledgeEffect() * irrigationBonus;
         return {id, name: actionNames[id], ...base, workers, duration, reward, level, unlocked,
             automatic: false,
             repeatAvailable: base.resource === "food" && foodOrdersAvailable() && unlocked,
@@ -500,12 +501,12 @@ function createCivilizationRules({ saveState }) {
     }
     function equipmentProject(id) {
         const level = equipmentLevel(id);
-        const definition = id === "water-storage" ? {resource: "water", name: "Woven baskets", costs: {craft: 1}} : improvementDefinitions[id];
+        const definition = id === "water-storage" ? {resource: "water", name: "Tightly woven baskets", costs: {craft: 1}} : improvementDefinitions[id];
         const craftCost = definition.costs.craft * Math.pow(2, level);
         const effects = {
             roofs: "+1 housing per hut per level.", bricks: "+2 housing per hut per level.",
             hunting: "First level unlocks hunting with 2 workers; each further level adds 25% base hunting yield.",
-            "water-storage": "+40 Water storage, plus 80 per jar level.", jars: "+50 Water storage and +80 per basket level.",
+            "water-storage": "+10 manual Water carrying capacity per level.", jars: "+20 manual Water carrying capacity and +20 Water storage per level.",
             digging: "Gathering yield ×1.25 per level.", butchery: "Hunting yield ×1.5 per level.",
             clayPots: "Cooking fuel use ×0.75 per level.", copperPots: "+25% fueled Cooking bonus per level.",
             pipes: "Spring flow ×2 per level.", copperAxes: "Hut building speed ×2 per level.",

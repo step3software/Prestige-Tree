@@ -256,7 +256,7 @@ test('Organization previews exact buyable protection earned by the next mileston
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(24);p.shelter.homes=4;p.shelter.points=new Decimal(24);p.food.routes.gather=2;p.civ.equipment["water-storage"]=2;p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await node(page,'Organization').click();
     await expect(page.getByRole('heading',{name:'Organization milestones',exact:true})).toBeVisible();
-    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Woven baskets');
+    await expect(page.getByTestId('prestige-reset-preview')).toContainText('Tightly woven baskets');
     await expect(page.getByTestId('prestige-keep-preview')).not.toContainText('Well improvements');
     await expect(page.getByTestId('prestige-reset-preview')).toContainText('Explore farther afield');
     await expect(page.getByText('4 Organization · Fire · Locked',{exact:true})).toBeVisible();
