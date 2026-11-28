@@ -1,0 +1,582 @@
+{
+  "orcha_revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+  "documents": {
+    "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+    "docs/agent-workflows/feature.md": "52279cc4869aa56c9a40efe7c2e136177feb807053783039c3c4e7dfa95170b3",
+    "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+    "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+    "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+    "docs/agent-workflows/review.md": "d0a6df1eb01857876d799cc1997dc3c021ec59e0b377fa207ae4187067d9c05b",
+    "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+    "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+    "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+    "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+    "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6"
+  },
+  "project_revision": "70b11a5f87041c928bbab56d6899f0c230b516aa",
+  "project_documents": {
+    "AGENTS.md": "aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6",
+    ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+    "README.md": "6cf7fb4b45420d4c8fe192ff5e1c45860c1b6272f8cf3999b09d1cf13983b90a",
+    "docs/developer-guide.md": "9f1b2bb74adcf64e3c03c3df5a246ebc0149e6f0ccf20d00ef6249b5a107f220",
+    "docs/!general-info.md": "06420ab8ce5eb231928fd93aa17552580840128039f6e6d1fe5a4614ecf1570e",
+    "docs/civilization.md": "ba633f657f0da2f73995d3fa32f1cd52ed0242988143f1a66019d00137e74959",
+    "docs/balance-testing.md": "916b8717210541c00a7ad7726f67d48644ed70c929a9011c40686d539494090e"
+  },
+  "rebased_onto": "280caf5edf6f20c9d5a30eda1b6c77c13b0de710",
+  "governing_project_documents": {
+    "AGENTS.md": "aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6",
+    ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+    "README.md": "6cf7fb4b45420d4c8fe192ff5e1c45860c1b6272f8cf3999b09d1cf13983b90a",
+    "docs/developer-guide.md": "9f1b2bb74adcf64e3c03c3df5a246ebc0149e6f0ccf20d00ef6249b5a107f220",
+    "docs/!general-info.md": "cb43c339d4d4846066e850fabd4e223d3342f64aeb2ad00c5795a001004f80bd",
+    "docs/civilization.md": "ba633f657f0da2f73995d3fa32f1cd52ed0242988143f1a66019d00137e74959",
+    "docs/balance-testing.md": "916b8717210541c00a7ad7726f67d48644ed70c929a9011c40686d539494090e"
+  },
+  "balance": {
+    "sourceRevision": "ee4325460e9fd227e55cc5c438843f681c73c31c",
+    "engineSources": {
+      "js/technical/break_eternity.js": "668d5024e41c64a9557cf7895e948ad14f5638297277a0714599ceee773a3e49",
+      "js/technical/layerSupport.js": "698faf660627e427a64326054c888e8ee3bc3f048ffc3e4fbae14cec0e734477",
+      "js/tree.js": "c0b1df0c0ce7143db9ec76c523e16ee6c58af2ed0fce24437da2737fb939d6ae",
+      "js/sc.js": "0559e2c61e0aa8a2eda2b2b8b37accd61ad625d2526a9ad1e5acb1290bc8bfa5",
+      "js/help.js": "9133bfb065e426d214c1eeb78a6ec44fc2525f729aecca85a04ea8896b225c52",
+      "js/civilization.js": "98da51ede6c1951348c219e61fa9cd2dee7ed2b9270e2104d2181384d946e516",
+      "js/layers/resources.js": "59bb77682e72e17c0678dea075026ff08496b050c7373c8fe0ff4829ff08ce30",
+      "js/layers/manifest.js": "1a669201b7703b624ecb4d6e8da995fe518b7db0b0d9366f4003151245613aa8",
+      "js/mod.js": "2ee049b7af92dcf864ccebf2a8c152648814408eb0d94ff6210a2dc0525ba053",
+      "js/technical/temp.js": "01e91e32b487aa00f29ba255fee2afcaf7a3d38db5aac034955da2d4a3c1ed23",
+      "js/game.js": "77c2b6c612a690f54cbb2858bb77826eacf1a2bcb55e3d1bc0c390b29b3d1087",
+      "js/utils.js": "a77fcda8989fb4cad57cd97e1a7243a0c579ef91ac56006de6a51ed820847944",
+      "js/save-codec.js": "00493a4719c674c86af2ca31aa4b28156aef983d2548700c5596d16879e9ea7c",
+      "js/save-storage.js": "208e9273a69d465409dbdd3c7bda79182da978f6f45bc2f917ad322dbbe0e0ca",
+      "js/saves.js": "c65a3df88631a74906f4edd8de74398b7a6493832ef4a6146972a27a9c09bb29",
+      "js/components.js": "4c83782b68f1521b4a0a888288f00d301e08b280018e2ce59d24845259bec3f3",
+      "js/technical/canvas.js": "d7d40693968d5770958ece8ab8287925fed252d361f99b7c1103444023ae3b4f",
+      "js/game-runtime.js": "aae182a1d8e1214dea5b93f1572fd59d772d3bc2287a80c983bff11169a0f3e5",
+      "js/game-session.js": "c1f85137c6bf3b0154e8d12648786815428bd9c651b01772a8f491ea73efdc6c",
+      "js/contracts.js": "5fb774ae31d1ca392f85c67d8da0e0d5fce00877ff9ae102f116ddac680b56eb",
+      "js/browser-entry.js": "0347b1bf64d62231d2b87ba8009955f819eb69e723f6b87c4678fa5e9931ef79"
+    },
+    "toolSources": {
+      "engine.cjs": "1277165d68a01c0b4f8b7ed8606742cf954432d54a8b249ab3cb6f28f4072049",
+      "policy.cjs": "1d69e6de3759d82a52d16ba316a3df7bc36b954ebe809398869b932af3b9d261",
+      "report.cjs": "d96bec69c916e484f15a852604d1d375842e09451cbe0e39c6ca586fb8c5f183",
+      "rough.cjs": "f5f118a43f2b2562ebd237423cc92118c61bba6c8b52b561cc62747ed624ef48",
+      "run.cjs": "459f370603ef9d1f569600157aba63b94b88c10e8444eecd2ade482b9684f529",
+      "sections.cjs": "c71600c7559cdb4741bc0824eb12c922875d47eba684a985d9c60395b7cbeffc",
+      "simulate.cjs": "d3d465c2c9cee3950aa581cf7a0105150a24d9d12084ee975d24ed497a0dd908"
+    },
+    "runs": [
+      {
+        "strategy": "active-balanced",
+        "status": "endgame",
+        "seconds": 7425,
+        "actions": {
+          "dispatch": 520,
+          "prestige": 42,
+          "construction": 233,
+          "automation": 503,
+          "upgrade": 25,
+          "expedition-length": 194,
+          "staffing": 1363,
+          "council-scale": 2,
+          "fire-tending": 87
+        },
+        "council": [
+          {
+            "id": "council",
+            "name": "Settlement Council unlocked",
+            "status": "reached",
+            "entrySeconds": 865,
+            "entryWindowSeconds": [
+              865,
+              865
+            ],
+            "sectionSeconds": 120,
+            "censored": false
+          },
+          {
+            "id": "council-staffed",
+            "name": "Council scale raised with actual workers",
+            "status": "reached",
+            "entrySeconds": 985,
+            "entryWindowSeconds": [
+              985,
+              985
+            ],
+            "sectionSeconds": 6440,
+            "censored": false
+          }
+        ]
+      },
+      {
+        "strategy": "regular",
+        "status": "endgame",
+        "seconds": 7795,
+        "actions": {
+          "dispatch": 316,
+          "prestige": 40,
+          "construction": 210,
+          "automation": 425,
+          "upgrade": 25,
+          "expedition-length": 138,
+          "staffing": 356,
+          "council-scale": 2,
+          "fire-tending": 55
+        },
+        "council": [
+          {
+            "id": "council",
+            "name": "Settlement Council unlocked",
+            "status": "reached",
+            "entrySeconds": 940,
+            "entryWindowSeconds": [
+              940,
+              940
+            ],
+            "sectionSeconds": 120,
+            "censored": false
+          },
+          {
+            "id": "council-staffed",
+            "name": "Council scale raised with actual workers",
+            "status": "reached",
+            "entrySeconds": 1060,
+            "entryWindowSeconds": [
+              1060,
+              1060
+            ],
+            "sectionSeconds": 6735,
+            "censored": false
+          }
+        ]
+      }
+    ],
+    "calibration": [
+      {
+        "strategy": "active-balanced",
+        "horizonSeconds": 14400,
+        "roughStatus": "endgame",
+        "fixedStatus": "endgame",
+        "roughWallSeconds": 8.7753645,
+        "fixedWallSeconds": 8.2103522,
+        "speedup": null,
+        "rows": [
+          {
+            "id": "supported-eight",
+            "roughSeconds": 40,
+            "fixedSeconds": 40,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-1",
+            "roughSeconds": 40,
+            "fixedSeconds": 40,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-2",
+            "roughSeconds": 210,
+            "fixedSeconds": 210,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-3",
+            "roughSeconds": 345,
+            "fixedSeconds": 345,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-4",
+            "roughSeconds": 1505,
+            "fixedSeconds": 1505,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-5",
+            "roughSeconds": 4265,
+            "fixedSeconds": 4265,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-6",
+            "roughSeconds": 5005,
+            "fixedSeconds": 5005,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-7",
+            "roughSeconds": 6760,
+            "fixedSeconds": 6760,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-8",
+            "roughSeconds": 6915,
+            "fixedSeconds": 6915,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-9",
+            "roughSeconds": 7290,
+            "fixedSeconds": 7290,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-10",
+            "roughSeconds": 7385,
+            "fixedSeconds": 7385,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "overseer",
+            "roughSeconds": 345,
+            "fixedSeconds": 345,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "water-flow",
+            "roughSeconds": 4270,
+            "fixedSeconds": 4270,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "farming",
+            "roughSeconds": 5060,
+            "fixedSeconds": 5060,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "craft",
+            "roughSeconds": 125,
+            "fixedSeconds": 125,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization",
+            "roughSeconds": 40,
+            "fixedSeconds": 40,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "material-crafting",
+            "roughSeconds": 1330,
+            "fixedSeconds": 1330,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "material-clay",
+            "roughSeconds": 2200,
+            "fixedSeconds": 2200,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "material-copper",
+            "roughSeconds": 3580,
+            "fixedSeconds": 3580,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "fire-buyables",
+            "roughSeconds": 5105,
+            "fixedSeconds": 5105,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "council",
+            "roughSeconds": 865,
+            "fixedSeconds": 865,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "council-staffed",
+            "roughSeconds": 985,
+            "fixedSeconds": 985,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "endgame",
+            "roughSeconds": 7425,
+            "fixedSeconds": 7425,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          }
+        ]
+      },
+      {
+        "strategy": "regular",
+        "horizonSeconds": 14400,
+        "roughStatus": "endgame",
+        "fixedStatus": "endgame",
+        "roughWallSeconds": 2.9670975,
+        "fixedWallSeconds": 2.8584151999999956,
+        "speedup": null,
+        "rows": [
+          {
+            "id": "supported-eight",
+            "roughSeconds": 40,
+            "fixedSeconds": 40,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-1",
+            "roughSeconds": 40,
+            "fixedSeconds": 40,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-2",
+            "roughSeconds": 240,
+            "fixedSeconds": 240,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-3",
+            "roughSeconds": 380,
+            "fixedSeconds": 380,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-4",
+            "roughSeconds": 1600,
+            "fixedSeconds": 1600,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-5",
+            "roughSeconds": 4480,
+            "fixedSeconds": 4480,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-6",
+            "roughSeconds": 5240,
+            "fixedSeconds": 5240,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-7",
+            "roughSeconds": 7060,
+            "fixedSeconds": 7060,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-8",
+            "roughSeconds": 7200,
+            "fixedSeconds": 7200,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-9",
+            "roughSeconds": 7560,
+            "fixedSeconds": 7560,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization-10",
+            "roughSeconds": 7740,
+            "fixedSeconds": 7740,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "overseer",
+            "roughSeconds": 380,
+            "fixedSeconds": 380,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "water-flow",
+            "roughSeconds": 4540,
+            "fixedSeconds": 4540,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "farming",
+            "roughSeconds": 5340,
+            "fixedSeconds": 5340,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "craft",
+            "roughSeconds": 140,
+            "fixedSeconds": 140,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "organization",
+            "roughSeconds": 40,
+            "fixedSeconds": 40,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "material-crafting",
+            "roughSeconds": 1440,
+            "fixedSeconds": 1440,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "material-clay",
+            "roughSeconds": 2340,
+            "fixedSeconds": 2340,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "material-copper",
+            "roughSeconds": 3780,
+            "fixedSeconds": 3780,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "fire-buyables",
+            "roughSeconds": 5415,
+            "fixedSeconds": 5415,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "council",
+            "roughSeconds": 940,
+            "fixedSeconds": 940,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "council-staffed",
+            "roughSeconds": 1060,
+            "fixedSeconds": 1060,
+            "relativeDifference": 0,
+            "coverageMismatch": false
+          },
+          {
+            "id": "endgame",
+            "roughSeconds": 7795,
+            "fixedSeconds": 7790,
+            "relativeDifference": 0.0006418485237483953,
+            "coverageMismatch": false
+          }
+        ]
+      }
+    ]
+  },
+  "review": {
+    "result": "bounded changed-scope review",
+    "limits": [
+      "No human usability or production performance study",
+      "No native milestone acceptance, merge or deployment"
+    ],
+    "files": [
+      "README.md",
+      "docs/balance-testing.md",
+      "docs/civilization.md",
+      "docs/developer-guide.md",
+      "docs/settlement-council.evidence.json",
+      "docs/settlement-council.verification.md",
+      "index.html",
+      "js/civilization.js",
+      "js/components.js",
+      "scripts/balance/policy.cjs",
+      "scripts/balance/sections.cjs",
+      "tests/browser/council.spec.cjs",
+      "tests/browser/fire.spec.cjs",
+      "tests/rules/balance-simulation.test.cjs",
+      "tests/rules/civ-saves.test.cjs",
+      "tests/rules/current-coordination.test.cjs",
+      "tests/rules/materials.test.cjs",
+      "tests/rules/settlement-council.test.cjs"
+    ]
+  },
+  "verified_source_hashes": {
+    "README.md": "2d88fd7f8cadf67d1fddc7e2069f068f17cddd91101fc512b95704e7bc9545c5",
+    "docs/balance-testing.md": "2a992ab85f56814e6f6fea927f2b27e7df4025bb704a0d22b867ad4bfd1c2af1",
+    "docs/civilization.md": "d60081d0d1b8b0fb33ba65392b16ee97f24249856f7b1035e7fd3784fb4b8cf4",
+    "docs/developer-guide.md": "4f0889e6546716874340a4e6dc30f9253da8e9f069fa324520fc84c20540446e",
+    "docs/settlement-council.verification.md": "0170b20ae6bc5d833fb6d7ba9101d89bbfe38f730109d45f5761b05226520e5f",
+    "index.html": "2b7eb8dfe6269dab862872d007c64aba8b6397b6f00e8d863404817185031601",
+    "js/civilization.js": "8ef6ff2a1dfd73afaf30e18acb774b6258093aca3c08220dbdcb0b1500577e3a",
+    "js/components.js": "4d406628be139f93fa143f8cf7db6944d1ae106ca06ec18a67e1b11a8771273d",
+    "scripts/balance/policy.cjs": "029dd40fdd2039be56d2736627d520c475aa9afadbbba128711179168ee7d8a9",
+    "scripts/balance/sections.cjs": "14058859f1fe600af9db1dc10d5646e8fe6c0a4fd4fc0b78211426782ce8d59f",
+    "tests/browser/council.spec.cjs": "46d0485d1f90ef04b762fd46480809d0ba05acf500542e7e4b729352f0a63370",
+    "tests/browser/fire.spec.cjs": "ef50fcbad442fb65832ed0e8dc7f449a853e9f04b39f41fbbdd1adada99bf042",
+    "tests/rules/balance-simulation.test.cjs": "756e0d9965c926b4112c5e463ee20b390fd71aed6116ca801ea34e1e65af7337",
+    "tests/rules/civ-saves.test.cjs": "a42be0cf85370d2de98fe7952e1d24a98013a7b92489e6cf52c9e2d451512b3d",
+    "tests/rules/current-coordination.test.cjs": "8e1ed221a9274e4be3ffe0fc3f3346e77819e8f7db004577974877e5001ed0bb",
+    "tests/rules/materials.test.cjs": "dcf73fb6b5a91f20f61db92191acf4b289853c7d01787310447482915be014e7",
+    "tests/rules/settlement-council.test.cjs": "acbbd12edc35fe6c7291f9a27ff1a44b8fb5e6015246546a32fcb72d8fd1e122"
+  },
+  "verified_source_hash_basis": "SHA-256 of normalized Git index bytes, excluding this self-referential evidence file; balance engine/tool hashes use actual checkout bytes",
+  "checks": {
+    "build": "passed",
+    "package": "passed",
+    "static": "passed",
+    "syntax": "passed",
+    "staticSensitivity": "passed",
+    "prestigeMutation": "passed",
+    "documentationTargets": 36,
+    "browser": {
+      "passed": 35,
+      "loopbackPort": 4189,
+      "evidence": "Rendered automated desktop/narrow journeys; fresh test contexts"
+    },
+    "rules": {
+      "broadRun": {
+        "passed": 169,
+        "total": 170,
+        "remaining": "Existing 15-second wall-budget limit on active-organization under local load"
+      },
+      "isolatedPolicyRetry": "passed for all three strategies, unchanged budget",
+      "finalCouncilSuite": {
+        "passed": 8,
+        "total": 8
+      },
+      "finalCouncilFireMaterialBoundaries": {
+        "passed": 36,
+        "total": 36
+      },
+      "uniqueCurrentCasesCovered": 171
+    },
+    "ci": "Verify on published PR head"
+  }
+}
