@@ -5,8 +5,9 @@ const Decimal = require('../../js/technical/break_eternity.js');
 
 function game(t) {
     const engine = createBalanceEngine();
-    // Established-settlement fixture: retain activities already discovered before this test.
+    // Established-settlement fixture; current Coordination is set for the activity gates under test.
     Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
+    engine.player.organization.points=new Decimal(7);
     t.after(engine.dispose);
     return {engine, p: engine.player, e: engine.session.modRules.civilization};
 }
@@ -30,35 +31,16 @@ test('exploring farther trades longer trips for compounded yields and rising wor
     assert.equal(e.actionDefinition('fish').reward, 14);
 });
 
-test('bigger game requires lifetime Organization and rounds up each successive crew', t => {
-    const {p, e} = game(t);
-    assert.equal(e.node('food').projects.find(item => item.id === 'hunt-tools').canStart, false);
-    assert.equal(e.startProject('hunt-tools'), false);
-    assert.equal(p.civ.project, '');
-    p.organization.total = new Decimal(1);
-    p.organization.points = new Decimal(0);
-    assert.equal(e.startProject('hunt-tools'), true, 'Earned Organization remains valid after spending');
-    e.cancelProject();
-    for (const [level, workers] of [[0, 3], [1, 5], [2, 8], [3, 12]]) {
-        p.food.routes.hunt = level;
-        const action = e.actionDefinition('hunt');
-        assert.equal(action.workers, workers);
-        assert.equal(action.duration, 25);
-        assert.equal(action.reward, 24 * 2 ** level);
-        assert.equal(e.projects('food').find(item => item.id === 'hunt-tools').work, 14);
-    }
-    p.food.routes.hunt = 1;
-    assert.equal(e.startProject('hunt-tools'), false, 'Next level needs two lifetime Organization');
-    assert.equal(e.dispatch('gather'), true);
-    assert.equal(e.dispatch('hunt'), false, 'The five-person party cannot start while a gatherer is away');
-    e.recall('gather');
-    p.civ.improvements.hunting = true;
-    for (const [level, workers] of [[0, 2], [1, 3], [2, 5], [3, 8]]) {
-        p.food.routes.hunt = level;
-        assert.equal(e.actionDefinition('hunt').workers, workers);
-    }
-    p.civ.improvements.autonomousFood = true;
-    assert.equal(e.actionDefinition('hunt').workers, 0);
+test('bigger game requires current Organization and rounds each successive crew', t => {
+ const {p,e}=game(t);p.organization.total=new Decimal(100);p.organization.points=new Decimal(6);
+ assert.equal(e.startProject('hunt-tools'),false);
+ p.organization.points=new Decimal(7);assert.equal(e.startProject('hunt-tools'),true);e.cancelProject();
+ for(const [level,workers] of [[0,3],[1,5],[2,8],[3,12]]){p.food.routes.hunt=level;assert.equal(e.actionDefinition('hunt').workers,workers);assert.equal(e.actionDefinition('hunt').duration,25);assert.equal(e.actionDefinition('hunt').reward,24*2**level);}
+ p.food.routes.hunt=7;assert.equal(e.startProject('hunt-tools'),false,'This tier requires eight held Organization');
+ p.organization.points=new Decimal(8);assert.equal(e.startProject('hunt-tools'),true);e.cancelProject();
+ p.food.routes.hunt=1;e.dispatch('gather');assert.equal(e.dispatch('hunt'),false);e.recall('gather');p.civ.improvements.hunting=true;
+ for(const [level,workers] of [[0,2],[1,3],[2,5],[3,8]]){p.food.routes.hunt=level;assert.equal(e.actionDefinition('hunt').workers,workers);}
+ p.civ.improvements.autonomousFood=true;assert.equal(e.actionDefinition('hunt').workers,0);
 });
 
 test('river traps spend escalating Craft once at start and keep the same trip and crew', t => {
@@ -92,7 +74,7 @@ test('larger hunting crews round-trip, retain active contracts and wait safely o
     p.points = new Decimal(12);
     p.shelter.homes = 1; p.shelter.points = new Decimal(12);
     p.food.points = new Decimal(50); p.water.points = new Decimal(50);
-    p.organization.total = new Decimal(2);
+    p.organization.total=new Decimal(7);p.organization.points=new Decimal(7);
     p.food.routes.hunt = 1;
     p.civ.improvements.overseer = true;
     assert.equal(e.dispatch('hunt'), true);

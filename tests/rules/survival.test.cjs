@@ -4,8 +4,9 @@ const Decimal=require('../../js/technical/break_eternity.js');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t){
     const engine=createBalanceEngine();
-    // Established-settlement fixture: retain activities already discovered before this test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});t.after(engine.dispose);
+    // Established-settlement fixture; current Coordination is set for the activity gates under test.
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
+    engine.player.organization.points=new Decimal(7);t.after(engine.dispose);
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 function shortage(p,resource='food',population=10){
@@ -50,7 +51,7 @@ test('a supply crew returning at the grace deadline prevents the loss',t=>{
 test('emergency upgrades protect their own supply and the unprepared shortage still controls the deadline',t=>{
     for(const [resource,upgrade,total] of [['food','rationing',5],['water','waterReserves',4]]){
         const {engine,p,e}=game(t);
-        p.points=new Decimal(10);p.organization.total=new Decimal(total);p.craft.points=new Decimal(2);
+        p.points=new Decimal(10);p.organization.total=new Decimal(total);p.organization.points=new Decimal(total);p.craft.points=new Decimal(2);
         p.food.points=new Decimal(resource==='food'?20:50);p.water.points=new Decimal(resource==='water'?20:50);
         assert.equal(e.buyUpgrade(upgrade),true);
         engine.advance(19);assert.equal(p.points.toNumber(),10);
@@ -65,7 +66,7 @@ test('emergency upgrades protect their own supply and the unprepared shortage st
 
 test('Mutual aid slows accelerating losses',t=>{
     const {engine,p,e}=game(t);shortage(p);
-    p.organization.total=new Decimal(8);p.organization.points=new Decimal(1);p.craft.points=new Decimal(3);
+    p.organization.total=new Decimal(8);p.organization.points=new Decimal(8);p.craft.points=new Decimal(3);
     assert.equal(e.buyUpgrade('relief'),true);
     engine.advance(10);assert.equal(p.points.toNumber(),9);
     engine.advance(8);assert.equal(p.points.toNumber(),9);
@@ -109,7 +110,7 @@ test('population losses pause construction without losing work and resume when l
 
 test('Overseer reserves one worker for all enabled Food sliders and cannot overbook',t=>{
     const {engine,p,e}=game(t);
-    p.civ.improvements.overseer=true;p.food.points=new Decimal(50);
+    p.civ.improvements.overseer=true;p.organization.points=p.organization.points.max(3);p.food.points=new Decimal(50);
     assert.equal(e.setRepeat('gather',5),true);
     assert.equal(e.supply().overseerWorkers,1);
     assert.equal(e.supply().availableWorkers,4);
@@ -126,7 +127,7 @@ test('Overseer reserves one worker for all enabled Food sliders and cannot overb
 
 test('a shortage releases the Overseer before recalling a critical Food crew',t=>{
     const {engine,p,e}=game(t);shortage(p,'food',6);
-    p.civ.improvements.overseer=true;
+    p.civ.improvements.overseer=true;p.organization.points=p.organization.points.max(3);
     e.setRepeat('hunt',1);e.dispatch('hunt');e.dispatch('fish');
     engine.advance(10);
     assert.equal(p.points.toNumber(),5);
@@ -140,8 +141,8 @@ test('both prestiges reset Population to five, seed ten supplies and switch Food
         const {engine,p,e}=game(t);
         p.points=new Decimal(52);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
         p.shelter.homes=11;p.shelter.points=new Decimal(52);
-        p.organization.total=new Decimal(10);
-        p.civ.improvements.overseer=true;p.civ.actions.gather.repeat=1;p.civ.improvements.hutForeman=true;p.civ.hutRepeat=1;
+        p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);
+        p.civ.improvements.overseer=true;p.organization.points=p.organization.points.max(3);p.civ.actions.gather.repeat=1;p.civ.improvements.hutForeman=true;p.organization.points=p.organization.points.max(3);p.civ.hutRepeat=1;
         p.civ.shortage={elapsed:9,losses:2};p.civ.growth=0.5;
         assert.equal(e.prestige(id),true);
         assert.equal(p.points.toNumber(),5);
@@ -160,10 +161,10 @@ test('Craft requires only Population, granting one at twelve then one per two mo
     }
 });
 
-test('Organization requires only Population, advances by four lifetime people and never grants bulk',t=>{
+test('Organization requires only Population, scales with currently held Coordination and never grants bulk',t=>{
     const {p,e}=game(t);shortage(p,'both',1);
     for(let earned=0;earned<3;earned++){
-        p.organization.points=new Decimal(0);
+        p.organization.points=new Decimal(earned);
         const required=8+4*earned;
         assert.equal(e.organizationPopulationRequirement(),required);
         p.shelter.homes=248;p.shelter.points=new Decimal(1000);

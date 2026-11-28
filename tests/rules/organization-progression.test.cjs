@@ -23,7 +23,7 @@ test('first three milestones each expose exactly three upgrades in the expected 
     rich(p);
     const sets=[['lashings','joinery','builderTools'],['digging','hunting','butchery'],['preparedMaterials','extendedExpeditions','workRosters']];
     for(let index=0;index<3;index++){
-        p.organization.total=new Decimal(index+1);
+        p.organization.total=new Decimal(index+1);p.organization.points=new Decimal(index+1);
         const reward=e.organizationMilestones()[index];assert.deepEqual(reward.upgrades,sets[index]);
         const upgrades=['food','water','shelter','organization'].flatMap(id=>e.upgrades(id));
         for(const [slot,id] of sets[index].entries()){
@@ -33,17 +33,17 @@ test('first three milestones each expose exactly three upgrades in the expected 
     }
 });
 
-test('every later upgrade rejects affordable purchases below its lifetime gate',t=>{
+test('every later upgrade rejects affordable purchases below its current gate',t=>{
     const {p,e}=game(t);rich(p);
     const milestones=e.organizationMilestones();
     assert.deepEqual(milestones.map(row=>row.requirement),[1,2,3,4,5,6,7,8,9,10]);
     for(const milestone of milestones){
         for(const id of milestone.upgrades){
-            p.organization.total=new Decimal(milestone.requirement-1);
+            p.organization.total=new Decimal(milestone.requirement-1);p.organization.points=new Decimal(milestone.requirement-1);
             const before=JSON.stringify(p);
             assert.equal(e.buyUpgrade(id),false,id+' below gate');
             assert.equal(JSON.stringify(p),before,id+' must not spend');
-            p.organization.total=new Decimal(milestone.requirement);
+            p.organization.total=new Decimal(milestone.requirement);p.organization.points=new Decimal(milestone.requirement);
             assert.equal(p.civ.improvements[id],false);
             assert.equal(e.buyUpgrade(id),!['sluice','autonomousFood'].includes(id),id+' at gate; later resource purchases stay locked');
             assert.equal(e.buyUpgrade(id),false,id+' cannot buy twice');
@@ -63,10 +63,12 @@ test('each retention milestone immediately keeps its exact buyable and protected
         p.food.sites=1;p.food.storage=1;p.water.sites=1;p.water.storage=1;
         for(const route of Object.keys(p.food.routes))p.food.routes[route]=1;
         p.food.points=new Decimal(50);p.water.points=new Decimal(50);
-        p.organization.total=new Decimal(threshold-1);
+        p.organization.total=new Decimal(threshold-1);p.organization.points=new Decimal(threshold-1);
         assert.equal(e.prestigePreview('craft').kept[id],false);
         p.craft.points=new Decimal(4);
+        p.organization.points=new Decimal(7);
         assert.equal(e.startProject(id),true);
+        p.organization.points=new Decimal(threshold-1);
         p.civ.projectWork=2;
         const plan=e.prestigePreview('organization');
         assert.equal(plan.kept[id],true);
@@ -82,19 +84,18 @@ test('each retention milestone immediately keeps its exact buyable and protected
 test('auto-building remains inactive through milestone nine, including a previously saved enabled toggle',t=>{
     const {engine,p,e}=game(t);
     p.civ.autoBuild=true;
-    p.organization.total=new Decimal(9);
+    p.organization.total=new Decimal(9);p.organization.points=new Decimal(9);
     engine.advance(1);
     assert.equal(e.summary().autoAvailable,false);
     assert.equal(p.civ.project,'');
-    p.organization.total=new Decimal(10);
-    p.organization.points=new Decimal(0);
+    p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);
     engine.advance(1);
     assert.equal(e.summary().autoAvailable,true);
     assert.notEqual(p.civ.project,'');
 });
 
 test('retired upgrades cannot be purchased and Fishing keeps its full two-person crew',t=>{
-    const {p,e}=game(t);rich(p);p.organization.total=new Decimal(10);
+    const {p,e}=game(t);rich(p);p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);
     assert.equal(e.buyUpgrade('fishing'),false);
     assert.equal(e.buyUpgrade('wellLining'),false);
     assert.equal(e.actionDefinition('fish').workers,2);

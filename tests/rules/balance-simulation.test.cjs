@@ -158,7 +158,7 @@ test('legal active and regular settlements can develop gathering, hunting and fa
   // Reach the scenario by ordinary play; no granted currencies or route levels.
   for(;time<7200;time+=cadence){
    policy.act(time);
-   if(p.organization.total.gte(8)&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(8)&&!p.civ.project)break;
+   if(p.organization.points.gte(8)&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(8)&&!p.civ.project)break;
    engine.advance(cadence);
   }
   assert.ok(time<7200,'Legally reached pre-buyable settlement');

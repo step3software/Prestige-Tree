@@ -11,12 +11,12 @@ test('Abundance is unavailable before milestone five and free in Shelter after i
     assert.equal(e.buyUpgrade('abundance'),false);
     assert.equal(JSON.stringify(p),before);
     assert.equal(e.upgrades('shelter').some(u=>u.id==='abundance'),false);
-    p.organization.total=new Decimal(5);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
+    p.organization.total=new Decimal(5);p.organization.points=new Decimal(5);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
     const upgrade=e.upgrades('shelter').find(u=>u.id==='abundance');
     assert.equal(upgrade.canBuy,true);assert.equal(upgrade.costText,'Free');
     assert.deepEqual(upgrade.costs,{});
     assert.equal(e.buyUpgrade('abundance'),true);
-    for(const id of ['food','water','craft','organization'])assert.equal(p[id].points.toNumber(),0);
+    for(const id of ['food','water','craft'])assert.equal(p[id].points.toNumber(),0);
     assert.equal(e.buyUpgrade('abundance'),false);
 });
 
@@ -26,7 +26,7 @@ test('stock and housing cannot accelerate growth until Abundance is purchased',t
     p.shelter.homes=11;p.shelter.points=new Decimal(52);
     assert.equal(e.supply().abundance.enabled,false);assert.equal(e.supply().abundance.multiplier,1);
     engine.advance(12);assert.equal(p.points.toNumber(),6);
-    p.organization.total=new Decimal(5);assert.equal(e.buyUpgrade('abundance'),true);
+    p.organization.total=new Decimal(5);p.organization.points=new Decimal(5);assert.equal(e.buyUpgrade('abundance'),true);
     assert.equal(e.supply().abundance.multiplier,10);
     engine.advance(12);assert.equal(p.points.toNumber(),16);
     assert.equal(e.prestige('craft'),true);
@@ -34,9 +34,9 @@ test('stock and housing cannot accelerate growth until Abundance is purchased',t
 });
 
 test('both overseers unlock with milestone three without an extra purchase',t=>{
- const {p,e}=game(t);p.organization.total=new Decimal(2);assert.equal(e.setRepeat('gather',5),false);assert.equal(e.setHutRepeat(5),false);
- p.organization.total=new Decimal(3);assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);
- assert.equal(p.craft.points.toNumber(),0);assert.equal(p.organization.points.toNumber(),0);
+ const {p,e}=game(t);p.organization.total=new Decimal(2);p.organization.points=new Decimal(2);assert.equal(e.setRepeat('gather',5),false);assert.equal(e.setHutRepeat(5),false);
+ p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);
+ assert.equal(p.craft.points.toNumber(),0);assert.equal(p.organization.points.toNumber(),3);
  assert.equal(e.supply().overseerWorkers,1);assert.equal(e.supply().foremanWorkers,1);
 });
 

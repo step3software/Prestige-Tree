@@ -19,10 +19,10 @@ function createPolicy(engine,settings,onAction=()=>{}){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];
-    const sequence=p.organization.total.lt(1)?['organization']:p.craft.total.gte(1)?['organization','craft']:opening;
+    const sequence=p.organization.points.lt(1)?['organization']:p.craft.total.gte(1)?['organization','craft']:opening;
     for(const id of sequence){
-      const needsRetention=p.organization.total.lt(10);
-      const canOrganize=p.organization.total.lt(1)||p.craft.total.gte(1)||(settings.first==='organization'&&p.organization.total.lt(1));
+      const needsRetention=p.organization.points.lt(10);
+      const canOrganize=p.organization.points.lt(1)||p.craft.total.gte(1)||(settings.first==='organization'&&p.organization.points.lt(1));
       const wanted=id==='organization'?canOrganize&&(p.organization.points.lt(3)||needsRetention):
         p.craft.points.lt(needsRetention?3:15)&&p.points.gte(needsRetention?Math.min(16,economy.organizationPopulationRequirement()):20);
       if(wanted && economy.prestigeGain(id)>0 && economy.prestige(id))record('prestige',id,time);
@@ -49,7 +49,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
       if(action.unlocked && action.repeatAvailable && action.repeat<cap && economy.setRepeat(id,cap))record('automation',id,time);
     }
     if(!p.civ.project){
-      const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationPopulationRequirement()):24;
+      const targetHousing=p.organization.points.lt(10)?Math.max(12,economy.organizationPopulationRequirement()):24;
       let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2&&p.craft.points.gte(4)?'food-storage':p.water.sites<1?'water-site':null;
       if(next && !economy.canStartProject(next))next=p.water.sites<1?'water-site':null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);

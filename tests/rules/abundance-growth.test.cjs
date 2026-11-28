@@ -5,8 +5,8 @@ const Decimal = require('../../js/technical/break_eternity.js');
 function game(t) {
     const engine = createBalanceEngine(); t.after(engine.dispose);
     const p = engine.player, e = engine.session.modRules.civilization;
-    p.organization.total = new Decimal(5);
-    assert.equal(e.buyUpgrade("abundance"),true);
+    // Purchased Abundance is permanent; this fixture isolates the growth curves.
+    p.civ.improvements.abundance=true;
     p.food.points = new Decimal(5); p.water.points = new Decimal(5);
     return {engine,p,e};
 }
