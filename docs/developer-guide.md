@@ -91,6 +91,9 @@ Abundance, free workers and shortage status in one row (maximum 40 CSS px). Targ
 at most 96 px from page top to gameplay, with Gather/Water or Build fully in view.
 Save success reuses its header slot without moving play. Narrow views may wrap;
 put actions before the tree and preserve usable controls without horizontal overflow.
+Temporary feedback must never displace permanent elements. Worker warnings use
+reserved space below the action button. Compare button/field bounds before,
+during and after feedback in both axes; message presence alone is insufficient.
 
 `index.html`/`civ.css` own composition; `js/components.js` owns contextual help and
 display-only feedback; the rule owner's `effect`/`description` pairs provide short
