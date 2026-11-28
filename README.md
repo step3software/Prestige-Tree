@@ -10,6 +10,8 @@ Fire unlocks at Organization 4. Its tenders share the settlement's workers. Cook
 
 The game retains the session-bound Modding Tree engine, Vue 3, Decimal arithmetic, dark theme and upstream attribution/licenses. Empty Food or Water causes accelerating losses after a grace period; one survivor can rebuild. Older Civ saves migrate into the current model without retroactive charges. Money/Time and later branches remain hidden.
 
+Timber frames is available in Shelter after Organization 1 for 2 Craft. It keeps up to one completed hut per earned Organization milestone on Craft and Organization resets, replacing its former housing bonus. Newly earned milestones count immediately; milestone 10 still keeps all huts and hut work. Version 0.9.1 converts old Timber frames housing while preserving counts, Population and paid work; roofs and bricks keep their bonuses.
+
 ## Play locally
 
 From a dedicated worktree, use Node 24.22.1 and npm 11.19.1:

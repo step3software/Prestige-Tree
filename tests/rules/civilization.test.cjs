@@ -117,8 +117,8 @@ test('Shelter buyables add housing and retired domestic improvements cannot rese
     assert.equal(r.run('e.supply().availableWorkers'),r.run('p.points.toNumber()'));
     assert.equal(r.run('e.startProject("shelter-comfort")'),false);
     assert.equal(r.run('e.projects("shelter").length'),1);
-    r.run('p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);p.craft.points=new Decimal(2);p.food.points=new Decimal(25);p.civ.improvements.joinery=true;p.shelter.points=new Decimal(8+p.shelter.homes*6)');
-    assert.equal(r.run('p.shelter.points.toNumber()'),14);
+    r.run('p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);p.craft.points=new Decimal(2);p.food.points=new Decimal(25);p.civ.improvements.joinery=true;p.shelter.points=new Decimal(8+p.shelter.homes*4)');
+    assert.equal(r.run('p.shelter.points.toNumber()'),12);
 });
 
 test('timely recovery crews restore empty stores before grace expires',t=>{

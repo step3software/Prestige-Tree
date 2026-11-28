@@ -20,7 +20,7 @@ const get=(p,id)=>{
 
 test('Organization retains automation while materials own the moved equipment upgrades',t=>{
  const {p,e}=game(t);rich(p);
- assert.deepEqual(e.organizationMilestones().slice(0,2).map(row=>row.upgrades),[[],[]]);
+ assert.deepEqual(e.organizationMilestones().slice(0,2).map(row=>row.upgrades),[['joinery'],[]]);
  assert.deepEqual(e.organizationMilestones()[2].upgrades,['preparedMaterials','extendedExpeditions','workRosters']);
  p.organization.total=new Decimal(3);
  for(const [id,cost] of [['preparedMaterials',1],['extendedExpeditions',2],['workRosters',3]]){p.organization.points=new Decimal(3);const before=p.organization.points.toNumber();assert.equal(e.buyUpgrade(id),true);assert.equal(p.organization.points.toNumber(),before-cost);}
