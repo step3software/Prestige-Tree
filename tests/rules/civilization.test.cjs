@@ -26,7 +26,7 @@ test('fresh Population grows into housing, without automatic Food or Water produ
 });
 
 test('parallel expeditions reserve distinct crews, reject overbooking and release on completion',t=>{
-    const r=game(t);prepared(r);r.run('p.points=new Decimal(6);e.startProject("food-site")');
+    const r=game(t);prepared(r);r.run('p.points=new Decimal(6);e.startProject("water-storage")');
     assert.equal(r.run('e.dispatch("gather")'),true);
     assert.equal(r.run('e.dispatch("hunt")'),true);
     assert.equal(r.run('e.supply().workers.food'),4);
