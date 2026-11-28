@@ -9,7 +9,7 @@ function optionalPlayerFields() {
 // Pure ingress/egress boundary. Configuration/defaults (including time) are
 // supplied by the caller. No storage, active player, clock, UI or timer effects.
 /** @returns {SaveCodec} */
-function createSaveCodec({ defaults, layerDefinitions, version, modId, validatePlayer = () => {} }) {
+function createSaveCodec({ defaults, layerDefinitions, version, modId, migratePlayer = () => {}, validatePlayer = () => {} }) {
 	const playerDefaults = Object.assign({}, defaults, { version: String(version.num) });
 	const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 	const record = value => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -146,6 +146,7 @@ function createSaveCodec({ defaults, layerDefinitions, version, modId, validateP
 			}
 		}
 		let oldVersion = data.version;
+		migratePlayer(data);
 		data = hydrate(data, playerDefaults);
 		for (let field of ["devSpeed", "hqTree", "timePlayedReset"]) {
 			if (data[field] !== undefined) data[field] = hydrate(data[field], optionalFields[field]);

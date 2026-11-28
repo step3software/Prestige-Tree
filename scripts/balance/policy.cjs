@@ -15,16 +15,16 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['buckets','hunting','hearth','fishing','wellLining','joinery','waterOrders','waterReserves','overseer','rationing','gravity','farming','builderTools','relief','sluice','autonomousFood']){
+    for(const id of ['lashings','joinery','builderTools','digging','hunting','butchery','preparedMaterials','extendedExpeditions','workRosters','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];
-    const sequence=p.craft.total.gte(1)?['organization','craft']:opening;
+    const sequence=p.organization.total.lt(1)?['organization']:p.craft.total.gte(1)?['organization','craft']:opening;
     for(const id of sequence){
       const needsRetention=p.organization.total.lt(10);
-      const canOrganize=p.craft.total.gte(1)||(settings.first==='organization'&&p.organization.total.lt(1));
+      const canOrganize=p.organization.total.lt(1)||p.craft.total.gte(1)||(settings.first==='organization'&&p.organization.total.lt(1));
       const wanted=id==='organization'?canOrganize&&(p.organization.points.lt(3)||needsRetention):
-        p.craft.points.lt(needsRetention?3:15)&&(needsRetention||p.points.gte(20));
+        p.craft.points.lt(needsRetention?3:15)&&p.points.gte(needsRetention?Math.min(16,economy.organizationPopulationRequirement()):20);
       if(wanted && economy.prestigeGain(id)>0 && economy.prestige(id))record('prestige',id,time);
     }
     if(economy.summary().autoAvailable && !p.civ.autoBuild){p.civ.autoBuild=true;record('automation','organization',time);}
@@ -33,13 +33,24 @@ function createPolicy(engine,settings,onAction=()=>{}){
       const held=id==='education'?p[id].points:p[id].total;
       if(held.lt(target) && economy.canInvest(id) && economy.invest(id))record('investment',id,time);
     }
-    for(const id of ['water','gather','fish','hunt','farm']){
+    if(p.civ.improvements.workRosters){
+      const workers=Math.max(1,Math.min(5,Math.floor(p.points.toNumber()/6)));
+      if(economy.setOverseers('food',workers))record('staffing','food',time);
+    }
+    for(const id of ['gather','fish','hunt','farm']){
       const action=economy.actionDefinition(id);
-      if(action.unlocked && action.repeatAvailable && !action.automatic && !action.repeat && economy.toggleRepeat(id))record('automation',id,time);
+      if(action.unlocked && p.civ.improvements.extendedExpeditions){
+        const ledger=economy.supply(),baseDuration=action.duration/action.expeditionMultiplier,baseYield=action.reward/action.expeditionMultiplier;
+        const affordableDuration=Math.max(0,p.food.points.toNumber()-ledger.reserve)*60/ledger.demand;
+        const multiplier=Math.max(1,Math.min(5,Math.floor(affordableDuration/baseDuration),Math.floor(ledger.storage.food/baseYield)));
+        if(multiplier!==action.expeditionMultiplier && economy.setExpeditionMultiplier(id,multiplier))record('expedition-length',id,time);
+      }
+      const cap=economy.summary().foodRepeatCap;
+      if(action.unlocked && action.repeatAvailable && action.repeat<cap && economy.setRepeat(id,cap))record('automation',id,time);
     }
     if(!p.civ.project){
-      const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationHousingRequirement()):24;
-      let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2?'food-storage':p.water.sites<1?'water-site':null;
+      const targetHousing=p.organization.total.lt(10)?Math.max(12,economy.organizationPopulationRequirement()):24;
+      let next=p.shelter.points.lt(targetHousing)?'shelter-home':p.food.storage<2&&p.craft.points.gte(4)?'food-storage':p.water.sites<1?'water-site':null;
       if(next && !economy.canStartProject(next))next=p.water.sites<1?'water-site':null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);
     }

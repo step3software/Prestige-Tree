@@ -4,6 +4,7 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 const key = 'civ-prestige-tree';
 function open(t, options = {}) {
     const r=createRuntime({bridge:false,...options});r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
+    r.run('if(p)Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true})');
     t.after(()=>{r.run('s.dispose()');r.dispose();});return r;
 }
 test('Civ storage is independent of the untouched original ptr value', t => {
@@ -56,13 +57,13 @@ test('export/import round trip retains the simulation remainder and building pro
 
 test('active crews and repeat orders survive a codec round trip without duplicate yield',t=>{
     const r=open(t);
-    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.organization.total=new Decimal(5);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.toggleRepeat("gather");e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
+    r.run('p.craft.points=new Decimal(1);p.organization.points=new Decimal(1);p.organization.total=new Decimal(5);p.food.points=new Decimal(30);e.buyUpgrade("overseer");e.setRepeat("gather",1);e.dispatch("gather");e.dispatch("water");s.advance(3);var encoded=s.saveCommands.saveCodec().encodePlayer(p).text');
     const target=open(t);target.io.prompt=r.run('encoded');
     assert.equal(target.run('gameUI.commands.importSave()'),true);
     target.run('p=s.saveState.player');
     assert.equal(target.run('p.civ.actions.gather.remaining'),7);
     assert.equal(target.run('p.civ.actions.water.remaining'),5);
-    assert.equal(target.run('p.civ.actions.gather.repeat'),true);
+    assert.equal(target.run('p.civ.actions.gather.repeat'),1);
     target.run('s.advance(7)');
     assert.equal(target.run('p.civ.actions.gather.completed'),1);
     assert.equal(target.run('p.civ.actions.water.completed'),1);

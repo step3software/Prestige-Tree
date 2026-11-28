@@ -173,3 +173,6 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .shortage-warning { margin: 0 0 20px; padding: 16px; border: 2px solid #ff7070; }
 .shortage-warning h2 { display: block; font-size: 20px; margin: 8px 0; }
 .shortage-warning p { font-size: 13px; line-height: 1.6; margin: 12px 0; }
+
+.action-row label { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 14px 0; }
+.action-row select { width: min(100%, 360px); }

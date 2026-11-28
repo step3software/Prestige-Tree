@@ -4,11 +4,13 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 function game(t) {
     const r = createRuntime({bridge:false});
     r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
+    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true})');
     t.after(() => { r.run('s.dispose()'); r.dispose(); });
     return r;
 }
 const read=(r,expression)=>JSON.parse(r.run('JSON.stringify('+expression+')'));
 function prepared(r) {
+    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true})');
     r.run('p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.craft.points=new Decimal(20);p.organization.points=new Decimal(6);p.organization.total=new Decimal(10)');
 }
 
@@ -65,17 +67,15 @@ test('route equipment improves only its route and active crews keep their dispat
     assert.ok(r.run('p.civ.actions.hunt.reward>oldYield'));
 });
 
-test('Water automation progresses from fewer workers to repeat orders to worker-free flow',t=>{
+test('Water progresses from carrying crews directly to worker-free flow',t=>{
     const r=game(t);prepared(r);
-    assert.equal(r.run('e.toggleRepeat("water")'),false);
+    assert.equal(r.run('e.setRepeat("water",1)'),false);
     assert.equal(r.run('e.actionDefinition("water").workers'),2);
-    r.run('e.buyUpgrade("buckets")');
+    r.run('p.civ.improvements.buckets=true');
     assert.equal(r.run('e.actionDefinition("water").workers'),1);
-    r.run('e.buyUpgrade("waterOrders");e.toggleRepeat("water");p.water.points=new Decimal(0);s.advance(40)');
-    assert.ok(r.run('p.civ.actions.water.completed')>=2);
-    assert.equal(r.run('e.supply().keeperWorkers'),1,'Keeper remains reserved between trips');
-    r.run('p.water.points=new Decimal(0);s.advance(1)');
-    assert.equal(r.run('p.civ.actions.water.workers'),1);
+    r.run('p.water.points=new Decimal(0);e.dispatch("water");s.advance(8)');
+    assert.equal(r.run('p.civ.actions.water.completed'),1);
+    assert.equal(r.run('p.civ.actions.water.workers'),0);
     r.run('p.food.points=new Decimal(50);e.buyUpgrade("gravity");s.advance(10)');
     assert.equal(r.run('e.supply().workers.water'),0);
     assert.equal(r.run('e.dispatch("water")'),false);
@@ -87,7 +87,7 @@ test('overseer repeats staffed Food and farming while purchases needing later re
     const r=game(t);prepared(r);
     assert.equal(r.run('e.dispatch("farm")'),false);
     assert.equal(r.run('e.buyUpgrade("autonomousFood")'),false);
-    r.run('e.buyUpgrade("overseer");p.craft.points=new Decimal(0);e.toggleRepeat("gather");p.food.points=new Decimal(0);s.advance(35)');
+    r.run('e.buyUpgrade("overseer");p.craft.points=new Decimal(0);e.setRepeat("gather",5);p.food.points=new Decimal(0);s.advance(35)');
     assert.ok(r.run('p.civ.actions.gather.completed')>=3);
     assert.equal(r.run('p.civ.actions.gather.workers'),1);
     r.run('p.craft.points=new Decimal(20);p.food.points=new Decimal(50);p.water.points=new Decimal(50);e.buyUpgrade("farming");e.recall("gather");e.dispatch("farm")');
@@ -99,18 +99,12 @@ test('overseer repeats staffed Food and farming while purchases needing later re
     assert.equal(r.run('p.money.points.toNumber()'),120);
 });
 
-test('reservoir release protects household reserves and boosts new Food trips only',t=>{
-    const r=game(t);
-    r.run('p.water.points=new Decimal(20)');
-    assert.equal(r.run('e.irrigate()'),false);
-    r.run('p.water.points=new Decimal(50);var base=e.actionDefinition("gather").reward;e.dispatch("gather");var dispatched=p.civ.actions.gather.reward');
-    assert.equal(r.run('e.irrigate()'),true);
-    assert.equal(r.run('e.irrigate()'),false);
-    assert.equal(r.run('p.water.points.toNumber()'),30);
-    assert.equal(r.run('p.civ.actions.gather.reward'),r.run('dispatched'));
-    assert.ok(Math.abs(r.run('e.actionDefinition("gather").reward/base')-1.35)<1e-9);
-    r.run('s.advance(45)');
-    assert.equal(r.run('p.civ.irrigation'),0);
+test('reservoir release protects household reserves and boosts Farming only',t=>{
+ const r=game(t);prepared(r);r.run('p.civ.improvements.farming=true;p.water.points=new Decimal(20)');
+ assert.equal(r.run('e.irrigate()'),false);r.run('p.water.points=new Decimal(50);var before=e.actionDefinition("gather").reward;var crop=e.actionDefinition("farm").reward');
+ assert.equal(r.run('e.irrigate()'),true);assert.equal(r.run('e.actionDefinition("gather").reward'),r.run('before'));
+ assert.equal(r.run('e.actionDefinition("farm").reward'),r.run('crop*1.35'));
+ assert.equal(r.run('e.irrigate()'),false);r.run('s.advance(45)');assert.equal(r.run('p.civ.irrigation'),0);
 });
 
 test('Shelter buyables add housing and retired domestic improvements cannot reserve labor',t=>{
@@ -141,7 +135,7 @@ test('timely recovery crews restore empty stores before grace expires',t=>{
 
 test('prestige resets buyables, Population and construction while providing starting supplies',t=>{
     const r=game(t);prepared(r);
-    r.run('p.organization.total=new Decimal(0);p.points=new Decimal(12);p.food.sites=2;p.food.storage=2;p.food.routes.gather=3;p.water.sites=2;p.water.storage=1;p.shelter.comfort=3;e.buyUpgrade("buckets");e.dispatch("gather");e.dispatch("water");e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
+    r.run('p.organization.total=new Decimal(0);p.points=new Decimal(12);p.food.sites=2;p.food.storage=2;p.food.routes.gather=3;p.water.sites=2;p.water.storage=1;p.shelter.comfort=3;p.civ.improvements.buckets=true;e.dispatch("gather");e.dispatch("water");e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
     assert.equal(r.run('e.prestige("craft")'),true);
     for(const field of ['p.food.sites','p.food.storage','p.food.routes.gather','p.water.sites','p.water.storage','p.shelter.homes','p.civ.projectWork','p.civ.actions.gather.remaining','p.civ.actions.water.remaining'])assert.equal(r.run(field),0,field);
     assert.equal(r.run('p.points.toNumber()'),5);
@@ -171,7 +165,7 @@ test('milestones retain Food equipment, protected construction and trips after s
 
 test('milestone ten keeps only named buyables on both prestiges',t=>{
     for(const id of ['craft','organization']){
-        const r=game(t);prepared(r);r.run('p.points=new Decimal(12)');
+        const r=game(t);prepared(r);r.run('p.points=new Decimal(52)');
         r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.gather=2;p.food.routes.hunt=2;p.food.routes.fish=2;p.food.routes.farm=2;p.food.storage=2;p.food.sites=1;p.water.sites=2;p.water.storage=2;p.shelter.homes=11;p.shelter.points=new Decimal(52);p.shelter.comfort=2;e.startProject("shelter-home");s.advance(2);p.food.points=new Decimal(50);p.water.points=new Decimal(50)');
         const work=r.run('p.civ.projectWork');
         assert.equal(r.run('e.prestige("'+id+'")'),true);
@@ -201,13 +195,13 @@ test('prestige returns enough protected crews to fit the five-person workforce',
 test('failed purchases and locked investments do not spend resources',t=>{
     const r=game(t);
     const before=r.run('JSON.stringify(p)');
-    for(const command of ['e.buyUpgrade("missing")','e.buyUpgrade("gravity")','e.invest("education")','e.dispatch("farm")','e.toggleRepeat("gather")','e.prestige("money")'])assert.equal(r.run(command),false,command);
+    for(const command of ['e.buyUpgrade("missing")','e.buyUpgrade("gravity")','e.invest("education")','e.dispatch("farm")','e.setRepeat("gather",5)','e.prestige("money")'])assert.equal(r.run(command),false,command);
     assert.equal(r.run('JSON.stringify(p)'),before);
 });
 
 test('offline-like chunk sizes preserve batch completion, repeats, construction and irrigation',t=>{
     const a=game(t),b=game(t);
-    for(const r of [a,b]){prepared(r);r.run('e.buyUpgrade("overseer");e.toggleRepeat("gather");e.dispatch("hunt");e.startProject("shelter-home");e.irrigate()');}
+    for(const r of [a,b]){prepared(r);r.run('e.buyUpgrade("overseer");e.setRepeat("gather",5);e.dispatch("hunt");e.startProject("shelter-home");e.irrigate()');}
     a.run('s.advance(120.5)');
     b.run('for(let i=0;i<2410;i++)s.advance(.05)');
     for(const value of ['p.points.toString()','p.food.points.toString()','p.water.points.toString()','p.shelter.points.toString()','JSON.stringify(p.civ.actions)','p.civ.growth','p.civ.projectWork'])assert.equal(a.run(value),b.run(value),value);
