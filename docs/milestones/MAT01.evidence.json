@@ -1,0 +1,76 @@
+{
+  "task": "MAT01 planning only",
+  "evidence_date": "2026-11-27 America/New_York",
+  "source": {
+    "branch": "docs/craft-materials-plan",
+    "parent_branch": "codex/fire-ms4",
+    "revision": "2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a",
+    "published_main_observed": "8333e6d535cad36361f261e8005861cfde6ed5c1",
+    "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe"
+  },
+  "orcha_resolution": "Fresh git fetch origin main; loaded standards_resolver.py from the fetched immutable main commit and verified all selected plan documents against catalog hashes.",
+  "orcha_documents_sha256": {
+    "docs/milestone-file-conventions.md": "e630986b67fa044151c11c36ee31ca49a87aa73920e77ac1c8591ddd8ce6db32",
+    "docs/repository-milestones.md": "e2d82bc7e158cb297ae521a8c863e5ebc194c42a3de8e860831a800cfd11b1f9",
+    "docs/development-workflow.md": "efee35a23b01792973ac212ef21c304610baefa23bc21b1575e6670f25fa55b6",
+    "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
+    "docs/agent-workflows/plan.md": "23dcc6414bece19ef5a4b70088065b815a5a1e74827c8200b5936aa15678bc5b",
+    "docs/standards/no-legacy-modes.md": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156",
+    "docs/standards/readable-code.md": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e",
+    "AGENTS.md": "6f832fe94b7a9b1a77560bf811bf6aef76da2567009db5e9d815a33f720d1888",
+    "README.md": "847dab7c34dcee9a575ca90d5b50ac383b4fde239d97145fa79dd562be6d28e5",
+    "standards/catalog.json": "5850f5eb70397db5dccede9b9dbbf5de27861a8cfcb8676cda6337b608532651",
+    "config/repositories.json": "18cf54987abcdec4b58089eaa6091fc636e94e2f18bfeec149fb836e9a782e86",
+    "docs/pr-development-coordination.md": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e",
+    "docs/documentation-first-planning.md": "a21dcb680594f66625b453d245edd764f451e805361fb466eae69ccc51ebc7e2",
+    "docs/delivery-principles.md": "47e00f64ba28a304c7bc110421330e54aeb0cf14a7ccfaac31a1f63714a38f52",
+    "workflow/templates/plan.example.json": "7623a9c787a3b1b761a2aa0974c8340064722c59b24e6da957362205af8a9875",
+    "standards_resolver.py": "4c126f6dc47fa7a7284a148c0ad600d4f79488f6b7df8fe51a3a7f35dbd50f66"
+  },
+  "project_source_sha256": {
+    "AGENTS.md": "aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6",
+    ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+    "README.md": "75cbb391c7cd55b074f9062b29d3a7304aa0f1785ec81a0d2aa02185db3056cf",
+    "docs/!general-info.md": "06420ab8ce5eb231928fd93aa17552580840128039f6e6d1fe5a4614ecf1570e",
+    "docs/developer-guide.md": "c876353746bca4dfcab7229e709b48ba6eba364baa467ec2ff04a8bc089fa93e",
+    "docs/civilization.md": "ac56ba7fd7496cf35650e0817e3b9a6c10657818bf9a978f8a278365beca6f8a",
+    "docs/balance-testing.md": "8076c998951f99a5b2563b5820b1918ecf8f1922c3ea841a9859dd3d5e72702f",
+    "js/civilization.js": "11c25c2e7e98bf2b00418d1cc8fd458a88e2379fa54e2e86bed6f21f1b6208cb",
+    "js/mod.js": "4953f5830cba2edaf4a11cf1fae87f08c82c1a42c0c3abadc02455f93449bb88"
+  },
+  "research_source_sha256": {
+    "docs/research/plant.md": "09bd316bc966b5c982101b751f6e028f3b02c7124d9a4546d5f0aa0012eb2cfe",
+    "docs/research/water.md": "25b8f3b35fc74b640aab0100709a6e8cfdb721157cf4f0f0e4bccec906d08500",
+    "docs/research/reference-guide.md": "6c5a99aa392f87b3a10488c063c431fe526b9f4f813e9f202570cef6a624e9c7",
+    "docs/research/sources.json": "5991f3f3244a975663d25a2a53f38195cc47987301d521c645282271a4872756",
+    "docs/research/read_sources.py": "d5709f0b286a7fc886e4752ad04e89d9d234c587f38f9c96dc507a66968a85dd"
+  },
+  "artifacts_sha256": {
+    "docs/milestones/MAT01.md": "c9caca405d94de34ef6823f5ade891ae43eef76339091acda096d4c25df62f95",
+    "docs/milestones/MAT01.plan.json": "c320f3e853886fb786cb0eb8bcbe60be5566f559af7d8be3dbb7bee9ada0ccfa"
+  },
+  "source_discrepancy": "Registry and manifest master; local AGENTS main; owner explicitly requested latest work. Selected local committed Fire head without changing canonical source or parent writer.",
+  "writer": {
+    "branch": "refs/heads/docs/craft-materials-plan",
+    "fence": 2724,
+    "protection": "installed branch_writers; isolated docs-only scope; private token omitted"
+  },
+  "research_reading": [
+    "Plant part 4 paragraphs 22-39 (hash-verified original EPUB)",
+    "Plant part 1 paragraphs 3-18 (hash-verified original EPUB)",
+    "Pinned Plant/water notes and reference guide",
+    "AMNH Petra water account; PLOS ONE 2012 well study; Ashmolean pottery classification"
+  ],
+  "checks": {
+    "catalog_document_hashes": "passed",
+    "artifact_structure_and_links": "passed: required fields, distinct IDs/options, 4 rows of 5, 10% costs, 270 Craft total, relative links and UTF-8",
+    "gameplay_tests": "not run: planning only",
+    "publication": "not attempted; local branch only",
+    "native_lifecycle": "not enrolled or transitioned",
+    "water_arithmetic": "passed: eight/nine/sixteen support equations at six Organization balances; arithmetic only, implementation untested",
+    "planned_lifecycle_gate": "not eligible: native validator correctly rejects unanswered D1/D2; no lifecycle write attempted",
+    "diff_whitespace": "passed: git diff --check before staging and git diff --cached --check after staging"
+  },
+  "resolver_execution_sha256": "4c126f6dc47fa7a7284a148c0ad600d4f79488f6b7df8fe51a3a7f35dbd50f66"
+}

@@ -27,6 +27,7 @@ Run `npm test` for package integrity, syntax, lexical/type boundaries, sensitivi
 
 ## Find and change the rules
 
+- [Craft materials and Water implementation plan](docs/milestones/MAT01.md): proposed material rows, costs, research, migration and open decisions; no gameplay change.
 - [Civilization design](docs/civilization.md): resource relationships, pacing coefficients, reset consequences and save isolation.
 - [Developer guide](docs/developer-guide.md): actual owners, commands and focused checks.
 - [CIV01 delivery scope](docs/milestones/CIV01.md), [preparation](docs/milestones/CIV01.preparation.json) and [verification](docs/milestones/CIV01.verification.md).
