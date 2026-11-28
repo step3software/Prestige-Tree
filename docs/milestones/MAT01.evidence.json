@@ -1,6 +1,6 @@
 {
   "task": "MAT01 full development cycle",
-  "evidence_date": "2026-11-28 UTC / 2026-11-27 America/New_York",
+  "evidence_date": "2026-11-28 UTC / America/New_York",
   "authorization": {
     "implementation": "User: Rebase on main and resolve conflicts. Then do a full development cycle on this plan.",
     "bootstrap": "User: Keep basic huts at Organization 1 (recommended)",
@@ -9,8 +9,8 @@
   "source": {
     "repository": "step3software/Prestige-Tree",
     "branch": "docs/craft-materials-plan",
-    "comparison_main": "790d758c9e5012745cd324ec45a473a24a1b580a",
-    "candidate_parent": "bb05da79288b80d121e27129a2488539ea734667",
+    "comparison_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
+    "candidate_parent": "704cd6e2a3f82910c9ed74977e65ad95cb9eba86",
     "content_hashes_authoritative_for_uncommitted_review_fixes": true,
     "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
     "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe"
@@ -43,7 +43,7 @@
     ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
     "README.md": "ce159557d490fd8ddd2fba9f7d2a6aaad272b54d79bab964508ca5ee8140cd62",
     "docs/!general-info.md": "06420ab8ce5eb231928fd93aa17552580840128039f6e6d1fe5a4614ecf1570e",
-    "docs/developer-guide.md": "620b3f888a68ec35b9f56cbd52fabc3a819e2a087de865661168fc7f8bb6903a",
+    "docs/developer-guide.md": "1d3815bea8b04690919aa2ae5e58b8d37603064b38985098335d5bafd5e41406",
     "docs/civilization.md": "e84bbc35143de35a3dcf97d38f646abf063e09c6f2948625ff3d757f179bb238",
     "docs/balance-testing.md": "fde892c4dd008512c4ceedc1a2cfbf6437a3c4f8b514d2affa336b0d32c08f87",
     "docs/current-coordination.verification.md": "18513717a2e672989eb85956811dbfad8c6554125bcf7c1e268e91a1a533414a",
@@ -51,19 +51,21 @@
   },
   "rebase": {
     "initial_main": "177c57962bf89de1fa85e9e72e6dac0d73543f90",
-    "latest_main": "790d758c9e5012745cd324ec45a473a24a1b580a",
+    "latest_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
     "original_fire": "2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a",
-    "rebased_fire": "9a07ba1",
+    "rebased_fire": "7c905b4",
     "implementation_before_latest_rebase": "7067e021220f2e08e3cdc124d40a64750ae54bb6",
-    "implementation_rebased": "bb05da7",
-    "conflict_resolution": "Individually inspected and merged hunks, preserved current-held Organization and main controls. Bulk side selection was rejected before execution by automatic approval review; not retried."
+    "implementation_rebased": "bb12419",
+    "conflict_resolution": "Individually inspected and merged hunks, preserved current-held Organization and main controls. Bulk side selection was rejected before execution by automatic approval review; not retried.",
+    "final_review_rebased": "704cd6e",
+    "final_runtime_byte_comparison": "No changes across all tracked runtime, package, policy and test bytes through final rebase; pre/post manifest compared."
   },
   "writer": {
     "owner": "codex:mat01-cycle:01a22028",
     "branch": "1473946570:refs/heads/docs/craft-materials-plan",
     "fence": 2728,
     "scope": "exclusive whole branch in dedicated project worktree; token omitted",
-    "release": "pending verified publication; other writers untouched"
+    "release": "Held through implementation/publication; settle only own claim after verified remote delivery; final result recorded in handoff."
   },
   "review": {
     "procedure": "Current Orcha review/fix plus current project contracts; author review, no independent agent review claimed",
@@ -71,147 +73,151 @@
     "changed_paths": {
       "README.md": {
         "sha256": "879463634066790f1881cc68d8b671f773e5d982901d573082cabc72d7821951",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "civ.css": {
-        "sha256": "5701a71eccc24ffb5f6373dad45c35ef24206bb34e6e21b90f4d2dd4af60761b",
-        "review": "inspected source and consumers"
+        "sha256": "a78a88220e594c60157a534fea68332eb1b16ec6fd197a48e669a23fb3b6d6bf",
+        "review": "inspected source and consumers; full suite"
       },
       "docs/balance-testing.md": {
         "sha256": "0c134b708e849b6ebcba0de9166c9f196aaad004a92f735d9c75b81a63610168",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/civilization.md": {
         "sha256": "f6512517e659f987cea8b93a853c6daa2d290e68614652093a54412536597f0e",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/developer-guide.md": {
-        "sha256": "92da1980da0a239403b158ffa44fcb4313c941ffa27014862bfdff35f089e76f",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "sha256": "61b910f35a8c80605001ec0da0588a56cc7de84c4893c5bcc040b9ebe09d5b95",
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/fire.verification.md": {
         "sha256": "f51a3c4be834576b3ed41c8106a44371797d6c60620f46e540b1164083eb3f9e",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "review": "inspected documentation/provenance; schema/link/hash checks"
+      },
+      "docs/milestones/MAT01.evidence.json": {
+        "sha256": null,
+        "review": "inspected provenance; complete artifact bound by final Git commit"
       },
       "docs/milestones/MAT01.md": {
-        "sha256": "829b6d051bbaf14faa80360252f46e33a228f58c37907c5df37fd7020451de24",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "sha256": "0030d26a931945cc841bb83738ed75086842e94ab8224838a6f99351a3fe0bf2",
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/milestones/MAT01.plan.json": {
-        "sha256": "b9c9134b4de84957a71bcd3fb265fd457ad9652c7e7f38f8f66d67adcfed4471",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "sha256": "0ee4b37892aaa3364350cfb1fe2fdf2810a0e924cf7b508622d26e464f3aeabe",
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/milestones/MAT01.preparation.json": {
-        "sha256": "0ae876213229a8ba3804aab4fba78000a043d37d43bebd5b40665f6723402dd1",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "sha256": "eb0ff51fc9637cfdef7b4278e704ae1d406441f60236bda1fae57448f33f9aa8",
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/milestones/MAT01.verification.md": {
-        "sha256": "c65c53077eacdc045fef98bc6c3182f2423fa8c79feffe6d746c6be2a92c1163",
-        "review": "inspected documentation/provenance; mechanically checked"
+        "sha256": "1e66b2109ebc42267adf79f431d0b7426f1b68e6da1235476c1219d4e5e51df3",
+        "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "index.html": {
         "sha256": "c7ed0c2a6540e4f325df7396d3b785e72c8941c38f39f8b472384cacf96d606d",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "js/civilization.js": {
-        "sha256": "e941d31953ec65877bb187101e8b14a1c00533ffd7ff30eab8ff4d5e1380934a",
-        "review": "inspected source and consumers"
+        "sha256": "8eca7ea694ec336da79caaefe490ddb522f3d435bb0898c8fc5deda518d1f017",
+        "review": "inspected source and consumers; full suite"
       },
       "js/components.js": {
         "sha256": "5d5c5afff81829feb14031488570e023e7045130746407c9bc00233d198b03cf",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "js/mod.js": {
         "sha256": "4080cf3770de9b164df99babba1f9d9cbd8c95628d2ea6fee7a996bc5f45f57f",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "scripts/balance/policy.cjs": {
         "sha256": "865ce4f6c628e9d137f84e0971124ef95afc7479dcaaa979afa374dfac5843b7",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "scripts/balance/report.cjs": {
         "sha256": "d96bec69c916e484f15a852604d1d375842e09451cbe0e39c6ca586fb8c5f183",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "scripts/balance/sections.cjs": {
         "sha256": "d20e916101727a293ecd49daf97d6069de54a9c742565b8fe4a6ee519dde5b07",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "scripts/balance/simulate.cjs": {
         "sha256": "d3d465c2c9cee3950aa581cf7a0105150a24d9d12084ee975d24ed497a0dd908",
-        "review": "inspected source and consumers"
+        "review": "inspected source and consumers; full suite"
       },
       "tests/browser/civilization.spec.cjs": {
         "sha256": "5af69693b55b02eb08e9c198b8376051b5bdd1a7a68fb05afb03f27e23fd1c2b",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/browser/fire.spec.cjs": {
         "sha256": "ecf94e7c670aa83211928a445b13290f1353c78ad2c872d22f649ba7820a96e0",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/browser/materials.spec.cjs": {
-        "sha256": "7831330a36bca2e15587c5af84b0a85743de37d31fa333b0c2ba82e1500b2a5a",
-        "review": "inspected assertions; exercised automatically"
+        "sha256": "2faf2c4ece3a0198c2189643050f129673ddec766191ae3d5543ea317f0d71f9",
+        "review": "inspected assertions; full suite"
       },
       "tests/fixtures/civ-pre-fire-v08.json": {
         "sha256": "3f3528af837379fffb69f9e08820be82ce19ab811459bbb13e286f3f68379732",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/balance-simulation.test.cjs": {
         "sha256": "b73f211b31ce161de8f984d3b19891a65d7d46de4cd2717fe1ab51199d5693f8",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/civ-runtime.test.cjs": {
         "sha256": "e8c9c302df3e53ac7c3412758a77e892efca4c71ad62c53408d94a61643863ca",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/civ-saves.test.cjs": {
         "sha256": "89b88da9e00ba84b87d516480406216c73780bab773739aa1205d3e17fcf17bf",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/civilization.test.cjs": {
         "sha256": "b73df7cbe50d8ab3c68459c2d769761e64d9e4e758dc3f534d102649ac6e004f",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/early-milestones.test.cjs": {
         "sha256": "a41271e713f334dfe392df726cc0e5138c859fbda1ebb50fddcf2f81316c27d3",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/fire.test.cjs": {
         "sha256": "7705fa29ba25ae089f2d68289060defda083d9530b1540df9a836fed7e6ba623",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/food-buyables.test.cjs": {
         "sha256": "350b5d31d124b7ff66a9ed159d75f8c043f2a3389cb72aa4da4e00dca2df62d3",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/materials.test.cjs": {
         "sha256": "5fbf10e2231b5be202c7c2d24c19e3ba4215a8969a08a41bfac96d1531f3f8f7",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/opening-economy.test.cjs": {
         "sha256": "51202bc2bb2cd4d3c2d365a9ed2518677b964807ade765b5817baf99210a3f9f",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/organization-progression.test.cjs": {
         "sha256": "5ac466c63ea653dc1787469fcc94587cf5dc52c6c4f63115374bb37e2aee6ba0",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/shared-hearths.test.cjs": {
         "sha256": "d96e74c411774bf3243b30e8920bf9b39a748069b9fa9396842ea9d94e3d45a6",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/survival.test.cjs": {
         "sha256": "94a64799bdc259a005dcc3a97ac21d90dd7337f5aecd7023d7a524d441a338a5",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/v08-upgrades.test.cjs": {
         "sha256": "353acf3f7ba0dfcc01a4692853f5c696760e922ff4099bf8b982226861449099",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       },
       "tests/rules/work-orders.test.cjs": {
         "sha256": "12def7496e644273950fc25e1d7009c8feb1d9b9ca5ed065a862207242be7f88",
-        "review": "inspected assertions; exercised automatically"
+        "review": "inspected assertions; full suite"
       }
     },
     "self_hash_omission": "This evidence file omits its own content hash to avoid a recursive digest. Final Git commit/PR binds the complete artifact.",
@@ -220,33 +226,35 @@
       "R2 completed calibration terminal censor",
       "R3 restore main overseer slider controls and complete keyboard regression",
       "R4 validate permanent Craft prerequisite for active new Fire projects while preserving paid Water work",
-      "R5 preserve current-held Organization guards, retained paid work, paused queues, prospective retention and truthful labels"
+      "R5 preserve current-held Organization guards, retained paid work, paused queues, prospective retention and truthful labels",
+      "R6 fluid-height material/Fire cards prevent inherited fixed-size clipping; high-contrast states and Copper knives label; new card overflow assertion"
     ],
     "unresolved": [
       "Actual-user enjoyment/usability, assistive-technology testing and installed performance not measured; no such acceptance is claimed.",
-      "Human pacing targets remain unset; synthetic times are observations.",
-      "Publication/checks pending final delivery."
+      "Human pacing targets remain unset; synthetic times are observations."
     ]
   },
   "checks": {
-    "full_suite": "pending",
+    "full_suite": "passed: final unbroken npm test exited 0; 152 rule/save/runtime/balance tests and 32 Chromium journeys, build/package/syntax/static and negative/mutation sensitivity checks",
     "focused_material_and_current_gate": "18 passed, including reproduced invalid active Fire import after fix",
     "focused_review_material_and_early_milestone": "24 passed after narrowing new Fire validation and preserving main paid Water case",
     "plan_preparation_schema": "passed; exact plan hash bound in preparation; no native lifecycle transition",
-    "whitespace": "passed; rerun before commit",
-    "visual_review": "pending final screenshots",
-    "publication": "not attempted yet"
+    "whitespace": "git diff --check passed before final commit",
+    "visual_review": "inspected final materials-1280.png and materials-390.png; readable fluid cards and Copper knives label, no clipped card contents; no human/AT study claimed",
+    "publication": "Pre-publication evidence artifact. Final PR URL and verified remote head are recorded in the delivery handoff.",
+    "full_suite_log_sha256": "b99bdb57c6cd2359581f5a3ae9269aaeafac66ecdac5f7dbb6127ddb336667ba",
+    "runtime": "Node 24.22.1; npm 11.19.1; locked dependencies"
   },
   "balance": {
     "command": "npm run balance -- --hours 4 --budget 30 --calibrate-minutes 240",
-    "report_sha256": "131528011f18229c48cfda75a8eab21df69c563caeec34c3a229ec08faa700cf",
+    "report_sha256": "a91193ba2c7979b2083c4a48893f2a0de8596bc57b5d057c9dce7d831076a0d5",
     "engine_sources_sha256": {
       "js/technical/break_eternity.js": "668d5024e41c64a9557cf7895e948ad14f5638297277a0714599ceee773a3e49",
       "js/technical/layerSupport.js": "698faf660627e427a64326054c888e8ee3bc3f048ffc3e4fbae14cec0e734477",
       "js/tree.js": "c0b1df0c0ce7143db9ec76c523e16ee6c58af2ed0fce24437da2737fb939d6ae",
       "js/sc.js": "0559e2c61e0aa8a2eda2b2b8b37accd61ad625d2526a9ad1e5acb1290bc8bfa5",
       "js/help.js": "9133bfb065e426d214c1eeb78a6ec44fc2525f729aecca85a04ea8896b225c52",
-      "js/civilization.js": "e941d31953ec65877bb187101e8b14a1c00533ffd7ff30eab8ff4d5e1380934a",
+      "js/civilization.js": "8eca7ea694ec336da79caaefe490ddb522f3d435bb0898c8fc5deda518d1f017",
       "js/layers/resources.js": "59bb77682e72e17c0678dea075026ff08496b050c7373c8fe0ff4829ff08ce30",
       "js/layers/manifest.js": "1a669201b7703b624ecb4d6e8da995fe518b7db0b0d9366f4003151245613aa8",
       "js/mod.js": "4080cf3770de9b164df99babba1f9d9cbd8c95628d2ea6fee7a996bc5f45f57f",
@@ -368,8 +376,8 @@
         "horizonSeconds": 14400,
         "roughStatus": "endgame",
         "fixedStatus": "endgame",
-        "roughWallSeconds": 7.2228523000000004,
-        "fixedWallSeconds": 10.751748899999999,
+        "roughWallSeconds": 6.5382380000000015,
+        "fixedWallSeconds": 4.7017072,
         "speedup": null,
         "rows": [
           {
@@ -526,8 +534,8 @@
         "horizonSeconds": 14400,
         "roughStatus": "endgame",
         "fixedStatus": "endgame",
-        "roughWallSeconds": 2.6296131999999997,
-        "fixedWallSeconds": 2.9179537999999994,
+        "roughWallSeconds": 1.8905841,
+        "fixedWallSeconds": 1.8198947000000008,
         "speedup": null,
         "rows": [
           {
@@ -774,5 +782,10 @@
       "https://www.londonmuseum.org.uk/collections/v/object-2493/sickle-socketed-sickle/",
       "https://www.metmuseum.org/art/collection/search/587605"
     ]
+  },
+  "screenshots_sha256": {
+    "test-results/materials-1280.png": "64d493a308b3f2b8ccf3530b5e0c6c999083ce508c75643d392a5eaea677acad",
+    "test-results/materials-390.png": "d95fcf5e467066abe10394f5f9d0b7aa7eae0fb2130bb1f199541443d92530af",
+    "test-results/materials-narrow.png": "9e5f388d439bcb2c865d73d3e1596146c2578efda065b74983dc1f6b163218cd"
   }
 }

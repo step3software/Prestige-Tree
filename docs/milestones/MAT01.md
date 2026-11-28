@@ -1,7 +1,7 @@
 # MAT01: Material upgrades and Fire buyables
 
-Status: implementation candidate under full-cycle verification. Latest corrections separate Water-storage and Cooking vessels, replace Communal cistern with Clay cooking pots, and replace Copper chisels/awls with pots/sickles. D2 is resolved by the owner: basic huts stay at Organization 1. The owner now authorizes the full development cycle, excluding merge/deployment.
-Repository: `step3software/Prestige-Tree`; branch `docs/craft-materials-plan`. Rebased onto published main `790d758c9e5012745cd324ec45a473a24a1b580a`, preserving its current-held Organization rules. Original Fire and plan revisions remain recorded in evidence; parent writers remain unchanged.
+Status: implemented and locally verified; unmerged delivery candidate for owner review. Latest corrections separate Water-storage and Cooking vessels, replace Communal cistern with Clay cooking pots, and replace Copper chisels/awls with pots/sickles. D2 is resolved by the owner: basic huts stay at Organization 1. The owner now authorizes the full development cycle, excluding merge/deployment.
+Repository: `step3software/Prestige-Tree`; branch `docs/craft-materials-plan`. Rebased onto published main `27d24953e2c7c8c1617f22beba00fd668232713a`, preserving its current-held Organization rules. Original Fire and plan revisions remain recorded in evidence; parent writers remain unchanged.
 Companions: [structured plan](MAT01.plan.json), [revision/hash evidence](MAT01.evidence.json), [preparation](MAT01.preparation.json), [verification](MAT01.verification.md).
 
 ## Intended outcome and scope

@@ -1,6 +1,6 @@
 # MAT01 implementation verification
 
-Candidate based on `main` at `790d758c9e5012745cd324ec45a473a24a1b580a` (held Organization requirements, PR #15). Orcha current `main` was refetched at `cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78`; [evidence](MAT01.evidence.json) records exact governing document and candidate content hashes. The user authorized rebase, implementation, review/fixes and a full development cycle; basic huts remain Organization 1. Native lifecycle enrollment/acceptance, merge and deployment remain outside this delivery.
+Candidate based on `main` at `27d24953e2c7c8c1617f22beba00fd668232713a` (held Organization requirements and native staffing sliders, PRs #15/#14). Orcha current `main` was refetched at `cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78`; [evidence](MAT01.evidence.json) records exact governing document and candidate content hashes. The user authorized rebase, implementation, review/fixes and a full development cycle; basic huts remain Organization 1. Native lifecycle enrollment/acceptance, merge and deployment remain outside this delivery.
 
 ## Implemented outcome
 
@@ -10,7 +10,7 @@ Current held Organization still controls remaining gates, population requirement
 
 ## Executed verification
 
-FINAL_SUITE_PENDING
+`npm test` passed on Node 24.22.1 / npm 11.19.1: build, package identity, syntax, actual Vue compilation/static contracts, negative sensitivity checks, **152 rule/save/runtime/balance tests**, real prestige mutation sensitivity and **32 Chromium journeys**. The final unbroken run exited 0. Desktop 1280px and narrow 390px material screenshots were visually inspected after fixing clipped cards; the browser suite also covers 320px reflow and main staffing sliders.
 
 The separate legal balance command is `npm run balance -- --hours 4 --budget 30 --calibrate-minutes 240`. It uses the real session/commands with no granted resources, real one-second economic steps, fixed 5-second active checks and 20-second regular checks throughout this opening. Results are synthetic, with no accepted human pacing target:
 
@@ -34,7 +34,7 @@ Matched four-hour calibration reaches every checkpoint in both modes: maximum ob
 | AC08–09: one current save model, retained ownership/work, safe ingress and prestige | Canonical defaults, detached migration/validation, exact retained IDs; real historical codec fixtures, invalid-import atomicity, prestige/chunk/save tests | Verified automatically |
 | AC10: legally reachable material and Fire progression | Source-hashed four-hour report and full-horizon matched calibration, three policy completion tests | Verified automatically; pacing acceptance unknown |
 | AC11: keyboard/reflow, tiers and safe save replacement | Native controls, material/Fire journeys at desktop/narrow widths, existing save-replacement and recovery journeys | Synthetic/rendered; actual-user and assistive-technology usability not measured |
-| AC12: integrated checks and accurate canonical documentation | Full suite, schema/path/hash checks, README → developer guide → rules/test trace | Final suite pending |
+| AC12: integrated checks and accurate canonical documentation | Full suite, schema/path/hash checks, README → developer guide → rules/test trace | Verified automatically |
 | AC14–15: independent upgrade chains, preserved counts, real fuel/bonus and new-trip sickles | Shared housing/storage/effective Cooking formulas; count/work, fuel delivery, snapshot, shortage and chunk assertions | Verified automatically |
 | Orcha RC01–08; local session, labor, codec and delivery contracts | README/code map routes; one rules owner and inferred default contracts; read-through of commands → UI/codec/prestige; focused and integrated verification | Satisfied within inspected scope |
 | Orcha no-legacy and fail-safe migration | Historical formats convert at detached ingress; runtime consumes only v0.9 defaults/current flags; storage recovery and malformed imports preserve originals | Verified automatically |
@@ -48,6 +48,7 @@ Every changed path is listed with a content hash and review disposition in the e
 - R2: completed rough/fixed terminal observations could be falsely censored when regular rough completion was a few seconds later. Completed runs now use their common requested horizon; incomplete references retain their actual censor. A focused regression covers both.
 - R3: cumulative Fire replay replaced main's overseer sliders with dropdowns. Restored main's computed staffing bounds, slider controls and full keyboard/reload regression, retaining Fire controls separately.
 - R4: a new active Fire project could import without its permanent Craft prerequisite. A reproduced failing test now rejects this malformed import. This rule is limited to the new Fire projects; main's paid Water-work preservation case remains valid.
+- R6: rendered material cards inherited fixed-size buttons, clipping labels/costs at narrow widths; scoped fluid-height cards now preserve readable text and native controls. Chromium checks card overflow and rendered Copper knives naming.
 - R5: rebase overlaps risked reverting held Organization. Preserved main's guards, paused queues, internal locked-project lookup, prospective held retention and current milestone labels; updated synthetic fixtures and canonical descriptions. All four main current-coordination regressions remain unchanged.
 
 Automatic approval review rejected an attempted bulk conflict-side selection because it could discard main behavior. That command did not execute. Each overlapping hunk was subsequently inspected and merged individually; the rebase completed through the safer path.

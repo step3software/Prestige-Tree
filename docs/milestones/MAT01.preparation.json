@@ -1,6 +1,6 @@
 {
   "milestone_id": "step3software/Prestige-Tree#MAT01",
-  "plan_sha256": "b9c9134b4de84957a71bcd3fb265fd457ad9652c7e7f38f8f66d67adcfed4471",
+  "plan_sha256": "0ee4b37892aaa3364350cfb1fe2fdf2810a0e924cf7b508622d26e464f3aeabe",
   "base_revision": "14791fbd6ada032c5bff68267730638716e47fea",
   "implementation_branch": "docs/craft-materials-plan",
   "validation_commands": [
@@ -437,7 +437,7 @@
     ]
   },
   "rollback": "Keep matching exported save and source artifact; do not load v0.9 data into an older artifact; ptr untouched.",
-  "source_main": "790d758c9e5012745cd324ec45a473a24a1b580a",
+  "source_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
   "rebase": {
     "original_head": "e1b2c244466c01dbf698ff9f7981c2ba8f4c2475",
     "old_parent": "8032e9122b85b2832bb587a4c87153ba328e3fe5",
@@ -448,6 +448,12 @@
       "new_main": "790d758c9e5012745cd324ec45a473a24a1b580a",
       "result_head": "bb05da79288b80d121e27129a2488539ea734667",
       "resolution": "Inspected overlapping hunks individually. Preserved held Organization requirements/gates, paused queues, locked paid-project lookup and unchanged current-coordination regression suite; integrated material and Fire behavior."
+    },
+    "final_rebase": {
+      "new_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
+      "result_head": "704cd6e2a3f82910c9ed74977e65ad95cb9eba86",
+      "conflicts": "Worker ledger: keep renamed staff and add Fire tenders. Developer guide: retain material route and native slider contract. Explicit per-hunk resolution.",
+      "runtime_equivalence": "All tracked runtime, policy, package and test bytes match pre-rebase manifest; final visual/name changes were included before this comparison."
     }
   },
   "authority": "Direct-session artifacts validated locally; no native milestone enrollment or forged stage receipt.",

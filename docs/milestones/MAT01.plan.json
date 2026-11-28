@@ -267,11 +267,11 @@
   "source": {
     "branch": "docs/craft-materials-plan",
     "parent_branch": "codex/fire-ms4",
-    "revision": "bb05da79288b80d121e27129a2488539ea734667",
-    "published_main_observed": "790d758c9e5012745cd324ec45a473a24a1b580a",
+    "revision": "704cd6e2a3f82910c9ed74977e65ad95cb9eba86",
+    "published_main_observed": "27d24953e2c7c8c1617f22beba00fd668232713a",
     "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
     "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe",
-    "rebased_fire": "9a07ba1"
+    "rebased_fire": "7c905b4"
   },
   "validation": {
     "kind": "development_flow.validate_plan local validation; no native lifecycle transition",
