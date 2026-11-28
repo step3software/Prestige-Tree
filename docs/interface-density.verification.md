@@ -4,13 +4,16 @@ Owner request: reduce unnecessary UI text, prioritize vertical space, put all
 Population information in one compact desktop row, recheck workflows, and push
 separate game/process PRs. This change implements that game scope on isolated
 `codex/compact-gameplay-ui`, from main
-`27d24953e2c7c8c1617f22beba00fd668232713a`, with verified branch writer protection.
+`44c1814232dd495dec3912af87a710d0c3d65d68`, with verified branch writer protection.
+The initial review used `27d2495`; main published permanent milestones and Craft/Fire
+content during the task. The branch was reconciled with that owner-authored source
+before publication, preserving its v0.9 rules, save behavior and verification.
 No merge, deployment, save conversion, new content or balance change is included.
 
 ## Before and after
 
 Matched synthetic Chromium fixtures; CSS pixels, at top of page with help closed.
-Baseline was captured from the pinned main; candidate uses the unchanged locked
+Historical baseline was captured from initial main `27d2495`; candidate uses the unchanged locked
 Vue/runtime and real package/commands in a fresh browser context, never a user save.
 
 | Fixture | Before | After |
@@ -21,7 +24,7 @@ Vue/runtime and real package/commands in a fresh browser context, never a user s
 | Established Shelter, 1280×800: population height | 202 | 36 |
 | Established Shelter: document height | 2372 | 800 |
 | Last survivor, 1908×736: gameplay top | 519 | 88 |
-| Last survivor, 390×844: gameplay top | 777 | 150 |
+| Last survivor, 390×844: gameplay top | 777 | 146 |
 
 Desktop acceptance checks cover 1280×720, 1280×800 and 1920×1080: population row
 at most 40 px, masthead at most 44 px, gameplay begins by 96 px, and Gather/Build
@@ -38,9 +41,9 @@ buttons is disabled because it caused horizontal overflow, retaining theme/glow.
 | Temporary worker warning | Reserve a compact feedback slot below the expedition button in all states. Showing and clearing “Needs free workers” cannot shift that button or the neighboring statistics. A regression checks their complete rectangles before/during/after at desktop and narrow widths. |
 | Resource/actions | Remove descriptions, decorative eyebrows, duplicated stock labels and permanent mechanic paragraphs. Combine rates and labor; keep actual crew, duration, yield, current worker blocker and action. |
 | Staffing/repeats | Reuse their rows beside operating controls; preserve PR #14 names, min/max guards and finite counters. Optional reservation, snapshot and repeat-zero explanations move to hover/focus/tap help. |
-| Construction | Relocate the existing active construction row from the footer to the operating panel across resource selections. Existing row shows progress, builder, Cancel and non-refundable work/Craft. Recall loss is in the existing action row. No new confirmation step. |
+| Construction | Relocate the existing active construction row from the footer to the operating panel across resource selections. Existing row shows progress, builder, Cancel and loss of work and paid resources. Recall loss is in the existing action row. No new confirmation step. |
 | Purchases | Use existing buttons for short numeric effects/costs/levels/owned state. Original descriptions remain attached help. No permanent construction/upgrades instruction rows. |
-| Hearths | Live Food storage/income modifiers join Food's existing rate row; Shelter retains the owned upgrade and its concise effect. |
+| Hearths | Current Fire-scaled Food storage/income modifiers join Food's existing rate row; Shelter retains the owned upgrade and its concise effect. |
 | Prestige/milestones | Remove repeated currency lessons; preserve actual derived reset/keep consequences and confirmation. Milestone rows retain requirement/name/active state; detailed rewards use attached help. |
 | Footer/settings/settlements | Remove slogans and obvious explanation. Keep actual actions, current save identity and full attribution/version in About. |
 
@@ -52,10 +55,11 @@ content is out of flow; statuses, effects and loss qualifiers reuse existing row
 
 ## Workflow verification
 
-32 Chromium tests passed: all 27 existing Civ journeys (updated assertions for
-the shorter presentation) plus five density/help regressions. They cover fresh
-play, actual dispatch/build/purchases and debits, busy/overbooked workers, held
-Organization gates, finite Food/Hut queues, current work finishing after zero,
+37 Chromium journeys cover the current source: 27 Civ journeys (presentation
+assertions updated), three Fire journeys, two material journeys and five density/help
+regressions. They cover fresh
+play, actual dispatch/build/purchases and debits, busy/overbooked workers, permanent earned milestones and held-balance
+prestige requirements, finite Food/Hut queues, current work finishing after zero,
 prestige preview/cancel/confirm, shortage countdown/recovery, save/reload/import
 rejection, runtime faults, historical saves, keyboard controls and narrow reflow.
 New checks assert viewport placement rather than DOM visibility, no save-status
@@ -68,9 +72,9 @@ Executed commands:
   all authored-script lint and checked boundary contracts passed.
 - `npm run test:syntax`, `npm run test:static-sensitivity`,
   `npm run test:sensitivity`: syntax and required negative/mutation checks passed.
-- `npm run test:rules`: all 125 rule/save/runtime/balance cases passed.
-- `npx playwright test --config .agent-runtime/playwright-density.config.cjs tests/browser/civilization.spec.cjs tests/browser/interface-density.spec.cjs --reporter=line`:
-  all 32 passed. The local ignored config changes only test-server cwd/port to
+- `npm run test:rules`: all 154 rule/save/runtime/balance cases passed.
+- `npx playwright test --config .agent-runtime/playwright-density.config.cjs tests/browser/civilization.spec.cjs tests/browser/interface-density.spec.cjs tests/browser/fire.spec.cjs tests/browser/materials.spec.cjs --reporter=line`:
+  all 37 passed. The local ignored config changes only test-server cwd/port to
   4193 because 4173 was occupied; the test source, viewport defaults, package and
   browser are the standard ones. Normal CI uses checked-in Playwright config.
 - Matched 12-state screenshot/DOM inspection: no page errors or horizontal
@@ -101,3 +105,30 @@ browser/rule consumers. `effect` fields are display metadata alongside unchanged
 descriptions; simulation functions, saved fields, command guards and persistence
 semantics are unchanged. Rollback is the prior source/package, with the same save
 format. Publish as an unmerged draft PR to this fork's main.
+
+## Reconciled current-source document hashes
+
+Git-byte SHA-256 at `44c1814232dd495dec3912af87a710d0c3d65d68`:
+
+| Document | SHA-256 |
+| --- | --- |
+| `AGENTS.md` | `aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6` |
+| `.orcha/repository.json` | `d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585` |
+| `README.md` | `53bdbb845e0e489538b365f9446d4b49fd13372c4a3a7f099f83b26df4c11551` |
+| `docs/developer-guide.md` | `6d24c52487e33d1895ff986d0ea554fc61e31e11834099672fb3243d40fac626` |
+| `docs/civilization.md` | `95e641dd047755f00771455e3a907e9375bdbcac8e9cb3c27e9d6a3329c6de01` |
+
+Fire remains available across resource selections in the existing tree sidebar;
+its progress, rates, tending/Cooking controls and purchases are retained without
+pushing gameplay down. Craft retains all three material rows and four equipment
+choices each, with current costs, prerequisite guards and upgraded-family names.
+Rule differences introduced by main are preserved, including permanently earned
+milestones, Fire payments and manual hauling after the spring. New effect fields
+are display metadata only; no balance or save logic was changed by this PR.
+
+Final visual review also removed the inherited fixed prestige-button height and
+compacted material headers to one operating row. The density regression caps the
+Craft action at 40 px. Learned/owned material prices are omitted; repeatable
+construction still shows its current work, builder and currency costs.
+After those final visual corrections, all ten affected Fire/material/density
+journeys passed again, including the new Craft-button height assertion.

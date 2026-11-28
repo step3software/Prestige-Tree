@@ -91,9 +91,9 @@ function createCivilizationRules({ saveState }) {
     const materialFor = id => materialDefinitions.find(row => row.items.includes(id));
     const materialItem = id => materialFor(id) || materialDefinitions.some(row => row.id === id);
     const fireProjectDefinitions = {
-        fuel: {name: "Fuel stores", craftCost: 1, baseWork: 12, description: "+10 Fire capacity per level; no free fuel."},
-        hearths: {name: "Improved hearths", craftCost: 1, baseWork: 16, description: "+20% base tender production per level; tenders still required."},
-        charcoal: {name: "Charcoal clamps", craftCost: 2, baseWork: 24, description: "Fuel use divided by 1 + 0.15 per level. Fixed technology costs stay unchanged."},
+        fuel: {effect: "+10 Fire capacity", name: "Fuel stores", craftCost: 1, baseWork: 12, description: "+10 Fire capacity per level; no free fuel."},
+        hearths: {effect: "+20% tender production", name: "Improved hearths", craftCost: 1, baseWork: 16, description: "+20% base tender production per level; tenders still required."},
+        charcoal: {effect: "Lower recurring fuel use", name: "Charcoal clamps", craftCost: 2, baseWork: 24, description: "Fuel use divided by 1 + 0.15 per level. Fixed technology costs stay unchanged."},
     };
     const housingPerHut = improvements => 4 + (improvements.joinery ? 2 : 0) + (improvements.bricks ? 2 : improvements.roofs ? 1 : 0);
     function updateHousing() { player().shelter.points = new Decimal(8 + player().shelter.homes * housingPerHut(player().civ.improvements)); }
@@ -516,24 +516,24 @@ function createCivilizationRules({ saveState }) {
             .filter(([kind]) => includeLocked || kind !== "charcoal" || owns("clay"))
             .map(([kind, item]) => ({...item, id: "fire-" + kind, name: item.name + " · Level " + p.civ.fireBuyables[kind], work: work(item.baseWork, p.civ.fireBuyables[kind])})) : [];
         if (id === "food") return [
-            {id: "gather-tools", name: buyableNames["gather-tools"],
+            {id: "gather-tools", effect: "Level " + p.food.routes.gather + " · yield 1.5× / time 1.2×", name: buyableNames["gather-tools"],
                 description: "Exploration level " + p.food.routes.gather + ": reach richer ground. Each level multiplies trip time by 1.2 and yield by 1.5; crew unchanged.", work: work(14, p.food.routes.gather)},
-            {id: "hunt-tools", name: buyableNames["hunt-tools"],
+            {id: "hunt-tools", effect: "Level " + p.food.routes.hunt + " · yield 2× / crew 1.5×", name: buyableNames["hunt-tools"],
                 description: "Bigger-game level " + p.food.routes.hunt + ": each level multiplies the crew by 1.5, rounded up, and yield by 2; trip time unchanged. Craft equipment replaces Organization-level requirements.", work: 14},
-            {id: "fish-tools", name: buyableNames["fish-tools"], craftCost: Math.pow(2, p.food.routes.fish),
+            {id: "fish-tools", effect: "River trap level " + p.food.routes.fish + " · catch 2×", name: buyableNames["fish-tools"], craftCost: Math.pow(2, p.food.routes.fish),
                 description: "River trap level " + p.food.routes.fish + ": each level doubles the catch with the same crew and trip time. Costs " + Math.pow(2, p.food.routes.fish) + " Craft, paid when construction starts.", work: 14},
-            ...(owns("farming") ? [{id: "farm-tools", name: buyableNames["farm-tools"],
+            ...(owns("farming") ? [{id: "farm-tools", effect: "Level " + p.food.routes.farm + " · yield +35% / faster trips", name: buyableNames["farm-tools"],
                 description: "Route level " + p.food.routes.farm + ": +35% base yield and faster trips per level.", work: work(14, p.food.routes.farm)}] : []),
-            {id: "food-site", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
-            {id: "food-storage", name: "Weave food baskets", craftCost: 1, description: "+40 Food storage. Costs 1 Craft per basket, paid when construction starts.", work: work(12, p.food.storage)},
+            {id: "food-site", effect: "Food yield +15%", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
+            {id: "food-storage", effect: "Food storage +40", name: "Weave food baskets", craftCost: 1, description: "+40 Food storage. Costs 1 Craft per basket, paid when construction starts.", work: work(12, p.food.storage)},
         ];
         if (id === "water") return [
-            {id: "water-site", name: "Improve the well", description: "Improve manual collection; +1 upkeep-equivalent Water/min from the spring.", work: work(16, p.water.sites)},
-            {id: "water-storage", name: owns("jars") ? "Earthenware jars" : "Woven baskets", craftCost: owns("jars") ? 2 : 1, fireCost: owns("jars") ? 0.5 * Math.pow(1.5, p.water.storage) / fuelEfficiency() : 0,
+            {id: "water-site", effect: "Better hauling · spring +1 upkeep-equivalent/min", name: "Improve the well", description: "Improve manual collection; +1 upkeep-equivalent Water/min from the spring.", work: work(16, p.water.sites)},
+            {id: "water-storage", effect: "+" + (owns("jars") ? 120 : 40) + " Water storage", name: owns("jars") ? "Earthenware jars" : "Woven baskets", craftCost: owns("jars") ? 2 : 1, fireCost: owns("jars") ? 0.5 * Math.pow(1.5, p.water.storage) / fuelEfficiency() : 0,
                 description: (owns("jars") ? "Upgrade woven baskets with fired clay. +" : "Tightly woven Water baskets. +") + (owns("jars") ? 120 : 40) + " Water storage. Costs " + (owns("jars") ? 2 : 1) + " Craft" + (owns("jars") ? " and " + (0.5 * Math.pow(1.5, p.water.storage) / fuelEfficiency()).toFixed(3) + " Fire" : "") + ", paid when construction starts.", work: work(12, p.water.storage)},
         ];
         if (id === "shelter" && (includeLocked || featureAvailable("huts"))) return [
-            {id: "shelter-home", name: "Build a new hut", description: "+" + housingPerHut(p.civ.improvements) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
+            {id: "shelter-home", effect: "+" + housingPerHut(p.civ.improvements) + " housing · " + p.shelter.homes + " owned", name: "Build a new hut", description: "+" + housingPerHut(p.civ.improvements) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
         ];
         return [];
     }
@@ -618,7 +618,7 @@ function createCivilizationRules({ saveState }) {
         const prerequisite = id === "jars" ? "Needs a completed Water basket and Fire." : id === "bricks" ? "Needs Thatched roofs." :
             id === "copperPots" ? "Needs Clay cooking pots." : id === "clayPots" ? "Needs Cooking." : id === "sickles" ? "Needs Farming." : "Needs its material capability.";
         const currentItem = id === "roofs" && owns("bricks") ? improvementDefinitions.bricks : id === "clayPots" && owns("copperPots") ? improvementDefinitions.copperPots : item;
-        return {id, ...item, name: currentItem.name, description: currentItem.description, available, organizationRequired: upgradeRequirement(id), owned: owns(id), superseded,
+        return {id, ...item, name: currentItem.name, effect: currentItem.effect, description: currentItem.description, available, organizationRequired: upgradeRequirement(id), owned: owns(id), superseded,
             requirement: available ? "" : prerequisite,
             canBuy: available && !owns(id) && Object.entries(item.costs).every(([key, cost]) => costAmount(key) >= cost),
             costText: Object.entries(item.costs).map(([key, cost]) => cost + " " + (key === "fire" ? "Fire" : names[key])).join(" · ") || "Free"};

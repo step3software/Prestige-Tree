@@ -114,7 +114,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
                         const bounds = this.$el.getBoundingClientRect();
                         const tip = this.$refs.tip;
                         this.left = Math.max(12, Math.min(bounds.left, effects.window.innerWidth - tip.offsetWidth - 12));
-                        this.top = bounds.bottom + tip.offsetHeight + 8 < effects.window.innerHeight ? bounds.bottom + 4 : Math.max(8, bounds.top - tip.offsetHeight - 4);
+                        this.top = bounds.top >= tip.offsetHeight + 12 ? bounds.top - tip.offsetHeight - 4 : Math.min(effects.window.innerHeight - tip.offsetHeight - 8, bounds.bottom + 4);
                     });
                 },
                 hide(event) {

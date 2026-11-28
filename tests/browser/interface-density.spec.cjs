@@ -48,6 +48,9 @@ test('desktop keeps all population status in one compact row and primary actions
             await node(page,'Shelter').click();await page.evaluate(()=>scrollTo(0,0));
             await expect(page.getByRole('button',{name:/^Build a new hut/})).toBeInViewport({ratio:1});
         }
+        await page.evaluate(()=>{gameUI.session.saveState.player.points=new Decimal(20);});
+        await node(page,'Craft').click();
+        expect((await page.getByRole('button',{name:'Develop Craft',exact:true}).boundingBox()).height).toBeLessThanOrEqual(40);
     }
     expect(errors).toEqual([]);
 });

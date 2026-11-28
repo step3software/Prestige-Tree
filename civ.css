@@ -28,6 +28,27 @@ progress { display: block; width: 100%; height: 7px; border: 1px solid var(--col
 .text-button { background: transparent; color: var(--color); border: 0; text-decoration: underline; cursor: pointer; }
 .game-layout { display: grid; grid-template-columns: 290px minmax(0,1fr); border-top: 1px solid var(--color); margin-top: 6px; gap: 18px; }
 .tree-section { margin: 0; padding: 14px 8px; min-width: 0; }
+.fire-panel { border-top: 1px solid #a8463e; padding-top: 8px; margin-top: 8px; }
+.fire-panel h2 { display: block; color: #ffb0a6; font-size: 15px; margin: 0 0 6px; }
+.fire-bar { accent-color: #e34b42; }
+.fire-bar::-webkit-progress-value { background: #e34b42; }
+.fire-rates, .cooking-status { display: block; font-size: 11px; line-height: 1.4; margin: 6px 0; }
+.fire-controls label { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12px; }
+.fire-controls .help-anchor { width: 100%; margin: 4px 0; }
+.fire-upgrades, .fire-buyables { display: grid; gap: 6px; margin: 8px 0; }
+.fire-panel .project-button.upg { min-height: 64px; font-size: 11px; background: #9f392f; color: #fff; }
+.fire-panel .project-button:disabled { background: #3d2926; }
+.material-rows { margin: 12px 0; }
+.material-rows h3 { font-size: 15px; margin: 0 0 6px; }
+.material-row { padding: 8px 0; border-top: 1px solid #777; }
+.material-row > .help-anchor { width: 100%; }
+.material-row .material-unlock { min-height: 48px; }
+.material-items { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; margin-top: 6px; }
+.material-items .help-anchor { width: 100%; }
+.material-items > .help-anchor { margin: 0; align-self: stretch; }
+.material-row .project-button { overflow-wrap: anywhere; background: #292f34; color: #f3f5f6; }
+.material-row .project-button.can { background: #655020; color: #fff; }
+.material-row .project-button.bought { background: #35502c; }
 .resource-tree { margin: 0; }
 .resource-tier { padding: 0 0 20px; }
 .node-row { display: flex; justify-content: center; align-items: flex-start; gap: 12px; }
@@ -64,7 +85,7 @@ select { min-height: 30px; padding: 3px; max-width: 100%; font-size: 14px; }
 .projects { margin-top: 14px; }
 .projects h3, .organization-milestones h3 { display: block; font-size: 15px; margin: 0 0 8px; }
 .project-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 8px; }
-.project-grid > .help-anchor { width: 100%; }
+.project-grid > .help-anchor { width: 100%; margin: 0; align-self: stretch; }
 .project-button.upg { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px; width: 100%; height: auto; min-height: 80px; border-radius: 14px; margin: 0; padding: 10px 12px; font-size: 12px; }
 .project-button strong { font-size: 13px; margin: 0; }
 .project-button.upg:hover { transform: none; }
@@ -80,7 +101,8 @@ select { min-height: 30px; padding: 3px; max-width: 100%; font-size: 14px; }
 .reset-preview > div { display: flex; gap: 8px; margin: 6px 0; }
 .reset-preview dt { width: 60px; flex-shrink: 0; margin: 0; }
 .reset-preview dd { margin: 0; }
-.primary.reset { display: inline-block; min-height: 36px; padding: 6px 12px; font-size: 14px; margin: 4px 0; }
+.primary.reset { display: inline-block; width: auto; height: auto; min-height: 36px; padding: 6px 12px; font-size: 14px; margin: 4px 0; }
+.material-row .project-button.material-unlock { min-height: 40px; flex-direction: row; justify-content: space-between; align-items: center; }
 .organization-milestones { margin-top: 14px; }
 .organization-milestones h3 small { font-size: 12px; margin-left: 10px; }
 .organization-milestones .milestone { width: 100%; max-width: 100%; height: auto; min-height: 0; margin: 4px 0; padding: 8px; font-size: 12px; }
@@ -150,6 +172,7 @@ dialog button { min-height: 36px; padding: 6px 10px; margin: 4px; }
     .resource-summary { gap: 8px; }
     .storage-line { width: 100%; margin: 0; }
     .project-grid { grid-template-columns: 1fr; }
+    .material-items { grid-template-columns: repeat(2,minmax(0,1fr)); }
     .save-row { flex-direction: column; }
     .inline-help .help-content { position: fixed; left: 12px; top: 150px; }
     .control-tooltip { left: 12px !important; }
