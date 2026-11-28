@@ -6,6 +6,39 @@ const {simulate}=require('../../scripts/balance/simulate.cjs');
 const {compareReference}=require('../../scripts/balance/report.cjs');
 const {createRuntime}=require('../support/game-runtime.cjs');
 
+test('Timber frames rebuilds from retained huts on active and regular checks with fixed-step parity',t=>{
+ // Synthetic section start grants MS3, five huts and 2 Craft, skipping the prefix.
+ // Buy the upgrade and use real reset/build commands; no accepted pacing target.
+ const seed=createBalanceEngine();t.after(seed.dispose);
+ const p=seed.player,D=p.points.constructor,e=seed.session.modRules.civilization;
+ p.organization.best=new D(3);p.craft.points=new D(2);
+ p.shelter.homes=5;p.shelter.points=new D(28);p.points=new D(12);
+ assert.equal(e.buyUpgrade('joinery'),true);
+ const start=seed.exportPlayer();
+ for(const [profile,cadence] of [['active',5],['regular',20]]){
+  const outcomes=[];
+  for(const step of [1,5]){
+   const engine=createBalanceEngine(start);t.after(engine.dispose);
+   const rules=engine.session.modRules.civilization;
+   assert.equal(rules.prestige('craft'),true);
+   assert.equal(engine.player.shelter.homes,3);
+   assert.equal(rules.startProject('shelter-home'),true);
+   let elapsed=0;
+   while(engine.player.shelter.homes===3&&elapsed<120){
+    for(let time=0;time<cadence;time+=step)engine.advance(Math.min(step,cadence-time));
+    elapsed+=cadence;
+   }
+   assert.equal(engine.player.shelter.homes,4);
+   assert.equal(engine.player.shelter.points.toNumber(),24);
+   assert.ok(elapsed<=120,'Rebuild finishes before the bounded section horizon');
+   outcomes.push([elapsed,engine.exportPlayer()]);
+   engine.assertIsolated();
+  }
+  assert.deepEqual(outcomes[0],outcomes[1]);
+  console.log(profile+' Timber frames section: keep 3/5 huts, rebuild to 4 in '+outcomes[0][0]+'s; 1s/5s advancement identical (synthetic).');
+ }
+});
+
 test('abundance rebuilds legally reached high shelter after actual starvation with recovery staffing and short repeat orders',t=>{
  for(const strategy of ['active-balanced','regular']){
   const run=simulate({strategy,horizonSeconds:14400});

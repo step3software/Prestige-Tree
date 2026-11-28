@@ -55,7 +55,7 @@ content is out of flow; statuses, effects and loss qualifiers reuse existing row
 
 ## Workflow verification
 
-37 Chromium journeys cover the current source: 27 Civ journeys (presentation
+38 Chromium journeys cover the current source: 28 Civ journeys (presentation
 assertions updated), three Fire journeys, two material journeys and five density/help
 regressions. They cover fresh
 play, actual dispatch/build/purchases and debits, busy/overbooked workers, permanent earned milestones and held-balance
@@ -72,9 +72,9 @@ Executed commands:
   all authored-script lint and checked boundary contracts passed.
 - `npm run test:syntax`, `npm run test:static-sensitivity`,
   `npm run test:sensitivity`: syntax and required negative/mutation checks passed.
-- `npm run test:rules`: all 154 rule/save/runtime/balance cases passed.
+- `npm run test:rules` at `44c1814`: all 154 rule/save/runtime/balance cases passed.
 - `npx playwright test --config .agent-runtime/playwright-density.config.cjs tests/browser/civilization.spec.cjs tests/browser/interface-density.spec.cjs tests/browser/fire.spec.cjs tests/browser/materials.spec.cjs --reporter=line`:
-  all 37 passed. The local ignored config changes only test-server cwd/port to
+  all 38 passed on publication source `280caf5`. The local ignored config changes only test-server cwd/port to
   4193 because 4173 was occupied; the test source, viewport defaults, package and
   browser are the standard ones. Normal CI uses checked-in Playwright config.
 - Matched 12-state screenshot/DOM inspection: no page errors or horizontal
@@ -132,3 +132,30 @@ Craft action at 40 px. Learned/owned material prices are omitted; repeatable
 construction still shows its current work, builder and currency costs.
 After those final visual corrections, all ten affected Fire/material/density
 journeys passed again, including the new Craft-button height assertion.
+
+## Publication-time source reconciliation
+
+Main advanced to `280caf5edf6f20c9d5a30eda1b6c77c13b0de710` during PR publication.
+The owner Timber frames retention/migration and research changes are preserved.
+Only the Timber frames display-metadata conflict needed resolution: its short
+effect now says “Keep 1 hut per earned milestone”; the full current reset rule is
+attached help, and reset previews still use the unchanged prospective plan.
+The previously recorded 154-rule run applies to source `44c1814`; publication
+validation adds focused current-source Timber/reset/save checks and the current
+browser suite. No research, balance, migration or retention behavior is authored
+by this cleanup.
+
+At final publication source `280caf5edf6f20c9d5a30eda1b6c77c13b0de710`, 56 focused Timber,
+reset, save, material and economy cases passed, along with all 38 Chromium
+journeys and the build/static boundary checks. The earlier full balance run
+is recorded at its original source above; it is not represented as a rerun
+of the newly published Timber balance scenario.
+
+Latest governing document SHA-256 values (Git bytes):
+
+| Document | SHA-256 |
+| --- | --- |
+| `README.md` | `6cf7fb4b45420d4c8fe192ff5e1c45860c1b6272f8cf3999b09d1cf13983b90a` |
+| `docs/!general-info.md` | `cb43c339d4d4846066e850fabd4e223d3342f64aeb2ad00c5795a001004f80bd` |
+| `docs/civilization.md` | `ba633f657f0da2f73995d3fa32f1cd52ed0242988143f1a66019d00137e74959` |
+| `docs/developer-guide.md` | `9f1b2bb74adcf64e3c03c3df5a246ebc0149e6f0ccf20d00ef6249b5a107f220` |

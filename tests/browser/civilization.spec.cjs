@@ -8,6 +8,39 @@ async function open(page,established=true){
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
 
+test('Timber frames previews exact retained huts and cancel, confirm and reload agree',async({page})=>{
+ const errors=await open(page,false);
+ await page.evaluate(()=>{
+  const p=gameUI.session.saveState.player;
+  p.points=new Decimal(20);p.organization.points=new Decimal(3);p.organization.best=new Decimal(3);
+  p.shelter.homes=6;p.shelter.points=new Decimal(32);p.craft.points=new Decimal(2);
+ });
+ await node(page,'Shelter').click();
+ const timber=page.getByRole('button',{name:/^Timber frames/});
+ await expect(timber).toContainText('Keep 1 hut per earned milestone');
+ await expect(timber).toContainText('2 Craft');
+ await timber.focus();await page.keyboard.press('Enter');
+ await expect(timber).toBeDisabled();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.craft.points.toNumber())).toBe(0);
+ await node(page,'Organization').click();
+ await expect(page.getByTestId('prestige-keep-preview')).toContainText('4 built huts (24 housing)');
+ await expect(page.getByTestId('prestige-reset-preview')).toContainText('2 built huts; housing capacity becomes 24');
+ page.once('dialog',async dialog=>{
+  expect(dialog.message()).toContain('4 built huts (24 housing)');
+  await dialog.dismiss();
+ });
+ await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(6);
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Develop Organization',exact:true}).click();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(4);
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.points.toNumber())).toBe(24);
+ await page.evaluate(()=>gameUI.commands.save());await page.reload();
+ await expect(page.getByRole('heading',{name:'Population',exact:false})).toBeVisible();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(4);
+ expect(errors).toEqual([]);
+});
+
 test('spending Organization retains milestones while lowering Population requirements through reload',async({page})=>{
  const errors=await open(page,false);
  await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(50);p.organization.points=new Decimal(3);p.points=new Decimal(20);p.shelter.homes=3;p.shelter.points=new Decimal(20);p.civ.improvements.overseer=true;p.civ.improvements.hutForeman=true;});
@@ -591,7 +624,7 @@ for(const version of ['v06','v07']){
     await expect(page.locator('.chapter')).toContainText('v0.9');
     await page.getByRole('button',{name:'About & credits'}).click();
     await expect(page.locator('#save-recovery')).toBeHidden();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.9');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.91');
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
     expect(errors).toEqual([]);
