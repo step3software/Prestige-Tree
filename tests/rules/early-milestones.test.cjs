@@ -7,13 +7,13 @@ function stage(p,D,total=3){p.organization.total=new D(total);p.organization.poi
 test('the actual pre-redesign v0.8 codec export keeps discovered activities and paid work',t=>{
  const fixture=require('../fixtures/civ-pre-ms123-v08.json'),raw=JSON.parse(atob(fixture.player));
  const {engine,p,e}=game(t,fixture.player);
- assert.equal(p.version,'0.9');assert.equal(p.points.toString(),raw.points);
+ assert.equal(p.version,'0.91');assert.equal(p.points.toString(),raw.points);
  assert.equal(p.food.points.toString(),raw.food.points);assert.equal(p.craft.points.toString(),raw.craft.points);
  assert.equal(p.civ.project,raw.civ.project);assert.equal(p.civ.projectWork,raw.civ.projectWork);
  assert.equal(p.civ.preparedHut,false);
  assert.equal(p.civ.actions.hunt.reward,raw.civ.actions.hunt.reward);assert.equal(p.civ.actions.hunt.remaining,raw.civ.actions.hunt.remaining);
  assert.equal(p.civ.actions.gather.repeat,raw.civ.actions.gather.repeat);
- assert.equal(e.actionDefinition('fish').unlocked,true);assert.equal(e.projects('food').length,0,'Below the current buyable gate, existing work remains valid');
+ assert.equal(e.actionDefinition('fish').unlocked,true);assert.ok(e.projects('food').length>0,'Paid historical equipment migrates to Craft capability');
  assert.deepEqual(p.civ.overseers,{food:1,huts:1});
  const loaded=game(t,engine.exportPlayer());assert.deepEqual(loaded.p.civ.features,p.civ.features);
 });
@@ -27,37 +27,19 @@ test('twenty-five repeats exhaust once each with five overseers, including a mid
  assert.equal(e.supply().overseerWorkers,0);assert.equal(engine.exportPlayer(),loaded.engine.exportPlayer());
 });
 
-test('fresh play unlocks huts at eight people and hunting only at milestone two',t=>{
- const {engine,p,e,D}=game(t);
- assert.deepEqual(e.node('food').actions.map(a=>a.id),['gather']);
- assert.deepEqual(e.projects('shelter'),[]);assert.deepEqual(e.projects('food'),[]);
- for(const id of ['hunting','lashings','digging'])assert.equal(e.buyUpgrade(id),false);
- assert.equal(e.dispatch('hunt'),false);assert.equal(e.startProject('shelter-home'),false);
- engine.advance(36);assert.equal(p.points.toNumber(),8);assert.equal(e.prestige('organization'),true);
- assert.equal(p.organization.total.toNumber(),1);assert.equal(e.startProject('shelter-home'),true);
- assert.deepEqual(e.upgrades('shelter').map(u=>[u.id,u.costs.craft]),[['lashings',1],['joinery',2],['builderTools',3]]);
- assert.equal(e.dispatch('hunt'),false);p.organization.total=new D(2);p.organization.points=new D(2);
- assert.equal(e.dispatch('hunt'),true);
- assert.deepEqual(e.upgrades('food').map(u=>[u.id,u.costs.craft]),[['digging',1],['hunting',2],['butchery',3]]);
- assert.equal(e.setRepeat('gather',1),false);assert.equal(e.setHutRepeat(1),false);
- p.organization.total=new D(3);p.organization.points=new D(3);e.cancelProject();e.recall('hunt');
- assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);
- assert.equal(e.supply().overseerWorkers,1);assert.equal(e.supply().foremanWorkers,1);
- engine.exportPlayer();
+test('fresh play retains eight-person hut bootstrap and moves hunting to Craft spending',t=>{
+ const {engine,p,e,D}=game(t);assert.deepEqual(e.projects('shelter'),[]);assert.equal(e.dispatch('hunt'),false);
+ engine.advance(36);assert.equal(e.prestige('organization'),true);assert.equal(e.startProject('shelter-home'),true);e.cancelProject();
+ p.organization.total=new D(2);p.organization.points=new D(2);assert.equal(e.dispatch('hunt'),false);p.craft.points=new D(11);assert.equal(e.buyUpgrade('crafting'),true);assert.equal(e.buyUpgrade('hunting'),true);assert.equal(e.dispatch('hunt'),true);e.recall('hunt');
+ p.organization.total=new D(3);p.organization.points=new D(3);assert.equal(e.setRepeat('gather',5),true);assert.equal(e.setHutRepeat(5),true);engine.exportPlayer();
 });
 
-test('early upgrades spend exact Craft or Organization and never change lifetime earnings',t=>{
- const {p,e,D}=game(t);stage(p,D);
+test('material equipment and retained Organization upgrades charge their actual currencies once',t=>{
+ const {p,e,D}=game(t);stage(p,D);p.craft.points=new D(100);e.buyUpgrade('crafting');e.buyUpgrade('clay');e.buyUpgrade('copper');
  const buy=(id,currency,cost)=>{const before=p[currency].points.toNumber(),total=p.organization.total.toNumber();assert.equal(e.buyUpgrade(id),true);assert.equal(p[currency].points.toNumber(),before-cost);assert.equal(p.organization.total.toNumber(),total);assert.equal(e.buyUpgrade(id),false);};
- p.shelter.homes=2;p.shelter.points=new D(16);const before=e.projects('shelter')[0].work;
- buy('lashings','craft',1);assert.ok(e.projects('shelter')[0].work<before);
- assert.equal(e.projects('shelter')[0].work,16*1.25**2);
- buy('joinery','craft',2);assert.equal(p.shelter.points.toNumber(),16);buy('builderTools','craft',3);
- buy('digging','craft',1);assert.equal(e.actionDefinition('gather').reward,7.5);
- buy('hunting','craft',2);assert.equal(e.actionDefinition('hunt').workers,2);
- buy('butchery','craft',3);assert.equal(e.actionDefinition('hunt').reward,36);
+ buy('roofs','craft',1);buy('bricks','craft',2);buy('copperAxes','craft',3);buy('digging','craft',1);buy('hunting','craft',1);buy('butchery','craft',3);
+ assert.equal(e.actionDefinition('gather').reward,7.5);assert.equal(e.actionDefinition('hunt').reward,36);assert.equal(e.actionDefinition('hunt').workers,2);
  for(const [id,cost] of [['preparedMaterials',1],['extendedExpeditions',2],['workRosters',3]])buy(id,'organization',cost);
- assert.equal(p.organization.total.toNumber(),3);assert.equal(e.summary().foodOrdersAvailable,true);
 });
 
 test('extended expeditions snapshot 1-5x time and yield, unchanged crews and one repeat',t=>{

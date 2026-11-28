@@ -5,7 +5,7 @@ function createModRules({ derivedState, effects, gameHelpers, saveState }) {
         pointsName: "Population", initialStartPoints: new Decimal(civilization.startingSettlement.population), offlineLimit: 1,
         changelogLink: "https://github.com/step3software/Prestige-Tree"};
     /** @type {{num:string,name:string,withoutName:string,withName:string,beta?:number,pre?:number,patch?:number}} */
-    const VERSION = {num: "0.9", name: "First settlements", withoutName: "v0.9", withName: "v0.9 - First settlements"};
+    const VERSION = {num: "0.91", name: "Materials and fire", withoutName: "v0.9.1", withName: "v0.9.1 - Materials and fire"};
     const activeNotifications = effects.observe([]);
     return {modInfo, VERSION, civilization, activeNotifications,
         doNotCallTheseFunctionsEveryTick: [], alwaysKeepTheseVariables: [], displayThings: [],

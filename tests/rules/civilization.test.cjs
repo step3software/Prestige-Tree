@@ -4,13 +4,13 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 function game(t) {
     const r = createRuntime({bridge:false});
     r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
-    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});p.organization.points=new Decimal(7)');
+    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7)');
     t.after(() => { r.run('s.dispose()'); r.dispose(); });
     return r;
 }
 const read=(r,expression)=>JSON.parse(r.run('JSON.stringify('+expression+')'));
 function prepared(r) {
-    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});p.organization.points=new Decimal(7)');
+    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7)');
     r.run('p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.craft.points=new Decimal(20);p.organization.points=new Decimal(6);p.organization.total=new Decimal(10);p.organization.points=new Decimal(10)');
 }
 
@@ -67,7 +67,7 @@ test('route equipment improves only its route and active crews keep their dispat
     assert.ok(r.run('p.civ.actions.hunt.reward>oldYield'));
 });
 
-test('Water progresses from carrying crews directly to worker-free flow',t=>{
+test('Water flow supplements hauling and needs manual trips above its baseline',t=>{
     const r=game(t);prepared(r);
     assert.equal(r.run('e.setRepeat("water",1)'),false);
     assert.equal(r.run('e.actionDefinition("water").workers'),2);
@@ -78,9 +78,9 @@ test('Water progresses from carrying crews directly to worker-free flow',t=>{
     assert.equal(r.run('p.civ.actions.water.workers'),0);
     r.run('p.food.points=new Decimal(50);e.buyUpgrade("gravity");s.advance(10)');
     assert.equal(r.run('e.supply().workers.water'),0);
-    assert.equal(r.run('e.dispatch("water")'),false);
+    assert.equal(r.run('e.dispatch("water")'),true);r.run('e.recall("water")');
     r.run('p.water.points=new Decimal(0);var before=p.water.points.toNumber();s.advance(10)');
-    assert.ok(r.run('p.water.points.toNumber()>before'));
+    assert.equal(r.run('p.water.points.toNumber()'),0);r.run('e.dispatch("water");s.advance(8)');assert.ok(r.run('p.water.points.gt(0)'));
 });
 
 test('overseer repeats staffed Food and farming while purchases needing later resources stay locked',t=>{
@@ -117,7 +117,7 @@ test('Shelter buyables add housing and retired domestic improvements cannot rese
     assert.equal(r.run('e.supply().availableWorkers'),r.run('p.points.toNumber()'));
     assert.equal(r.run('e.startProject("shelter-comfort")'),false);
     assert.equal(r.run('e.projects("shelter").length'),1);
-    r.run('p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);p.craft.points=new Decimal(2);p.food.points=new Decimal(25);e.buyUpgrade("joinery")');
+    r.run('p.organization.total=new Decimal(3);p.organization.points=new Decimal(3);p.craft.points=new Decimal(2);p.food.points=new Decimal(25);p.civ.improvements.joinery=true;p.shelter.points=new Decimal(8+p.shelter.homes*4)');
     assert.equal(r.run('p.shelter.points.toNumber()'),12);
 });
 

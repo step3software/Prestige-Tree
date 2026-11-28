@@ -176,3 +176,39 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 
 .action-row label { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 14px 0; }
 .action-row select { width: min(100%, 360px); }
+
+/* Fire is settlement capacity, independent of the selected resource tab. */
+.fire-panel { margin: 1rem 0; padding: 1rem; border: 1px solid #a8463e; border-radius: 8px; background: #211514; }
+.fire-panel h2 { color: #ffb0a6; font-size: 1.1rem; margin-bottom: .5rem; }
+.fire-bar { accent-color: #e34b42; border-color: #e34b42; }
+.fire-bar::-webkit-progress-value { background: #e34b42; }
+.fire-bar::-moz-progress-bar { background: #e34b42; }
+.fire-controls { display: flex; flex-wrap: wrap; gap: 1rem; margin: .75rem 0; }
+.fire-controls label { display: grid; gap: .35rem; flex: 1 1 12rem; min-width: 0; }
+.fire-controls input { width: 100%; min-width: 0; accent-color: #e34b42; }
+.fire-upgrades { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .5rem; }
+.fire-upgrades .project-button { width: 100%; height: auto; min-height: 7rem; min-width: 0; margin: 0; border-radius: 8px; color: #fff; }
+.fire-upgrades .locked { background: #3d2926; color: #f5dfda; }
+.fire-upgrades .can, .fire-upgrades .bought { background: #9f392f; color: #fff; }
+
+/* Material knowledge reveals four equipment choices in the existing Craft panel. */
+.material-rows { margin-top: 1.5rem; }
+.material-row { margin: 1rem 0; padding: .75rem; border: 1px solid #596368; border-radius: .4rem; }
+.material-unlock { width: 100%; }
+.material-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin-top: .5rem; }
+.material-items .project-button { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .material-items { grid-template-columns: 1fr; } }
+
+/* New cards need room for descriptions and costs at narrow widths. */
+.material-row .project-button.upg,
+.fire-buyables .project-button.upg {
+    width: 100%; height: auto; min-height: 7rem; min-width: 0; margin: 0;
+    border-radius: 8px; border: 1px solid #68737b;
+    background: #292f34; color: #f3f5f6; opacity: 1;
+    overflow-wrap: anywhere;
+}
+.material-row .project-button.can, .fire-buyables .project-button.can { background: #655020; color: #fff; }
+.material-row .project-button.bought { background: #35502c; color: #fff; }
+.material-row .project-button:disabled { color: #e0e5e9; }
+.fire-buyables { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .5rem; }
+.fire-buyables > h3, .fire-buyables > p { grid-column: 1 / -1; }

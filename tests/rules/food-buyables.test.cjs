@@ -5,9 +5,8 @@ const Decimal = require('../../js/technical/break_eternity.js');
 
 function game(t) {
     const engine = createBalanceEngine();
-    // Established-settlement fixture; current Coordination is set for the activity gates under test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
-    engine.player.organization.points=new Decimal(7);
+    // Established-settlement fixture: retain activities already discovered before this test.
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);
     t.after(engine.dispose);
     return {engine, p: engine.player, e: engine.session.modRules.civilization};
 }
@@ -31,14 +30,12 @@ test('exploring farther trades longer trips for compounded yields and rising wor
     assert.equal(e.actionDefinition('fish').reward, 14);
 });
 
-test('bigger game requires current Organization and rounds each successive crew', t => {
- const {p,e}=game(t);p.organization.total=new Decimal(100);p.organization.points=new Decimal(6);
- assert.equal(e.startProject('hunt-tools'),false);
- p.organization.points=new Decimal(7);assert.equal(e.startProject('hunt-tools'),true);e.cancelProject();
- for(const [level,workers] of [[0,3],[1,5],[2,8],[3,12]]){p.food.routes.hunt=level;assert.equal(e.actionDefinition('hunt').workers,workers);assert.equal(e.actionDefinition('hunt').duration,25);assert.equal(e.actionDefinition('hunt').reward,24*2**level);}
- p.food.routes.hunt=7;assert.equal(e.startProject('hunt-tools'),false,'This tier requires eight held Organization');
- p.organization.points=new Decimal(8);assert.equal(e.startProject('hunt-tools'),true);e.cancelProject();
- p.food.routes.hunt=1;e.dispatch('gather');assert.equal(e.dispatch('hunt'),false);e.recall('gather');p.civ.improvements.hunting=true;
+test('bigger game uses Craft access and rounds each successive crew without Organization gates', t => {
+ const {p,e}=game(t);
+ assert.equal(p.organization.total.toNumber(),0);assert.equal(e.startProject('hunt-tools'),true);e.cancelProject();
+ for(const [level,workers] of [[0,3],[1,5],[2,8],[3,12]]){p.food.routes.hunt=level;assert.equal(e.actionDefinition('hunt').workers,workers);assert.equal(e.actionDefinition('hunt').reward,24*2**level);}
+ p.food.routes.hunt=1;assert.equal(e.startProject('hunt-tools'),true);e.cancelProject();e.dispatch('gather');assert.equal(e.dispatch('hunt'),false);
+ e.recall('gather');p.civ.improvements.hunting=true;
  for(const [level,workers] of [[0,2],[1,3],[2,5],[3,8]]){p.food.routes.hunt=level;assert.equal(e.actionDefinition('hunt').workers,workers);}
  p.civ.improvements.autonomousFood=true;assert.equal(e.actionDefinition('hunt').workers,0);
 });

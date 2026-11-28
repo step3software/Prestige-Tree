@@ -1,6 +1,6 @@
 {
   "orcha_revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
-  "source_revision": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
+  "source_revision": "44c1814232dd495dec3912af87a710d0c3d65d68",
   "shared_documents": {
     "docs/agent-workflows/intent-routing.md": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed",
     "docs/agent-workflows/feature.md": "52279cc4869aa56c9a40efe7c2e136177feb807053783039c3c4e7dfa95170b3",
@@ -17,18 +17,28 @@
   "project_documents": {
     "AGENTS.md": "aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6",
     ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
+    "README.md": "53bdbb845e0e489538b365f9446d4b49fd13372c4a3a7f099f83b26df4c11551",
+    "docs/developer-guide.md": "6d24c52487e33d1895ff986d0ea554fc61e31e11834099672fb3243d40fac626",
+    "docs/!general-info.md": "06420ab8ce5eb231928fd93aa17552580840128039f6e6d1fe5a4614ecf1570e",
+    "docs/civilization.md": "95e641dd047755f00771455e3a907e9375bdbcac8e9cb3c27e9d6a3329c6de01",
+    "docs/balance-testing.md": "916b8717210541c00a7ad7726f67d48644ed70c929a9011c40686d539494090e"
+  },
+  "initial_source_revision": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
+  "initial_project_documents": {
+    "AGENTS.md": "aca5c332ba10d11ee6fbcc74c9f97e931451ae89289b2a035521007c83682ca6",
+    ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
     "README.md": "ce159557d490fd8ddd2fba9f7d2a6aaad272b54d79bab964508ca5ee8140cd62",
     "docs/developer-guide.md": "3ae5c8e9027506f5ace72e7c40878d1c0cf8d60b05e571a1b42f8dded6d3e71b",
     "docs/!general-info.md": "06420ab8ce5eb231928fd93aa17552580840128039f6e6d1fe5a4614ecf1570e",
     "docs/civilization.md": "4c508a843938de81ac178e6d48394db453de106d2a4f456607088adfdc7a8243",
     "docs/balance-testing.md": "dd1a51d4cb87f1d9d08d70fdc6e629f0167fb2ab7000c9e3aa4ae266a5e8f063"
   },
-  "request": "Timber frames now keeps 1 built hut per milestone on tier 2 resets.",
+  "request": "Timber frames now keeps 1 built hut per milestone on tier 2 resets. Owner follow-up: restore a purchase option too.",
   "branch": "codex/timber-frames-retention",
   "target": "main",
   "source_resolution": "Registry and manifest retain master; GitHub redirects master to main. Governing project AGENTS and README explicitly select main. Both main SHAs were rechecked before delivery.",
-  "scope": "Replace Timber frames housing bonus with min(built huts, earned Organization milestones) on Craft/Organization resets. Preserve milestone-10 full retention and construction. Convert historical housing through one versioned detached save ingress.",
-  "prior_work": "Open PRs 13 (research) and 17 (Craft materials/Fire) inspected; this independent branch starts at published main and does not alter those branches.",
+  "scope": "Replace Timber frames housing bonus with min(built huts, earned Organization milestones) on Craft/Organization resets. Preserve milestone-10 full retention and construction. Convert historical housing through one versioned detached save ingress. Restore Shelter purchase after Organization milestone 1 for 2 Craft; retain roof/Bricks housing bonuses. Save version 0.91 displays as v0.9.1, after current main v0.9.",
+  "prior_work": "PR17 (Craft materials/Fire) merged during publication. Incorporated main 44c1814 into this owned branch, reconciled conflicts, restored purchase per the owner reply, and reran verification. PR13 research remains independent.",
   "writer": "Installed Orcha branch_writers verified exact isolated branch/checkout scope before edits and publication. Default-off coordinator was not activated; private fencing receipts remain outside source.",
   "user_outcome": {
     "start": "Player owns Timber frames, completed huts and earned Organization milestones; sufficient Population for Craft or Organization.",
@@ -40,7 +50,7 @@
     {
       "id": "TF1",
       "requirement": "Owner-requested effect",
-      "evidence": "js/civilization.js prestigePreview -> prestige; tests/rules/timber-frames.test.cjs covers both resets, 0-10 milestones and 0/1/4/12 huts",
+      "evidence": "js/civilization.js prestigePreview -> prestige; tests/rules/timber-frames.test.cjs covers both resets, 0-10 milestones and 0/1/4/12 huts; restored purchase and insufficient-Craft/below-gate/repeated-purchase tests; roof/Bricks retention and v0.9 conversion test",
       "result": "satisfied"
     },
     {
@@ -52,7 +62,7 @@
     {
       "id": "TF3",
       "requirement": "Shared no-legacy-modes; project detached save atomicity",
-      "evidence": "js/mod.js v0.9; migrateData validates old housing before converting; old/current/repeated/malformed codec tests",
+      "evidence": "js/mod.js save version 0.91 (v0.9.1); migrateData validates old capacity including roofs/Bricks before removing only Timber frames +2; historical/current/repeated/malformed codec tests",
       "result": "satisfied"
     },
     {
@@ -64,7 +74,7 @@
     {
       "id": "TF5",
       "requirement": "Project build, package, static, sensitivity, deterministic balance, saves/runtime and Chromium checks",
-      "evidence": "Build/package/syntax/static/static-sensitivity, 132 rule tests, Population-reset mutation sensitivity and 28 Chromium journeys",
+      "evidence": "Full npm test: build/package/syntax/static/static-sensitivity, 162 rule tests, Population-reset mutation sensitivity and 33 Chromium journeys; focused keyboard-purchase journey rerun after final test enhancement.",
       "result": "satisfied"
     },
     {
@@ -82,52 +92,52 @@
   ],
   "checks": [
     {
-      "command": "npm test",
-      "result": "All stages through test:sensitivity passed; sandbox browser launch stalled and was stopped. Browser stage rerun successfully outside sandbox. Rule suite: 132 passed."
+      "command": "npm test (outside sandbox)",
+      "result": "passed: build, package, syntax, static contracts/sensitivity, 162 rules, gameplay mutation sensitivity, 33 Chromium journeys"
     },
     {
-      "command": "npm run test:browser",
-      "result": "28 passed using installed Chromium outside sandbox."
+      "command": "npx playwright test tests/browser/civilization.spec.cjs --grep \"Timber frames\"",
+      "result": "passed after extending the journey to buy through the actual Shelter button with keyboard input"
     },
     {
-      "command": "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60",
-      "result": "Both policies reached opening completion; matched rough/fixed one-hour coverage and checkpoint times agree."
+      "command": "npm run balance -- --hours 4 --budget 15 --calibrate-minutes 240",
+      "result": "Both legal policies completed; rough/fixed matched full-opening coverage within existing calibration tolerance. Section rebuild remains 40s with exact 1s/5s advancement parity."
     },
     {
       "command": "git diff --check",
       "result": "passed"
     },
     {
-      "command": "standards_resolver.resolve(feature/review), fresh observed Orcha main",
+      "command": "standards_resolver.resolve(feature/review), freshly observed current Orcha main",
       "result": "catalog hashes verified"
     }
   ],
   "balance": {
-    "report_sha256": "7f6fe31e009b048f29d4432fae0877da4589a539e175c7fc488f9e29e20abdde",
+    "report_sha256": "9fd4a99a579ca0d40e5ad4848b1914eaf3e1fd2577ef51d7decf0bbdba624680",
     "engine_sources": {
       "js/technical/break_eternity.js": "668d5024e41c64a9557cf7895e948ad14f5638297277a0714599ceee773a3e49",
       "js/technical/layerSupport.js": "698faf660627e427a64326054c888e8ee3bc3f048ffc3e4fbae14cec0e734477",
       "js/tree.js": "c0b1df0c0ce7143db9ec76c523e16ee6c58af2ed0fce24437da2737fb939d6ae",
       "js/sc.js": "0559e2c61e0aa8a2eda2b2b8b37accd61ad625d2526a9ad1e5acb1290bc8bfa5",
       "js/help.js": "9133bfb065e426d214c1eeb78a6ec44fc2525f729aecca85a04ea8896b225c52",
-      "js/civilization.js": "eb7a5d3f114b1a5926a960141c94de062bfd32a6b0413ed0a939e0674f131137",
+      "js/civilization.js": "df801c34768c16f7038ec165ec3aa4d72f70cb3425c9cf8f68e0bbf2aa61e7d0",
       "js/layers/resources.js": "59bb77682e72e17c0678dea075026ff08496b050c7373c8fe0ff4829ff08ce30",
       "js/layers/manifest.js": "1a669201b7703b624ecb4d6e8da995fe518b7db0b0d9366f4003151245613aa8",
-      "js/mod.js": "f8ee894358a8ed843fa191db115ccdeeb87c41bc2c3d6a24931b5720fa3ff4bc",
+      "js/mod.js": "0e051868585ad252d60a4e22289f81267e20330e0ae624f111cff38f421e7f14",
       "js/technical/temp.js": "01e91e32b487aa00f29ba255fee2afcaf7a3d38db5aac034955da2d4a3c1ed23",
       "js/game.js": "77c2b6c612a690f54cbb2858bb77826eacf1a2bcb55e3d1bc0c390b29b3d1087",
       "js/utils.js": "a77fcda8989fb4cad57cd97e1a7243a0c579ef91ac56006de6a51ed820847944",
       "js/save-codec.js": "00493a4719c674c86af2ca31aa4b28156aef983d2548700c5596d16879e9ea7c",
       "js/save-storage.js": "208e9273a69d465409dbdd3c7bda79182da978f6f45bc2f917ad322dbbe0e0ca",
       "js/saves.js": "c65a3df88631a74906f4edd8de74398b7a6493832ef4a6146972a27a9c09bb29",
-      "js/components.js": "f450c5da26e2efb8bfcb5405331120801ac173783f23422d85974ad5868c90c8",
+      "js/components.js": "5d5c5afff81829feb14031488570e023e7045130746407c9bc00233d198b03cf",
       "js/technical/canvas.js": "d7d40693968d5770958ece8ab8287925fed252d361f99b7c1103444023ae3b4f",
       "js/game-runtime.js": "aae182a1d8e1214dea5b93f1572fd59d772d3bc2287a80c983bff11169a0f3e5",
       "js/game-session.js": "c1f85137c6bf3b0154e8d12648786815428bd9c651b01772a8f491ea73efdc6c",
       "js/contracts.js": "5fb774ae31d1ca392f85c67d8da0e0d5fce00877ff9ae102f116ddac680b56eb",
       "js/browser-entry.js": "0347b1bf64d62231d2b87ba8009955f819eb69e723f6b87c4678fa5e9931ef79"
     },
-    "policy_sha256": "b63b2096aca8511ea5d4b10cff7cde1ccacc1315b221b55ce1aa22e1effc1ee9",
+    "policy_sha256": "865ce4f6c628e9d137f84e0971124ef95afc7479dcaaa979afa374dfac5843b7",
     "section": {
       "start": "Synthetic MS3, five built huts, two Craft, 12 Population; buy through command, export/load codec, Craft reset keeps three huts, build fourth through command. Prefix intentionally skipped.",
       "observation": "40 simulated seconds with active 5s or regular 20s checks; serialized results identical with 1s/5s outer advancement; horizon 120s. No accepted timing target."
@@ -135,16 +145,17 @@
     "runs": [
       {
         "strategy": "active-balanced",
-        "simulatedSeconds": 2945,
+        "simulatedSeconds": 7870,
         "status": "endgame",
         "actions": {
-          "dispatch": 149,
-          "prestige": 30,
-          "construction": 27,
-          "upgrade": 16,
-          "expedition-length": 52,
-          "automation": 278,
-          "staffing": 468
+          "dispatch": 542,
+          "prestige": 42,
+          "construction": 232,
+          "automation": 504,
+          "upgrade": 25,
+          "expedition-length": 207,
+          "staffing": 1452,
+          "fire-tending": 85
         },
         "cadenceChanges": [
           {
@@ -155,25 +166,22 @@
       },
       {
         "strategy": "regular",
-        "simulatedSeconds": 3160,
+        "simulatedSeconds": 8215,
         "status": "endgame",
         "actions": {
-          "dispatch": 96,
-          "prestige": 29,
-          "construction": 27,
-          "upgrade": 16,
-          "automation": 209,
-          "expedition-length": 23,
-          "staffing": 125
+          "dispatch": 349,
+          "prestige": 40,
+          "construction": 212,
+          "automation": 448,
+          "upgrade": 25,
+          "expedition-length": 127,
+          "staffing": 377,
+          "fire-tending": 55
         },
         "cadenceChanges": [
           {
             "time": 0,
             "seconds": 20
-          },
-          {
-            "time": 3160,
-            "seconds": 300
           }
         ]
       }
@@ -181,26 +189,26 @@
     "calibration": [
       {
         "strategy": "active-balanced",
-        "horizonSeconds": 3600,
+        "horizonSeconds": 14400,
         "roughStatus": "endgame",
         "fixedStatus": "endgame",
-        "checkpointCount": 17,
+        "checkpointCount": 21,
         "coverageMismatches": 0,
         "maximumRelativeCheckpointDifference": 0
       },
       {
         "strategy": "regular",
-        "horizonSeconds": 3600,
+        "horizonSeconds": 14400,
         "roughStatus": "endgame",
         "fixedStatus": "endgame",
-        "checkpointCount": 17,
+        "checkpointCount": 21,
         "coverageMismatches": 0,
-        "maximumRelativeCheckpointDifference": 0
+        "maximumRelativeCheckpointDifference": 0.0006090133982947625
       }
     ]
   },
   "review": {
-    "comparison_base": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
+    "comparison_base": "44c1814232dd495dec3912af87a710d0c3d65d68",
     "scope": "All authored changed and added paths, including historical version assertions, inspected. No confirmed remaining findings in this bounded change.",
     "candidates": [
       {
@@ -214,59 +222,63 @@
     ],
     "limitations": [
       "Synthetic pacing is not real-user pacing.",
-      "Existing Timber frames settlements retain their hut counts and Population but housing decreases from six to four per hut; Population can temporarily exceed housing.",
-      "Rollback to pre-v0.9 code requires the preserved original v0.8 export; older code correctly rejects new-version saves.",
-      "Registry/manifest master metadata discrepancy is retained; no lifecycle authority, upstream, merge, deployment or service activation changes."
+      "Pre-0.91 Timber frames settlements keep their hut counts and Population but lose the old +2 housing per hut; roofs/Bricks remain. Population may temporarily exceed housing.",
+      "Rollback requires a preserved pre-0.91 export; older code rejects newer-version saves.",
+      "Registry/manifest master metadata discrepancy is retained; no lifecycle authority, upstream, merge to main, deployment or service activation changes."
     ]
   },
   "changed_paths": {
     "README.md": {
       "review": "inspected",
-      "sha256_lf": "4bdc9235ff3ec964a5df396e926df4d5daadf3e99f223664c7535a1c465e945d"
+      "sha256_lf": "6cf7fb4b45420d4c8fe192ff5e1c45860c1b6272f8cf3999b09d1cf13983b90a"
     },
     "docs/civilization.md": {
       "review": "inspected",
-      "sha256_lf": "dbbfd203252e6a98688393da7fc4f35fb0771ace71da8eb97b4590d943291d27"
+      "sha256_lf": "ba633f657f0da2f73995d3fa32f1cd52ed0242988143f1a66019d00137e74959"
     },
     "docs/developer-guide.md": {
       "review": "inspected",
-      "sha256_lf": "0d6dfc5e90be32b1260b6d4b63957192d59bda1206e42006123c0e608dbf9296"
+      "sha256_lf": "9f1b2bb74adcf64e3c03c3df5a246ebc0149e6f0ccf20d00ef6249b5a107f220"
     },
     "js/civilization.js": {
       "review": "inspected",
-      "sha256_lf": "fa721cca638e765632c09d31ae5dad332fe0f619f8485cae6de200d80b450f38"
+      "sha256_lf": "df801c34768c16f7038ec165ec3aa4d72f70cb3425c9cf8f68e0bbf2aa61e7d0"
     },
     "js/mod.js": {
       "review": "inspected",
-      "sha256_lf": "91c364c74d60ae78ee730dba0c5c42611274b4a393161457305758737de0339a"
+      "sha256_lf": "0e051868585ad252d60a4e22289f81267e20330e0ae624f111cff38f421e7f14"
     },
     "tests/browser/civilization.spec.cjs": {
       "review": "inspected",
-      "sha256_lf": "4c393cb6c21fe28cd87e7a1091059b3e5acacb36ce246bbd0f4ed7d15379ee57"
+      "sha256_lf": "e6369dbdd2fea4462aba579565be1a4852c1c348891f8a29f66ded615bdbb40b"
     },
     "tests/rules/balance-simulation.test.cjs": {
       "review": "inspected",
-      "sha256_lf": "89500155eb91db2c355eddf2269f1a9ade1df0a3d6d4b103c4386e49ec3b1f68"
+      "sha256_lf": "b1474d1bcffa995b07480ef2b3fea97ef88089262dd699991971e5ae1a1c5a58"
     },
     "tests/rules/civilization.test.cjs": {
       "review": "inspected",
-      "sha256_lf": "e0a7d85901a52b53e0e77c74fe97ce4f9c72735bef934d6b49c30f450e41a530"
+      "sha256_lf": "f3adfc08549074bad901678c8fce5754d5a9452efeb7a46ea9ee1c65a4393d48"
     },
     "tests/rules/early-milestones.test.cjs": {
       "review": "inspected",
-      "sha256_lf": "bd6d94a0af6664fdc5bba76436fd5adbf7b3aa755201ddabdb53f8834a679211"
+      "sha256_lf": "3983b6a4bca106e4c75aaba0335d267051bd481942d3d1222a7abde1dd93475d"
     },
-    "tests/rules/shared-hearths.test.cjs": {
+    "tests/rules/materials.test.cjs": {
       "review": "inspected",
-      "sha256_lf": "baa802e2f86953c9e39cafff2fa18ba243e5853b90073fa59dbfb102b6e863a5"
+      "sha256_lf": "459c7929ad288c2aa5b01ba9f9f241b169f6bf8db5f82cdb8a34210c7d381a3d"
     },
-    "tests/rules/v08-upgrades.test.cjs": {
+    "tests/rules/organization-progression.test.cjs": {
       "review": "inspected",
-      "sha256_lf": "870573c94fb65e339650190815f5892b89b13497425ea96221dd30182ce1c615"
+      "sha256_lf": "281429da434ee6a7db5188029a11752276882e942f178a130b213bb97db6ecbd"
     },
     "tests/rules/timber-frames.test.cjs": {
       "review": "inspected",
-      "sha256_lf": "824daded1e896d778d9abceb6eba2d443b987904bc7248d7b4c9287026a617ed"
+      "sha256_lf": "18494397089f3c95586284865b07865be7f1c2f1ef49c70aa87c5c713032d933"
+    },
+    "tests/rules/v08-upgrades.test.cjs": {
+      "review": "inspected",
+      "sha256_lf": "9fd08accd8f9898cee717063b4bcaa78f208d9dd9e32f1dacd3b23aadc8f9180"
     }
   }
 }

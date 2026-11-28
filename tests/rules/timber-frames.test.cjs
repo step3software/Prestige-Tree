@@ -38,6 +38,43 @@ test('Timber frames caps built hut retention at earned milestones on both tier 2
     }
 });
 
+test('Timber frames is purchasable once in Shelter for two Craft after milestone one', t => {
+    const {p,e,D} = game(t, 0, 0, false);
+    p.craft.points = new D(2);
+    assert.equal(e.upgrades('shelter').some(upgrade => upgrade.id === 'joinery'), false);
+    assert.equal(e.buyUpgrade('joinery'), false);
+    assert.equal(p.craft.points.toNumber(), 2);
+    p.organization.best = new D(1); p.craft.points = new D(1);
+    assert.equal(e.buyUpgrade('joinery'), false);
+    assert.equal(p.craft.points.toNumber(), 1);
+    p.craft.points = new D(2);
+    assert.equal(e.upgrades('shelter').find(upgrade => upgrade.id === 'joinery').canBuy, true);
+    assert.equal(e.buyUpgrade('joinery'), true);
+    assert.equal(p.craft.points.toNumber(), 0);
+    assert.equal(p.shelter.points.toNumber(), 8);
+    assert.equal(e.buyUpgrade('joinery'), false);
+});
+
+test('roof and Bricks housing survives Timber frames retention and historical conversion', t => {
+    for (const bricks of [false, true]) {
+        const {engine,p,e,D} = game(t, 3, 5);
+        p.craft.points = new D(100);
+        for (const id of ['crafting','roofs',...(bricks ? ['clay','bricks'] : [])]) assert.equal(e.buyUpgrade(id), true);
+        const perHut = bricks ? 6 : 5;
+        assert.equal(p.shelter.points.toNumber(), 8 + 5 * perHut);
+        const raw = JSON.parse(Buffer.from(engine.exportPlayer(), 'base64').toString());
+        raw.version = '0.9'; raw.shelter.points = String(8 + 5 * (perHut + 2));
+        const converted = createBalanceEngine(raw); t.after(converted.dispose);
+        assert.equal(converted.player.shelter.points.toNumber(), 8 + 5 * perHut);
+        const rules = converted.session.modRules.civilization;
+        assert.ok(rules.prestigePreview('craft').keepText.includes('3 built huts (' + (8 + 3 * perHut) + ' housing)'));
+        assert.equal(rules.prestige('craft'), true);
+        assert.equal(converted.player.shelter.homes, 3);
+        assert.equal(converted.player.shelter.points.toNumber(), 8 + 3 * perHut);
+        converted.exportPlayer();
+    }
+});
+
 test('prospective Organization milestone counts immediately and spending does not reduce the cap', t => {
     const {p,e,D} = game(t, 3, 8);
     p.organization.points = new D(3); p.points = new D(20);
@@ -91,7 +128,7 @@ test('v0.8 Timber frames housing converts once without changing huts, Population
     assert.equal(result.ok, true, result.error);
     assert.equal(JSON.stringify(raw), original, 'Detached conversion preserves the original');
     const loaded = createBalanceEngine(codec.encodePlayer(result.value).text); t.after(loaded.dispose);
-    assert.equal(loaded.player.version, '0.9');
+    assert.equal(loaded.player.version, '0.91');
     assert.equal(loaded.player.shelter.homes, 4);
     assert.equal(loaded.player.shelter.points.toNumber(), 24);
     assert.equal(loaded.player.points.toNumber(), p.points.toNumber());

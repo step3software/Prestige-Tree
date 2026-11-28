@@ -61,8 +61,9 @@ test('all ten unlocks survive spending, both prestiges and codec reload without 
 test('retention, upgrades, irrigation and auto-building remain unlocked after spending', t => {
     const {engine,p,e,D} = game(t);
     p.organization.best = new D(10); p.organization.points = new D(0); p.organization.total = new D(100);
-    p.craft.points = new D(10); p.food.points = new D(50); p.water.points = new D(50);
-    assert.equal(e.buyUpgrade('lashings'),true);
+    p.craft.points = new D(15); p.food.points = new D(50); p.water.points = new D(50);
+    assert.equal(e.buyUpgrade('crafting'),true);
+    assert.equal(e.buyUpgrade('hunting'),true);
     assert.equal(e.buyUpgrade('workRosters'),false,'unlocked upgrades still require payment');
     assert.equal(e.buyUpgrade('abundance'),true);
     assert.equal(e.startProject('shelter-home'),true);
@@ -79,6 +80,7 @@ test('retention, upgrades, irrigation and auto-building remain unlocked after sp
 test('previously paused orders wait for supervisors without discarding paid crews or pending counts', t => {
     const {engine,p,e,D} = game(t);
     p.organization.best = new D(3); p.organization.points = new D(2);
+    p.civ.improvements.crafting=true;p.civ.features.hunting=true;
     p.food.points = new D(10); p.water.points = new D(20);
     assert.equal(e.dispatch('hunt'),true); assert.equal(e.dispatch('water'),true);
     p.civ.actions.gather.repeat = 4; p.civ.hutRepeat = 4;

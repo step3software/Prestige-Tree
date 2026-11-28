@@ -4,8 +4,8 @@ const {createBalanceEngine} = require('../../scripts/balance/engine.cjs');
 const Decimal = require('../../js/technical/break_eternity.js');
 function game(t,save) {
     const engine=createBalanceEngine(save);
-    // Established-settlement fixture; current Coordination is set for the activity gates under test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});t.after(engine.dispose);
+    // Established-settlement fixture: retain activities already discovered before this test.
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true;t.after(engine.dispose);
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 
