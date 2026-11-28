@@ -1,3 +1,43 @@
+/** Integer selection stays controlled by the caller, including rejected commands. */
+function createRangeControl() {
+    return {
+        props: {
+            id: {type: String, required: true}, label: {type: String, required: true},
+            value: {type: Number, required: true}, min: {type: Number, default: 0},
+            max: {type: Number, required: true}, color: {type: String, default: 'var(--points)'},
+            disabled: {type: Boolean, default: false},
+        },
+        emits: ['change'],
+        methods: {
+            choose(value, event) {
+                if (this.disabled || value < this.min || value > this.max) return;
+                this.$emit('change', value);
+                // A command can reject without changing props; restore native input state too.
+                this.$nextTick(() => {
+                    if (event.target.type === 'checkbox') event.target.checked = Number(event.target.value) <= this.value;
+                    else event.target.value = String(this.value);
+                });
+            },
+            toggle(level, event) {
+                const next = level === this.value ? Math.max(this.min, level - 1) : level;
+                this.choose(next, event);
+            },
+        },
+        template: `<div :id="id" class="range-control" role="group" :aria-labelledby="id + '-label'" :style="{'--range-color': color}">
+            <span :id="id + '-label'" class="range-label">{{label}}</span>
+            <div v-if="max <= 5" class="range-steps">
+                <label v-for="level in max" :key="level" class="range-step">
+                    <input type="checkbox" :value="level" :checked="level <= value" :disabled="disabled || level < min"
+                        :aria-label="label + ': set ' + level" @change="toggle(level, $event)">
+                    <span>{{level}}</span>
+                </label>
+            </div>
+            <input v-else type="range" :min="min" :max="max" step="1" :value="value" :disabled="disabled"
+                :aria-labelledby="id + '-label'" @change="choose(Number($event.target.value), $event)">
+        </div>`,
+    };
+}
+
 /** The Civ view observes the session's canonical player; it owns only UI state. */
 function createGameView({derivedState, effects, gameHelpers, gameRules, helpContent, layerRegistry, modRules, saveCommands, saveState, runtimeServices}) {
     let app;
@@ -40,16 +80,15 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         build(id) { return actionable(() => modRules.civilization.startProject(id)); },
         dispatch(id) { return actionable(() => modRules.civilization.dispatch(id)); },
         recall(id) { return actionable(() => modRules.civilization.recall(id)); },
-        setRepeat(id, event) { return actionable(() => modRules.civilization.setRepeat(id, Number(event.target.value))); },
-        setFireTenders(event) {
-            const changed = actionable(() => modRules.civilization.setFireTenders(Number(event.target.value)));
-            event.target.value = String(saveState.player.civ.fireTenders);
+        setRepeat(id, value) { return actionable(() => modRules.civilization.setRepeat(id, value)); },
+        setFireTenders(value) {
+            const changed = actionable(() => modRules.civilization.setFireTenders(value));
             if (!changed) saveState.player.civ.message = "Fire tending needs available workers. Release a crew or choose fewer tenders.";
             return changed;
         },
-        setCookingLevel(event) { return actionable(() => modRules.civilization.setCookingLevel(Number(event.target.value))); },
-        setHutRepeat(event) { return actionable(() => modRules.civilization.setHutRepeat(Number(event.target.value))); },
-        setOverseers(kind, event) { return actionable(() => modRules.civilization.setOverseers(kind, Number(event.target.value))); },
+        setCookingLevel(value) { return actionable(() => modRules.civilization.setCookingLevel(value)); },
+        setHutRepeat(value) { return actionable(() => modRules.civilization.setHutRepeat(value)); },
+        setOverseers(kind, value) { return actionable(() => modRules.civilization.setOverseers(kind, value)); },
         setExpeditionMultiplier(id, event) { return actionable(() => modRules.civilization.setExpeditionMultiplier(id, Number(event.target.value))); },
         buyUpgrade(id) { return actionable(() => modRules.civilization.buyUpgrade(id)); },
         irrigate() { return actionable(() => modRules.civilization.irrigate()); },
@@ -79,6 +118,7 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         bind();
         if (app) return app;
         const application = effects.Vue.createApp({data: () => ({ui}), computed, methods});
+        application.component('range-control', createRangeControl());
         application.config.errorHandler = error => {
             if (gameRules.tickFaulted) return;
             try { runtimeServices.disposeAll(); }

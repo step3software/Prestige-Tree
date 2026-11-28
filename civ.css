@@ -184,8 +184,7 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .fire-bar::-webkit-progress-value { background: #e34b42; }
 .fire-bar::-moz-progress-bar { background: #e34b42; }
 .fire-controls { display: flex; flex-wrap: wrap; gap: 1rem; margin: .75rem 0; }
-.fire-controls label { display: grid; gap: .35rem; flex: 1 1 12rem; min-width: 0; }
-.fire-controls input { width: 100%; min-width: 0; accent-color: #e34b42; }
+.fire-controls > .range-control { flex: 1 1 12rem; }
 .fire-upgrades { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .5rem; }
 .fire-upgrades .project-button { width: 100%; height: auto; min-height: 7rem; min-width: 0; margin: 0; border-radius: 8px; color: #fff; }
 .fire-upgrades .locked { background: #3d2926; color: #f5dfda; }
@@ -211,4 +210,14 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .material-row .project-button.bought { background: #35502c; color: #fff; }
 .material-row .project-button:disabled { color: #e0e5e9; }
 .fire-buyables { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .5rem; }
+
+/* One integer control: cumulative checkboxes through five, native range above five. */
+.range-control { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; margin: 14px 0; }
+.range-label { font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.range-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.range-control .range-step { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 36px; min-height: 48px; margin: 0; font-size: 16px; cursor: pointer; }
+.range-step input { width: 24px; height: 24px; margin: 0; accent-color: var(--range-color); cursor: inherit; }
+.range-step input:disabled { cursor: not-allowed; }
+.range-control > input[type="range"] { width: 100%; min-width: 0; min-height: 32px; margin: 0; accent-color: var(--range-color); }
+.range-control input:focus-visible { outline: 3px solid var(--color); outline-offset: 3px; }
 .fire-buyables > h3, .fire-buyables > p { grid-column: 1 / -1; }

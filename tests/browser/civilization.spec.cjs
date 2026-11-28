@@ -71,16 +71,17 @@ test('Organization upgrades drive expedition length and separate 25/10 overseer 
  await node(page,'Organization').click();await page.getByRole('button',{name:/^Work rosters/}).click();
  await node(page,'Shelter').click();await page.getByRole('button',{name:/^Prepared materials/}).click();
  expect(await page.evaluate(()=>gameUI.session.saveState.player.organization.points.toNumber())).toBe(3);
- const foreman=page.getByRole('slider',{name:/^Hut foreman:/});
- await expect(foreman).toHaveAttribute('min','1');await expect(foreman).toHaveAttribute('max','5');
- await foreman.focus();await page.keyboard.press('ArrowRight');await expect(foreman).toHaveValue('2');
- await page.getByLabel('Hut repeats remaining:').focus();await page.keyboard.press('End');
- await expect(page.getByLabel('Hut repeats remaining:')).toHaveAttribute('max','10');
+ const foreman=page.locator('#overseer-workers-shelter');
+ await expect(foreman.getByRole('checkbox')).toHaveCount(5);
+ await foreman.locator('input[value="2"]').focus();await page.keyboard.press('Space');
+ await expect(foreman.getByRole('checkbox',{checked:true})).toHaveCount(2);
+ await page.locator('#repeat-huts input[type="range"]').focus();await page.keyboard.press('End');
+ await expect(page.locator('#repeat-huts input[type="range"]')).toHaveAttribute('max','10');
  await node(page,'Food').click();
- const planner=page.getByRole('slider',{name:/^Expedition planner:/});
- await planner.focus();await page.keyboard.press('End');await expect(planner).toHaveValue('5');
+ const planner=page.locator('#overseer-workers-food');
+ await planner.locator('input[value="5"]').click();await expect(planner.getByRole('checkbox',{checked:true})).toHaveCount(5);
  await page.getByLabel('Gather expedition length').selectOption('5');
- const slider=page.getByLabel('Gather repeats remaining:');await slider.focus();await page.keyboard.press('End');
+ const slider=page.locator('#repeat-gather').getByRole('slider');await slider.focus();await page.keyboard.press('End');
  await expect(slider).toHaveValue('25');await expect(slider).toHaveAttribute('max','25');
  await page.evaluate(()=>{gameUI.session.saveState.player.food.points=new Decimal(10);gameUI.session.advance(1);gameUI.commands.save();});
  await expect(slider).toHaveValue('24');
@@ -89,22 +90,24 @@ test('Organization upgrades drive expedition length and separate 25/10 overseer 
  expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().foremanWorkers)).toBe(2);
  expect(await page.evaluate(()=>gameUI.session.modRules.civilization.summary().project.work)).toBeCloseTo(16*1.35**6*.75,8);
  await page.reload();await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());
- await expect(planner).toHaveValue('5');
+ await expect(planner.getByRole('checkbox',{checked:true})).toHaveCount(5);
  await expect(page.getByLabel('Gather expedition length')).toHaveValue('5');
  await expect(slider).toHaveAttribute('max','25');
- await expect(planner).toHaveAttribute('min','5');
- await planner.focus();await page.keyboard.press('Home');await expect(planner).toHaveValue('5');
+ await expect(planner.locator('input[value="4"]')).toBeDisabled();
+ await planner.locator('input[value="5"]').click();await expect(planner.getByRole('checkbox',{checked:true})).toHaveCount(5);
  await slider.focus();await page.keyboard.press('Home');
- await planner.focus();await page.keyboard.press('Home');await expect(planner).toHaveValue('1');
- await expect(slider).toHaveAttribute('max','5');
+ await planner.locator('input[value="1"]').click();await expect(planner.getByRole('checkbox',{checked:true})).toHaveCount(1);
+ await expect(page.locator('#repeat-gather').getByRole('slider')).toHaveCount(0);
+ await expect(page.locator('#repeat-gather').getByRole('checkbox')).toHaveCount(5);
  // Active queues cannot increase staffing beyond the shared free labor budget.
  await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.civ.actions.gather.repeat=1;p.points=new Decimal(6);});
- await expect(planner).toHaveAttribute('max','2');
- await planner.focus();await page.keyboard.press('End');await expect(planner).toHaveValue('2');
+ await expect(planner.getByRole('checkbox')).toHaveCount(2);
+ await planner.locator('input[value="2"]').click();await expect(planner.getByRole('checkbox',{checked:true})).toHaveCount(2);
  expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().availableWorkers)).toBe(0);
- await node(page,'Shelter').click();await expect(foreman).toHaveValue('2');
- await expect(foreman).toHaveAttribute('min','2');await expect(foreman).toHaveAttribute('max','2');
- await foreman.focus();await page.keyboard.press('Home');await expect(foreman).toHaveValue('2');
+ await node(page,'Shelter').click();await expect(foreman.getByRole('checkbox',{checked:true})).toHaveCount(2);
+ await expect(foreman.getByRole('checkbox')).toHaveCount(2);
+ await expect(foreman.locator('input[value="1"]')).toBeDisabled();
+ await foreman.locator('input[value="2"]').click();await expect(foreman.getByRole('checkbox',{checked:true})).toHaveCount(2);
  for(const panel of ['Food','Shelter']){
   await node(page,panel).click();
   for(const width of [1280,320]){
@@ -380,8 +383,8 @@ test('fresh milestones retain huts and overseers while Craft spending reveals hu
  await page.getByTestId('material-crafting').locator('.material-unlock').click();await page.getByRole('button',{name:/^Wooden spears/}).click();
  await node(page,'Food').click();await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toBeVisible();
  await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(3);gameUI.session.saveState.player.organization.points=new Decimal(3);});
- await expect(page.getByLabel('Gather repeats remaining:')).toBeVisible();await expect(page.getByRole('button',{name:/^Extended expeditions/})).toContainText('2 Organization');
- await node(page,'Shelter').click();await expect(page.getByLabel('Hut repeats remaining:')).toBeVisible();await expect(page.getByRole('button',{name:/^Prepared materials/})).toContainText('1 Organization');
+ await expect(page.locator('#repeat-gather')).toBeVisible();await expect(page.getByRole('button',{name:/^Extended expeditions/})).toContainText('2 Organization');
+ await node(page,'Shelter').click();await expect(page.locator('#repeat-huts')).toBeVisible();await expect(page.getByRole('button',{name:/^Prepared materials/})).toContainText('1 Organization');
  await node(page,'Organization').click();await expect(page.getByRole('button',{name:/^Work rosters/})).toContainText('3 Organization');expect(errors).toEqual([]);
 });
 
@@ -492,7 +495,7 @@ test('overseer controls repeat staffed trips and Water upgrades remove hauling w
     // reachability and pacing are covered by the balance policy tests.
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(10);p.organization.points=new Decimal(3);p.organization.total=new Decimal(6);p.organization.points=new Decimal(6);p.food.points=new Decimal(50);p.water.points=new Decimal(50);});
     await expect(page.getByRole('button',{name:/^Expedition overseer/})).toHaveCount(0);
-    await page.getByLabel('Gather repeats remaining:').focus();await page.keyboard.press('End');
+    await page.locator('#repeat-gather input[value="5"]').click();
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.craft.points=new Decimal(0);p.food.points=new Decimal(0);gameUI.session.advance(22);});
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.completed)).toBeGreaterThanOrEqual(2);
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().workers.food)).toBe(2);
@@ -516,7 +519,7 @@ test('shortage warning counts down grace, shows accelerating loss and clears on 
     expect(errors).toEqual([]);
 });
 
-test('Hut foreman replaces Water keeper and repeats staffed construction with a keyboard slider',async({page})=>{
+test('Hut foreman replaces Water keeper and repeats staffed construction with keyboard checkboxes',async({page})=>{
     const errors=await open(page);
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(12);p.craft.points=new Decimal(1);p.organization.total=new Decimal(4);p.organization.points=new Decimal(4);p.food.points=new Decimal(50);p.water.points=new Decimal(50);gameUI.session.derivedState.updateTemp();});
     await node(page,'Water').click();
@@ -524,15 +527,15 @@ test('Hut foreman replaces Water keeper and repeats staffed construction with a 
     await expect(page.locator('#resource-panel').getByRole('slider')).toHaveCount(0);
     await node(page,'Shelter').click();
     await expect(page.getByRole('button',{name:/^Hut foreman/})).toHaveCount(0);
-    const slider=page.getByLabel('Hut repeats remaining:');
-    await slider.focus();await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');
-    await expect(slider).toHaveValue('2');
+    const control=page.locator('#repeat-huts');
+    await control.locator('input[value="2"]').focus();await page.keyboard.press('Space');
+    await expect(control.getByRole('checkbox',{checked:true})).toHaveCount(2);
     await page.evaluate(()=>gameUI.session.advance(1));
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().foremanWorkers)).toBe(1);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.projectWorkers)).toBe(1);
-    await expect(slider).toHaveValue('1');
+    await expect(control.getByRole('checkbox',{checked:true})).toHaveCount(1);
     await page.evaluate(()=>gameUI.session.advance(40));
-    await expect(slider).toHaveValue('0');
+    await expect(control.getByRole('checkbox',{checked:true})).toHaveCount(0);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.shelter.homes)).toBe(2);
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().foremanWorkers)).toBe(0);
     await node(page,'Craft').click();
@@ -544,35 +547,35 @@ test('Hut foreman replaces Water keeper and repeats staffed construction with a 
 });
 
 
-test('Food sliders count down queued repeats, finish current jobs and stop at zero',async({page})=>{
+test('Food checkboxes count down queued repeats, finish current jobs and stop at zero',async({page})=>{
     const errors=await open(page);
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(30);p.civ.improvements.overseer=true;p.civ.improvements.farming=true;p.civ.improvements.gravity=true;p.food.points=new Decimal(10);p.water.points=new Decimal(50);gameUI.session.derivedState.updateTemp();});
     for(const name of ['Gather','Hunt']){
-        const slider=page.getByLabel(name+' repeats remaining:');
-        await slider.focus();await page.keyboard.press('End');
-        await expect(slider).toHaveValue('5');
+        const control=page.locator('#repeat-'+name.toLowerCase());
+        await control.locator('input[value="5"]').focus();await page.keyboard.press('Space');
+        await expect(control.getByRole('checkbox',{checked:true})).toHaveCount(5);
     }
     await page.evaluate(()=>gameUI.session.advance(1));
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().overseerWorkers)).toBe(1);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(1);
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.hunt.workers)).toBe(3);
-    await expect(page.getByLabel('Gather repeats remaining:')).toHaveValue('4');
-    await expect(page.getByLabel('Hunt repeats remaining:')).toHaveValue('4');
+    await expect(page.locator('#repeat-gather input:checked')).toHaveCount(4);
+    await expect(page.locator('#repeat-hunt input:checked')).toHaveCount(4);
     await page.evaluate(()=>gameUI.session.advance(1));
-    await expect(page.getByLabel('Gather repeats remaining:')).toHaveValue('4');
-    const gather=page.getByLabel('Gather repeats remaining:');
-    await gather.focus();await page.keyboard.press('Home');
+    await expect(page.locator('#repeat-gather input:checked')).toHaveCount(4);
+    const gather=page.locator('#repeat-gather input[value="1"]');
+    await gather.click();await gather.click();
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.gather.jobs)).toBe(1);
-    await expect(page.getByLabel('Fish repeats remaining:')).toHaveValue('0');
-    await expect(page.getByLabel('Farm repeats remaining:')).toHaveValue('0');
+    await expect(page.locator('#repeat-fish input:checked')).toHaveCount(0);
+    await expect(page.locator('#repeat-farm input:checked')).toHaveCount(0);
     for(const width of [1280,320]){
         await page.setViewportSize({width,height:800});
-        await expect(page.getByLabel('Hunt repeats remaining:')).toBeVisible();
+        await expect(page.locator('#repeat-hunt')).toBeVisible();
         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
         await page.screenshot({path:'test-results/food-orders-'+width+'.png',fullPage:true});
     }
     await page.evaluate(()=>gameUI.session.advance(125));
-    await expect(page.getByLabel('Hunt repeats remaining:')).toHaveValue('0');
+    await expect(page.locator('#repeat-hunt input:checked')).toHaveCount(0);
     await page.evaluate(()=>{const s=gameUI.session;for(let i=0;i<100&&s.saveState.player.civ.actions.hunt.completed<5;i++)s.advance(1);});
     expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.actions.hunt.completed)).toBe(5);
     await page.evaluate(()=>gameUI.session.advance(30));
