@@ -5,7 +5,7 @@ async function open(page){
  await page.goto('/');await expect(page.getByTestId('population')).toBeVisible();
  await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());return errors;
 }
-async function stage(page,total=4){await page.evaluate(total=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(total);p.points=new Decimal(12);p.shelter.homes=2;p.shelter.points=new Decimal(16);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.craft.points=new Decimal(10);},total);}
+async function stage(page,total=4){await page.evaluate(total=>{const p=gameUI.session.saveState.player;p.organization.total=new Decimal(total);p.organization.points=new Decimal(total);p.points=new Decimal(12);p.shelter.homes=2;p.shelter.points=new Decimal(16);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.craft.points=new Decimal(10);},total);}
 
 test('MS4 reveals a red Fire bar, exact upgrades and separate keyboard tending/Cooking controls through reload',async({page})=>{
  const errors=await open(page);await expect(page.getByTestId('fire-panel')).toHaveCount(0);await stage(page);

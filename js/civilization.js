@@ -60,7 +60,7 @@ function createCivilizationRules({ saveState }) {
         pipes: {resource: "water", name: "Fired-clay pipes", description: "Double spring flow. Manual hauling remains available. Pay Fire once, without ongoing fuel use.", costs: {craft: 2, fire: 2}},
         lashings: {resource: "shelter", name: "Cord lashings", description: "Hut construction work scales by 1.25 per hut instead of 1.35.", costs: {craft: 1}},
         digging: {resource: "food", name: "Digging sticks", description: "Gathering returns 25% more Food with the same crew and duration.", costs: {craft: 1}},
-        butchery: {resource: "food", name: "Butchery tools", description: "Hunting returns 50% more Food with the same crew and duration.", costs: {craft: 3}},
+        butchery: {resource: "food", name: "Copper knives", description: "Hunting returns 50% more Food with the same crew and duration.", costs: {craft: 3}},
         preparedMaterials: {resource: "shelter", name: "Prepared materials", description: "Overseer-started huts require 25% less construction work.", costs: {organization: 1}},
         extendedExpeditions: {resource: "food", name: "Extended expeditions", description: "Choose 1-5 times duration and Food yield for each expedition. Crew size and repeats spent stay unchanged.", costs: {organization: 2}},
         workRosters: {resource: "organization", name: "Work rosters", description: "Assign 1-5 overseers separately to Food and huts. Each assigned worker supports 5 queued repeats, up to 25 per slider.", costs: {organization: 3}},
@@ -184,13 +184,15 @@ function createCivilizationRules({ saveState }) {
     }
     const knowledgeEffect = () => 1 + amount("education") * 0.12;
     const waterFlow = () => personUpkeep() * (8 + player().water.sites) * knowledgeEffect() * (owns("pipes") ? 2 : 1);
-    function fireAvailable() {
-        return amount("organization") >= 4 || owns("cooking") || owns("jars") || owns("hearth");
+    function fireAvailable(data = player()) {
+        const improvements = data.civ.improvements;
+        return data.organization.points.gte(4) || improvements.cooking || improvements.jars || improvements.hearth;
     }
     const fireCapacity = () => 10 + 2 * player().shelter.homes + 10 * player().civ.fireBuyables.fuel;
     function fireStatus() {
         const p = player(), maximum = fireCapacity(), fill = Math.min(1, p.civ.fire / maximum);
-        const gain = p.civ.fireTenders * (0.5 + 1.5 * fill * fill) * (1 + 0.2 * p.civ.fireBuyables.hearths);
+        const tenders = fireAvailable() ? p.civ.fireTenders : 0;
+        const gain = tenders * (0.5 + 1.5 * fill * fill) * (1 + 0.2 * p.civ.fireBuyables.hearths);
         let uncookedProduction = 0;
         for (const [id, state] of Object.entries(p.civ.actions)) {
             if (actionBase[id].resource === "food" && state.remaining > 0) uncookedProduction += state.reward / state.duration * 60;
@@ -200,14 +202,14 @@ function createCivilizationRules({ saveState }) {
         const suppliedFraction = consumption > 0 ? Math.min(1, (p.civ.fire * 60 + gain) / consumption) : 1;
         const actualConsumption = consumption * suppliedFraction;
         return {available: fireAvailable(), current: p.civ.fire, maximum, fill, gain, consumption, actualConsumption,
-            net: gain - actualConsumption, tenders: p.civ.fireTenders, level, uncookedProduction,
+            net: gain - actualConsumption, tenders, level, uncookedProduction,
             cookingMultiplier: 1 + (level - 1) * suppliedFraction * cookingBonusFactor(), cookingAvailable: owns("cooking"),
             fuelLimited: suppliedFraction < 1};
     }
     function setFireTenders(workers) {
         const p = player();
         if (!Number.isInteger(workers) || workers < 0 || workers > 5 || (workers > 0 && !fireAvailable()) ||
-            workers - p.civ.fireTenders > occupiedWorkers().availableWorkers) return false;
+            workers - occupiedWorkers().fireTenders > occupiedWorkers().availableWorkers) return false;
         p.civ.fireTenders = workers;
         return true;
     }
@@ -396,7 +398,7 @@ function createCivilizationRules({ saveState }) {
             if (action.remaining > 0) workers[actionBase[id].resource] += action.workers;
         }
         const builders = p.civ.project ? p.civ.projectWorkers : 0;
-        const fireTenders = p.civ.fireTenders;
+        const fireTenders = fireAvailable() ? p.civ.fireTenders : 0;
         const laborUsed = workers.food + workers.water + builders + foremanWorkers + fireTenders;
         const spare = Math.max(0, p.points.toNumber() - laborUsed);
         return {workers, overseerWorkers, foremanWorkers, builders, fireTenders, laborUsed, spare, availableWorkers: Math.floor(spare + 1e-9)};
@@ -869,19 +871,19 @@ function createCivilizationRules({ saveState }) {
             const improvements = old.improvements;
             if (improvements && typeof improvements === "object" && !Array.isArray(improvements)) {
                 if (Object.values(improvements).some(value => typeof value !== "boolean")) throw new Error("Invalid historical improvement");
-                const broadAccess = !Object.hasOwn(old, "features") || old.features?.buyables || Number(data.organization?.total) >= 6;
+                const broadAccess = !Object.hasOwn(old, "features") || old.features?.buyables || Number(data.organization?.points) >= 6;
                 const ownsEquipment = ["jars", "hunting", "digging", "butchery"].some(id => improvements[id]) ||
                     Number(data.water?.storage) > 0 || Number(data.water?.sites) > 0 || Number(data.food?.storage) > 0 ||
                     (old.project && old.project !== "shelter-home");
                 if (broadAccess || ownsEquipment) improvements.crafting = true;
                 if (improvements.jars) { improvements.clay = true; improvements.crafting = true; }
                 if (improvements.butchery) improvements.copper = true;
-                if (Number(data.organization?.total) >= 2 && old.features) old.features.hunting = true;
+                if (old.features) old.features.hunting = Number(data.organization?.points) >= 2;
             }
             if (old.features && Object.hasOwn(old.features, "buyables")) old.features.buyables = false;
         }
         if (data.civ && !Object.hasOwn(data.civ, "features")) {
-            data.civ.features = {huts: true, hunting: true, fishing: true, buyables: true};
+            data.civ.features = {huts: false, hunting: Number(data.organization?.points) >= 2, fishing: true, buyables: false};
         }
         if (Number(data.version || 0) >= 0.8) return;
         const civ = data.civ;
@@ -934,16 +936,15 @@ function createCivilizationRules({ saveState }) {
         const civ = data.civ;
         if (Object.keys(civ.fireBuyables).sort().join() !== "charcoal,fuel,hearths" || !Object.values(civ.fireBuyables).every(count)) throw new Error("Invalid Fire buyables");
         const imp = civ.improvements;
+        if (civ.project.startsWith("fire-") && !imp.crafting) throw new Error("Construction material is locked");
         if ((civ.fireBuyables.charcoal > 0 || civ.project === "fire-charcoal") && !imp.clay) throw new Error("Charcoal material is locked");
-        if (civ.project.startsWith("fire-") && data.organization.total.lt(4) && !imp.cooking && !imp.jars && !imp.hearth) throw new Error("Fire construction is locked");
         if (imp.bricks && !imp.roofs || imp.copperPots && !imp.clayPots || imp.clayPots && !imp.cooking) throw new Error("Invalid equipment tier");
         if (Number(data.version) >= 0.9 && ((imp.jars || imp.bricks || imp.clayPots || imp.pipes) && !imp.clay ||
             (imp.copperAxes || imp.butchery || imp.copperPots || imp.sickles) && !imp.copper ||
             (imp.roofs || imp.hunting || imp.digging || Object.values(civ.fireBuyables).some(value => value > 0)) && !imp.crafting)) throw new Error("Equipment material is locked");
         if (!finite(civ.fire) || civ.fire > 10 + 2 * data.shelter.homes + 10 * civ.fireBuyables.fuel || !count(civ.fireTenders) || civ.fireTenders > 5 ||
             !Number.isInteger(civ.cookingLevel) || civ.cookingLevel < 1 || civ.cookingLevel > 5 ||
-            (!civ.improvements.cooking && civ.cookingLevel !== 1) ||
-            (data.organization.total.lt(4) && !civ.improvements.cooking && !civ.improvements.jars && !civ.improvements.hearth && (civ.fire > 0 || civ.fireTenders > 0))) throw new Error("Invalid Fire state");
+            (!civ.improvements.cooking && civ.cookingLevel !== 1)) throw new Error("Invalid Fire state");
         if (Number(data.version) < 0.6) {
             // Preserve earned balances and retired improvement counts while
             // retiring their automatic unlock and unfinished labor-only project.

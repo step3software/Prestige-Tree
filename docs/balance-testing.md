@@ -4,7 +4,7 @@ Build balance coverage **in the same PR as each new or replaced section of game
 content**. The planned content replacement should develop its checkpoints,
 playable strategies and pacing tests together. Extend coverage as sections land.
 
-The runner uses the shipped Civ session and resource rules. Its catalog follows supported population, Craft, all ten Organization milestones, Food repeat orders, worker-free Water and staffed farming. The opening completion checkpoint requires milestone 10, overseer, gravity flow and farming. Later resources are locked and hidden and are not opening checkpoints.
+The runner uses the shipped Civ session and resource rules. Its catalog follows supported population, Craft, all ten Organization milestones, Food repeat orders, worker-free Water and staffed farming. The current opening completion checkpoint requires held Organization 10, overseer, gravity flow, farming, Copper cooking pots and all three Fire buyable levels. Later resources are locked and hidden and are not opening checkpoints.
 
 ## Add balance coverage with content
 
@@ -153,7 +153,7 @@ README -> developer guide -> this document -> `scripts/balance/run.cjs` -> `simu
 
 Survival regressions exercise zero Food/Water, combined shortages, exact grace deadlines, acceleration, recovery upgrades, one-survivor rebuilding and deterministic online/offline chunks. A legally reached tenth Organization checkpoint verifies ten minutes of idle rebuilding without additional manual actions. The prestige sensitivity check detects accidentally retaining Population.
 
-The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded settlement through ordinary active/regular play, then constructs exploration, bigger-game hunting and river traps through real guarded commands while maintaining supplies. It grants no resources or levels and checks the new trip/crew contracts. Work, currently held Organization and Craft are distinct scaling axes; no enjoyment or target pacing range is asserted.
+The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded settlement through ordinary active/regular play, then constructs exploration, bigger-game hunting and river traps through real guarded commands while maintaining supplies. It grants no resources or levels and checks the new trip/crew contracts. Work and Craft are the current scaling axes; bigger-game per-level Organization requirements are removed by material capability; no enjoyment or target pacing range is asserted.
 
 ## Fire and revised MS4–9 progression
 
@@ -169,7 +169,7 @@ All times are deterministic synthetic policy observations, not accepted human pa
 
 ## MS1-3 progression and orders
 
-Current held Organization governs new starts, milestone retention and the next Population requirement. Fire policy results below require fresh verification after this rebase.
+Current held Organization governs new starts, milestone retention and the next Population requirement. Final material/Fire results and matching source hashes are recorded in [MAT01 verification](milestones/MAT01.verification.md).
 
 New games have Gather, Hunt from milestone 2 and Farm from 7; Fishing remains a discovered activity only in existing saves pending its new milestone. The legal buyable scenario therefore develops gathering, hunting and farming after their gates. Finite queue tests provision additional wells before five new huts, and recovery tests select one overseer and short expeditions before solo rebuilding. A complete earned settlement recovers 1 to 44 in 93s/92s for active/regular play, after three Food repeat orders. The ten-minute idle check first uses legal manual checks to finish purchases, establish larger queues and build reserves; no extra controls or survival guarantees are implied for an arbitrary five-repeat queue.
 
@@ -209,4 +209,4 @@ The v0.8 policy purchases free Abundance at milestone 1 and can purchase Expedit
 
 The legal policy banks 10/20/30 Craft material unlocks, buys all three separate equipment tiers and constructs each Fire project. No progress/resource grants are used. Optional automatic storage is paused while saving the Fire construction budget. Material checkpoints and `fire-buyables` are recorded separately; current ending also requires Copper cooking pots and completed Fire levels. Active and regular use 5/20-second manual checks respectively until safe automation. The reduced spring generally requires regular hauling, so the observed prefix keeps its 20-second cadence; this is not five-minute idle survival evidence.
 
-After all three rows, active and regular runs reach the material/Fire checkpoint at approximately 5410/5745 game seconds on the initial candidate. Exact final source hashes, observations and rough/fixed calibration belong in MAT01 verification; these are synthetic observations, not an accepted pacing target. Recovery tests now allow actual Water pressure and manual hauling rather than assuming an unlimited old spring. Full calibration uses at least 120 minutes to include the new late material/Fire purchases.
+After rebasing onto held-Organization main, fixed active/regular runs finish at 7805/8230 game seconds; rough regular observes completion at 8235. All calibration checkpoints have matching coverage, with maximum drift 0s active / 5s regular. Exact final source hashes, observations and rough/fixed calibration belong in MAT01 verification; these are synthetic observations, not an accepted pacing target. Recovery tests now allow actual Water pressure and manual hauling rather than assuming an unlimited old spring. Full calibration uses a 240-minute horizon to include the new late material/Fire purchases.

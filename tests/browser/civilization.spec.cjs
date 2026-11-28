@@ -149,10 +149,11 @@ test('Shared hearths buys with Fire and displays fullness-scaled Food without ch
     expect(await page.evaluate(()=>gameUI.session.modRules.civilization.supply().support)).toBe(12);
     await node(page,'Food').click();
     await expect(page.locator('.storage-line')).toContainText('/ 75');
+    const demand=await page.evaluate(()=>gameUI.session.modRules.civilization.supply().demand);
     const before=await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber());
     await page.evaluate(()=>gameUI.session.advance(1));
     const after=await page.evaluate(()=>gameUI.session.saveState.player.food.points.toNumber());
-    expect(after-before).toBeCloseTo(-7/60,8);
+    expect(after-before).toBeCloseTo((3-demand)/60,8);
     for(const width of [1280,320]){
         await page.setViewportSize({width,height:800});
         await expect(page.getByTestId('hearth-benefits')).toBeVisible();
@@ -338,9 +339,9 @@ test('Organization previews exact buyable protection earned by the next mileston
 
 test('fresh milestones retain huts and overseers while Craft spending reveals hunting',async({page})=>{
  const errors=await open(page,false);await node(page,'Shelter').click();await expect(page.getByRole('button',{name:/Build a new hut/})).toHaveCount(0);
- await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(1);});
+ await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(1);gameUI.session.saveState.player.organization.points=new Decimal(1);});
  await expect(page.getByRole('button',{name:/Build a new hut/})).toBeVisible();
- await node(page,'Food').click();await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(2);});
+ await node(page,'Food').click();await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(2);gameUI.session.saveState.player.organization.points=new Decimal(2);});
  await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toHaveCount(0);
  await node(page,'Craft').click();await page.evaluate(()=>{gameUI.session.saveState.player.craft.points=new Decimal(11);});
  await page.getByTestId('material-crafting').locator('.material-unlock').click();await page.getByRole('button',{name:/^Wooden spears/}).click();

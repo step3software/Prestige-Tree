@@ -5,7 +5,7 @@ async function settlement(page){
  await page.evaluate(()=>{
   gameUI.session.runtimeServices.gameRuntime.stop();
   const p=gameUI.session.saveState.player;
-  p.craft.points=new Decimal(500);p.organization.total=new Decimal(10);
+  p.craft.points=new Decimal(500);p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);
   p.civ.fire=10;p.food.points=new Decimal(50);p.water.points=new Decimal(50);
  });
  await page.getByRole('button',{name:/^Craft,/}).click();
@@ -29,6 +29,7 @@ test('material rows upgrade separate Water, cooking and housing families through
  await page.locator('.fire-upgrades').getByRole('button',{name:/^Cooking/}).click();
  await clay.getByRole('button',{name:/^Clay cooking pots/}).click();
  await page.getByTestId('material-copper').locator('.material-unlock').click();
+ await expect(page.getByTestId('material-copper').getByRole('button',{name:/^Copper knives/})).toBeVisible();
  await page.getByTestId('material-copper').getByRole('button',{name:/^Copper pots/}).click();
  const state=await page.evaluate(()=>{
   const p=gameUI.session.saveState.player,e=gameUI.session.modRules.civilization;
@@ -37,7 +38,7 @@ test('material rows upgrade separate Water, cooking and housing families through
  });
  expect(state).toEqual({storage:1,capacity:220,multiplier:3.5,huts:0});
  await expect(clay.getByRole('button',{name:/^Copper pots/})).toContainText('Upgraded');
- for(const width of [1280,390]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'test-results/materials-'+width+'.png',fullPage:true});}
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(await page.locator('.material-row .project-button').evaluateAll(buttons=>buttons.every(button=>button.scrollHeight<=button.clientHeight+1))).toBe(true);await page.screenshot({path:'test-results/materials-'+width+'.png',fullPage:true});}
  expect(errors).toEqual([]);
 });
 test('narrow Fire projects reserve a builder and spring still allows manual collection',async({page})=>{

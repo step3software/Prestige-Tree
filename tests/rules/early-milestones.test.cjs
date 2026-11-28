@@ -13,7 +13,7 @@ test('the actual pre-redesign v0.8 codec export keeps discovered activities and 
  assert.equal(p.civ.preparedHut,false);
  assert.equal(p.civ.actions.hunt.reward,raw.civ.actions.hunt.reward);assert.equal(p.civ.actions.hunt.remaining,raw.civ.actions.hunt.remaining);
  assert.equal(p.civ.actions.gather.repeat,raw.civ.actions.gather.repeat);
- assert.equal(e.actionDefinition('fish').unlocked,true);assert.equal(e.projects('food').length,0,'Below the current buyable gate, existing work remains valid');
+ assert.equal(e.actionDefinition('fish').unlocked,true);assert.ok(e.projects('food').length>0,'Paid historical equipment migrates to Craft capability');
  assert.deepEqual(p.civ.overseers,{food:1,huts:1});
  const loaded=game(t,engine.exportPlayer());assert.deepEqual(loaded.p.civ.features,p.civ.features);
 });

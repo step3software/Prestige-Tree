@@ -2,16 +2,16 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t,save){const engine=createBalanceEngine(save);t.after(engine.dispose);const p=engine.player;return {engine,p,e:engine.session.modRules.civilization,D:p.points.constructor};}
-function stage(p,D,total=4){p.civ.features.hunting=true;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;p.organization.total=new D(total);p.points=new D(8);p.shelter.homes=0;p.shelter.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);}
+function stage(p,D,total=4){p.civ.features.hunting=true;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;p.organization.total=new D(total);p.organization.points=new D(total);p.points=new D(8);p.shelter.homes=0;p.shelter.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);}
 const near=(a,b,tolerance=1e-8)=>assert.ok(Math.abs(a-b)<tolerance,`${a} expected ${b}`);
 
 test('Fire unlocks at four with Cooking/hearths while jar access moves to Clay',t=>{
  const {p,e,D}=game(t);p.civ.fire=10;assert.equal(e.fireStatus().available,false);assert.equal(e.buyUpgrade('cooking'),false);
- p.organization.total=new D(4);assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['cooking',1],['hearth',3]]);
+ p.organization.total=new D(4);p.organization.points=new D(4);assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['cooking',1],['hearth',3]]);
  assert.equal(e.buyUpgrade('jars'),false);
  for(const [id,cost] of [['cooking',1],['hearth',3]]){p.civ.fire=cost;assert.equal(e.buyUpgrade(id),true);assert.equal(p.civ.fire,0);assert.equal(e.buyUpgrade(id),false);}
  assert.deepEqual(e.projects('water'),[]);p.craft.points=new D(10);assert.equal(e.buyUpgrade('crafting'),true);assert.ok(e.projects('water').length>0);
- assert.equal(e.buyUpgrade('abundance'),false);p.organization.total=new D(8);assert.equal(e.buyUpgrade('abundance'),true);
+ assert.equal(e.buyUpgrade('abundance'),false);p.organization.total=new D(8);p.organization.points=new D(8);assert.equal(e.buyUpgrade('abundance'),true);
 });
 
 test('tending uses shared whole workers, accepts zero and preserves hut-based Fire capacity',t=>{

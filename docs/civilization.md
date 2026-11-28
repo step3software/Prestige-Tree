@@ -127,7 +127,7 @@ At Organization 4, assign 0-5 whole Fire tenders from the existing shared pool. 
 | Improved hearths | Crafting; 1 | +20% base tender production per level | 16 |
 | Charcoal clamps | Clay; 2 | Divide recurring fuel use by `1 + 0.15*level` | 24 |
 
-Fire construction uses the normal single slot and one builder, `baseWork * 1.35^level`, complete upfront Craft payment and no cancellation refund. Levels increase only at completion. Capacity adds no free fuel. These new physical levels/construction are unprotected on prestige; Fire and tender assignments reset to zero. Permanent techniques and material knowledge remain.
+Fire construction uses the normal single slot and one builder, `baseWork * 1.35^level`, complete upfront Craft payment and no cancellation refund. Levels increase only at completion. Capacity adds no free fuel. These new physical levels/construction are unprotected on prestige; Fire and tender assignments reset to zero. When spending closes the Fire gate, assigned tenders pause and release their labor; stored fuel and paid construction remain. Assignments resume when the gate opens. Permanent techniques and material knowledge remain.
 
 ```text
 maximum = 10 + 2*huts + 10*fuelStores
@@ -167,7 +167,7 @@ There are no building slots and no Shelter milestone track.
 
 There is no domestic work or household labor reservation. Every person can join a crew or build. The ledger counts active crews, the shared Food Overseer, the hut foreman, Fire tenders and every reserved builder once. Only whole available workers can join a crew.
 
-One construction job runs at a time for new queued work. Other buyables retain their single builder. Existing saved multi-hut snapshots keep their work and builders until completion. Population loss can pause construction without losing progress; it resumes when enough builders are available. Organization and Construction tools still affect construction work. Canceling releases builders and clears progress; spent Craft is not refunded. Canceling current construction does not consume another queued repeat; set the slider to zero to stop further automatic starts.
+One construction job runs at a time for new queued work. Other buyables retain their single builder. Existing saved multi-hut snapshots keep their work and builders until completion. Population loss can pause construction without losing progress; it resumes when enough builders are available. Organization and Construction tools still affect construction work. Canceling releases builders and clears progress; spent Craft and Fire are not refunded. Canceling current construction does not consume another queued repeat; set the slider to zero to stop further automatic starts.
 
 ## Prestige and later resources
 
@@ -177,7 +177,7 @@ Organization requires only current Population: the next point needs `8 + 4 × cu
 
 Milestones unlock when the held balance first reaches their threshold and stay unlocked after spending, prestige and save/reload. The existing saved peak (`organization.best`) records the highest held balance; lifetime earnings remain historical statistics and cannot unlock a never-held threshold. All milestone rewards share this rule: features, upgrade access, overseer orders, irrigation, auto-building and specific buyable retention. Spending still lowers the next Population requirement and must cover each purchase cost. Pending orders continue with their assigned managers. Queues saved while their managers were reassigned wait for free supervisors without discarding active paid work or remaining repeats. Prestige itself still clears queues according to its existing contract. Paid work and purchased upgrades retain their existing state and effects.
 
-Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Fire and tender assignments reset to zero. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
+Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Fire and tender assignments reset to zero. When spending closes the Fire gate, assigned tenders pause and release their labor; stored fuel and paid construction remain. Assignments resume when the gate opens. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
 
 New games can view the three material unlocks in Craft. Material spending owns equipment; Organization retains the rewards below.
 

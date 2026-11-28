@@ -1,13 +1,13 @@
 {
   "milestone_id": "step3software/Prestige-Tree#MAT01",
-  "plan_sha256": "2af696ab3c9b09bebc03ebfed8a6e414cde329d0bf0c923518d46e4c8c2c76a2",
-  "base_revision": "9d850b5d36366feef59980c20d49d74bc9b36ad3",
+  "plan_sha256": "b9c9134b4de84957a71bcd3fb265fd457ad9652c7e7f38f8f66d67adcfed4471",
+  "base_revision": "14791fbd6ada032c5bff68267730638716e47fea",
   "implementation_branch": "docs/craft-materials-plan",
   "validation_commands": [
     "node --test tests/rules/materials.test.cjs",
     "npm run test:balance",
     "npm test",
-    "npm run balance -- --hours 4 --budget 30 --calibrate-minutes 60",
+    "npm run balance -- --hours 4 --budget 30 --calibrate-minutes 240",
     "git diff --check"
   ],
   "handoff_instructions": [
@@ -333,6 +333,30 @@
         "Matched complete material/Fire rough/fixed runs",
         "npm test"
       ]
+    },
+    {
+      "path": "docs/fire.verification.md",
+      "operation": "create",
+      "implementation": "Carry historical Fire-parent verification as revision-specific evidence; final proof belongs in MAT01 verification.",
+      "verification": [
+        "Plan/preparation schema and path inventory; relevant codec tests; final criteria review"
+      ]
+    },
+    {
+      "path": "tests/fixtures/civ-pre-fire-v08.json",
+      "operation": "create",
+      "implementation": "Carry the genuine pre-Fire codec fixture from the authorized latest-work parent; exercise ingress preservation.",
+      "verification": [
+        "Plan/preparation schema and path inventory; relevant codec tests; final criteria review"
+      ]
+    },
+    {
+      "path": "docs/milestones/MAT01.preparation.json",
+      "operation": "modify",
+      "implementation": "Reconcile exact-file preparation, current main, plan binding and cumulative inherited Fire paths.",
+      "verification": [
+        "Plan/preparation schema and path inventory; relevant codec tests; final criteria review"
+      ]
     }
   ],
   "criteria_coverage": {
@@ -413,14 +437,20 @@
     ]
   },
   "rollback": "Keep matching exported save and source artifact; do not load v0.9 data into an older artifact; ptr untouched.",
-  "source_main": "177c57962bf89de1fa85e9e72e6dac0d73543f90",
+  "source_main": "790d758c9e5012745cd324ec45a473a24a1b580a",
   "rebase": {
     "original_head": "e1b2c244466c01dbf698ff9f7981c2ba8f4c2475",
     "old_parent": "8032e9122b85b2832bb587a4c87153ba328e3fe5",
     "result_head": "9d850b5d36366feef59980c20d49d74bc9b36ad3",
-    "conflicts": "none; main tree exactly matched original parent tree"
+    "conflicts": "none; main tree exactly matched original parent tree",
+    "second_rebase": {
+      "original_head": "7067e021220f2e08e3cdc124d40a64750ae54bb6",
+      "new_main": "790d758c9e5012745cd324ec45a473a24a1b580a",
+      "result_head": "bb05da79288b80d121e27129a2488539ea734667",
+      "resolution": "Inspected overlapping hunks individually. Preserved held Organization requirements/gates, paused queues, locked paid-project lookup and unchanged current-coordination regression suite; integrated material and Fire behavior."
+    }
   },
   "authority": "Direct-session artifacts validated locally; no native milestone enrollment or forged stage receipt.",
   "prior_plan_sha256": "859bedb6e7cf8b1619cc818571f659f742bc969ee523208b463e5f686a3edfd6",
-  "reconciliation": "Corrected historical planning-only exclusion to reflect explicit full-cycle request; no gameplay scope/criteria change."
+  "reconciliation": "Reconciled full-cycle authority, resolved D2, actual inferred contracts, manual-dispatch guards and current-held Organization from latest main; no new feature scope."
 }

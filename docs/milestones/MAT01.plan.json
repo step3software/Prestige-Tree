@@ -5,7 +5,7 @@
     "include": [
       "Three initial rows: Crafting 10 Craft, Clay 20 Craft, recommended Copper working 30 Craft; each has one unlock tile and four related purchases",
       "Craft-based buyable access, prerequisite migration and resolved hut bootstrap",
-      "Manual plus passive Water, eight-person baseline, communal cistern and fired-clay pipes",
+      "Manual plus passive Water, eight-person baseline and fired-clay pipes",
       "Save/prestige preservation, truthful UI and legal balance coverage",
       "Separate in-place Water-storage, cooking-vessel and housing upgrade chains; removed Communal cistern",
       "Three proposed repeatable Fire projects for capacity, tender production and fuel efficiency"
@@ -22,7 +22,7 @@
     "MAT01-AC02: The first successful row-unlock purchase permanently reveals its four related tiles. Failed, repeated one-time or insufficient-funds purchases spend nothing and reveal nothing.",
     "MAT01-AC03: Craft capability predicates replace the Organization-6 buyable gate and bigger-game per-level Organization requirement. Organization retention, automation and unrelated activity gates remain explicit; bootstrap follows the resolved D2 decision.",
     "MAT01-AC04: Every listed upgrade and repeatable project has an observable effect, truthful cost and shared simulation/UI eligibility; direct locked commands reject atomically.",
-    "MAT01-AC05: Collect water remains visible and dispatchable with a spring, including after reload, with normal worker/full-storage/busy guards and active snapshots.",
+    "MAT01-AC05: Collect water remains visible and dispatchable with a spring, including after reload, with normal worker/busy guards and active snapshots.",
     "MAT01-AC06: A spring without Water improvements supports exactly eight current-upkeep equivalents: zero net Water at eight and negative at nine, including Organization balance changes. This is sustainable supply, not a Population cap.",
     "MAT01-AC07: Communal cistern is absent. Clay cooking pots cost 2 Craft and reduce Cooking Fire use by 25%. Pipes cost 2 Craft plus exactly 2 Fire and double only passive Water.",
     "MAT01-AC08: Learned material tiers and permanent techniques survive both prestiges. Reuse exact existing Water-storage/hut retention IDs and levels; retain/reset Fire-project levels by the explicitly documented unprotected default.",
@@ -38,7 +38,7 @@
     "Implement only the validated material/Water/Cooking/Fire scope under the owner full-development-cycle request; preserve merge/deployment and human acceptance boundaries.",
     "One canonical civilization rules owner, one save model/runtime, session-bound state and normal codec ingress",
     "Preserve branch writers, old save recovery, upstream attribution and all unrelated Organization rewards",
-    "Resolve the remaining hut-bootstrap decision D2 and validate exact-file preparation before any separately authorized implementation"
+    "D2 is resolved: basic huts stay at Organization 1. Validate exact-file preparation and preserve current-held Organization behavior from main."
   ],
   "decisions": [
     {
@@ -267,11 +267,11 @@
   "source": {
     "branch": "docs/craft-materials-plan",
     "parent_branch": "codex/fire-ms4",
-    "revision": "9d850b5d36366feef59980c20d49d74bc9b36ad3",
-    "published_main_observed": "177c57962bf89de1fa85e9e72e6dac0d73543f90",
+    "revision": "bb05da79288b80d121e27129a2488539ea734667",
+    "published_main_observed": "790d758c9e5012745cd324ec45a473a24a1b580a",
     "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
     "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe",
-    "rebased_fire": "82f8436"
+    "rebased_fire": "9a07ba1"
   },
   "validation": {
     "kind": "development_flow.validate_plan local validation; no native lifecycle transition",

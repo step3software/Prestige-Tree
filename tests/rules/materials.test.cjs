@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
 function game(t,save){const engine=createBalanceEngine(save);t.after(engine.dispose);const p=engine.player;return {engine,p,e:engine.session.modRules.civilization,D:p.points.constructor};}
-function funded(g){const {p,e,D}=g;p.craft.points=new D(500);p.organization.total=new D(10);p.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);for(const id of ['crafting','clay','copper'])assert.equal(e.buyUpgrade(id),true);}
+function funded(g){const {p,e,D}=g;p.craft.points=new D(500);p.organization.total=new D(10);p.organization.points=new D(10);p.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);for(const id of ['crafting','clay','copper'])assert.equal(e.buyUpgrade(id),true);}
 const near=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actual} != ${expected}`);
 
 test('material unlocks cost 10/20/30 and reveal four choices without buying them',t=>{
@@ -16,7 +16,7 @@ test('material unlocks cost 10/20/30 and reveal four choices without buying them
  assert.deepEqual(e.materialRows().map(row=>row.items.length),[4,4,4]);assert.equal(p.civ.improvements.hunting,false);
 });
 test('Organization alone does not unlock new hunting or buyables; basic huts stay at one',t=>{
- const {p,e,D}=game(t);p.organization.total=new D(10);
+ const {p,e,D}=game(t);p.organization.total=new D(10);p.organization.points=new D(10);
  assert.equal(e.actionDefinition('hunt').unlocked,false);assert.equal(e.startProject('water-site'),false);assert.equal(e.startProject('shelter-home'),true);
  e.cancelProject();p.craft.points=new D(11);assert.equal(e.buyUpgrade('crafting'),true);assert.equal(e.buyUpgrade('hunting'),true);assert.equal(e.actionDefinition('hunt').workers,2);
 });
@@ -81,4 +81,20 @@ test('historical malformed discovery flags reject before migration and preserve 
 test('material/Fire economy has identical saved state under chunked advancement',t=>{
  const g=game(t),{p,e,engine}=g;funded(g);p.civ.fire=10;e.buyUpgrade('cooking');e.buyUpgrade('clayPots');e.buyUpgrade('copperPots');e.setCookingLevel(3);e.setFireTenders(1);e.dispatch('gather');e.startProject('fire-fuel');
  const clone=game(t,engine.exportPlayer());engine.advance(15);for(let i=0;i<30;i++)clone.engine.advance(.5);assert.equal(engine.exportPlayer(),clone.engine.exportPlayer());
+});
+
+
+test('held Fire gate pauses tending while paid construction survives spending and reload',t=>{
+ const {engine,p,e,D}=game(t);p.organization.points=new D(4);p.organization.total=new D(100);p.craft.points=new D(11);
+ e.buyUpgrade('crafting');assert.equal(e.startProject('fire-fuel'),true);assert.equal(e.setFireTenders(2),true);p.civ.fire=1;
+ assert.equal(e.buyUpgrade('preparedMaterials'),true);assert.equal(e.fireStatus().available,false);assert.equal(e.fireStatus().gain,0);assert.equal(e.supply().fireTenders,0);
+ const loaded=game(t,engine.exportPlayer());loaded.engine.advance(12);assert.equal(loaded.p.civ.fireBuyables.fuel,1);assert.equal(loaded.p.civ.fire,1);
+ assert.equal(loaded.e.startProject('fire-hearths'),false);loaded.p.organization.points=new D(4);assert.equal(loaded.e.fireStatus().tenders,2);
+});
+
+
+test('an imported active Fire project requires its permanent Craft material',t=>{
+ const g=game(t),{p,e,engine}=g;funded(g);assert.equal(e.startProject('fire-fuel'),true);
+ const encoded=engine.exportPlayer(),raw=JSON.parse(atob(encoded));raw.civ.improvements.crafting=false;
+ assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,false);assert.equal(engine.exportPlayer(),encoded);
 });

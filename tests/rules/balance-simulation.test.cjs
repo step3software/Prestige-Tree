@@ -157,12 +157,12 @@ test('legal active and regular settlements can develop gathering, hunting and fa
   const cadence=strategy==='regular'?20:5;
   let time=0;
   // Reach the scenario by ordinary play; no granted currencies or route levels.
-  for(;time<7200;time+=cadence){
+  for(;time<14400;time+=cadence){
    policy.act(time);
    if(p.organization.points.gte(10)&&p.civ.improvements.copperPots&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(20)&&!p.civ.project)break;
    engine.advance(cadence);
   }
-  assert.ok(time<7200,'Legally reached pre-buyable settlement');
+  assert.ok(time<14400,'Legally reached pre-buyable settlement');
   const enteredAt=time;
   const builds=['gather-tools','hunt-tools','farm-tools'];
   const started=new Set();
@@ -200,7 +200,7 @@ test('native balance loader matches the VM through real construction, growth and
  native.assertIsolated();assert.equal(r.io.writes,0);assert.equal(r.intervals.size,0);
 });
 test('regular policy keeps 20-second hauling checks when spring supply cannot sustain full housing',()=>{
- const run=simulate({strategy:'regular',horizonSeconds:7200,stepSeconds:5});
+ const run=simulate({strategy:'regular',horizonSeconds:14400,stepSeconds:5});
  assert.equal(run.status,'endgame');
  assert.deepEqual(run.cadenceChanges.map(row=>row.seconds),[20]);
  const transition=Infinity;
@@ -223,6 +223,8 @@ test('both active branch orders and adaptive regular play reach the opening usin
 test('legal developed settlements need hauling above sustainable spring supply and recover Water through real crews',t=>{
  const run=simulate({strategy:'active-balanced',horizonSeconds:14400});assert.equal(run.status,'endgame');
  const engine=createBalanceEngine(run.checkpoint);t.after(engine.dispose);const p=engine.player,e=engine.session.modRules.civilization;
+ p.civ.autoBuild=false;
+ for(let time=0;time<600&&p.points.lt(e.supply().support);time+=5){for(const id of ['gather','hunt','farm'])e.setRepeat(id,5);e.dispatch('water');engine.advance(5);}
  assert.ok(e.supply().passiveProduction.water<e.supply().demand,'Eight-person baseline and finite wells do not supply unlimited population');
  p.civ.autoBuild=false;for(const id of ['gather','hunt','farm'])e.setRepeat(id,0);
  const before=p.water.points.toNumber();engine.advance(60);assert.ok(p.water.points.toNumber()<before);
@@ -249,7 +251,7 @@ test('continuous legal play keeps Food staffed and later currencies locked after
 
 test('rough and fixed runs have matching progression coverage and bounded observation drift',()=>{
  for(const strategy of ['active-balanced','regular']){
-  const options={strategy,horizonSeconds:7200,wallBudgetSeconds:30};
+  const options={strategy,horizonSeconds:14400,wallBudgetSeconds:30};
   const rough=simulate({...options,mode:'rough'}),fixed=simulate({...options,mode:'fixed'});
   const calibration=compareReference(rough,fixed);
   assert.ok(calibration.rows.every(row=>!row.coverageMismatch));
