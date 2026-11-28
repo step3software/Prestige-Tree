@@ -5,13 +5,13 @@ const Decimal=require('../../js/technical/break_eternity.js');
 const fixtures=require('../fixtures/civ-v08-migration.json');
 function game(t,input){const engine=createBalanceEngine(input);t.after(engine.dispose);return {engine,p:engine.player,e:engine.session.modRules.civilization};}
 
-test('Abundance is unavailable before milestone five and free in Shelter after it',t=>{
+test('Abundance is unavailable before milestone eight and free in Shelter after it',t=>{
     const {p,e}=game(t);
     const before=JSON.stringify(p);
     assert.equal(e.buyUpgrade('abundance'),false);
     assert.equal(JSON.stringify(p),before);
     assert.equal(e.upgrades('shelter').some(u=>u.id==='abundance'),false);
-    p.organization.total=new Decimal(5);p.organization.points=new Decimal(5);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
+    p.organization.total=new Decimal(8);p.organization.points=new Decimal(8);p.food.points=new Decimal(0);p.water.points=new Decimal(0);
     const upgrade=e.upgrades('shelter').find(u=>u.id==='abundance');
     assert.equal(upgrade.canBuy,true);assert.equal(upgrade.costText,'Free');
     assert.deepEqual(upgrade.costs,{});
@@ -26,7 +26,7 @@ test('stock and housing cannot accelerate growth until Abundance is purchased',t
     p.shelter.homes=11;p.shelter.points=new Decimal(52);
     assert.equal(e.supply().abundance.enabled,false);assert.equal(e.supply().abundance.multiplier,1);
     engine.advance(12);assert.equal(p.points.toNumber(),6);
-    p.organization.total=new Decimal(5);p.organization.points=new Decimal(5);assert.equal(e.buyUpgrade('abundance'),true);
+    p.organization.total=new Decimal(8);p.organization.points=new Decimal(8);assert.equal(e.buyUpgrade('abundance'),true);
     assert.equal(e.supply().abundance.multiplier,10);
     engine.advance(12);assert.equal(p.points.toNumber(),16);
     assert.equal(e.prestige('craft'),true);
@@ -43,7 +43,7 @@ test('both overseers unlock with milestone three without an extra purchase',t=>{
 test('actual v0.6 save loads into v0.8 without losing stocks, paid construction or active crews',t=>{
     const {engine,p,e}=game(t,fixtures.v06);
     const original=JSON.parse(atob(fixtures.v06));
-    assert.equal(p.version,'0.8');assert.equal(p.points.toString(),original.points);
+    assert.equal(p.version,'0.9');assert.equal(p.points.toString(),original.points);
     assert.equal(p.craft.points.toString(),original.craft.points);
     assert.equal(p.civ.project,'water-storage');assert.equal(p.civ.projectWork,original.civ.projectWork);
     assert.equal(p.civ.actions.fish.remaining,original.civ.actions.fish.remaining);
@@ -59,7 +59,7 @@ test('actual v0.6 save loads into v0.8 without losing stocks, paid construction 
 test('actual v0.7 save preserves the remaining repeat count and active job through v0.8 reload',t=>{
     const {engine,p}=game(t,fixtures.v07);
     const original=JSON.parse(atob(fixtures.v07));
-    assert.equal(p.version,'0.8');assert.equal(p.civ.actions.gather.repeat,4);
+    assert.equal(p.version,'0.9');assert.equal(p.civ.actions.gather.repeat,4);
     assert.equal(p.civ.actions.gather.remaining,original.civ.actions.gather.remaining);
     assert.equal(p.civ.actions.gather.reward,original.civ.actions.gather.reward);
     assert.equal(p.civ.improvements.overseer,true);

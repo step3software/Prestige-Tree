@@ -41,6 +41,13 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         dispatch(id) { return actionable(() => modRules.civilization.dispatch(id)); },
         recall(id) { return actionable(() => modRules.civilization.recall(id)); },
         setRepeat(id, event) { return actionable(() => modRules.civilization.setRepeat(id, Number(event.target.value))); },
+        setFireTenders(event) {
+            const changed = actionable(() => modRules.civilization.setFireTenders(Number(event.target.value)));
+            event.target.value = String(saveState.player.civ.fireTenders);
+            if (!changed) saveState.player.civ.message = "Fire tending needs available workers. Release a crew or choose fewer tenders.";
+            return changed;
+        },
+        setCookingLevel(event) { return actionable(() => modRules.civilization.setCookingLevel(Number(event.target.value))); },
         setHutRepeat(event) { return actionable(() => modRules.civilization.setHutRepeat(Number(event.target.value))); },
         setOverseers(kind, event) { return actionable(() => modRules.civilization.setOverseers(kind, Number(event.target.value))); },
         setExpeditionMultiplier(id, event) { return actionable(() => modRules.civilization.setExpeditionMultiplier(id, Number(event.target.value))); },

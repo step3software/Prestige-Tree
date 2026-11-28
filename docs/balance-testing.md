@@ -4,7 +4,7 @@ Build balance coverage **in the same PR as each new or replaced section of game
 content**. The planned content replacement should develop its checkpoints,
 playable strategies and pacing tests together. Extend coverage as sections land.
 
-The runner uses the shipped Civ session and resource rules. Its catalog follows supported population, Craft, all ten Organization milestones, Food repeat orders, worker-free Water and staffed farming. The opening completion checkpoint requires milestone 10, overseer, gravity flow and farming. Later resources are locked and hidden and are not opening checkpoints.
+The runner uses the shipped Civ session and resource rules. Its catalog follows supported population, Craft, all ten Organization milestones, Food repeat orders, worker-free Water and staffed farming. The current opening completion checkpoint requires held Organization 10, overseer, gravity flow, farming, Copper cooking pots and all three Fire buyable levels. Later resources are locked and hidden and are not opening checkpoints.
 
 ## Add balance coverage with content
 
@@ -120,7 +120,7 @@ times into a campaign total or call the best tested strategy a proven optimum.
 npm run balance -- --hours 4 --budget 15 --calibrate-minutes 60
 ```
 
-The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 20 seconds until Expedition overseer, Gravity-fed spring and milestone-10 auto-building are earned, then every 300 seconds). This opening cadence was requested by the owner because five-minute fresh checks could not sustain manual expeditions. `cadenceChanges` records the actual transition. `active-organization` reverses the early prestige priority. Policies dispatch real crews, buy equipment and automation, construct housing/storage, earn Craft/Organization and invest through the shipped guards. No resources, workers or unlocks are granted.
+The default profiles are `active-balanced` (manual decisions every 5 seconds) and `regular` (every 20 seconds until Expedition overseer, Gravity-fed spring and milestone-10 auto-building are earned, then every 300 seconds only when passive Water sustains full housing). This opening cadence was requested by the owner because five-minute fresh checks could not sustain manual expeditions. `cadenceChanges` records the actual transition. `active-organization` reverses the early prestige priority. Policies dispatch real crews, buy equipment and automation, construct housing/storage, earn Craft/Organization and invest through the shipped guards. No resources, workers or unlocks are granted.
 
 The default CLI remains bounded by 15 wall seconds per run. `--hours` is a simulated game-time horizon, not a claim that the opening takes that long. `--save` loads a codec-validated synthetic checkpoint and measures time since that input. Reports include actual source hashes, actions, layer unlocks, completion/censoring and rough/fixed calibration. `balance-results/` is ignored; its saves are generated synthetic inputs, not player data.
 
@@ -153,13 +153,25 @@ README -> developer guide -> this document -> `scripts/balance/run.cjs` -> `simu
 
 Survival regressions exercise zero Food/Water, combined shortages, exact grace deadlines, acceleration, recovery upgrades, one-survivor rebuilding and deterministic online/offline chunks. A legally reached tenth Organization checkpoint verifies ten minutes of idle rebuilding without additional manual actions. The prestige sensitivity check detects accidentally retaining Population.
 
-The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded settlement through ordinary active/regular play, then constructs exploration, bigger-game hunting and river traps through real guarded commands while maintaining supplies. It grants no resources or levels and checks the new trip/crew contracts. Work, currently held Organization and Craft are distinct scaling axes; no enjoyment or target pacing range is asserted.
+The Food buyable scenario in `balance-simulation.test.cjs` reaches a funded settlement through ordinary active/regular play, then constructs exploration, bigger-game hunting and river traps through real guarded commands while maintaining supplies. It grants no resources or levels and checks the new trip/crew contracts. Work and Craft are the current scaling axes; bigger-game per-level Organization requirements are removed by material capability; no enjoyment or target pacing range is asserted.
+
+## Fire and revised MS4–9 progression
+
+The current policy uses only guarded commands to assign up to three available Fire tenders, leaving room for survival crews, managers and a builder. It purchases Cooking, Earthenware jars and Shared hearths with earned Fire. It leaves Cooking at 1× for the baseline campaign; higher Cooking levels have focused work/fuel tests rather than an optimal-strategy claim. Fire assignments reset on prestige, and later decisions restaff them when labor permits.
+
+Active 5-second policies complete the opening in **3025s** (either early prestige order); regular 20-second/300-second play completes it in **3660s**. All ten Organization checkpoints, rough/fixed parity, finite queues and ten-minute idle survival after legal setup pass. Legal Fire-upgrade purchases reach the ten-person hearth checkpoint by 1740s/1820s and twenty people by 1750s/1840s for active/regular play. At twenty, hearth storage is +50 and income is `8 * Fire fullness`, up to +8 Food/min.
+
+After actual starvation to one survivor, the reached settlements recover to 44 people with three Food repeat orders in **130s/93s**, peaking at **5.64×/7.55×** growth. Larger hearth storage changes the Food fullness curve, so the old arbitrary minimum peak of 7× no longer applies; the recovery still must beat one-third of the uninterrupted unbuffed fill time. Shortage handling releases tenders to preserve survival labor. No balance coefficients were changed to compensate.
+
+The isolated two-hut/three-tender numerical fixture fills 14 Fire in **340s** using the existing one-second simulation, close to the continuous design estimate of 5m38s. Buying the 1/2/3 Fire upgrades immediately takes **234s**, excluding Cooking consumption. These fixtures use authored synthetic starting supplies; the campaign/hearth/jar scenarios separately prove legal reachability without grants. A 45 Food/min crew reproduces all five requested Cooking rows, and 5× expeditions plus fully fueled 5× Cooking pay 25× base Food over 5× time.
+
+All times are deterministic synthetic policy observations, not accepted human pacing or enjoyment targets. The following MS1–3 and older sections retain historical measurements at their stated revisions.
 
 ## MS1-3 progression and orders
 
-The current policy earns Organization at eight people before attempting Craft or huts, purchases the nine new early upgrades through real guarded commands, and selects staffing/expedition lengths within available labor, reserves and storage. It never grants activities or currencies. Active 5-second checks complete the existing opening in 3105s; regular 20-second checks switch to 300s after earned automation and finish in 3480s. These are synthetic observations, not accepted human pacing targets. The detailed first-three-milestone checkpoints are recorded in [verification](early-milestones.verification.md).
+Peak held Organization preserves milestone access and retention; current held Organization determines the next Population requirement. Final material/Fire results and matching source hashes are recorded in [MAT01 verification](milestones/MAT01.verification.md).
 
-New games have Gather, Hunt from milestone 2 and Farm from 8; Fishing remains a discovered activity only in existing saves pending its new milestone. The legal buyable scenario therefore develops gathering, hunting and farming after their gates. Finite queue tests provision additional wells before five new huts, and recovery tests select one overseer and short expeditions before solo rebuilding. A complete earned settlement recovers 1 to 44 in 93s/92s for active/regular play, after three Food repeat orders. The ten-minute idle check first uses legal manual checks to finish purchases, establish larger queues and build reserves; no extra controls or survival guarantees are implied for an arbitrary five-repeat queue.
+New games have Gather, Hunt from milestone 2 and Farm from 7; Fishing remains a discovered activity only in existing saves pending its new milestone. The legal buyable scenario therefore develops gathering, hunting and farming after their gates. Finite queue tests provision additional wells before five new huts, and recovery tests select one overseer and short expeditions before solo rebuilding. A complete earned settlement recovers 1 to 44 in 93s/92s for active/regular play, after three Food repeat orders. The ten-minute idle check first uses legal manual checks to finish purchases, establish larger queues and build reserves; no extra controls or survival guarantees are implied for an arbitrary five-repeat queue.
 
 The following sections are historical measurements for the pre-MS1-3 rules at `394b2f8`; they do not describe the current unlock gates or pacing.
 
@@ -192,3 +204,9 @@ Combined regression: the Food abundance curve uses hearth-adjusted capacity, whi
 Finite queues are deliberately not unattended infinite production. The measured idle window and opening remain viable, but players must replenish counters for continued work. Craft balances, costs and active snapshots remain intact; changing a Craft balance does not alter new expedition yields or gravity flow.
 
 The v0.8 policy purchases free Abundance at milestone 1 and can purchase Expedition overseer at milestone 2. Fishing retains two workers and Water has no Well lining multiplier. The runner uses those real guards and prices; no pacing coefficient was changed to compensate. The updated scenario times and save migration are recorded in [v0.8 verification](v08-upgrades.verification.md).
+
+## Material and Fire section (v0.9)
+
+The legal policy banks 10/20/30 Craft material unlocks, buys all three separate equipment tiers and constructs each Fire project. No progress/resource grants are used. Optional automatic storage is paused while saving the Fire construction budget. Material checkpoints and `fire-buyables` are recorded separately; current ending also requires Copper cooking pots and completed Fire levels. Active and regular use 5/20-second manual checks respectively until safe automation. The reduced spring generally requires regular hauling, so the observed prefix keeps its 20-second cadence; this is not five-minute idle survival evidence.
+
+After rebasing onto permanent-milestone main, fixed active/regular runs finish at 7870/8210 game seconds; rough regular observes completion at 8215. All calibration checkpoints have matching coverage, with maximum drift 0s active / 5s regular. Exact final source hashes, observations and rough/fixed calibration belong in MAT01 verification; these are synthetic observations, not an accepted pacing target. Recovery tests now allow actual Water pressure and manual hauling rather than assuming an unlimited old spring. Full calibration uses a 240-minute horizon to include the new late material/Fire purchases.

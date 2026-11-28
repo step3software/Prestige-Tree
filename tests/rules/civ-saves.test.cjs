@@ -4,7 +4,7 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 const key = 'civ-prestige-tree';
 function open(t, options = {}) {
     const r=createRuntime({bridge:false,...options});r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
-    if(!options.storage || !options.storage[key])r.run('if(p){Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});p.organization.points=new Decimal(7)}');
+    if(!options.storage || !options.storage[key])r.run('if(p){Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7);}');
     t.after(()=>{r.run('s.dispose()');r.dispose();});return r;
 }
 test('Civ storage is independent of the untouched original ptr value', t => {

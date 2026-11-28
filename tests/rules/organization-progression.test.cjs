@@ -7,6 +7,7 @@ function game(t){
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 function rich(p){
+    p.civ.fire=10;
     for(const id of ['food','water','craft','organization','education','money','freeTime'])p[id].points=new Decimal(1000);
 }
 const get=(p,id)=>{
@@ -17,20 +18,13 @@ const get=(p,id)=>{
     return p[resource][kind==='site'?'sites':'storage'];
 };
 
-test('first three milestones each expose exactly three upgrades in the expected currency',t=>{
-    const {p,e}=game(t);
-    for(const resource of ['food','water','shelter'])assert.deepEqual(e.upgrades(resource),[]);
-    rich(p);
-    const sets=[['lashings','joinery','builderTools'],['digging','hunting','butchery'],['preparedMaterials','extendedExpeditions','workRosters']];
-    for(let index=0;index<3;index++){
-        p.organization.total=new Decimal(index+1);p.organization.points=new Decimal(index+1);
-        const reward=e.organizationMilestones()[index];assert.deepEqual(reward.upgrades,sets[index]);
-        const upgrades=['food','water','shelter','organization'].flatMap(id=>e.upgrades(id));
-        for(const [slot,id] of sets[index].entries()){
-            const upgrade=upgrades.find(u=>u.id===id);assert.ok(upgrade);assert.equal(upgrade.costs[index===2?'organization':'craft'],slot+1);
-        }
-        assert.equal(Object.values(e.prestigePreview('craft').kept).some(Boolean),false);
-    }
+test('Organization retains automation while materials own the moved equipment upgrades',t=>{
+ const {p,e}=game(t);rich(p);
+ assert.deepEqual(e.organizationMilestones().slice(0,2).map(row=>row.upgrades),[[],[]]);
+ assert.deepEqual(e.organizationMilestones()[2].upgrades,['preparedMaterials','extendedExpeditions','workRosters']);
+ p.organization.total=new Decimal(3);
+ for(const [id,cost] of [['preparedMaterials',1],['extendedExpeditions',2],['workRosters',3]]){p.organization.points=new Decimal(3);const before=p.organization.points.toNumber();assert.equal(e.buyUpgrade(id),true);assert.equal(p.organization.points.toNumber(),before-cost);}
+ assert.equal(e.buyUpgrade('hunting'),false);assert.equal(e.buyUpgrade('crafting'),true);assert.equal(e.buyUpgrade('hunting'),true);
 });
 
 test('every later upgrade rejects affordable purchases before its milestone is first reached',t=>{
@@ -57,7 +51,7 @@ test('each retention milestone immediately keeps its exact buyable and protected
     const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
     for(const [id,threshold] of retained){
         const {p,e}=game(t);
-        Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:true});
+        Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;
         p.civ.improvements.farming=true;
         p.points=new Decimal(12+4*(threshold-1));
         p.shelter.homes=threshold;p.shelter.points=new Decimal(8+threshold*4);p.shelter.comfort=1;
@@ -84,7 +78,7 @@ test('each retention milestone immediately keeps its exact buyable and protected
 
 test('auto-building remains inactive through milestone nine, including a previously saved enabled toggle',t=>{
     const {engine,p,e}=game(t);
-    p.civ.autoBuild=true;
+    p.civ.improvements.crafting=true;p.civ.autoBuild=true;
     p.organization.total=new Decimal(9);p.organization.points=new Decimal(9);
     engine.advance(1);
     assert.equal(e.summary().autoAvailable,false);
@@ -101,7 +95,7 @@ test('retired upgrades cannot be purchased and Fishing keeps its full two-person
     assert.equal(e.buyUpgrade('wellLining'),false);
     assert.equal(e.actionDefinition('fish').workers,2);
     p.civ.improvements.gravity=true;p.education.points=new Decimal(0);
-    assert.equal(e.supply().production.water,24);
+    assert.equal(e.supply().production.water,8*e.supply().upkeep);
 });
 
 test('earlier owned upgrades remain usable on load while new purchases obey current gates',t=>{
