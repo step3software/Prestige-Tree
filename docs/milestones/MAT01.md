@@ -1,75 +1,68 @@
-# MAT01: Craft materials and complementary Water supply
+# MAT01: Craft rows and complementary Water supply
 
-Status: owner-requested implementation-plan draft, November 27, 2026. D1/D2 remain open; this is not native milestone enrollment or implementation authority.
+Status: revised owner-requested implementation-plan draft, November 27, 2026. The row-structure correction resolves D1. Hut bootstrap D2 remains open. No implementation or native lifecycle transition is authorized by this artifact.
 Repository: `step3software/Prestige-Tree`. Branch: `docs/craft-materials-plan`.
-Source: local `codex/fire-ms4` at `2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a`, ahead of PR12 (`8032e91`) and published `main` (`8333e6d`). The parent has an existing writer and pending publication; this task neither publishes nor edits it.
+Gameplay source remains local `codex/fire-ms4` at `2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a`. This revision corrects local plan commit `7b315f9`; it does not alter the parent's branch or writer.
 Companions: [structured plan](MAT01.plan.json), [revision/hash evidence](MAT01.evidence.json).
 
-## Outcome and boundaries
+## Corrected structure and outcome
 
-A player banks Craft, buys a material capability, sees its related upgrades, and chooses equipment/storage improvements. A spring supplements manual hauling. Storage gives room for reserves; pipes improve delivery. The original request authorizes this plan and its isolated branch only.
+The owner clarified **five tiles total per row: one expensive unlock followed by four related purchases**. The first row is Crafting at 10 Craft, combining basic wood, stone and fiber techniques. Its four purchases cost 1 Craft each: Thatched roofs, Wooden spears, Woven baskets and the researched recommendation, Digging sticks. The second row is Clay at 20 Craft, with four purchases at 2 Craft each. The requested third-tier recommendation is Copper working at 30 Craft, with four purchases at 3 Craft each.
 
-The proposed layout has Wood, Bark/plant fiber, Stone and Clay rows with five upgrades each. D1 distinguishes this from five early technologies in total. Numerical effects below are initial design proposals for balance testing. The request explicitly supplies the starting material prices, 10% price relationship, eight-person baseline and pipe Fire cost/multiplier.
+The earlier separate Wood/Bark/Stone/Clay rows and five-child layout are superseded. There are no separate harvested material stocks. Spending the row's unlock cost reveals its four related purchases without automatically buying them. One-time techniques retain ownership; repeatable container construction retains normal work, builders and per-project payment. In particular, Woven baskets is an actual repeatable 1-Craft Water-storage purchase, so do not charge a separate 1-Craft discovery surcharge before its first basket. The row unlock supplies its prerequisite; first construction completion grants the first +40 capacity.
 
-Materials mean knowledge of working a material, not harvested inventories. Buying the first tile spends Craft once and permanently reveals that row; it does not instantly buy all its upgrades or grant stock. Row purchases are independent, without an invented universal historical sequence. Fired products also require available Fire. The row's purchase is one-time; repeatable projects keep their existing work/builders and resource-panel controls.
+One purchase of each of these fifteen tiles totals **84 Craft**: 60 for unlocks and 24 for the twelve related purchases. Pipes also cost 2 Fire. Additional container levels, spring purchase and construction costs are separate. Prices and requested tiles are owner direction; proposed effects, the additional basic tool and metal-row choices are architect recommendations for initial balance testing. No pacing target is accepted.
 
-Exclude new raw-material gathering, a fishing unlock, later eras, weather, contamination, changes to farming/automation, unrelated Organization rewards, and all implementation/merge/deployment in this task. Existing Fire tending, Cooking and Shared hearths remain. No implementation tests are claimed by this document.
+## Proposed rows
 
-## Material and upgrade proposal
+### Crafting (10 Craft)
 
-Unlock costs are fixed Craft: 10, 20, 50, 100. Every ordinary upgrade in a row costs 10% of that row's fixed unlock: 1, 2, 5, 10 Craft. These are never a percentage of the player's balance. Fire is an additional manufacturing input: pipes cost 10 Craft plus exactly 2 Fire under this interpretation. Material unlocks alone cost 180 Craft; all twenty upgrades add 90 Craft, for 270 Craft plus 8 Fire before repeatable construction. Test this large investment; no pacing target has been accepted.
+One unlock tile followed by these four purchases at **1 Craft each**.
 
-### Wood: 10 Craft to unlock; 1 Craft per upgrade
-
-| Upgrade | Proposed behavior | Research / reuse |
+| Purchase | Proposed effect | Research / reuse |
 | --- | --- | --- |
-| Spears | Unlock Hunt for new settlements and retain the existing Spear hunting crew reduction (3 to 2 before bigger-game scaling). | PLT-08; existing hunting ID |
-| Digging sticks | +25% Gather yield; same crew and duration. | PLT-02; existing digging ID |
-| Timber frames | Huts provide 6 housing instead of 4, including existing huts. | PLT-04; existing joinery ID |
-| Carrying yokes | Manual Water crew falls from 2 to 1; solo recovery remains legal. | WAT-08; existing buckets ID |
-| Raised provision racks | +25 Food storage; no Food income. | SMI-04; proposed storage abstraction |
+| Thatched roofs | Improve hut capacity by +1 place per hut, including existing huts. Initial tuning proposal. | Plant part 6 paragraphs 91-92; PLT-04 |
+| Wooden spears | Unlock Hunt and use the existing Spear hunting reduction from 3 to 2 workers before bigger-game scaling. | Existing hunting ID; wooden hunting equipment research |
+| Woven baskets | Increase Water storage by +40 per completed basket. Reuse a repeatable 1-Craft basket project with scaling work. | Plant part 4 paragraphs 22-39; WAT-01 |
+| Digging sticks | Increase Gather yield by 25%, retaining crew and duration. Reuse the digging upgrade. | Plant part 1 paragraphs 61-64; PLT-02 |
 
-### Bark / plant fiber: 20 Craft to unlock; 2 Craft per upgrade
+### Clay (20 Craft)
 
-| Upgrade | Proposed behavior | Research / reuse |
+One unlock tile followed by these four purchases at **2 Craft each**.
+
+| Purchase | Proposed effect | Research / reuse |
 | --- | --- | --- |
-| Woven water baskets | Unlock a distinct repeatable basket project: 1 Craft, 12 * 1.35^basketLevel work, +40 Water capacity per completed basket. | PLT-03; WAT-01 |
-| Food basketry | Unlock existing food-storage projects: 1 Craft, existing scaling work, +40 Food capacity. | PLT-03; existing food-storage ID |
-| Cord lashings | Hut-work growth factor falls from 1.35 to 1.25. | PLT-03/04; existing lashings ID |
-| Bucket ropes | +25% manual Water reward on the next dispatch; no passive flow bonus. | WAT-08; proposed coefficient |
-| Woven river traps | Unlock existing fish-tools projects with their existing 2^level Craft costs, construction work and staffed Fish behavior; Fish still needs its own discovery. | PLT-07; existing fish-tools ID |
+| Earthenware jars | Cost 2 Craft for the technology. Retain the jars effect: base Water capacity 100 and +120 per jar level, plus access to jar construction. | SMI-14; PLT-10; existing jars ID |
+| Bricks | Add +1 housing per hut, including existing huts. Model sun-dried clay bricks so this tile has no invented Fire charge. | PLT-05; authored coefficient |
+| Communal cistern | Add +200 Water capacity once; no free refill or income. Keep Emergency cistern shortage protection separate. | WAT-05; original owner request |
+| Fired-clay pipes | Cost 2 Craft plus exactly 2 Fire; double automatic Water flow once. No manual-haul multiplier and no flow without a spring. | WAT-05; original owner request |
 
-### Stone: 50 Craft to unlock; 5 Craft per upgrade
+### Copper working (30 Craft)
 
-| Upgrade | Proposed behavior | Research / reuse |
+One unlock tile followed by these four purchases at **3 Craft each**.
+
+| Purchase | Proposed effect | Research / reuse |
 | --- | --- | --- |
-| Knapped butchery blades | +50% Hunt yield on the next dispatch. | PLT-02; existing butchery ID |
-| Hammerstones and construction tools | Double construction speed; builders remain reserved. | PLT-02; existing builderTools ID |
-| Stone adzes | Additional 1.25x construction speed; multiplicative with Construction tools. | PLT-02; proposed coefficient |
-| Well construction tools | Unlock existing water-site projects; retain manual improvements, replace +10 passive units/level with the smaller flow formula below. | WAT-03; existing water-site ID |
-| Communal cistern | +200 Water capacity once; no refill, flow or shortage-grace change. | WAT-05; new ID communalCistern |
+| Copper axes | Increase hut construction speed by 25%; builders still required. | Early copper axe evidence; game coefficient proposed |
+| Copper knives | Reuse Butchery tools: +50% Hunt yield on the next dispatch. Tool-kit specialization is an abstraction, not universal copper superiority. | Existing butchery ID; early copper tool research |
+| Copper chisels | Increase well-project construction speed by 25%; no free Water income. | Met copper-alloy chisel; task-specific game interpretation |
+| Copper awls | Reduce basket-project work by 25%; no storage/Water gain until a basket completes. | Tel Tsaf copper-awl excavation; fabrication abstraction |
 
-### Clay: 100 Craft to unlock; 10 Craft per upgrade
+Thatched roofs and Bricks add independently to hut capacity. Preserve the already-purchased Timber frames bonus from old saves; do not relabel it into a weaker upgrade or permit a duplicate purchase of the same effect. Existing active job rewards/crews remain snapshots. Construction speed/work effects apply through the existing construction owner. Copper effects are task-specific game abstractions: research does not establish that copper is universally superior to stone, wood or bone.
 
-| Upgrade | Proposed behavior | Research / reuse |
-| --- | --- | --- |
-| Earthenware jars | Also costs 2 Fire. Retain jars upgrade: base Water capacity 100, +120 per jar level. Unlock existing jar projects, retaining 1 Craft + 0.5 * 1.5^jarLevel Fire and existing work. | SMI-14; PLT-10; existing jars ID |
-| Sun-dried bricks | +1 housing per hut, including existing huts; no Fire charge. | PLT-05; proposed clay-building abstraction |
-| Fired bricks | Also costs 2 Fire. Additional +1 housing per hut, including existing huts. | PLT-10; proposed fired-clay application |
-| Ceramic roof tiles | Also costs 2 Fire. Multiply required hut work by 0.9. | PLT-06; proposed coefficient |
-| Fired-clay pipes | Also costs exactly 2 Fire. Double total automatic Water flow; no effect without a purchased spring and no manual-trip multiplier. | WAT-05; user-requested 2x and Fire cost |
+Earthenware jars technology now costs **2 Craft**, replacing its old upfront 2-Fire technology price. Firing remains a capability prerequisite for ceramic manufacturing and existing repeatable jar projects retain their scaling Fire inputs. Do not invent a second Fire charge on the 2-Craft technology. Pipes explicitly cost **2 Craft + 2 Fire**, paid atomically once; their operation does not consume Fire. Bricks mean sun-dried clay bricks in this table; fired bricks/roof tiles can be later options rather than extra tiles crowding the five-tile row.
 
-All names/effects beyond the owner's examples are proposals. Reuse existing upgrade IDs/effects where named rather than introducing duplicate bonuses. Housing additions from bricks add to Timber frames: 4 base +2 with frames +1 sun-dried +1 fired, per hut. Recompute existing homes through the same housing owner. Construction tools and adzes multiply speed; lashings and tiles change work as specified. Active jobs retain dispatched rewards/crews. An upgrade never retroactively charges an existing project.
+## Why Copper at 30 Craft
 
-## Access, Organization and the opening
+Recommend Copper working for the third row. It provides a distinct first-metal tier using axes, knives, chisels and awls. Bronze working can follow at a proposed 50 Craft, with 5-Craft purchases, as future work. Bronze commonly combines copper and tin; material supply and alloying offer a meaningful later step. The prices are game design, not history, and these rows are not a claim that every society followed the same order. Keep ore procurement/annealing/smelting abstracted into Craft, existing Fire capability and construction for now; do not introduce mining, tin trade or a new fuel system in this plan.
 
-Remove the blanket Organization-6 Food/Water buyable gate and bigger-game's per-level Organization requirement. Add explicit capability prerequisites to each project and enforce them in direct commands as well as the UI. Proposed mapping: Wood opens exploration/provisioning/bigger-game equipment once its associated activity is discovered; Bark upgrades open food baskets, water baskets and river traps; Stone well tools open well projects; Clay jars open jar projects. Farming tools still require the existing Farming activity and a suitable material capability (Wood initially). Spears replace the new-game Organization-2 Hunt discovery gate. Existing discovered Hunt/Fish remain usable.
+## Access, Organization and opening dependency
 
-Organization continues to own automation, Fire availability, spring availability, Farming, Abundance, irrigation and exact prestige retention. Remove moved item names from milestone promises without renumbering milestones or changing retention IDs. Empty milestone content is acceptable when it still grants retention. Spring remains the existing purchase at Organization 5, with 2 Craft +1 Organization +30 Food; the owner's Water request does not remove its own gate.
+Crafting replaces the Organization-6 blanket Food/Water buyable gate for the existing basic repeatable projects, with appropriate activity prerequisites. It opens exploration, provisioning, food baskets and basic well projects; Woven baskets directly supplies its Water-storage project. Wooden spears unlock Hunt, replacing the new-game Organization-2 Hunt gate, and enable bigger-game projects without their per-level Organization requirement. River traps still need existing Fish discovery; this task does not invent a fishing unlock. Farming tools still require Farming. Clay plus Earthenware jars opens jar projects. Copper purchases improve their named tasks rather than acting as an arbitrary additional gate for already basic actions.
 
-Huts need D2. Current Craft begins at 12 people but starting housing holds 8; requiring Wood at 10 Craft for all housing is circular. Recommended smallest change keeps labor-only huts at Organization 1 and moves the other buyables to Craft. The all-huts alternative needs a deliberately amended opening: first Craft reachable at 8, a separate 1-Craft starter-hut capability, and specified earnings beyond that point. Do not invent that amendment during implementation. Both alternatives must legally reach Wood without grants.
+Organization retains automation, Fire/spring availability, Farming, Abundance, irrigation and exact prestige retention. Update moved item names in milestone promises without renumbering rewards. Spring retains its existing Organization-5 availability and 2 Craft +1 Organization +30 Food purchase cost. Current Fire availability is a manufacturing prerequisite, not a replacement for the Craft row-unlock payment. Cooking, Shared hearths and unrelated bought effects remain.
 
-The general auto-builder must choose only projects whose new prerequisites and complete upfront costs pass the same command guards. No bypass through auto-building, repeat queues or imported discovered-feature flags. Do not assign an unrequested new Fish unlock merely to demonstrate traps.
+**D2 remains consequential:** housing starts at 8 while Craft starts at 12. Making all huts require the 10-Craft Crafting tile deadlocks the opening. The recommended smallest change keeps labor-only huts at Organization 1 while their improvements move to Craft rows. Moving huts too requires an explicitly amended first-Craft threshold/starter-hut capability and earnings formula. No answer was supplied by the row correction; do not invent one. The automatic builder and all direct project commands must enforce the same new prerequisites/costs.
 
 ## Water formula and storage
 
@@ -95,10 +88,12 @@ Use a versioned migration (proposed v0.9) at detached codec ingress into one cur
 
 Avoid granting a fresh save that historical access. Keep existing bought upgrade IDs to avoid duplicate purchases. A current explicit false capability must not be silently overwritten: reject inconsistent current records. Validate types before conversion; repeat conversion must be idempotent. Validate resource/crew/project references and all new ownership/counts atomically. Bad imports leave live/durable bytes unchanged. Missing fields in supported old versions migrate; malformed present fields reject. New saves write only the current schema. Preserve exported original saves with their matching build; older builds can reject new keys. Original `ptr` storage remains untouched.
 
+Preserve existing bought Wood/Bark/Stone-related effects as individual upgrades while inferring the corrected Crafting capability; do not synthesize retired proposed material rows from this planning draft, which was never implemented. Copper defaults unpurchased. Old jar capability maps to Clay/jars without a new charge. Old roofs/frames and new Thatched roofs use distinct IDs unless a lossless exact-equivalent mapping is established.
+
 ## Implementation sequence and owning files
 
-1. Resolve D1/D2, validate exact plan bytes, and prepare the bounded file list against a fresh verified parent. Reuse this branch for later authorized stages; do not restart or alter the parent's writer. Verify the current Orcha snapshot afresh for the next task.
-2. In `js/civilization.js`, add a small explicit material/upgrade catalog and shared prerequisites; reuse existing upgrade/project commands. Implement the resolved bootstrap, exact costs and atomic spending, then migration/defaults/validation/prestige. Keep persisted state under the session-owned Civ record, with new physical basket levels in Water. Update `js/mod.js` version and existing type contracts under `types/` and layer defaults in `js/layers/resources.js` only where required. Preparation must identify exact type filenames, not authorize the whole directory.
+1. Resolve D2, validate exact plan bytes, and prepare the bounded file list against a fresh verified parent. Reuse this branch for later authorized stages; do not restart or alter the parent's writer. Verify the current Orcha snapshot afresh for the next task.
+2. In `js/civilization.js`, add a small explicit row/upgrade catalog and shared prerequisites; reuse existing upgrade/project commands. Implement the resolved bootstrap, exact costs and atomic spending, then migration/defaults/validation/prestige. Keep persisted state under the session-owned Civ record, with new physical basket levels in Water. Update `js/mod.js` version and existing type contracts under `types/` and layer defaults in `js/layers/resources.js` only where required. Preparation must identify exact type filenames, not authorize the whole directory.
 3. In the same rules owner, implement shared upkeep/passive flow, additive storage, pipes, cistern and continued hauling. UI commands in `js/components.js` and `index.html` derive availability/costs and render Craft material rows using existing native controls. Use `civ.css` only as needed for row layout. Keep domain decisions out of templates.
 4. Extend nearby organization/opening/food/Fire rule and save suites, focused Water/material tests, and `tests/browser/civilization.spec.cjs` / `fire.spec.cjs` (or a focused material journey). Retain survival/worker-budget regressions. Exact affected test filenames belong in preparation.
 5. Update `scripts/balance/policy.cjs`, `sections.cjs` and relevant balance tests together. Teach policies to bank material costs, purchase legal prerequisites, choose storage versus flow and haul above baseline; do not repeatedly spend the savings needed for a row. Reconcile the regular-cadence transition, which currently assumes worker-free Water is sufficient. Report when five-minute checks cannot sustain a larger population.
@@ -106,13 +101,13 @@ Avoid granting a fresh save that historical access. Keep existing bought upgrade
 
 ## Acceptance and verification
 
-- **MAT01-AC01**: New material rows use fixed first-purchase Craft costs 10/20/50/100, and ordinary row upgrades cost 1/2/5/10 Craft respectively; no cost is a percentage of current balance.
-- **MAT01-AC02**: The first successful material purchase permanently reveals its five upgrades. Failed, repeated or insufficient-funds purchases spend nothing and reveal nothing.
+- **MAT01-AC01**: Each row has exactly five tiles: one capability purchase at 10/20/30 Craft followed by four purchases at 1/2/3 Craft respectively; the 30-Craft Copper row is the requested architect recommendation.
+- **MAT01-AC02**: The first successful row-unlock purchase permanently reveals its four related tiles. Failed, repeated one-time or insufficient-funds purchases spend nothing and reveal nothing.
 - **MAT01-AC03**: Craft capability predicates replace the Organization-6 buyable gate and bigger-game per-level Organization requirement. Organization retention, automation and unrelated activity gates remain explicit; bootstrap follows the resolved D2 decision.
 - **MAT01-AC04**: Every listed upgrade and repeatable project has an observable effect, truthful cost and shared simulation/UI eligibility; direct locked commands reject atomically.
 - **MAT01-AC05**: Collect water remains visible and dispatchable with a spring, including after reload, with normal worker/full-storage/busy guards and active snapshots.
 - **MAT01-AC06**: A spring without Water improvements supports exactly eight current-upkeep equivalents: zero net Water at eight and negative at nine, including Organization balance changes. This is sustainable supply, not a Population cap.
-- **MAT01-AC07**: Communal cistern adds 200 capacity without adding stock/income or changing Emergency cistern. Fired-clay pipes spend 2 Fire plus the Clay-row Craft price once and multiply only spring flow by exactly 2.
+- **MAT01-AC07**: Communal cistern costs 2 Craft and adds 200 capacity without adding stock/income or changing Emergency cistern. Fired-clay pipes spend 2 Craft plus exactly 2 Fire once and multiply only spring flow by exactly 2.
 - **MAT01-AC08**: Material knowledge, owned row upgrades and cistern/pipes survive both prestiges. Repeatable projects retain/reset by exact IDs; new water baskets use the explicit Organization-4 Water-storage retention extension.
 - **MAT01-AC09**: Supported old Civ exports migrate atomically to the one current schema, preserving currencies, bought effects, active jobs, paid construction and applicable retention. Malformed imports preserve live and durable state; ptr stays untouched.
 - **MAT01-AC10**: A legal fresh-game policy reaches the first material and each later row without resource grants or an unlock cycle. Active and regular balance runs report observed cost/time, cadence and completion or stalls; rough/fixed comparisons cover the new sections.
@@ -123,17 +118,14 @@ Planned boundary scenarios: one less than/exactly each price; all-or-nothing Cra
 
 The player journey starts in a fresh settlement or a preserved old Civ save, reaches Craft legally, buys a material and sees only its newly available upgrades. Denied purchases explain missing prerequisites/funds and retain balances. Keyboard focus remains usable when a row expands; narrow layouts reflow with readable costs. Water shows passive supply separately from average crew deliveries and explains storage without claiming a refill. Planned rendered/browser evidence cannot establish actual-user enjoyment or assistive-technology quality; those remain unmeasured. No new performance budget or native zoom gate is introduced.
 
-## Open decisions
+## Open decision
 
-- **D1:** Five upgrades per material row (recommended and shown above), or five initial technologies total. The smaller alternative needs a revised table.
-- **D2:** Keep huts at Organization 1 (recommended smallest change), or move huts too and explicitly amend the Craft bootstrap. Current housing/Craft thresholds make this consequential.
-
-These questions are recorded with alternatives in the structured artifact and were presented in the chat. Recommendations are not owner answers. The draft is complete for review; preparation depends on their resolution and implementation remains outside this request.
+**D2:** Keep huts at Organization 1 (recommended smallest change), or move huts too and explicitly amend the Craft bootstrap. Alternatives and consequences remain in `open_questions`. D1 is resolved by the owner's explicit correction; selection of Digging sticks and the Copper recommendation was expressly delegated to the agent. No further row-layout approval question is required to produce this revised plan. Implementation remains outside the current request.
 
 ## Research and documentation assessment
 
-Read the pinned [Plant notes](https://github.com/step3software/Prestige-Tree/blob/b42c39c84cd653fff166dca07b569c0fd0bddbbe/docs/research/plant.md), [Water notes](https://github.com/step3software/Prestige-Tree/blob/b42c39c84cd653fff166dca07b569c0fd0bddbbe/docs/research/water.md) and reference guide. Original Plant EPUB passages were hash-verified through the source reader: part 4 paragraphs 22-39 distinguish tightly coiled water-carrying baskets from loose baskets; part 1 paragraphs 3-18 cover the basic stone toolkit. PLT-02/03/04/06/07/08/10 support task-specific equipment, lashings, shelters, tiles, traps and firing. The spear upgrade is a game interpretation; the spear-thrower source does not measure hunting yields.
+Hash-verified original Plant passages were reread: part 1 paragraphs 61-64 describe digging-stick use for soil/clay excavation and tilling; part 6 paragraphs 91-92 describe a sapling-frame, lashed and thatched shelter; part 4 paragraphs 22-39 distinguish tightly woven water-carrying baskets. Use the pinned [Plant notes](https://github.com/step3software/Prestige-Tree/blob/b42c39c84cd653fff166dca07b569c0fd0bddbbe/docs/research/plant.md) and [Water notes](https://github.com/step3software/Prestige-Tree/blob/b42c39c84cd653fff166dca07b569c0fd0bddbbe/docs/research/water.md) for source locators and limits. These are practical reconstructions, not dated universal invention sequences or measured production rates.
 
-Rechecked [AMNH's Petra water account](https://www.amnh.org/explore/ology/archaeology/a-walk-through-the-ruins-of-petra): pipes convey water while reservoirs/cisterns store it. Rechecked the [early wooden-well excavation study](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0051374), which supports stone-tool carpentry without requiring metal. [Ashmolean's ceramic classification](https://potweb.ashmolean.org/PotABCs1.html) distinguishes porous earthenware and suitable higher-fired bodies. These sources support naming and dependencies, not the chosen costs, 200 capacity, 2x flow or chronology. Do not add a water-safety mechanic from these examples.
+The [Ashmolean Bronze Age collection](https://britisharchaeology.ashmus.ox.ac.uk/collections/bronze-age.html) describes copper preceding bronze in its British collection context and identifies bronze as a copper alloy with tin (and later lead). [Historic England's archaeometallurgy guide](https://historicengland.org.uk/images-books/publications/archaeometallurgy-guidelines-best-practice/heag003-archaeometallurgy-guidelines/) explains tin alloying. The [Tel Tsaf excavation](https://doi.org/10.1371/journal.pone.0092591) provides a concrete early copper-awl example; the [Met's copper-alloy chisel](https://www.metmuseum.org/art/collection/search/855343) supports chisel naming without claiming pure-copper composition. Early copper axe/knife evidence is discussed in the [Italian copper-tool study](https://doi.org/10.1038/s41598-024-54825-z); rely on its verified metadata rather than inferring an alloy from a museum label. The Copper row is an informed game recommendation, not a claim that all four tools were one synchronous kit.
 
-Navigation assessment: README -> developer guide -> civilization rules gives a useful human route; research claim IDs and reproducible source locators are strengths. The manifest/registry still say `master` while current local instructions/design say `main`; this run preserves that discrepancy and follows the explicit request to branch from latest work. Research observations of old keeper/hauling behavior are dated, not current authority. Material costs and gameplay rules should live in the canonical design after implementation, avoiding a second competing current design in research. This plan adds one discoverability link without reorganizing existing documentation.
+Earlier checked AMNH Petra and Ashmolean ceramic references continue to support storage/conveyance and fired-clay distinctions. Navigation remains README -> developer guide -> civilization owner, with research notes supplying evidence. The registry/manifest `master` versus local `main` discrepancy remains recorded; the explicit latest-work branch instruction selected the local Fire head. Keep this proposed plan separate from canonical shipped rules and preserve the historical first draft in Git. No unrelated documentation reorganization is needed.
