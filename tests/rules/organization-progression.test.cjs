@@ -7,6 +7,7 @@ function game(t){
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 function rich(p){
+    p.civ.fire=10;
     for(const id of ['food','water','craft','organization','education','money','freeTime'])p[id].points=new Decimal(1000);
 }
 const get=(p,id)=>{

@@ -15,7 +15,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
   }
   function act(time){
     const p=engine.player;
-    for(const id of ['lashings','joinery','builderTools','digging','hunting','butchery','preparedMaterials','extendedExpeditions','workRosters','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
+    for(const id of ['lashings','joinery','builderTools','digging','hunting','butchery','preparedMaterials','extendedExpeditions','workRosters','cooking','jars','abundance','waterReserves','rationing','gravity','farming','hearth','relief','sluice','autonomousFood']){
       if(economy.buyUpgrade(id))record('upgrade',id,time);
     }
     const opening=settings.first==='organization'?['organization','craft']:['craft','organization'];
@@ -32,6 +32,10 @@ function createPolicy(engine,settings,onAction=()=>{}){
       const target=id==='education'?8:1;
       const held=id==='education'?p[id].points:p[id].total;
       if(held.lt(target) && economy.canInvest(id) && economy.invest(id))record('investment',id,time);
+    }
+    if(economy.fireStatus().available){
+      const target=Math.max(0,Math.min(3,p.points.toNumber()-7,economy.supply().availableWorkers+p.civ.fireTenders));
+      if(target!==p.civ.fireTenders && economy.setFireTenders(target))record('fire-tending','fire',time);
     }
     if(p.civ.improvements.workRosters){
       const workers=Math.max(1,Math.min(5,Math.floor(p.points.toNumber()/6)));

@@ -49,7 +49,7 @@ test('a supply crew returning at the grace deadline prevents the loss',t=>{
 });
 
 test('emergency upgrades protect their own supply and the unprepared shortage still controls the deadline',t=>{
-    for(const [resource,upgrade,total] of [['food','rationing',5],['water','waterReserves',4]]){
+    for(const [resource,upgrade,total] of [['food','rationing',8],['water','waterReserves',5]]){
         const {engine,p,e}=game(t);
         p.points=new Decimal(10);p.organization.total=new Decimal(total);p.organization.points=new Decimal(total);p.craft.points=new Decimal(2);
         p.food.points=new Decimal(resource==='food'?20:50);p.water.points=new Decimal(resource==='water'?20:50);

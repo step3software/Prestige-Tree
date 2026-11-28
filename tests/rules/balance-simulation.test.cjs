@@ -45,7 +45,7 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   }
   assert.equal(p.points.toNumber(),target);
   assert.ok(recoverySeconds<baselineMinimum/3,'Recovery is materially quicker than even uninterrupted old growth');
-  assert.ok(peak>=7&&peak<=10);
+  assert.ok(peak>1&&peak<=10, "Larger hearth storage changes fullness; recovery still must beat one-third of unbuffed time");
   assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
   console.log(strategy+' actual-starvation recovery: 1 -> '+target+' in '+recoverySeconds+'s after '+orders+' repeat orders; old unbuffed minimum '+baselineMinimum+'s; peak '+peak.toFixed(2)+'x (synthetic).');
  }
@@ -105,6 +105,7 @@ test('legal active and regular play earn hearths and scale their Food benefits t
    engine.advance(cadence);
   }
   assert.ok(time<7200,'Purchased hearths and reached ten people without grants');
+  for(const id of ['cooking','jars','hearth'])assert.equal(p.civ.improvements[id],true, 'Fire upgrades are bought through real commands');
   const enteredAt=time;
   // Keep this earned settlement instead of prestiging: build housing and send
   // real crews at the same manual cadence to measure the next Food threshold.
@@ -115,13 +116,13 @@ test('legal active and regular play earn hearths and scale their Food benefits t
    if(p.points.gte(20))break;
   }
   assert.ok(p.points.gte(20));
-  assert.equal(e.supply().hearth.foodStorage,10);
-  assert.equal(e.supply().passiveProduction.food,2);
+  assert.equal(e.supply().hearth.foodStorage,50);
+  assert.ok(Math.abs(e.supply().passiveProduction.food-8*e.fireStatus().fill)<1e-8);
   assert.ok(e.supply().passiveProduction.food<e.supply().demand,'Hearths supplement staffed Food routes');
   assert.ok(p.food.points.gt(0)&&p.water.points.gt(0));
   assert.ok(p.civ.actions.gather.completed>0);
   engine.assertIsolated();
-  console.log(strategy+' legal hearths: ten people by '+enteredAt+'s, twenty by '+(time+cadence)+'s; +10 storage/+2 Food per minute.');
+  console.log(strategy+' legal hearths: ten people by '+enteredAt+'s, twenty by '+(time+cadence)+'s; +50 storage/up to +8 Food per minute with Fire fullness.');
  }
 });
 

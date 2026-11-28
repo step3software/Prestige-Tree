@@ -4,13 +4,13 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 ## First minutes
 
-Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; hunting follows at milestone 2. Both overseer queues arrive at 3, with Food/Water buyables later at 7. Existing discovered fishing remains usable while its new milestone is undecided. Dispatching a busy route or overbooking workers fails without spending anything.
+Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; hunting follows at milestone 2. Both overseer queues arrive at 3, with Food/Water buyables later at 6. Existing discovered fishing remains usable while its new milestone is undecided. Dispatching a busy route or overbooking workers fails without spending anything.
 
-Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. After purchasing Abundance, a free Shelter upgrade unlocked at Organization milestone 5, independent Food, Water and Shelter bonuses can raise the rate to 10 times normal. Before purchase, growth remains at the base rate. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
+Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. After purchasing Abundance, a free Shelter upgrade unlocked at Organization milestone 8, independent Food, Water and Shelter bonuses can raise the rate to 10 times normal. Before purchase, growth remains at the base rate. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
 
 ## Abundance growth curves
 
-Abundance is purchased once for no resources after first holding five Organization; its ownership survives prestige.
+Abundance is purchased once for no resources after first holding eight Organization; its ownership survives prestige.
 
 `growthSettings` in `js/civilization.js` owns the base period and each input's
 independent weight, thresholds and shape exponent. All three currently contribute
@@ -66,7 +66,7 @@ The Population panel exposes the multiplier and all three independent contributi
 
 Zero Food or zero Water starts one shared shortage episode. With no protection, the first person is lost after 10 seconds, the next after another 8, then 6.4, 5.12 and progressively shorter intervals, with a 2-second minimum. The engine resolves fractional deadlines on its deterministic one-second steps. Two empty supplies do not create two independent death streams.
 
-Restore both supplies above zero to reset the episode's elapsed time and loss count. The current missing supplies determine the stricter grace period. Emergency rations (Organization 5, then a Craft purchase) double Food grace and related intervals to 20 seconds; Emergency cistern (Organization 4) does the same for Water. An unprotected missing supply still controls a combined shortage. Mutual aid (Organization 8) changes interval decay from 0.8 to 0.9 and raises the minimum interval to 4 seconds. These permanent upgrades change the actual calculation, not only the displayed countdown.
+Restore both supplies above zero to reset the episode's elapsed time and loss count. The current missing supplies determine the stricter grace period. Emergency rations (Organization 8, then a Craft purchase) double Food grace and related intervals to 20 seconds; Emergency cistern (Organization 5) does the same for Water. An unprotected missing supply still controls a combined shortage. Mutual aid (Organization 8) changes interval decay from 0.8 to 0.9 and raises the minimum interval to 4 seconds. These permanent upgrades change the actual calculation, not only the displayed countdown.
 
 Population cannot fall below one survivor. That survivor retains one usable worker. At very low Population, manual Water collection can use a solo carrier at a slower pace; Gather remains available. Recovery can grow the community again.
 
@@ -93,7 +93,7 @@ Food routes have distinct repeatable projects, each reserving one builder:
 
 Provisioning improves all Food routes by 15% of base yield per level. Each Food basket adds 40 storage and costs exactly 1 Craft up front, in addition to its existing scaling work requirement. Provisioning and exploration/farming spend work only. Improvements affect newly dispatched trips. Repeat orders wait for sufficient workers for the new crew size; Autonomous food production still removes the final scaled crew requirement.
 
-Spear hunting reduces the base crew from 3 to 2 before bigger-game scaling. Digging sticks adds 25% Gather yield; Butchery tools adds 50% Hunt yield. Food crews remain staffed. Cultivated fields becomes available at Organization 8 and retains its existing Food/Water/Craft/Organization costs. Autonomous food production and Automatic sluice still require inaccessible later resources; older purchased effects remain usable. See the early milestone contract below for queue unlocks and staffing.
+Spear hunting reduces the base crew from 3 to 2 before bigger-game scaling. Digging sticks adds 25% Gather yield; Butchery tools adds 50% Hunt yield. Food crews remain staffed. Cultivated fields becomes available at Organization 7 and retains its existing Food/Water/Craft/Organization costs. Autonomous food production and Automatic sluice still require inaccessible later resources; older purchased effects remain usable. See the early milestone contract below for queue unlocks and staffing.
 
 ## Early Organization milestones
 
@@ -111,24 +111,52 @@ Extended expeditions multiplies Food yield and duration equally; it does not cha
 
 These numeric upgrade effects are authored tuning choices, not historical measurements. Baseline hut work remains `16 * scale^owned`; the Prepared materials factor is 0.75. Construction speed remains multiplied by `1 + 0.15 * held Organization` and doubled by Construction tools. Food tool bonuses apply before provisioning and knowledge, once per newly dispatched contract.
 
-Existing later gates are Gravity-fed spring 4, Abundance 5, Food/Water buyables 7, Farming 8 and irrigation 9. Earthenware/Fire/Energy integration and the remaining future upgrade slots are outside the MS1-3 implementation. Fire/Energy is not yet implemented; milestone 6 retains its existing well-record reward and Shared hearths while that design is completed. Fishing has no new-game unlock yet; existing discovered fishing remains usable.
+The revised order is Fire 4, Gravity-fed spring 5, Food/Water buyables 6, Farming 7, Abundance 8 and Farming-only irrigation 9. Existing discovered fishing remains usable; its new-game milestone is undecided. Buyable retention keeps its existing exact IDs and thresholds, independently of feature order.
+
+## Fire capacity, tending and Cooking
+
+At MS4, assign 0–5 whole Fire tenders from the shared worker pool. Zero releases them and keeps stored Fire. Purchased huts, not tending assignments, provide capacity:
+
+```text
+maximum = 10 + 2 * purchased huts
+fill = stored Fire / maximum
+tending Fire/min = tenders * (0.5 + 1.5 * fill^2)
+```
+
+The red settlement bar shows `Fire: current / maximum` and tending, actual consumption and net rates. At full capacity surplus tending is discarded; the displayed positive net is labeled storage full. Empty Fire recovers with any assigned tender. Spending Fire reduces both fullness and its future tending rate. Population losses release enough tenders before survival crews; at two or fewer survivors all tenders are released for rebuilding.
+
+| Fire cost | Permanent upgrade | Effect |
+| --- | --- | --- |
+| 1 | Cooking | Separate 1–5× slider for Food job yields with ongoing Fire consumption |
+| 2 | Earthenware jars | Base Water capacity 50 to 100; storage purchases +40 to +120; new purchases add scaling Fire cost |
+| 3 | Shared hearths | Each whole ten current Population adds +25 Food storage and up to +4 Food/min times Fire fullness |
+
+For selected Cooking level `M`, requested Fire/min is `0.2 * (M-1)^2 * (uncooked Food/min / 30)`. Uncooked throughput uses each running Food job's raw reward/duration snapshot, including tools, provisioning, knowledge, irrigation, crew batches and expedition length. A 45 Food/min crew at levels 1/2/3/4/5 produces 45/90/135/180/225 Food/min and requests 0/0.3/1.2/2.7/4.8 Fire/min. Idle Food routes consume nothing.
+
+Each one-second step spends available fuel and accrues the corresponding Food bonus on active jobs. A partially fueled step earns only that fraction of the bonus. At empty Fire, new tending can fund part of the step; without tending there is no additional bonus. Base Food is never lost to depletion. Changing Cooking affects remaining work only; already accrued bonus stays with the job until completion, when base plus bonus is delivered up to Food capacity. Recall forfeits unfinished yield and bonus. This is one current action model, not a separate cooked job path.
+
+Cooking and Extended expeditions are independent. At full fuel, 5× expedition length and 5× Cooking give 25× base Food over 5× time, for 5× throughput. Cooking fuel scales with uncooked throughput, so later equipment cannot provide increasingly cheap bonuses. Shared hearth income remains outside Cooking. Its storage is independent of Fire but still follows whole tens of current Population; its income falls with Fire fullness.
+
+New jar construction after the Earthenware jars upgrade spends `0.5 * 1.5^owned` Fire: 0.5, 0.75, 1.125, 1.6875… Existing one-Craft and scaling-work costs remain. Both currencies are checked before either is spent, then charged once at start; cancellation or lost construction refunds neither. Existing in-flight jar work is grandfathered without retroactive charges.
+
+Both prestiges reset stored Fire and tender assignments to zero, while retaining Fire upgrades and Cooking selection. Reset previews disclose these effects. Prior Civ saves get zero Fire/tenders, 1× Cooking and no retroactive cooked bonus. Purchased hearths, paid construction, raw active rewards and progress remain; existing hearth income then follows current Fire fullness. The formulas and coefficients are authored balance choices. Fired clay requires firing; the [Ashmolean technology reference](https://islamicceramics.ashmolean.org/Technology/firing.htm) supplies historical context, not game coefficients.
 
 ## Water: hauling, jars and flow
 
-Water starts with manual collection trips into 50-capacity reserves. **Craft earthenware jars** adds 40 Water storage per purchase for exactly 1 Craft plus the existing work requirement: 12 × 1.35^owned jars. Craft is spent at start, with the same cancellation/prestige no-refund rule as Food baskets. Existing jar projects finish without retroactive charges. [Research and material options](research/reference-guide.md#water-storage-materials) explain the early fired-clay name; later material upgrades have no current cost or unlock. Previously purchased Carrying yokes still reduce collection crews from 2 to 1; they have no new-game upgrade slot. Well lining is removed; collection and gravity flow have no lining multiplier. There is no Water keeper upgrade or repeat toggle. Both overseers unlock at milestone 3; Water remains manual until Gravity-fed spring at milestone 4.
+Water starts with manual collection trips into 50-capacity reserves. **Craft earthenware jars** adds 40 Water storage per purchase before the MS4 Earthenware jars upgrade, or 120 after it for exactly 1 Craft plus the existing work requirement: 12 × 1.35^owned jars. Craft is spent at start, with the same cancellation/prestige no-refund rule as Food baskets. Existing jar projects finish without retroactive charges. [Research and material options](research/reference-guide.md#water-storage-materials) explain the early fired-clay name; later material upgrades have no current cost or unlock. Previously purchased Carrying yokes still reduce collection crews from 2 to 1; they have no new-game upgrade slot. Well lining is removed; collection and gravity flow have no lining multiplier. There is no Water keeper upgrade or repeat toggle. Both overseers unlock at milestone 3; Water remains manual until Gravity-fed spring at milestone 5.
 
-A Gravity-fed spring unlocks at milestone 4 and requires 2 Craft, 1 Organization and 30 Food. It replaces hauling with continuous, unattended, worker-free Water flow: 24 base Water per minute plus 10 per improved well, scaled by knowledge. An existing carrying crew finishes normally. New games currently retain staffed Food production.
+A Gravity-fed spring unlocks at milestone 5 and requires 2 Craft, 1 Organization and 30 Food. It replaces hauling with continuous, unattended, worker-free Water flow: 24 base Water per minute plus 10 per improved well, scaled by knowledge. An existing carrying crew finishes normally. New games currently retain staffed Food production.
 
-Well projects also improve manual trip yield and speed. Earthenware jar projects add 40 capacity. Irrigation spends 20 surplus Water, protecting the household growth reserve, after milestone 9 with Farming purchased, to boost newly dispatched Farming rewards by 35% for 45 seconds. Gather, Hunt and Fish receive no irrigation multiplier. It does not retroactively change active jobs. Previously owned Automatic sluice still obeys the same reserve and cooldown guards; new purchases await future resource unlocks.
+Well projects also improve manual trip yield and speed. Earthenware jar projects add 40 capacity, or 120 after the Fire upgrade. Irrigation spends 20 surplus Water, protecting the household growth reserve, after milestone 9 with Farming purchased, to boost newly dispatched Farming rewards by 35% for 45 seconds. Gather, Hunt and Fish receive no irrigation multiplier. It does not retroactively change active jobs. Previously owned Automatic sluice still obeys the same reserve and cooldown guards; new purchases await future resource unlocks.
 
 ## Shelter: expand housing
 
 There are no building slots and no Shelter milestone track.
 
-- **Abundance** is free to purchase after Organization milestone 5. Until purchased, surplus supplies and spare housing do not accelerate growth. Its curves and ownership gate are described above.
+- **Abundance** is free to purchase after Organization milestone 8. Until purchased, surplus supplies and spare housing do not accelerate growth. Its curves and ownership gate are described above.
 - **Build a new hut** unlocks at Organization 1 and adds 4 housing (6 with Timber frames). Both overseers unlock at 3; queued hut work and staffing follow the early milestone contract. General auto-building excludes huts. Busy construction, shortages and missing builders consume no repeats. Setting zero clears pending repeats; canceling stops current construction.
 
-There is no domestic work or household labor reservation. Every person can join a crew or build. The ledger counts active crews, the shared Food Overseer, the hut foreman and every reserved builder once. Only whole available workers can join a crew.
+There is no domestic work or household labor reservation. Every person can join a crew or build. The ledger counts active crews, the shared Food Overseer, the hut foreman, Fire tenders and every reserved builder once. Only whole available workers can join a crew.
 
 One construction job runs at a time for new queued work. Other buyables retain their single builder. Existing saved multi-hut snapshots keep their work and builders until completion. Population loss can pause construction without losing progress; it resumes when enough builders are available. Organization and Construction tools still affect construction work. Canceling releases builders and clears progress; spent Craft is not refunded. Canceling current construction does not consume another queued repeat; set the slider to zero to stop further automatic starts.
 
@@ -140,7 +168,7 @@ Organization requires only current Population: the next point needs `8 + 4 × cu
 
 Milestones unlock when the held balance first reaches their threshold and stay unlocked after spending, prestige and save/reload. The existing saved peak (`organization.best`) records the highest held balance; lifetime earnings remain historical statistics and cannot unlock a never-held threshold. All milestone rewards share this rule: features, upgrade access, overseer orders, irrigation, auto-building and specific buyable retention. Spending still lowers the next Population requirement and must cover each purchase cost. Pending orders continue with their assigned managers. Queues saved while their managers were reassigned wait for free supervisors without discarding active paid work or remaining repeats. Prestige itself still clears queues according to its existing contract. Paid work and purchased upgrades retain their existing state and effects.
 
-Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
+Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Fire and tender assignments reset to zero. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
 
 New games have no initially purchasable upgrades. The early Organization milestone table owns the first nine upgrades and their currencies. Later gates remain explicit in `organizationRewards`; a milestone reveals upgrades without buying them.
 
@@ -149,11 +177,11 @@ New games have no initially purchasable upgrades. The early Organization milesto
 | 1 | Huts; Cord lashings, Timber frames, Construction tools | None |
 | 2 | Hunting; Digging sticks, Spear hunting, Butchery tools | None |
 | 3 | Both overseers; Prepared materials, Extended expeditions, Work rosters | None |
-| 4 | Gravity-fed spring, Emergency cistern | Earthenware jars |
-| 5 | Free Abundance, Emergency rations, Mutual aid | Food baskets |
-| 6 | Existing Shared hearths / well records; Fire/Energy pending | Well improvements |
-| 7 | Food/Water buyables | Explore farther afield |
-| 8 | Cultivated fields | Hunt bigger game |
+| 4 | Fire; Cooking, Earthenware jars, Shared hearths | Earthenware jars |
+| 5 | Gravity-fed spring, Emergency cistern | Food baskets |
+| 6 | Food/Water buyables | Well improvements |
+| 7 | Cultivated fields | Explore farther afield |
+| 8 | Free Abundance, Emergency rations, Mutual aid | Hunt bigger game |
 | 9 | Farming-only irrigation | Weave river traps |
 | 10 | Existing auto-building | Huts |
 
