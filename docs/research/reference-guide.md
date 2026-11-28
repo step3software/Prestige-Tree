@@ -66,6 +66,12 @@ floor. Those rules are design choices, not an inferred historical mortality mode
 
 ## Food water and reserves
 
+### Shared hearths
+
+The [USDA National Agricultural Library's BARC archaeology exhibit](https://www.nal.usda.gov/exhibits/speccoll/exhibits/show/barc/what-did-people-do-here-/food-preparation), read 2026-11-27, interprets pottery around a hearth as evidence for communal meal preparation and describes sharing food beyond the immediate hunting group. This supports the game's shared-cooking theme. It does not establish an empirical Food yield, storage volume or housing benefit. Hearth income represents pooling and preparation efficiency within the existing Food abstraction, rather than an additional harvest route or a new worker reservation.
+
+The [GDC 2009 Game Design Workshop handout, page 3](https://media.gdcvault.com/gdc09/slides/Handout.pdf), read the same day, describes positive feedback as reinforcing a system's direction. Apply that lens to Population producing more Food: keep the income below upkeep so growth still needs staffed routes. The selected game rule is +5 storage and +1 Food/min per full ten current people, settlement-wide. Its coefficients are design choices, with legal pacing observations in the [balance guide](../balance-testing.md#shared-hearths-observations). Housing effects were excluded by the owner's final scope.
+
 Separate four questions in descriptions and balancing: how much can the site
 produce, how much labor is available, how much stock fits, and how long the
 reserve lasts at current demand. The useful game measure is a supply buffer
@@ -215,6 +221,8 @@ unlock order and any water-quality mechanics remain design work.
 
 The shared Craft bonus abstracts better working practices and equipment.
 Education is a locked later branch in the current opening.
+Craft is spent on explicit improvements; holding Craft no longer supplies a general production bonus. Education retains its existing effect. For the
+current simple game, describe this as improved working practices and equipment.
 If later content becomes more specific, name the task and input: better baskets
 reduce handling losses; a mill reduces processing work; a powered device trades
 human labor for an external energy source and supporting infrastructure.

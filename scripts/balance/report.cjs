@@ -9,7 +9,11 @@ function duration(seconds) {
 function compareReference(rough,fixed) {
   const rows=rough.sections.map(row=>{
     const other=fixed.sections.find(item=>item.id===row.id);
-    const roughTime=row.entrySeconds!==null && row.entrySeconds<=fixed.simulatedSeconds?row.entrySeconds:null;
+    // Both completed runs reached the same terminal state. Their final
+    // observation may differ within the tested step window; that is drift,
+    // not missing coverage beyond an incomplete reference run.
+    const comparisonEnd=rough.status==='endgame'&&fixed.status==='endgame'?fixed.horizonSeconds:fixed.simulatedSeconds;
+    const roughTime=row.entrySeconds!==null && row.entrySeconds<=comparisonEnd?row.entrySeconds:null;
     const fixedTime=other.entrySeconds;
     return {id:row.id,roughSeconds:roughTime,fixedSeconds:fixedTime,
       relativeDifference:roughTime!==null && fixedTime!==null?(roughTime-fixedTime)/Math.max(fixedTime,1):null,
@@ -26,7 +30,7 @@ function markdown(report) {
   const candidates=report.runs;
   const lines=['# Civ Prestige Tree balance timing','',
     `Source: \`${report.sourceRevision}\`. Mode: **${report.mode}**. ${report.startDescription}.`,
-    '', 'Regular play checks every **20 seconds** until Food overseer, worker-free Water and milestone-10 auto-building, then every **five minutes**. Active policies check every five seconds. Actual transitions are recorded in report.json.',
+    '', 'Regular play checks every **20 seconds** until Food overseer, milestone-10 auto-building and passive Water sufficient for full housing, then every **five minutes**. Active policies check every five seconds. Actual transitions are recorded in report.json.',
     '“Best tested” is an envelope of the tested strategies, not a proven optimum or one combined playthrough.',
     'Rough mode coalesces outer engine calls while the real Civ economy retains one-second internal steps. Checkpoint observation windows can differ; manual cadence stays fixed.',
     '', '| Section entry | Best tested | Winning policy | Regular |', '| --- | --- | --- | --- |'];

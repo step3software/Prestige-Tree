@@ -17,6 +17,16 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         player() { return binding.player; }, allSaves() { return binding.allSaves; },
         civ() { return binding.player && modRules.civilization.summary(); },
         selected() { return modRules.civilization.node(binding.player.tab); },
+        overseerStaffing() {
+            const food = this.selected.id === 'food';
+            const kind = food ? 'food' : 'huts';
+            const repeats = food ? Math.max(...Object.values(this.player.civ.actions).map(action => action.repeat)) : this.player.civ.hutRepeat;
+            const occupied = food ? this.civ.overseerWorkers : this.civ.foremanWorkers;
+            const workers = this.player.civ.overseers[kind];
+            return {kind, name: food ? 'Expedition planner' : 'Hut foreman', workers,
+                min: Math.max(1, Math.ceil(repeats / 5)),
+                max: occupied ? Math.min(5, occupied + this.civ.availableWorkers) : 5};
+        },
         rows() { return [0,1,2,3].map(tier => this.civ.nodes.filter(node => node.tier === tier)); },
         frozen() { return binding.ruleStatus.gameEnded || gameRules.tickFaulted; },
     };
@@ -30,7 +40,17 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
         build(id) { return actionable(() => modRules.civilization.startProject(id)); },
         dispatch(id) { return actionable(() => modRules.civilization.dispatch(id)); },
         recall(id) { return actionable(() => modRules.civilization.recall(id)); },
-        toggleRepeat(id) { return actionable(() => modRules.civilization.toggleRepeat(id)); },
+        setRepeat(id, event) { return actionable(() => modRules.civilization.setRepeat(id, Number(event.target.value))); },
+        setFireTenders(event) {
+            const changed = actionable(() => modRules.civilization.setFireTenders(Number(event.target.value)));
+            event.target.value = String(saveState.player.civ.fireTenders);
+            if (!changed) saveState.player.civ.message = "Fire tending needs available workers. Release a crew or choose fewer tenders.";
+            return changed;
+        },
+        setCookingLevel(event) { return actionable(() => modRules.civilization.setCookingLevel(Number(event.target.value))); },
+        setHutRepeat(event) { return actionable(() => modRules.civilization.setHutRepeat(Number(event.target.value))); },
+        setOverseers(kind, event) { return actionable(() => modRules.civilization.setOverseers(kind, Number(event.target.value))); },
+        setExpeditionMultiplier(id, event) { return actionable(() => modRules.civilization.setExpeditionMultiplier(id, Number(event.target.value))); },
         buyUpgrade(id) { return actionable(() => modRules.civilization.buyUpgrade(id)); },
         irrigate() { return actionable(() => modRules.civilization.irrigate()); },
         toggleIrrigation() { return actionable(() => { if (modRules.civilization.summary().autoIrrigateAvailable) binding.player.civ.autoIrrigate = !binding.player.civ.autoIrrigate; }); },

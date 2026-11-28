@@ -5,7 +5,7 @@ function createModRules({ derivedState, effects, gameHelpers, saveState }) {
         pointsName: "Population", initialStartPoints: new Decimal(civilization.startingSettlement.population), offlineLimit: 1,
         changelogLink: "https://github.com/step3software/Prestige-Tree"};
     /** @type {{num:string,name:string,withoutName:string,withName:string,beta?:number,pre?:number,patch?:number}} */
-    const VERSION = {num: "0.6", name: "The working settlement", withoutName: "v0.6", withName: "v0.6 - The working settlement"};
+    const VERSION = {num: "0.91", name: "Materials and fire", withoutName: "v0.9.1", withName: "v0.9.1 - Materials and fire"};
     const activeNotifications = effects.observe([]);
     return {modInfo, VERSION, civilization, activeNotifications,
         doNotCallTheseFunctionsEveryTick: [], alwaysKeepTheseVariables: [], displayThings: [],
@@ -13,6 +13,7 @@ function createModRules({ derivedState, effects, gameHelpers, saveState }) {
         getPointGen: () => new Decimal(0), getRow1to6Speed: () => new Decimal(1),
         addedPlayerData: () => ({civ: civilization.defaults()}),
         validatePlayerData: civilization.validateData,
+        migratePlayerData: civilization.migrateData,
         isEndgame: () => false, maxTickLength: () => 3600,
         addNotification(type, message, title) { activeNotifications.push({type, message, title, time: 3}); },
         adjustNotificationTime(diff) {
