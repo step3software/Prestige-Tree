@@ -18,8 +18,15 @@ test('shared range fills checkboxes, preserves bounds and switches at six with c
     const box=level=>control.locator(`input[value="${level}"]`);
     await expect(control.getByRole('checkbox')).toHaveCount(5);
     await expect(control.getByRole('slider')).toHaveCount(0);
+    await expect(control.locator('.range-step span')).toHaveCount(0);
+    await expect(box(1)).toHaveAccessibleName('Example selection with a long visible label: set 1');
+    await expect(box(1)).toHaveCSS('border-radius','50%');
+    await expect(box(1)).toHaveCSS('border-top-color','rgb(0, 136, 204)');
     await expect(box(1)).toHaveCSS('accent-color','rgb(0, 136, 204)');
     await box(4).click();await expect(checked).toHaveCount(4);await expect(box(5)).not.toBeChecked();
+    await expect(box(4)).not.toHaveCSS('background-image','none');
+    await expect(box(4)).not.toHaveCSS('box-shadow','none');
+    await expect(box(5)).toHaveCSS('background-image','none');
     await box(2).focus();await page.keyboard.press('Space');await expect(checked).toHaveCount(2);
     await expect(box(2)).toBeFocused();
     expect(await box(2).evaluate(el=>getComputedStyle(el).outlineStyle)).toBe('solid');
@@ -46,9 +53,14 @@ test('shared range fills checkboxes, preserves bounds and switches at six with c
     await page.evaluate(()=>{window.rangeExample.value=3;window.rangeExample.max=5;window.rangeExample.disabled=false;});
     await expect(checked).toHaveCount(3);
     await expect(box(3)).toHaveCSS('accent-color','rgb(227, 75, 66)');
+    await expect(box(3)).toHaveCSS('border-top-color','rgb(227, 75, 66)');
     for(const width of [1280,768,320]){
         await page.setViewportSize({width,height:900});await expect(control).toBeVisible();
         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     }
+    await control.screenshot({path:'test-results/range-round-320.png'});
+    await page.emulateMedia({forcedColors:'active'});
+    await expect(box(3)).toHaveCSS('appearance','auto');await expect(box(3)).toBeChecked();
+    await box(3).hover();await expect(box(3)).toHaveCSS('box-shadow','none');
     expect(errors).toEqual([]);
 });

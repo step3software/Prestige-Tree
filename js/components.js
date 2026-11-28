@@ -29,7 +29,6 @@ function createRangeControl() {
                 <label v-for="level in max" :key="level" class="range-step">
                     <input type="checkbox" :value="level" :checked="level <= value" :disabled="disabled || level < min"
                         :aria-label="label + ': set ' + level" @change="toggle(level, $event)">
-                    <span>{{level}}</span>
                 </label>
             </div>
             <input v-else type="range" :min="min" :max="max" step="1" :value="value" :disabled="disabled"

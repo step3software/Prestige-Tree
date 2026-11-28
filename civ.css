@@ -215,9 +215,14 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .range-control { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; margin: 14px 0; }
 .range-label { font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
 .range-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
-.range-control .range-step { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 36px; min-height: 48px; margin: 0; font-size: 16px; cursor: pointer; }
-.range-step input { width: 24px; height: 24px; margin: 0; accent-color: var(--range-color); cursor: inherit; }
-.range-step input:disabled { cursor: not-allowed; }
+.range-control .range-step { display: flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px; margin: 0; cursor: pointer; }
+.range-step input { appearance: none; box-sizing: border-box; width: 24px; height: 24px; margin: 0; border: 2px solid var(--range-color); border-radius: 50%; background-color: var(--background); accent-color: var(--range-color); cursor: inherit; }
+.range-step input:checked { background-image: radial-gradient(circle, var(--range-color) 0 40%, transparent 45%); box-shadow: 0 0 7px color-mix(in srgb, var(--range-color) 65%, transparent); }
+.range-step input:enabled:hover { box-shadow: 0 0 9px color-mix(in srgb, var(--range-color) 70%, transparent); }
+.range-step input:disabled { cursor: not-allowed; opacity: .55; box-shadow: none; }
 .range-control > input[type="range"] { width: 100%; min-width: 0; min-height: 32px; margin: 0; accent-color: var(--range-color); }
 .range-control input:focus-visible { outline: 3px solid var(--color); outline-offset: 3px; }
+@media (forced-colors: active) {
+    .range-step input, .range-step input:checked, .range-step input:enabled:hover { appearance: auto; background: none; box-shadow: none; }
+}
 .fire-buyables > h3, .fire-buyables > p { grid-column: 1 / -1; }
