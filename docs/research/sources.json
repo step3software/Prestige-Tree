@@ -2,12 +2,12 @@
   "schema": "civ.research-sources/v1",
   "parser_version": 1,
   "indexed_on": "2026-11-27",
-  "locator_convention": "Chapter IDs and one-based nonempty XHTML block ordinals; headings, captions, list items and definition items count. Whitespace is collapsed. These are not printed pages or Kindle locations.",
+  "locator_convention": "EPUB: chapter/part IDs and one-based nonempty XHTML block ordinals, unchanged parser_version 1. PDF: one-based physical file pages, with printed labels recorded separately. Do not exchange page labels and file-page numbers.",
   "library": {
     "local_root": "C:\\Users\\PhillipCurry\\projects\\books\\books",
     "repository": "https://github.com/step3software/books",
     "observed_branch": "main",
-    "binary_tracking": "Both EPUBs are tracked on main at the recorded revision; local Git blob identities match the published tree.",
+    "binary_tracking": "Smil and Scott are verified in the recorded repository revision. Plant and Kelly were added locally; repository presence is recorded separately for each source.",
     "revision": "8893e4e75744f12fd3f52cc1b9f5347a11e97453"
   },
   "books": {
@@ -1338,7 +1338,8 @@
       ],
       "repository_path": "books/Vaclav Smil - Energy and Civilization/Vaclav Smil - Energy and Civilization.epub",
       "git_blob_sha": "512311341c99dc317b8d949bde0be8c16aac8092",
-      "repository_url": "https://github.com/step3software/books/blob/8893e4e75744f12fd3f52cc1b9f5347a11e97453/books/Vaclav%20Smil%20-%20Energy%20and%20Civilization/Vaclav%20Smil%20-%20Energy%20and%20Civilization.epub"
+      "repository_url": "https://github.com/step3software/books/blob/8893e4e75744f12fd3f52cc1b9f5347a11e97453/books/Vaclav%20Smil%20-%20Energy%20and%20Civilization/Vaclav%20Smil%20-%20Energy%20and%20Civilization.epub",
+      "format": "epub"
     },
     "scott": {
       "title": "Against the Grain: A Deep History of the Earliest States",
@@ -1937,7 +1938,2952 @@
       ],
       "repository_path": "books/Against the Grain A Deep History of the Earliest States by James C. Scott.epub",
       "git_blob_sha": "2b92f42e70350bfd4290058e9cb7afbaba23785d",
-      "repository_url": "https://github.com/step3software/books/blob/8893e4e75744f12fd3f52cc1b9f5347a11e97453/books/Against%20the%20Grain%20A%20Deep%20History%20of%20the%20Earliest%20States%20by%20James%20C.%20Scott.epub"
+      "repository_url": "https://github.com/step3software/books/blob/8893e4e75744f12fd3f52cc1b9f5347a11e97453/books/Against%20the%20Grain%20A%20Deep%20History%20of%20the%20Earliest%20States%20by%20James%20C.%20Scott.epub",
+      "format": "epub"
+    },
+    "plant": {
+      "title": "Primitive Technology: A Survivalist's Guide to Building Tools, Shelters, and More in the Wild",
+      "author": "John Plant",
+      "publisher": "Clarkson Potter/Publishers",
+      "citation_prefix": "PLT",
+      "format": "epub",
+      "local_path": "C:\\Users\\PhillipCurry\\projects\\books\\books\\Primitive Technology A Survivalist's Guide to Building Tools, Shelters, and More in the Wild by John Plant.epub",
+      "relative_path": "Primitive Technology A Survivalist's Guide to Building Tools, Shelters, and More in the Wild by John Plant.epub",
+      "sha256": "7d145684084fdc813f666de7b8fb6f4e77ece236a3426f35c314057396bcd524",
+      "local_git_blob_sha": "321f4e37c5c014e9db9433b2da78433589a4f6f3",
+      "repository_path": "books/Primitive Technology A Survivalist's Guide to Building Tools, Shelters, and More in the Wild by John Plant.epub",
+      "repository_url": null,
+      "repository_status": "Local file present; absent from the observed library main tree at 8893e4e75744f12fd3f52cc1b9f5347a11e97453. Do not claim a hosted file URL until publication is verified.",
+      "copyright_year": 2019,
+      "copyright_page_isbn": "9781984823687 (ebook)",
+      "metadata_note": "Package date 2019-10-29. Part IDs follow reading order; project headings are styled paragraphs, not XHTML h elements. Native print-page anchors exist, but citations use stable block ordinals. Responsive markup repeats some instructions; the index preserves those source blocks.",
+      "chapters": [
+        {
+          "id": "intro",
+          "title": "Introduction",
+          "spine": 8,
+          "epub_href": "OEBPS/xhtml/intro.xhtml",
+          "sha256": "67686231742ea85c32af76780183131014fb21a3d89f71a37a88878607564af4",
+          "paragraph_count": 6,
+          "headings": [
+            {
+              "title": "Introduction",
+              "paragraph": 1,
+              "element_id": "p11_anchor"
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "title": "Basic Tool Kit",
+          "spine": 9,
+          "epub_href": "OEBPS/xhtml/c01.xhtml",
+          "sha256": "fed18bfc2642795e3527925b004e0a52a51c665ad9ecac2ab79983835ef950c2",
+          "paragraph_count": 119,
+          "headings": [
+            {
+              "title": "BASIC TOOL KIT",
+              "paragraph": 1,
+              "element_id": "p12_anchor"
+            },
+            {
+              "title": "HAMMER STONE",
+              "paragraph": 7,
+              "element_id": "p14_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 19,
+              "element_id": null
+            },
+            {
+              "title": "STONE BLADES",
+              "paragraph": 24,
+              "element_id": "p16_anchor"
+            },
+            {
+              "title": "HAND AXE",
+              "paragraph": 36,
+              "element_id": "p18_anchor"
+            },
+            {
+              "title": "HOW TO USE A HAND AXE",
+              "paragraph": 48,
+              "element_id": null
+            },
+            {
+              "title": "DIGGING STICK",
+              "paragraph": 50,
+              "element_id": "p20_anchor"
+            },
+            {
+              "title": "HOW TO USE A DIGGING STICK",
+              "paragraph": 61,
+              "element_id": null
+            },
+            {
+              "title": "MALLET & CHISEL",
+              "paragraph": 65,
+              "element_id": "p22_anchor"
+            },
+            {
+              "title": "HOW TO USE A MALLET AND CHISEL",
+              "paragraph": 82,
+              "element_id": null
+            },
+            {
+              "title": "HOW TO GROW YAMS",
+              "paragraph": 106,
+              "element_id": "p25_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 118,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "Heat",
+          "spine": 10,
+          "epub_href": "OEBPS/xhtml/c02.xhtml",
+          "sha256": "2dfe42de3bf97320c2f50e9389553a017371d85d688e17be2aeaf5a8e5011940",
+          "paragraph_count": 128,
+          "headings": [
+            {
+              "title": "HEAT",
+              "paragraph": 1,
+              "element_id": "p26_anchor"
+            },
+            {
+              "title": "FIRE STICKS",
+              "paragraph": 7,
+              "element_id": "p28_anchor"
+            },
+            {
+              "title": "BOW DRILL",
+              "paragraph": 25,
+              "element_id": "p30_anchor"
+            },
+            {
+              "title": "HOW TO USE A BOW DRILL",
+              "paragraph": 42,
+              "element_id": null
+            },
+            {
+              "title": "HOW TO START A FIRE",
+              "paragraph": 44,
+              "element_id": "p33_anchor"
+            },
+            {
+              "title": "BLOWPIPE",
+              "paragraph": 59,
+              "element_id": "p34_anchor"
+            },
+            {
+              "title": "HOW TO USE A BLOWPIPE",
+              "paragraph": 71,
+              "element_id": "p37_anchor"
+            },
+            {
+              "title": "WOODEN TONGS",
+              "paragraph": 82,
+              "element_id": "p38_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 95,
+              "element_id": null
+            },
+            {
+              "title": "BURN BOWL",
+              "paragraph": 99,
+              "element_id": "p40_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 114,
+              "element_id": "p42_anchor"
+            },
+            {
+              "title": "HOW TO BOIL WATER USING A BURN BOWL",
+              "paragraph": 117,
+              "element_id": "p43_anchor"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "title": "Hunt",
+          "spine": 11,
+          "epub_href": "OEBPS/xhtml/c03.xhtml",
+          "sha256": "646c99207965e4cb5d5da313139a5f00ca7cb7d8c3bca6688b943c2bc622fcfb",
+          "paragraph_count": 84,
+          "headings": [
+            {
+              "title": "HUNT",
+              "paragraph": 1,
+              "element_id": "p44_anchor"
+            },
+            {
+              "title": "BOW",
+              "paragraph": 6,
+              "element_id": "p46_anchor"
+            },
+            {
+              "title": "HOW TO USE A BOW AND ARROW",
+              "paragraph": 38,
+              "element_id": null
+            },
+            {
+              "title": "FISH TRAP",
+              "paragraph": 40,
+              "element_id": "p50_anchor"
+            },
+            {
+              "title": "HOW TO CATCH A FISH WITH A FISH TRAP",
+              "paragraph": 52,
+              "element_id": null
+            },
+            {
+              "title": "SPEAR THROWER",
+              "paragraph": 54,
+              "element_id": "p54_anchor"
+            },
+            {
+              "title": "HOW TO THROW A SPEAR WITH A SPEAR THROWER",
+              "paragraph": 68,
+              "element_id": "p57_anchor"
+            },
+            {
+              "title": "SLING",
+              "paragraph": 70,
+              "element_id": "p58_anchor"
+            },
+            {
+              "title": "HOW TO USE A SLING",
+              "paragraph": 82,
+              "element_id": "p61_anchor"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "title": "Clothing & Textiles",
+          "spine": 12,
+          "epub_href": "OEBPS/xhtml/c04.xhtml",
+          "sha256": "c32d9b72970a80e5f60d83b33005537e0569bb5ed354ce1b4e0932b8f16a0392",
+          "paragraph_count": 117,
+          "headings": [
+            {
+              "title": "CLOTHING & TEXTILES",
+              "paragraph": 1,
+              "element_id": "p62_anchor"
+            },
+            {
+              "title": "STANDARD WEAVE BASKET",
+              "paragraph": 9,
+              "element_id": "p64_anchor"
+            },
+            {
+              "title": "COIL WEAVE BASKET",
+              "paragraph": 22,
+              "element_id": "p68_anchor"
+            },
+            {
+              "title": "HOW TO USE A COIL WEAVE BASKET",
+              "paragraph": 38,
+              "element_id": null
+            },
+            {
+              "title": "TWINING WEAVE BASKET",
+              "paragraph": 40,
+              "element_id": "p72_anchor"
+            },
+            {
+              "title": "CORDAGE",
+              "paragraph": 52,
+              "element_id": "p76_anchor"
+            },
+            {
+              "title": "BEST USES FOR CORDAGE",
+              "paragraph": 62,
+              "element_id": null
+            },
+            {
+              "title": "DROP SPINDLE",
+              "paragraph": 64,
+              "element_id": "p78_anchor"
+            },
+            {
+              "title": "HOW TO MAKE YARN WITH A DROP SPINDLE",
+              "paragraph": 74,
+              "element_id": null
+            },
+            {
+              "title": "LOOM",
+              "paragraph": 80,
+              "element_id": "p80_anchor"
+            },
+            {
+              "title": "HOW TO MAKE CLOTH WITH A LOOM",
+              "paragraph": 97,
+              "element_id": "p83_anchor"
+            },
+            {
+              "title": "SANDALS",
+              "paragraph": 101,
+              "element_id": "p84_anchor"
+            },
+            {
+              "title": "HOW TO WEAR YOUR SANDALS",
+              "paragraph": 114,
+              "element_id": null
+            },
+            {
+              "title": "TIP",
+              "paragraph": 116,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "title": "Advanced Tool Kit",
+          "spine": 13,
+          "epub_href": "OEBPS/xhtml/c05.xhtml",
+          "sha256": "7d8542b30650d88aa998d8d781a87cc69c77986dd7982a3e3c447254d8d9aec8",
+          "paragraph_count": 122,
+          "headings": [
+            {
+              "title": "ADVANCED TOOL KIT",
+              "paragraph": 1,
+              "element_id": "p88_anchor"
+            },
+            {
+              "title": "ADZE",
+              "paragraph": 6,
+              "element_id": "p90_anchor"
+            },
+            {
+              "title": "HOW TO USE AN ADZE",
+              "paragraph": 24,
+              "element_id": "p91_anchor"
+            },
+            {
+              "title": "CELT AXE",
+              "paragraph": 26,
+              "element_id": "p94_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 48,
+              "element_id": "p95_anchor"
+            },
+            {
+              "title": "CORD DRILL",
+              "paragraph": 52,
+              "element_id": "p98_anchor"
+            },
+            {
+              "title": "HOW TO USE A CORD DRILL",
+              "paragraph": 70,
+              "element_id": null
+            },
+            {
+              "title": "HOW TO UPGRADE A CORD DRILL INTO A PUMP DRILL",
+              "paragraph": 72,
+              "element_id": "p101_anchor"
+            },
+            {
+              "title": "WATER HAMMER",
+              "paragraph": 92,
+              "element_id": "p104_anchor"
+            },
+            {
+              "title": "HOW TO USE A WATER HAMMER",
+              "paragraph": 121,
+              "element_id": null
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "title": "Shelter",
+          "spine": 14,
+          "epub_href": "OEBPS/xhtml/c06.xhtml",
+          "sha256": "fdbf5f86d313df392c8d142207c1c951e86b6e0ad9f6c1a6c3b0907f27c24aa5",
+          "paragraph_count": 355,
+          "headings": [
+            {
+              "title": "SHELTER",
+              "paragraph": 1,
+              "element_id": "p110_anchor"
+            },
+            {
+              "title": "DRYSTONE WALL",
+              "paragraph": 12,
+              "element_id": "p112_anchor"
+            },
+            {
+              "title": "WHEN TO BUILD A DRYSTONE WALL",
+              "paragraph": 28,
+              "element_id": "p113_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 30,
+              "element_id": null
+            },
+            {
+              "title": "MUD WALL",
+              "paragraph": 33,
+              "element_id": "p116_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 46,
+              "element_id": "p117_anchor"
+            },
+            {
+              "title": "WATTLE & DAUB WALL",
+              "paragraph": 50,
+              "element_id": "p120_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 68,
+              "element_id": "p121_anchor"
+            },
+            {
+              "title": "TERMITES!",
+              "paragraph": 72,
+              "element_id": "p123_anchor"
+            },
+            {
+              "title": "HOW TO MAKE ASH CEMENT",
+              "paragraph": 74,
+              "element_id": "p124_anchor"
+            },
+            {
+              "title": "DOME HUT",
+              "paragraph": 91,
+              "element_id": "p126_anchor"
+            },
+            {
+              "title": "OPTIMAL SETUP FOR A DOME HUT",
+              "paragraph": 123,
+              "element_id": null
+            },
+            {
+              "title": "HOW TO MAKE A BARK ROOF",
+              "paragraph": 125,
+              "element_id": "p130_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 133,
+              "element_id": "p131_anchor"
+            },
+            {
+              "title": "GABLED ROOF HUT",
+              "paragraph": 135,
+              "element_id": "p132_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 164,
+              "element_id": "p133_anchor"
+            },
+            {
+              "title": "OPTIMAL SETUP FOR A GABLED ROOF HUT",
+              "paragraph": 166,
+              "element_id": null
+            },
+            {
+              "title": "HOW TO PLACE TILES ON A GABLED ROOF HUT",
+              "paragraph": 168,
+              "element_id": "p137_anchor"
+            },
+            {
+              "title": "HOW TO MAKE FLAT CERAMIC ROOF TILES",
+              "paragraph": 170,
+              "element_id": "p138_anchor"
+            },
+            {
+              "title": "A-FRAME HUT",
+              "paragraph": 194,
+              "element_id": "p140_anchor"
+            },
+            {
+              "title": "OPTIMAL SETUP FOR AN A-FRAME HUT",
+              "paragraph": 216,
+              "element_id": "p141_anchor"
+            },
+            {
+              "title": "HOW TO MAKE A GRASS THATCH ROOF",
+              "paragraph": 220,
+              "element_id": "p143_anchor"
+            },
+            {
+              "title": "ROUND HUT",
+              "paragraph": 234,
+              "element_id": "p146_anchor"
+            },
+            {
+              "title": "OPTIMAL SETUP FOR A ROUND HUT",
+              "paragraph": 270,
+              "element_id": "p147_anchor"
+            },
+            {
+              "title": "HOW TO MAKE A PALM THATCH ROOF",
+              "paragraph": 272,
+              "element_id": "p150_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 285,
+              "element_id": "p151_anchor"
+            },
+            {
+              "title": "PYRAMIDAL HUT",
+              "paragraph": 287,
+              "element_id": "p152_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 314,
+              "element_id": "p153_anchor"
+            },
+            {
+              "title": "THE OPTIMAL SETUP FOR A PYRAMIDAL HUT",
+              "paragraph": 316,
+              "element_id": null
+            },
+            {
+              "title": "CHIMNEY",
+              "paragraph": 318,
+              "element_id": "p156_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 334,
+              "element_id": "p157_anchor"
+            },
+            {
+              "title": "ONDOL",
+              "paragraph": 338,
+              "element_id": "p160_anchor"
+            },
+            {
+              "title": "HOW TO USE AN ONDOL",
+              "paragraph": 354,
+              "element_id": "p161_anchor"
+            }
+          ]
+        },
+        {
+          "id": "7",
+          "title": "Primitive Pyrotechnology",
+          "spine": 15,
+          "epub_href": "OEBPS/xhtml/c07.xhtml",
+          "sha256": "2e9709e31f76d6a0a94801798444eb96ce753e515366ea6bcc44eb48de5b8c72",
+          "paragraph_count": 174,
+          "headings": [
+            {
+              "title": "PRIMITIVE PYROTECHNOLOGY",
+              "paragraph": 1,
+              "element_id": "p164_anchor"
+            },
+            {
+              "title": "REUSABLE CHARCOAL MOUND",
+              "paragraph": 7,
+              "element_id": "p166_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 35,
+              "element_id": null
+            },
+            {
+              "title": "HOW TO MAKE CHARCOAL",
+              "paragraph": 37,
+              "element_id": "p170_anchor"
+            },
+            {
+              "title": "HOW TO MAKE POTTERY USING CHARCOAL",
+              "paragraph": 48,
+              "element_id": "page_171"
+            },
+            {
+              "title": "IRON PRILLS",
+              "paragraph": 51,
+              "element_id": "p172_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 75,
+              "element_id": null
+            },
+            {
+              "title": "UPDRAFT KILN",
+              "paragraph": 78,
+              "element_id": "p176_anchor"
+            },
+            {
+              "title": "TIPS",
+              "paragraph": 97,
+              "element_id": "p176a"
+            },
+            {
+              "title": "HOW TO MAKE CERAMICS",
+              "paragraph": 102,
+              "element_id": "p181_anchor"
+            },
+            {
+              "title": "NATURAL DRAFT FURNACE",
+              "paragraph": 123,
+              "element_id": "p182_anchor"
+            },
+            {
+              "title": "TIP",
+              "paragraph": 138,
+              "element_id": null
+            },
+            {
+              "title": "FORGE BLOWER",
+              "paragraph": 142,
+              "element_id": "p186_anchor"
+            }
+          ]
+        }
+      ],
+      "spine_inventory": [
+        {
+          "spine": 1,
+          "epub_href": "OEBPS/xhtml/cover.xhtml",
+          "sha256": "011e4f9939bfdd932abe8d620cd93d4c5f5735bd36a54fa2bced0ea58c6eec82",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 2,
+          "epub_href": "OEBPS/xhtml/fm0.xhtml",
+          "sha256": "03af21f984c739c9a29eb99111b9ee03fb67a6e312ad61c4449a2c8d209fd101",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 3,
+          "epub_href": "OEBPS/xhtml/tp.xhtml",
+          "sha256": "8cb5edb0504b86c34f1608307d6ec354ba96e3a51684bb36c10c6c235b61f5cf",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 4,
+          "epub_href": "OEBPS/xhtml/copy.xhtml",
+          "sha256": "92e7e04839222c2184fb81fced15884860ce8e01d6a2c1eb2cf3d327163fce56",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 5,
+          "epub_href": "OEBPS/xhtml/fm1.xhtml",
+          "sha256": "707b99069acea3a473576220b06f01af59dd6f2306d8db29998a8d4ee4039e4f",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 6,
+          "epub_href": "OEBPS/xhtml/contents.xhtml",
+          "sha256": "22645b9a4a0f938f769b5035b55c4aa85ba01041204440b82f3eb447516d4b6e",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 7,
+          "epub_href": "OEBPS/xhtml/fm2.xhtml",
+          "sha256": "1c83b5b658c7e7e0177d6c5282d4b07504601cbf361b1bdf3cfb35f04a400433",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 8,
+          "epub_href": "OEBPS/xhtml/intro.xhtml",
+          "sha256": "67686231742ea85c32af76780183131014fb21a3d89f71a37a88878607564af4",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 9,
+          "epub_href": "OEBPS/xhtml/c01.xhtml",
+          "sha256": "fed18bfc2642795e3527925b004e0a52a51c665ad9ecac2ab79983835ef950c2",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 10,
+          "epub_href": "OEBPS/xhtml/c02.xhtml",
+          "sha256": "2dfe42de3bf97320c2f50e9389553a017371d85d688e17be2aeaf5a8e5011940",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 11,
+          "epub_href": "OEBPS/xhtml/c03.xhtml",
+          "sha256": "646c99207965e4cb5d5da313139a5f00ca7cb7d8c3bca6688b943c2bc622fcfb",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 12,
+          "epub_href": "OEBPS/xhtml/c04.xhtml",
+          "sha256": "c32d9b72970a80e5f60d83b33005537e0569bb5ed354ce1b4e0932b8f16a0392",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 13,
+          "epub_href": "OEBPS/xhtml/c05.xhtml",
+          "sha256": "7d8542b30650d88aa998d8d781a87cc69c77986dd7982a3e3c447254d8d9aec8",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 14,
+          "epub_href": "OEBPS/xhtml/c06.xhtml",
+          "sha256": "fdbf5f86d313df392c8d142207c1c951e86b6e0ad9f6c1a6c3b0907f27c24aa5",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 15,
+          "epub_href": "OEBPS/xhtml/c07.xhtml",
+          "sha256": "2e9709e31f76d6a0a94801798444eb96ce753e515366ea6bcc44eb48de5b8c72",
+          "headings": [],
+          "indexed_chapter": true
+        },
+        {
+          "spine": 16,
+          "epub_href": "OEBPS/xhtml/ack.xhtml",
+          "sha256": "b778d7264ab6d757f1fda8547e00415dc10599fcfdba33656787a04c45b4d189",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 17,
+          "epub_href": "OEBPS/xhtml/ata.xhtml",
+          "sha256": "aba1eabaad939512f3bf9dcff4da7a83b23af236ccff5131bd398575ac0b61b0",
+          "headings": [],
+          "indexed_chapter": false
+        },
+        {
+          "spine": 18,
+          "epub_href": "OEBPS/xhtml/next-reads.xhtml",
+          "sha256": "77310d7c75bbc93d584f9979c505a0dde7f23f4d969624995f535c6d2565b929",
+          "headings": [
+            "What’s next on your reading list?"
+          ],
+          "indexed_chapter": false
+        }
+      ]
+    },
+    "kelly": {
+      "title": "The Lifeways of Hunter-Gatherers: The Foraging Spectrum",
+      "author": "Robert L. Kelly",
+      "publisher": "Cambridge University Press",
+      "citation_prefix": "KEL",
+      "format": "pdf",
+      "local_path": "C:\\Users\\PhillipCurry\\projects\\books\\books\\The Lifeways of Hunter-Gatherers - The Foraging Spectrum by Robert L. Kelly.pdf",
+      "relative_path": "The Lifeways of Hunter-Gatherers - The Foraging Spectrum by Robert L. Kelly.pdf",
+      "sha256": "552f5980ab3efc90bd1104839c086eba7cbe4e8cbda6731e1aec958707c2899b",
+      "local_git_blob_sha": "b306b2f0848f44922fac2f8803a7a147ce871d6e",
+      "repository_path": "books/The Lifeways of Hunter-Gatherers - The Foraging Spectrum by Robert L. Kelly.pdf",
+      "repository_url": null,
+      "repository_status": "Local file present; absent from the observed library main tree at 8893e4e75744f12fd3f52cc1b9f5347a11e97453. Do not claim a hosted file URL until publication is verified.",
+      "copyright_year": 2013,
+      "edition": "Second edition",
+      "copyright_page_isbn": "9781107024878 (hardback); 9781107607613 (paperback)",
+      "page_count": 384,
+      "page_labels": [
+        "Cover",
+        "c1",
+        "i",
+        "ii",
+        "iii",
+        "iv",
+        "v",
+        "vi",
+        "vii",
+        "viii",
+        "ix",
+        "x",
+        "xi",
+        "xii",
+        "xiii",
+        "xiv",
+        "xv",
+        "xvi",
+        "xvii",
+        "xviii",
+        "xix",
+        "xx",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45",
+        "46",
+        "47",
+        "48",
+        "49",
+        "50",
+        "51",
+        "52",
+        "53",
+        "54",
+        "55",
+        "56",
+        "57",
+        "58",
+        "59",
+        "60",
+        "61",
+        "62",
+        "63",
+        "64",
+        "65",
+        "66",
+        "67",
+        "68",
+        "69",
+        "70",
+        "71",
+        "72",
+        "73",
+        "74",
+        "75",
+        "76",
+        "77",
+        "78",
+        "79",
+        "80",
+        "81",
+        "82",
+        "83",
+        "84",
+        "85",
+        "86",
+        "87",
+        "88",
+        "89",
+        "90",
+        "91",
+        "92",
+        "93",
+        "94",
+        "95",
+        "96",
+        "97",
+        "98",
+        "99",
+        "100",
+        "101",
+        "102",
+        "103",
+        "104",
+        "105",
+        "106",
+        "107",
+        "108",
+        "109",
+        "110",
+        "111",
+        "112",
+        "113",
+        "114",
+        "115",
+        "116",
+        "117",
+        "118",
+        "119",
+        "120",
+        "121",
+        "122",
+        "123",
+        "124",
+        "125",
+        "126",
+        "127",
+        "128",
+        "129",
+        "130",
+        "131",
+        "132",
+        "133",
+        "134",
+        "135",
+        "136",
+        "137",
+        "138",
+        "139",
+        "140",
+        "141",
+        "142",
+        "143",
+        "144",
+        "145",
+        "146",
+        "147",
+        "148",
+        "149",
+        "150",
+        "151",
+        "152",
+        "153",
+        "154",
+        "155",
+        "156",
+        "157",
+        "158",
+        "159",
+        "160",
+        "161",
+        "162",
+        "163",
+        "164",
+        "165",
+        "166",
+        "167",
+        "168",
+        "169",
+        "170",
+        "171",
+        "172",
+        "173",
+        "174",
+        "175",
+        "176",
+        "177",
+        "178",
+        "179",
+        "180",
+        "181",
+        "182",
+        "183",
+        "184",
+        "185",
+        "186",
+        "187",
+        "188",
+        "189",
+        "190",
+        "191",
+        "192",
+        "193",
+        "194",
+        "195",
+        "196",
+        "197",
+        "198",
+        "199",
+        "200",
+        "201",
+        "202",
+        "203",
+        "204",
+        "205",
+        "206",
+        "207",
+        "208",
+        "209",
+        "210",
+        "211",
+        "212",
+        "213",
+        "214",
+        "215",
+        "216",
+        "217",
+        "218",
+        "219",
+        "220",
+        "221",
+        "222",
+        "223",
+        "224",
+        "225",
+        "226",
+        "227",
+        "228",
+        "229",
+        "230",
+        "231",
+        "232",
+        "233",
+        "234",
+        "235",
+        "236",
+        "237",
+        "238",
+        "239",
+        "240",
+        "241",
+        "242",
+        "243",
+        "244",
+        "245",
+        "246",
+        "247",
+        "248",
+        "249",
+        "250",
+        "251",
+        "252",
+        "253",
+        "254",
+        "255",
+        "256",
+        "257",
+        "258",
+        "259",
+        "260",
+        "261",
+        "262",
+        "263",
+        "264",
+        "265",
+        "266",
+        "267",
+        "268",
+        "269",
+        "270",
+        "271",
+        "272",
+        "273",
+        "274",
+        "275",
+        "276",
+        "277",
+        "278",
+        "279",
+        "280",
+        "281",
+        "282",
+        "283",
+        "284",
+        "285",
+        "286",
+        "287",
+        "288",
+        "289",
+        "290",
+        "291",
+        "292",
+        "293",
+        "294",
+        "295",
+        "296",
+        "297",
+        "298",
+        "299",
+        "300",
+        "301",
+        "302",
+        "303",
+        "304",
+        "305",
+        "306",
+        "307",
+        "308",
+        "309",
+        "310",
+        "311",
+        "312",
+        "313",
+        "314",
+        "315",
+        "316",
+        "317",
+        "318",
+        "319",
+        "320",
+        "321",
+        "322",
+        "323",
+        "324",
+        "325",
+        "326",
+        "327",
+        "328",
+        "329",
+        "330",
+        "331",
+        "332",
+        "333",
+        "334",
+        "335",
+        "336",
+        "337",
+        "338",
+        "339",
+        "340",
+        "341",
+        "342",
+        "343",
+        "344",
+        "345",
+        "346",
+        "347",
+        "348",
+        "349",
+        "350",
+        "351",
+        "352",
+        "353",
+        "354",
+        "355",
+        "356",
+        "357",
+        "358",
+        "359",
+        "360",
+        "361",
+        "362"
+      ],
+      "locator_convention": "One-based physical PDF pages; printed labels are separate. Main text printed page n is file page n+22 in this exact PDF.",
+      "chapters": [
+        {
+          "id": "1",
+          "title": "Hunter-Gatherers and Anthropology",
+          "start_page": 23,
+          "end_page": 45,
+          "printed_start": "1",
+          "printed_end": "23",
+          "headings": [
+            {
+              "title": "Chapter 1 Hunter-Gatherers and Anthropology",
+              "file_page": 23,
+              "printed_page": "1",
+              "depth": 0
+            },
+            {
+              "title": "Hunter-Gatherers in Pre-Twentieth-Century Thought",
+              "file_page": 26,
+              "printed_page": "4",
+              "depth": 1
+            },
+            {
+              "title": "The Patrilineal/Patrilocal Band",
+              "file_page": 29,
+              "printed_page": "7",
+              "depth": 1
+            },
+            {
+              "title": "The Generalized Foraging Model",
+              "file_page": 31,
+              "printed_page": "9",
+              "depth": 1
+            },
+            {
+              "title": "The Interdependent Model, or “Professional Primitives”",
+              "file_page": 37,
+              "printed_page": "15",
+              "depth": 1
+            },
+            {
+              "title": "Who Are Living Hunter-Gatherers?",
+              "file_page": 40,
+              "printed_page": "18",
+              "depth": 1
+            },
+            {
+              "title": "Marxist Approaches",
+              "file_page": 41,
+              "printed_page": "19",
+              "depth": 1
+            },
+            {
+              "title": "Hunter-Gatherers as a Cultural Type",
+              "file_page": 43,
+              "printed_page": "21",
+              "depth": 1
+            },
+            {
+              "title": "Hunter-Gatherers and Ecology",
+              "file_page": 45,
+              "printed_page": "23",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "Environment, Evolution, and Anthropological Theory",
+          "start_page": 46,
+          "end_page": 61,
+          "printed_start": "24",
+          "printed_end": "39",
+          "headings": [
+            {
+              "title": "Chapter 2 Environment, Evolution, and Anthropological Theory",
+              "file_page": 46,
+              "printed_page": "24",
+              "depth": 0
+            },
+            {
+              "title": "The Culture Area Concept",
+              "file_page": 46,
+              "printed_page": "24",
+              "depth": 1
+            },
+            {
+              "title": "Cultural Ecology",
+              "file_page": 48,
+              "printed_page": "26",
+              "depth": 1
+            },
+            {
+              "title": "Human Behavioral Ecology",
+              "file_page": 53,
+              "printed_page": "31",
+              "depth": 1
+            },
+            {
+              "title": "Natural Selection",
+              "file_page": 54,
+              "printed_page": "32",
+              "depth": 2
+            },
+            {
+              "title": "Methodological Individualism",
+              "file_page": 55,
+              "printed_page": "33",
+              "depth": 2
+            },
+            {
+              "title": "Optimization",
+              "file_page": 55,
+              "printed_page": "33",
+              "depth": 2
+            },
+            {
+              "title": "What about Culture?",
+              "file_page": 59,
+              "printed_page": "37",
+              "depth": 1
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 60,
+              "printed_page": "38",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "title": "Foraging and Subsistence",
+          "start_page": 62,
+          "end_page": 98,
+          "printed_start": "40",
+          "printed_end": "76",
+          "headings": [
+            {
+              "title": "Chapter 3 Foraging and Subsistence",
+              "file_page": 62,
+              "printed_page": "40",
+              "depth": 0
+            },
+            {
+              "title": "Environment and Diet",
+              "file_page": 62,
+              "printed_page": "40",
+              "depth": 1
+            },
+            {
+              "title": "The Diet-Breadth Model",
+              "file_page": 68,
+              "printed_page": "46",
+              "depth": 1
+            },
+            {
+              "title": "What Is the “Right” Return Rate?",
+              "file_page": 74,
+              "printed_page": "52",
+              "depth": 1
+            },
+            {
+              "title": "Importance of the Diet-Breadth Model",
+              "file_page": 82,
+              "printed_page": "60",
+              "depth": 1
+            },
+            {
+              "title": "The Patch Choice Model",
+              "file_page": 84,
+              "printed_page": "62",
+              "depth": 1
+            },
+            {
+              "title": "Problems with Optimal-Foraging Models and Their Solutions",
+              "file_page": 85,
+              "printed_page": "63",
+              "depth": 1
+            },
+            {
+              "title": "Randomness",
+              "file_page": 85,
+              "printed_page": "63",
+              "depth": 2
+            },
+            {
+              "title": "Pursuit of Resources",
+              "file_page": 85,
+              "printed_page": "63",
+              "depth": 2
+            },
+            {
+              "title": "Processing of Resources",
+              "file_page": 86,
+              "printed_page": "64",
+              "depth": 2
+            },
+            {
+              "title": "Who Is Foraging?",
+              "file_page": 86,
+              "printed_page": "64",
+              "depth": 2
+            },
+            {
+              "title": "How Do People Eat?",
+              "file_page": 87,
+              "printed_page": "65",
+              "depth": 2
+            },
+            {
+              "title": "The Marginal Value Theorem",
+              "file_page": 87,
+              "printed_page": "65",
+              "depth": 1
+            },
+            {
+              "title": "Central Place Foraging",
+              "file_page": 88,
+              "printed_page": "66",
+              "depth": 1
+            },
+            {
+              "title": "Other Factors to Consider",
+              "file_page": 90,
+              "printed_page": "68",
+              "depth": 1
+            },
+            {
+              "title": "Risk",
+              "file_page": 90,
+              "printed_page": "68",
+              "depth": 2
+            },
+            {
+              "title": "Why Only Calories?",
+              "file_page": 92,
+              "printed_page": "70",
+              "depth": 2
+            },
+            {
+              "title": "The Importance of Fatty Meat",
+              "file_page": 93,
+              "printed_page": "71",
+              "depth": 2
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 97,
+              "printed_page": "75",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "title": "Mobility",
+          "start_page": 99,
+          "end_page": 135,
+          "printed_start": "77",
+          "printed_end": "113",
+          "headings": [
+            {
+              "title": "Chapter 4 Mobility",
+              "file_page": 99,
+              "printed_page": "77",
+              "depth": 0
+            },
+            {
+              "title": "Mobility and the Environment",
+              "file_page": 100,
+              "printed_page": "78",
+              "depth": 1
+            },
+            {
+              "title": "Ethnographic Data on Mobility",
+              "file_page": 107,
+              "printed_page": "85",
+              "depth": 1
+            },
+            {
+              "title": "Number of Residential Moves per Year",
+              "file_page": 110,
+              "printed_page": "88",
+              "depth": 2
+            },
+            {
+              "title": "Average Distance per Residential Move",
+              "file_page": 115,
+              "printed_page": "93",
+              "depth": 2
+            },
+            {
+              "title": "Logistical Mobility and Territorial Coverage",
+              "file_page": 117,
+              "printed_page": "95",
+              "depth": 2
+            },
+            {
+              "title": "Individual Foraging and Camp Movement: A Central Place Foraging Model",
+              "file_page": 118,
+              "printed_page": "96",
+              "depth": 1
+            },
+            {
+              "title": "Risk",
+              "file_page": 124,
+              "printed_page": "102",
+              "depth": 2
+            },
+            {
+              "title": "Storage",
+              "file_page": 125,
+              "printed_page": "103",
+              "depth": 2
+            },
+            {
+              "title": "Other Factors",
+              "file_page": 126,
+              "printed_page": "104",
+              "depth": 2
+            },
+            {
+              "title": "Sedentism: Why Stop Moving?",
+              "file_page": 126,
+              "printed_page": "104",
+              "depth": 1
+            },
+            {
+              "title": "Foraging, Mobility, and Society",
+              "file_page": 129,
+              "printed_page": "107",
+              "depth": 1
+            },
+            {
+              "title": "The Mobility Ethos",
+              "file_page": 129,
+              "printed_page": "107",
+              "depth": 2
+            },
+            {
+              "title": "Foraging and Enculturation",
+              "file_page": 130,
+              "printed_page": "108",
+              "depth": 2
+            },
+            {
+              "title": "Foraging and Resource Conservation",
+              "file_page": 132,
+              "printed_page": "110",
+              "depth": 2
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 134,
+              "printed_page": "112",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "title": "Technology",
+          "start_page": 136,
+          "end_page": 158,
+          "printed_start": "114",
+          "printed_end": "136",
+          "headings": [
+            {
+              "title": "Chapter 5 Technology",
+              "file_page": 136,
+              "printed_page": "114",
+              "depth": 0
+            },
+            {
+              "title": "What Is Technology?",
+              "file_page": 137,
+              "printed_page": "115",
+              "depth": 1
+            },
+            {
+              "title": "Ju/’hoan Technology",
+              "file_page": 138,
+              "printed_page": "116",
+              "depth": 1
+            },
+            {
+              "title": "Nuvugmiut Technology",
+              "file_page": 141,
+              "printed_page": "119",
+              "depth": 1
+            },
+            {
+              "title": "What Conditions Food-Getting Technology?",
+              "file_page": 142,
+              "printed_page": "120",
+              "depth": 1
+            },
+            {
+              "title": "Function",
+              "file_page": 144,
+              "printed_page": "122",
+              "depth": 2
+            },
+            {
+              "title": "Risk",
+              "file_page": 144,
+              "printed_page": "122",
+              "depth": 2
+            },
+            {
+              "title": "Mobility",
+              "file_page": 144,
+              "printed_page": "122",
+              "depth": 2
+            },
+            {
+              "title": "Why Elaborate Technology?",
+              "file_page": 146,
+              "printed_page": "124",
+              "depth": 1
+            },
+            {
+              "title": "A Technological Investment Model",
+              "file_page": 150,
+              "printed_page": "128",
+              "depth": 1
+            },
+            {
+              "title": "Performance Characteristics",
+              "file_page": 154,
+              "printed_page": "132",
+              "depth": 1
+            },
+            {
+              "title": "Technology, Gender, and Prestige",
+              "file_page": 156,
+              "printed_page": "134",
+              "depth": 1
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 157,
+              "printed_page": "135",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "6",
+          "title": "Sharing, Exchange, and Land Tenure",
+          "start_page": 159,
+          "end_page": 187,
+          "printed_start": "137",
+          "printed_end": "165",
+          "headings": [
+            {
+              "title": "Chapter 6 Sharing, Exchange, and Land Tenure",
+              "file_page": 159,
+              "printed_page": "137",
+              "depth": 0
+            },
+            {
+              "title": "Sharing",
+              "file_page": 160,
+              "printed_page": "138",
+              "depth": 1
+            },
+            {
+              "title": "Why Share?",
+              "file_page": 164,
+              "printed_page": "142",
+              "depth": 1
+            },
+            {
+              "title": "Kin Selection",
+              "file_page": 167,
+              "printed_page": "145",
+              "depth": 1
+            },
+            {
+              "title": "Reciprocal Altruism",
+              "file_page": 168,
+              "printed_page": "146",
+              "depth": 1
+            },
+            {
+              "title": "Tolerated Scrounging",
+              "file_page": 168,
+              "printed_page": "146",
+              "depth": 1
+            },
+            {
+              "title": "Costly Signaling",
+              "file_page": 169,
+              "printed_page": "147",
+              "depth": 1
+            },
+            {
+              "title": "What Explains Sharing?",
+              "file_page": 170,
+              "printed_page": "148",
+              "depth": 1
+            },
+            {
+              "title": "Land Tenure",
+              "file_page": 173,
+              "printed_page": "151",
+              "depth": 1
+            },
+            {
+              "title": "The Economic Defensibility Model",
+              "file_page": 178,
+              "printed_page": "156",
+              "depth": 1
+            },
+            {
+              "title": "Social-Boundary Defense",
+              "file_page": 180,
+              "printed_page": "158",
+              "depth": 1
+            },
+            {
+              "title": "The Winterhalder Model Reconsidered",
+              "file_page": 183,
+              "printed_page": "161",
+              "depth": 1
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 186,
+              "printed_page": "164",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "7",
+          "title": "Group Size and Demography",
+          "start_page": 188,
+          "end_page": 235,
+          "printed_start": "166",
+          "printed_end": "213",
+          "headings": [
+            {
+              "title": "Chapter 7 Group Size and Demography",
+              "file_page": 188,
+              "printed_page": "166",
+              "depth": 0
+            },
+            {
+              "title": "Group Size: The “Magic Numbers” 500 and 25",
+              "file_page": 189,
+              "printed_page": "167",
+              "depth": 1
+            },
+            {
+              "title": "Communal versus Individual Foraging",
+              "file_page": 196,
+              "printed_page": "174",
+              "depth": 1
+            },
+            {
+              "title": "Carrying Capacity, Foraging, and Population Density",
+              "file_page": 199,
+              "printed_page": "177",
+              "depth": 1
+            },
+            {
+              "title": "Reproduction and Cultural Controls",
+              "file_page": 208,
+              "printed_page": "186",
+              "depth": 1
+            },
+            {
+              "title": "Preferential Female Infanticide",
+              "file_page": 208,
+              "printed_page": "186",
+              "depth": 2
+            },
+            {
+              "title": "Interview Data",
+              "file_page": 209,
+              "printed_page": "187",
+              "depth": 3
+            },
+            {
+              "title": "Sex Ratios",
+              "file_page": 209,
+              "printed_page": "187",
+              "depth": 3
+            },
+            {
+              "title": "Birth-Spacing Infanticide",
+              "file_page": 211,
+              "printed_page": "189",
+              "depth": 2
+            },
+            {
+              "title": "Juvenile Foraging",
+              "file_page": 212,
+              "printed_page": "190",
+              "depth": 3
+            },
+            {
+              "title": "Help for Mother",
+              "file_page": 213,
+              "printed_page": "191",
+              "depth": 3
+            },
+            {
+              "title": "The Ecology of Reproduction",
+              "file_page": 215,
+              "printed_page": "193",
+              "depth": 1
+            },
+            {
+              "title": "Breastfeeding",
+              "file_page": 219,
+              "printed_page": "197",
+              "depth": 2
+            },
+            {
+              "title": "Maternal Nutritional Condition",
+              "file_page": 219,
+              "printed_page": "197",
+              "depth": 2
+            },
+            {
+              "title": "Mortality",
+              "file_page": 222,
+              "printed_page": "200",
+              "depth": 1
+            },
+            {
+              "title": "Infant and Juvenile Mortality",
+              "file_page": 222,
+              "printed_page": "200",
+              "depth": 2
+            },
+            {
+              "title": "Lethal Violence",
+              "file_page": 224,
+              "printed_page": "202",
+              "depth": 2
+            },
+            {
+              "title": "Warfare",
+              "file_page": 227,
+              "printed_page": "205",
+              "depth": 2
+            },
+            {
+              "title": "Homicide",
+              "file_page": 230,
+              "printed_page": "208",
+              "depth": 2
+            },
+            {
+              "title": "Mobility and Population Growth",
+              "file_page": 231,
+              "printed_page": "209",
+              "depth": 1
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 234,
+              "printed_page": "212",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "8",
+          "title": "Men, Women, and Foraging",
+          "start_page": 236,
+          "end_page": 262,
+          "printed_start": "214",
+          "printed_end": "240",
+          "headings": [
+            {
+              "title": "Chapter 8 Men, Women, and Foraging",
+              "file_page": 236,
+              "printed_page": "214",
+              "depth": 0
+            },
+            {
+              "title": "Division of Labor",
+              "file_page": 236,
+              "printed_page": "214",
+              "depth": 1
+            },
+            {
+              "title": "Why Do Men Hunt (and Women Not So Much)?",
+              "file_page": 240,
+              "printed_page": "218",
+              "depth": 1
+            },
+            {
+              "title": "Costly Signaling or Provisioning?",
+              "file_page": 244,
+              "printed_page": "222",
+              "depth": 1
+            },
+            {
+              "title": "Postmarital Residence",
+              "file_page": 246,
+              "printed_page": "224",
+              "depth": 1
+            },
+            {
+              "title": "Rules versus Actual Postmarital Residence",
+              "file_page": 251,
+              "printed_page": "229",
+              "depth": 2
+            },
+            {
+              "title": "Postmarital Residence as Social Strategy",
+              "file_page": 252,
+              "printed_page": "230",
+              "depth": 2
+            },
+            {
+              "title": "Descent",
+              "file_page": 253,
+              "printed_page": "231",
+              "depth": 1
+            },
+            {
+              "title": "Kinship as Social Strategy",
+              "file_page": 256,
+              "printed_page": "234",
+              "depth": 2
+            },
+            {
+              "title": "Marriage",
+              "file_page": 256,
+              "printed_page": "234",
+              "depth": 1
+            },
+            {
+              "title": "Gender, Marriage, and Social Inequality",
+              "file_page": 259,
+              "printed_page": "237",
+              "depth": 1
+            },
+            {
+              "title": "Brideservice",
+              "file_page": 259,
+              "printed_page": "237",
+              "depth": 2
+            },
+            {
+              "title": "Equal Bridewealth",
+              "file_page": 260,
+              "printed_page": "238",
+              "depth": 2
+            },
+            {
+              "title": "Unequal Bridewealth",
+              "file_page": 260,
+              "printed_page": "238",
+              "depth": 2
+            },
+            {
+              "title": "Polygyny",
+              "file_page": 260,
+              "printed_page": "238",
+              "depth": 2
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 261,
+              "printed_page": "239",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "9",
+          "title": "Nonegalitarian Hunter-Gatherers",
+          "start_page": 263,
+          "end_page": 290,
+          "printed_start": "241",
+          "printed_end": "268",
+          "headings": [
+            {
+              "title": "Chapter 9 Nonegalitarian Hunter-Gatherers",
+              "file_page": 263,
+              "printed_page": "241",
+              "depth": 0
+            },
+            {
+              "title": "Egalitarianism",
+              "file_page": 265,
+              "printed_page": "243",
+              "depth": 1
+            },
+            {
+              "title": "Male-Female Egalitarianism",
+              "file_page": 266,
+              "printed_page": "244",
+              "depth": 1
+            },
+            {
+              "title": "Nonegalitarian Hunter-Gatherers",
+              "file_page": 270,
+              "printed_page": "248",
+              "depth": 1
+            },
+            {
+              "title": "The Patron-Client Model of Inequality",
+              "file_page": 274,
+              "printed_page": "252",
+              "depth": 1
+            },
+            {
+              "title": "Sedentism and Population Growth",
+              "file_page": 274,
+              "printed_page": "252",
+              "depth": 2
+            },
+            {
+              "title": "Food Storage",
+              "file_page": 275,
+              "printed_page": "253",
+              "depth": 2
+            },
+            {
+              "title": "The Formation of Groups and Leaders",
+              "file_page": 276,
+              "printed_page": "254",
+              "depth": 2
+            },
+            {
+              "title": "Sharing",
+              "file_page": 278,
+              "printed_page": "256",
+              "depth": 2
+            },
+            {
+              "title": "Warfare",
+              "file_page": 278,
+              "printed_page": "256",
+              "depth": 2
+            },
+            {
+              "title": "Costly Displays",
+              "file_page": 279,
+              "printed_page": "257",
+              "depth": 2
+            },
+            {
+              "title": "The Patron-Client Relationship",
+              "file_page": 279,
+              "printed_page": "257",
+              "depth": 2
+            },
+            {
+              "title": "Resources That Are Not in Sync across a Landscape",
+              "file_page": 280,
+              "printed_page": "258",
+              "depth": 1
+            },
+            {
+              "title": "Resources That Are in Sync across a Landscape",
+              "file_page": 283,
+              "printed_page": "261",
+              "depth": 1
+            },
+            {
+              "title": "An Example: The Northwest Coast",
+              "file_page": 283,
+              "printed_page": "261",
+              "depth": 1
+            },
+            {
+              "title": "Southern Coast",
+              "file_page": 284,
+              "printed_page": "262",
+              "depth": 2
+            },
+            {
+              "title": "Central Coast",
+              "file_page": 285,
+              "printed_page": "263",
+              "depth": 2
+            },
+            {
+              "title": "Northern Coast",
+              "file_page": 286,
+              "printed_page": "264",
+              "depth": 2
+            },
+            {
+              "title": "Enculturation and Inequality",
+              "file_page": 288,
+              "printed_page": "266",
+              "depth": 1
+            },
+            {
+              "title": "Conclusion",
+              "file_page": 289,
+              "printed_page": "267",
+              "depth": 1
+            }
+          ]
+        },
+        {
+          "id": "10",
+          "title": "Hunter-Gatherers and Prehistory",
+          "start_page": 291,
+          "end_page": 322,
+          "printed_start": "269",
+          "printed_end": "300",
+          "headings": [
+            {
+              "title": "Chapter 10 Hunter-Gatherers and Prehistory",
+              "file_page": 291,
+              "printed_page": "269",
+              "depth": 0
+            }
+          ]
+        }
+      ],
+      "outline_inventory": [
+        {
+          "title": "Contents",
+          "file_page": 9,
+          "printed_page": "vii",
+          "depth": 0
+        },
+        {
+          "title": "Tables",
+          "file_page": 11,
+          "printed_page": "ix",
+          "depth": 0
+        },
+        {
+          "title": "Figures",
+          "file_page": 13,
+          "printed_page": "xi",
+          "depth": 0
+        },
+        {
+          "title": "Preface",
+          "file_page": 17,
+          "printed_page": "xv",
+          "depth": 0
+        },
+        {
+          "title": "Acknowledgments",
+          "file_page": 21,
+          "printed_page": "xix",
+          "depth": 0
+        },
+        {
+          "title": "Chapter 1 Hunter-Gatherers and Anthropology",
+          "file_page": 23,
+          "printed_page": "1",
+          "depth": 0
+        },
+        {
+          "title": "Hunter-Gatherers in Pre-Twentieth-Century Thought",
+          "file_page": 26,
+          "printed_page": "4",
+          "depth": 1
+        },
+        {
+          "title": "The Patrilineal/Patrilocal Band",
+          "file_page": 29,
+          "printed_page": "7",
+          "depth": 1
+        },
+        {
+          "title": "The Generalized Foraging Model",
+          "file_page": 31,
+          "printed_page": "9",
+          "depth": 1
+        },
+        {
+          "title": "The Interdependent Model, or “Professional Primitives”",
+          "file_page": 37,
+          "printed_page": "15",
+          "depth": 1
+        },
+        {
+          "title": "Who Are Living Hunter-Gatherers?",
+          "file_page": 40,
+          "printed_page": "18",
+          "depth": 1
+        },
+        {
+          "title": "Marxist Approaches",
+          "file_page": 41,
+          "printed_page": "19",
+          "depth": 1
+        },
+        {
+          "title": "Hunter-Gatherers as a Cultural Type",
+          "file_page": 43,
+          "printed_page": "21",
+          "depth": 1
+        },
+        {
+          "title": "Hunter-Gatherers and Ecology",
+          "file_page": 45,
+          "printed_page": "23",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 2 Environment, Evolution, and Anthropological Theory",
+          "file_page": 46,
+          "printed_page": "24",
+          "depth": 0
+        },
+        {
+          "title": "The Culture Area Concept",
+          "file_page": 46,
+          "printed_page": "24",
+          "depth": 1
+        },
+        {
+          "title": "Cultural Ecology",
+          "file_page": 48,
+          "printed_page": "26",
+          "depth": 1
+        },
+        {
+          "title": "Human Behavioral Ecology",
+          "file_page": 53,
+          "printed_page": "31",
+          "depth": 1
+        },
+        {
+          "title": "Natural Selection",
+          "file_page": 54,
+          "printed_page": "32",
+          "depth": 2
+        },
+        {
+          "title": "Methodological Individualism",
+          "file_page": 55,
+          "printed_page": "33",
+          "depth": 2
+        },
+        {
+          "title": "Optimization",
+          "file_page": 55,
+          "printed_page": "33",
+          "depth": 2
+        },
+        {
+          "title": "What about Culture?",
+          "file_page": 59,
+          "printed_page": "37",
+          "depth": 1
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 60,
+          "printed_page": "38",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 3 Foraging and Subsistence",
+          "file_page": 62,
+          "printed_page": "40",
+          "depth": 0
+        },
+        {
+          "title": "Environment and Diet",
+          "file_page": 62,
+          "printed_page": "40",
+          "depth": 1
+        },
+        {
+          "title": "The Diet-Breadth Model",
+          "file_page": 68,
+          "printed_page": "46",
+          "depth": 1
+        },
+        {
+          "title": "What Is the “Right” Return Rate?",
+          "file_page": 74,
+          "printed_page": "52",
+          "depth": 1
+        },
+        {
+          "title": "Importance of the Diet-Breadth Model",
+          "file_page": 82,
+          "printed_page": "60",
+          "depth": 1
+        },
+        {
+          "title": "The Patch Choice Model",
+          "file_page": 84,
+          "printed_page": "62",
+          "depth": 1
+        },
+        {
+          "title": "Problems with Optimal-Foraging Models and Their Solutions",
+          "file_page": 85,
+          "printed_page": "63",
+          "depth": 1
+        },
+        {
+          "title": "Randomness",
+          "file_page": 85,
+          "printed_page": "63",
+          "depth": 2
+        },
+        {
+          "title": "Pursuit of Resources",
+          "file_page": 85,
+          "printed_page": "63",
+          "depth": 2
+        },
+        {
+          "title": "Processing of Resources",
+          "file_page": 86,
+          "printed_page": "64",
+          "depth": 2
+        },
+        {
+          "title": "Who Is Foraging?",
+          "file_page": 86,
+          "printed_page": "64",
+          "depth": 2
+        },
+        {
+          "title": "How Do People Eat?",
+          "file_page": 87,
+          "printed_page": "65",
+          "depth": 2
+        },
+        {
+          "title": "The Marginal Value Theorem",
+          "file_page": 87,
+          "printed_page": "65",
+          "depth": 1
+        },
+        {
+          "title": "Central Place Foraging",
+          "file_page": 88,
+          "printed_page": "66",
+          "depth": 1
+        },
+        {
+          "title": "Other Factors to Consider",
+          "file_page": 90,
+          "printed_page": "68",
+          "depth": 1
+        },
+        {
+          "title": "Risk",
+          "file_page": 90,
+          "printed_page": "68",
+          "depth": 2
+        },
+        {
+          "title": "Why Only Calories?",
+          "file_page": 92,
+          "printed_page": "70",
+          "depth": 2
+        },
+        {
+          "title": "The Importance of Fatty Meat",
+          "file_page": 93,
+          "printed_page": "71",
+          "depth": 2
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 97,
+          "printed_page": "75",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 4 Mobility",
+          "file_page": 99,
+          "printed_page": "77",
+          "depth": 0
+        },
+        {
+          "title": "Mobility and the Environment",
+          "file_page": 100,
+          "printed_page": "78",
+          "depth": 1
+        },
+        {
+          "title": "Ethnographic Data on Mobility",
+          "file_page": 107,
+          "printed_page": "85",
+          "depth": 1
+        },
+        {
+          "title": "Number of Residential Moves per Year",
+          "file_page": 110,
+          "printed_page": "88",
+          "depth": 2
+        },
+        {
+          "title": "Average Distance per Residential Move",
+          "file_page": 115,
+          "printed_page": "93",
+          "depth": 2
+        },
+        {
+          "title": "Logistical Mobility and Territorial Coverage",
+          "file_page": 117,
+          "printed_page": "95",
+          "depth": 2
+        },
+        {
+          "title": "Individual Foraging and Camp Movement: A Central Place Foraging Model",
+          "file_page": 118,
+          "printed_page": "96",
+          "depth": 1
+        },
+        {
+          "title": "Risk",
+          "file_page": 124,
+          "printed_page": "102",
+          "depth": 2
+        },
+        {
+          "title": "Storage",
+          "file_page": 125,
+          "printed_page": "103",
+          "depth": 2
+        },
+        {
+          "title": "Other Factors",
+          "file_page": 126,
+          "printed_page": "104",
+          "depth": 2
+        },
+        {
+          "title": "Sedentism: Why Stop Moving?",
+          "file_page": 126,
+          "printed_page": "104",
+          "depth": 1
+        },
+        {
+          "title": "Foraging, Mobility, and Society",
+          "file_page": 129,
+          "printed_page": "107",
+          "depth": 1
+        },
+        {
+          "title": "The Mobility Ethos",
+          "file_page": 129,
+          "printed_page": "107",
+          "depth": 2
+        },
+        {
+          "title": "Foraging and Enculturation",
+          "file_page": 130,
+          "printed_page": "108",
+          "depth": 2
+        },
+        {
+          "title": "Foraging and Resource Conservation",
+          "file_page": 132,
+          "printed_page": "110",
+          "depth": 2
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 134,
+          "printed_page": "112",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 5 Technology",
+          "file_page": 136,
+          "printed_page": "114",
+          "depth": 0
+        },
+        {
+          "title": "What Is Technology?",
+          "file_page": 137,
+          "printed_page": "115",
+          "depth": 1
+        },
+        {
+          "title": "Ju/’hoan Technology",
+          "file_page": 138,
+          "printed_page": "116",
+          "depth": 1
+        },
+        {
+          "title": "Nuvugmiut Technology",
+          "file_page": 141,
+          "printed_page": "119",
+          "depth": 1
+        },
+        {
+          "title": "What Conditions Food-Getting Technology?",
+          "file_page": 142,
+          "printed_page": "120",
+          "depth": 1
+        },
+        {
+          "title": "Function",
+          "file_page": 144,
+          "printed_page": "122",
+          "depth": 2
+        },
+        {
+          "title": "Risk",
+          "file_page": 144,
+          "printed_page": "122",
+          "depth": 2
+        },
+        {
+          "title": "Mobility",
+          "file_page": 144,
+          "printed_page": "122",
+          "depth": 2
+        },
+        {
+          "title": "Why Elaborate Technology?",
+          "file_page": 146,
+          "printed_page": "124",
+          "depth": 1
+        },
+        {
+          "title": "A Technological Investment Model",
+          "file_page": 150,
+          "printed_page": "128",
+          "depth": 1
+        },
+        {
+          "title": "Performance Characteristics",
+          "file_page": 154,
+          "printed_page": "132",
+          "depth": 1
+        },
+        {
+          "title": "Technology, Gender, and Prestige",
+          "file_page": 156,
+          "printed_page": "134",
+          "depth": 1
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 157,
+          "printed_page": "135",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 6 Sharing, Exchange, and Land Tenure",
+          "file_page": 159,
+          "printed_page": "137",
+          "depth": 0
+        },
+        {
+          "title": "Sharing",
+          "file_page": 160,
+          "printed_page": "138",
+          "depth": 1
+        },
+        {
+          "title": "Why Share?",
+          "file_page": 164,
+          "printed_page": "142",
+          "depth": 1
+        },
+        {
+          "title": "Kin Selection",
+          "file_page": 167,
+          "printed_page": "145",
+          "depth": 1
+        },
+        {
+          "title": "Reciprocal Altruism",
+          "file_page": 168,
+          "printed_page": "146",
+          "depth": 1
+        },
+        {
+          "title": "Tolerated Scrounging",
+          "file_page": 168,
+          "printed_page": "146",
+          "depth": 1
+        },
+        {
+          "title": "Costly Signaling",
+          "file_page": 169,
+          "printed_page": "147",
+          "depth": 1
+        },
+        {
+          "title": "What Explains Sharing?",
+          "file_page": 170,
+          "printed_page": "148",
+          "depth": 1
+        },
+        {
+          "title": "Land Tenure",
+          "file_page": 173,
+          "printed_page": "151",
+          "depth": 1
+        },
+        {
+          "title": "The Economic Defensibility Model",
+          "file_page": 178,
+          "printed_page": "156",
+          "depth": 1
+        },
+        {
+          "title": "Social-Boundary Defense",
+          "file_page": 180,
+          "printed_page": "158",
+          "depth": 1
+        },
+        {
+          "title": "The Winterhalder Model Reconsidered",
+          "file_page": 183,
+          "printed_page": "161",
+          "depth": 1
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 186,
+          "printed_page": "164",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 7 Group Size and Demography",
+          "file_page": 188,
+          "printed_page": "166",
+          "depth": 0
+        },
+        {
+          "title": "Group Size: The “Magic Numbers” 500 and 25",
+          "file_page": 189,
+          "printed_page": "167",
+          "depth": 1
+        },
+        {
+          "title": "Communal versus Individual Foraging",
+          "file_page": 196,
+          "printed_page": "174",
+          "depth": 1
+        },
+        {
+          "title": "Carrying Capacity, Foraging, and Population Density",
+          "file_page": 199,
+          "printed_page": "177",
+          "depth": 1
+        },
+        {
+          "title": "Reproduction and Cultural Controls",
+          "file_page": 208,
+          "printed_page": "186",
+          "depth": 1
+        },
+        {
+          "title": "Preferential Female Infanticide",
+          "file_page": 208,
+          "printed_page": "186",
+          "depth": 2
+        },
+        {
+          "title": "Interview Data",
+          "file_page": 209,
+          "printed_page": "187",
+          "depth": 3
+        },
+        {
+          "title": "Sex Ratios",
+          "file_page": 209,
+          "printed_page": "187",
+          "depth": 3
+        },
+        {
+          "title": "Birth-Spacing Infanticide",
+          "file_page": 211,
+          "printed_page": "189",
+          "depth": 2
+        },
+        {
+          "title": "Juvenile Foraging",
+          "file_page": 212,
+          "printed_page": "190",
+          "depth": 3
+        },
+        {
+          "title": "Help for Mother",
+          "file_page": 213,
+          "printed_page": "191",
+          "depth": 3
+        },
+        {
+          "title": "The Ecology of Reproduction",
+          "file_page": 215,
+          "printed_page": "193",
+          "depth": 1
+        },
+        {
+          "title": "Breastfeeding",
+          "file_page": 219,
+          "printed_page": "197",
+          "depth": 2
+        },
+        {
+          "title": "Maternal Nutritional Condition",
+          "file_page": 219,
+          "printed_page": "197",
+          "depth": 2
+        },
+        {
+          "title": "Mortality",
+          "file_page": 222,
+          "printed_page": "200",
+          "depth": 1
+        },
+        {
+          "title": "Infant and Juvenile Mortality",
+          "file_page": 222,
+          "printed_page": "200",
+          "depth": 2
+        },
+        {
+          "title": "Lethal Violence",
+          "file_page": 224,
+          "printed_page": "202",
+          "depth": 2
+        },
+        {
+          "title": "Warfare",
+          "file_page": 227,
+          "printed_page": "205",
+          "depth": 2
+        },
+        {
+          "title": "Homicide",
+          "file_page": 230,
+          "printed_page": "208",
+          "depth": 2
+        },
+        {
+          "title": "Mobility and Population Growth",
+          "file_page": 231,
+          "printed_page": "209",
+          "depth": 1
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 234,
+          "printed_page": "212",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 8 Men, Women, and Foraging",
+          "file_page": 236,
+          "printed_page": "214",
+          "depth": 0
+        },
+        {
+          "title": "Division of Labor",
+          "file_page": 236,
+          "printed_page": "214",
+          "depth": 1
+        },
+        {
+          "title": "Why Do Men Hunt (and Women Not So Much)?",
+          "file_page": 240,
+          "printed_page": "218",
+          "depth": 1
+        },
+        {
+          "title": "Costly Signaling or Provisioning?",
+          "file_page": 244,
+          "printed_page": "222",
+          "depth": 1
+        },
+        {
+          "title": "Postmarital Residence",
+          "file_page": 246,
+          "printed_page": "224",
+          "depth": 1
+        },
+        {
+          "title": "Rules versus Actual Postmarital Residence",
+          "file_page": 251,
+          "printed_page": "229",
+          "depth": 2
+        },
+        {
+          "title": "Postmarital Residence as Social Strategy",
+          "file_page": 252,
+          "printed_page": "230",
+          "depth": 2
+        },
+        {
+          "title": "Descent",
+          "file_page": 253,
+          "printed_page": "231",
+          "depth": 1
+        },
+        {
+          "title": "Kinship as Social Strategy",
+          "file_page": 256,
+          "printed_page": "234",
+          "depth": 2
+        },
+        {
+          "title": "Marriage",
+          "file_page": 256,
+          "printed_page": "234",
+          "depth": 1
+        },
+        {
+          "title": "Gender, Marriage, and Social Inequality",
+          "file_page": 259,
+          "printed_page": "237",
+          "depth": 1
+        },
+        {
+          "title": "Brideservice",
+          "file_page": 259,
+          "printed_page": "237",
+          "depth": 2
+        },
+        {
+          "title": "Equal Bridewealth",
+          "file_page": 260,
+          "printed_page": "238",
+          "depth": 2
+        },
+        {
+          "title": "Unequal Bridewealth",
+          "file_page": 260,
+          "printed_page": "238",
+          "depth": 2
+        },
+        {
+          "title": "Polygyny",
+          "file_page": 260,
+          "printed_page": "238",
+          "depth": 2
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 261,
+          "printed_page": "239",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 9 Nonegalitarian Hunter-Gatherers",
+          "file_page": 263,
+          "printed_page": "241",
+          "depth": 0
+        },
+        {
+          "title": "Egalitarianism",
+          "file_page": 265,
+          "printed_page": "243",
+          "depth": 1
+        },
+        {
+          "title": "Male-Female Egalitarianism",
+          "file_page": 266,
+          "printed_page": "244",
+          "depth": 1
+        },
+        {
+          "title": "Nonegalitarian Hunter-Gatherers",
+          "file_page": 270,
+          "printed_page": "248",
+          "depth": 1
+        },
+        {
+          "title": "The Patron-Client Model of Inequality",
+          "file_page": 274,
+          "printed_page": "252",
+          "depth": 1
+        },
+        {
+          "title": "Sedentism and Population Growth",
+          "file_page": 274,
+          "printed_page": "252",
+          "depth": 2
+        },
+        {
+          "title": "Food Storage",
+          "file_page": 275,
+          "printed_page": "253",
+          "depth": 2
+        },
+        {
+          "title": "The Formation of Groups and Leaders",
+          "file_page": 276,
+          "printed_page": "254",
+          "depth": 2
+        },
+        {
+          "title": "Sharing",
+          "file_page": 278,
+          "printed_page": "256",
+          "depth": 2
+        },
+        {
+          "title": "Warfare",
+          "file_page": 278,
+          "printed_page": "256",
+          "depth": 2
+        },
+        {
+          "title": "Costly Displays",
+          "file_page": 279,
+          "printed_page": "257",
+          "depth": 2
+        },
+        {
+          "title": "The Patron-Client Relationship",
+          "file_page": 279,
+          "printed_page": "257",
+          "depth": 2
+        },
+        {
+          "title": "Resources That Are Not in Sync across a Landscape",
+          "file_page": 280,
+          "printed_page": "258",
+          "depth": 1
+        },
+        {
+          "title": "Resources That Are in Sync across a Landscape",
+          "file_page": 283,
+          "printed_page": "261",
+          "depth": 1
+        },
+        {
+          "title": "An Example: The Northwest Coast",
+          "file_page": 283,
+          "printed_page": "261",
+          "depth": 1
+        },
+        {
+          "title": "Southern Coast",
+          "file_page": 284,
+          "printed_page": "262",
+          "depth": 2
+        },
+        {
+          "title": "Central Coast",
+          "file_page": 285,
+          "printed_page": "263",
+          "depth": 2
+        },
+        {
+          "title": "Northern Coast",
+          "file_page": 286,
+          "printed_page": "264",
+          "depth": 2
+        },
+        {
+          "title": "Enculturation and Inequality",
+          "file_page": 288,
+          "printed_page": "266",
+          "depth": 1
+        },
+        {
+          "title": "Conclusion",
+          "file_page": 289,
+          "printed_page": "267",
+          "depth": 1
+        },
+        {
+          "title": "Chapter 10 Hunter-Gatherers and Prehistory",
+          "file_page": 291,
+          "printed_page": "269",
+          "depth": 0
+        },
+        {
+          "title": "References",
+          "file_page": 323,
+          "printed_page": "301",
+          "depth": 0
+        },
+        {
+          "title": "Index",
+          "file_page": 375,
+          "printed_page": "353",
+          "depth": 0
+        }
+      ]
     }
   }
 }

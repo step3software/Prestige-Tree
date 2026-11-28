@@ -1,0 +1,3 @@
+# Only the PDF source lookup needs this dependency; EPUB lookup is standard-library-only.
+# Version used for the indexed Kelly PDF and the focused reader checks.
+pypdf==6.21.4

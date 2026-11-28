@@ -1,7 +1,8 @@
-"""Locate and read the owner's EPUB passages without copying books into Git.
+"""Locate the owner's EPUB and PDF passages without copying books into Git.
 
-Uses Python 3.12+ standard library only. All commands are read-only and offline.
-Paragraph ordinals include headings and match sources.json's parser_version.
+Python 3.12+. EPUB commands use the standard library; PDF commands need pypdf.
+All commands are read-only and offline. EPUB ordinals match parser_version 1;
+PDF page arguments always use one-based physical file pages.
 """
 import argparse
 import hashlib
@@ -61,13 +62,45 @@ def local_tag(element):
     return element.tag.rsplit('}', 1)[-1]
 
 
-def paragraph_range(value):
+def pdf_reader(path):
+    try:
+        from pypdf import PdfReader
+    except ImportError as error:
+        raise ValueError('PDF lookup needs pypdf; install docs/research/requirements.txt '
+                         'in your Python environment or use the bundled PDF runtime.') from error
+    reader = PdfReader(path)
+    if reader.is_encrypted:
+        raise ValueError('Encrypted PDF is unsupported; no decryption or replacement is attempted.')
+    return reader
+
+
+def verify_pdf(reader, book):
+    if len(reader.pages) != book['page_count'] or reader.page_labels != book['page_labels']:
+        raise ValueError('PDF page count or printed labels differ from the index.')
+    for chapter in book['chapters']:
+        if not 1 <= chapter['start_page'] <= chapter['end_page'] <= len(reader.pages):
+            raise ValueError('Invalid indexed PDF chapter range.')
+        for heading in chapter['headings']:
+            number = heading['file_page']
+            if not chapter['start_page'] <= number <= chapter['end_page']:
+                raise ValueError('PDF heading is outside its chapter.')
+            if reader.page_labels[number - 1] != heading['printed_page']:
+                raise ValueError('PDF heading printed label differs from the index.')
+
+
+def print_pdf_page(reader, book, chapter, number):
+    text = reader.pages[number - 1].extract_text() or '[No extractable text on this page.]'
+    print(f"[{book['citation_prefix']} chapter {chapter['id']}, PDF file page {number}; "
+          f"printed {book['page_labels'][number - 1]}]\n{text}\n")
+
+
+def location_range(value):
     match = re.fullmatch(r'([1-9][0-9]*):([1-9][0-9]*)', value)
     if not match:
         raise argparse.ArgumentTypeError('Use a positive inclusive range such as 59:61.')
     first, last = map(int, match.groups())
     if first > last:
-        raise argparse.ArgumentTypeError('The first paragraph must not exceed the last.')
+        raise argparse.ArgumentTypeError('The first location must not exceed the last.')
     return first, last
 
 
@@ -75,13 +108,15 @@ def build_parser(manifest):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--library-root', default=manifest['library']['local_root'])
     commands = parser.add_subparsers(dest='command', required=True)
-    commands.add_parser('verify', help='Check both EPUB hashes and all indexed chapter locators.')
+    commands.add_parser('verify', help='Check every source hash and indexed chapter locator.')
     chapters = commands.add_parser('chapters', help='List chapter IDs and headings.')
     chapters.add_argument('book', choices=manifest['books'])
     read = commands.add_parser('read', help='Print a cited range from a local source.')
     read.add_argument('book', choices=manifest['books'])
-    read.add_argument('chapter', help='Chapter number, or intro for Scott.')
-    read.add_argument('--paragraphs', type=paragraph_range, required=True)
+    read.add_argument('chapter', help='Chapter/part ID from the chapters command.')
+    locations = read.add_mutually_exclusive_group(required=True)
+    locations.add_argument('--paragraphs', type=location_range, help='EPUB block range.')
+    locations.add_argument('--pages', type=location_range, help='Physical PDF file-page range.')
     search = commands.add_parser('search', help='Find a literal phrase, case-insensitively.')
     search.add_argument('book', choices=manifest['books'])
     search.add_argument('query')
@@ -99,6 +134,10 @@ def run(args, manifest):
     if args.command == 'verify':
         for key, book in books.items():
             path = open_source(book, args.library_root)
+            if book['format'] == 'pdf':
+                verify_pdf(pdf_reader(path), book)
+                print(f"Verified {key}: PDF hash, {book['page_count']} pages, printed labels and chapter ranges.")
+                continue
             for chapter in book['chapters']:
                 paragraphs = read_paragraphs(path, chapter)
                 for heading in chapter['headings']:
@@ -111,6 +150,13 @@ def run(args, manifest):
     path = open_source(book, args.library_root)
     if args.command == 'chapters':
         for chapter in book['chapters']:
+            if book['format'] == 'pdf':
+                print(f"{chapter['id']}: {chapter['title']} (PDF file pages "
+                      f"{chapter['start_page']}:{chapter['end_page']}; printed "
+                      f"{chapter['printed_start']}:{chapter['printed_end']})")
+                for heading in chapter['headings']:
+                    print(f"  PDF {heading['file_page']} / printed {heading['printed_page']}: {heading['title']}")
+                continue
             print(f"{chapter['id']}: {chapter['title']} ({chapter['paragraph_count']} paragraphs)")
             for heading in chapter['headings']:
                 print(f"  {heading['paragraph']}: {heading['title']}")
@@ -118,6 +164,18 @@ def run(args, manifest):
 
     if args.command == 'read':
         chapter = chapter_for(book, args.chapter)
+        if book['format'] == 'pdf':
+            if not args.pages:
+                raise ValueError('PDF sources require --pages with physical file-page numbers.')
+            first, last = args.pages
+            if not chapter['start_page'] <= first <= last <= chapter['end_page']:
+                raise ValueError(f"Chapter file-page range is {chapter['start_page']}:{chapter['end_page']}.")
+            reader = pdf_reader(path)
+            for number in range(first, last + 1):
+                print_pdf_page(reader, book, chapter, number)
+            return
+        if not args.paragraphs:
+            raise ValueError('EPUB sources require --paragraphs, not PDF page numbers.')
         paragraphs = read_paragraphs(path, chapter)
         first, last = args.paragraphs
         if last > len(paragraphs):
@@ -129,6 +187,19 @@ def run(args, manifest):
     if args.limit < 1 or not args.query.strip():
         raise ValueError('Search needs a nonempty phrase and a positive result limit.')
     matches = 0
+    if book['format'] == 'pdf':
+        reader = pdf_reader(path)
+        for chapter in book['chapters']:
+            for number in range(chapter['start_page'], chapter['end_page'] + 1):
+                text = reader.pages[number - 1].extract_text() or ''
+                if args.query.casefold() in text.casefold():
+                    print_pdf_page(reader, book, chapter, number)
+                    matches += 1
+                    if matches >= args.limit:
+                        print(f'Stopped at the requested limit of {args.limit} matching pages.')
+                        return
+        print(f'{matches} matching pages in the indexed chapters.')
+        return
     for chapter in book['chapters']:
         for ordinal, text in enumerate(read_paragraphs(path, chapter), start=1):
             if args.query.casefold() in text.casefold():
