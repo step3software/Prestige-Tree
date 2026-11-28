@@ -184,8 +184,7 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .fire-bar::-webkit-progress-value { background: #e34b42; }
 .fire-bar::-moz-progress-bar { background: #e34b42; }
 .fire-controls { display: flex; flex-wrap: wrap; gap: 1rem; margin: .75rem 0; }
-.fire-controls label { display: grid; gap: .35rem; flex: 1 1 12rem; min-width: 0; }
-.fire-controls input { width: 100%; min-width: 0; accent-color: #e34b42; }
+.fire-controls > .range-control { flex: 1 1 12rem; }
 .fire-upgrades { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .5rem; }
 .fire-upgrades .project-button { width: 100%; height: auto; min-height: 7rem; min-width: 0; margin: 0; border-radius: 8px; color: #fff; }
 .fire-upgrades .locked { background: #3d2926; color: #f5dfda; }
@@ -211,4 +210,19 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
 .material-row .project-button.bought { background: #35502c; color: #fff; }
 .material-row .project-button:disabled { color: #e0e5e9; }
 .fire-buyables { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .5rem; }
+
+/* One integer control: cumulative checkboxes through five, native range above five. */
+.range-control { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; margin: 14px 0; }
+.range-label { font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.range-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.range-control .range-step { display: flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px; margin: 0; cursor: pointer; }
+.range-step input { appearance: none; box-sizing: border-box; width: 24px; height: 24px; margin: 0; border: 2px solid var(--range-color); border-radius: 50%; background-color: var(--background); accent-color: var(--range-color); cursor: inherit; }
+.range-step input:checked { background-image: radial-gradient(circle, var(--range-color) 0 40%, transparent 45%); box-shadow: 0 0 7px color-mix(in srgb, var(--range-color) 65%, transparent); }
+.range-step input:enabled:hover { box-shadow: 0 0 9px color-mix(in srgb, var(--range-color) 70%, transparent); }
+.range-step input:disabled { cursor: not-allowed; opacity: .55; box-shadow: none; }
+.range-control > input[type="range"] { width: 100%; min-width: 0; min-height: 32px; margin: 0; accent-color: var(--range-color); }
+.range-control input:focus-visible { outline: 3px solid var(--color); outline-offset: 3px; }
+@media (forced-colors: active) {
+    .range-step input, .range-step input:checked, .range-step input:enabled:hover { appearance: auto; background: none; box-shadow: none; }
+}
 .fire-buyables > h3, .fire-buyables > p { grid-column: 1 / -1; }
