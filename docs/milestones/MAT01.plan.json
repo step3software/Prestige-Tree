@@ -38,7 +38,7 @@
     "Implement only the validated material/Water/Cooking/Fire scope under the owner full-development-cycle request; preserve merge/deployment and human acceptance boundaries.",
     "One canonical civilization rules owner, one save model/runtime, session-bound state and normal codec ingress",
     "Preserve branch writers, old save recovery, upstream attribution and all unrelated Organization rewards",
-    "D2 is resolved: basic huts stay at Organization 1. Validate exact-file preparation and preserve current-held Organization behavior from main."
+    "D2 is resolved: basic huts stay at Organization 1. Validate exact-file preparation and preserve current-main permanent milestone unlocks; held Organization still governs Population requirements and payment."
   ],
   "decisions": [
     {
@@ -267,11 +267,11 @@
   "source": {
     "branch": "docs/craft-materials-plan",
     "parent_branch": "codex/fire-ms4",
-    "revision": "704cd6e2a3f82910c9ed74977e65ad95cb9eba86",
-    "published_main_observed": "27d24953e2c7c8c1617f22beba00fd668232713a",
+    "revision": "010bd80319b5b04373af1da898d457796e743611",
+    "published_main_observed": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
     "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
     "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe",
-    "rebased_fire": "7c905b4"
+    "rebased_fire": "563cd71"
   },
   "validation": {
     "kind": "development_flow.validate_plan local validation; no native lifecycle transition",

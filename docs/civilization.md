@@ -111,7 +111,7 @@ Woven baskets uses the existing `water-storage` construction ID and `player.wate
 
 ## Early Organization milestones
 
-New games expose Gather and Collect water. Huts unlock at current Organization 1, Wooden spears unlock Hunt, and both Food and Hut overseer queues at 3 without a separate purchase. The first Organization point requires 8 Population; subsequent requirements are `8 + 4 * current Organization`. Craft still starts at 12 Population. Spending Coordination can lock milestones again; purchased upgrades and paid work remain. The population requirement falls immediately with the held balance.
+New games expose Gather and Collect water. Huts unlock permanently on first reaching Organization 1, Wooden spears unlock Hunt, and both Food and Hut overseer queues at 3 without a separate purchase. The first Organization point requires 8 Population; subsequent requirements are `8 + 4 * current Organization`. Craft still starts at 12 Population. Earned milestones remain unlocked after spending; purchased upgrades and paid work remain. The population requirement falls immediately with the held balance.
 
 Basic huts remain available at Organization 1 so the eight-person founding housing can grow to the first Craft threshold at twelve. Organization 2 no longer unlocks hunting; Wooden spears does. Food and hut orders unlock at 3. Prepared materials (1 Organization) discounts supervised hut work by 25%; Extended expeditions (2) allows separate 1-5x Food duration/reward selections; Work rosters (3) permits 1-5 overseers separately for Food/huts, each supporting five repeats. Each successful automatic start spends one repeat. Current job snapshots keep their crew/duration/reward, and staffing reductions reject before discarding queued work.
 
@@ -127,7 +127,7 @@ At Organization 4, assign 0-5 whole Fire tenders from the existing shared pool. 
 | Improved hearths | Crafting; 1 | +20% base tender production per level | 16 |
 | Charcoal clamps | Clay; 2 | Divide recurring fuel use by `1 + 0.15*level` | 24 |
 
-Fire construction uses the normal single slot and one builder, `baseWork * 1.35^level`, complete upfront Craft payment and no cancellation refund. Levels increase only at completion. Capacity adds no free fuel. These new physical levels/construction are unprotected on prestige; Fire and tender assignments reset to zero. When spending closes the Fire gate, assigned tenders pause and release their labor; stored fuel and paid construction remain. Assignments resume when the gate opens. Permanent techniques and material knowledge remain.
+Fire construction uses the normal single slot and one builder, `baseWork * 1.35^level`, complete upfront Craft payment and no cancellation refund. Levels increase only at completion. Capacity adds no free fuel. These new physical levels/construction are unprotected on prestige; Fire and tender assignments reset to zero. The earned Fire milestone remains available after spending; tenders, supervisors and active crews share the same worker budget. Permanent techniques and material knowledge remain.
 
 ```text
 maximum = 10 + 2*huts + 10*fuelStores
@@ -177,7 +177,7 @@ Organization requires only current Population: the next point needs `8 + 4 × cu
 
 Milestones unlock when the held balance first reaches their threshold and stay unlocked after spending, prestige and save/reload. The existing saved peak (`organization.best`) records the highest held balance; lifetime earnings remain historical statistics and cannot unlock a never-held threshold. All milestone rewards share this rule: features, upgrade access, overseer orders, irrigation, auto-building and specific buyable retention. Spending still lowers the next Population requirement and must cover each purchase cost. Pending orders continue with their assigned managers. Queues saved while their managers were reassigned wait for free supervisors without discarding active paid work or remaining repeats. Prestige itself still clears queues according to its existing contract. Paid work and purchased upgrades retain their existing state and effects.
 
-Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Fire and tender assignments reset to zero. When spending closes the Fire gate, assigned tenders pause and release their labor; stored fuel and paid construction remain. Assignments resume when the gate opens. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
+Both prestiges restart with 5 Population, 10 Food and 10 Water, and reset growth, irrigation and shortage pressure. Food and hut repeat targets return to zero, releasing their managers. Fire and tender assignments reset to zero. The earned Fire milestone remains available after spending; tenders, supervisors and active crews share the same worker budget. Purchased one-time upgrades, Craft/Organization and later resources remain. Unprotected buyables reset according to the milestones below; there is no blanket Population retention reward.
 
 New games can view the three material unlocks in Craft. Material spending owns equipment; Organization retains the rewards below.
 

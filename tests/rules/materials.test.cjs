@@ -84,17 +84,26 @@ test('material/Fire economy has identical saved state under chunked advancement'
 });
 
 
-test('held Fire gate pauses tending while paid construction survives spending and reload',t=>{
+test('earned Fire stays available while spending lowers held balance and paid construction survives reload',t=>{
  const {engine,p,e,D}=game(t);p.organization.points=new D(4);p.organization.total=new D(100);p.craft.points=new D(11);
  e.buyUpgrade('crafting');assert.equal(e.startProject('fire-fuel'),true);assert.equal(e.setFireTenders(2),true);p.civ.fire=1;
- assert.equal(e.buyUpgrade('preparedMaterials'),true);assert.equal(e.fireStatus().available,false);assert.equal(e.fireStatus().gain,0);assert.equal(e.supply().fireTenders,0);
- const loaded=game(t,engine.exportPlayer());loaded.engine.advance(12);assert.equal(loaded.p.civ.fireBuyables.fuel,1);assert.equal(loaded.p.civ.fire,1);
- assert.equal(loaded.e.startProject('fire-hearths'),false);loaded.p.organization.points=new D(4);assert.equal(loaded.e.fireStatus().tenders,2);
+ assert.equal(e.buyUpgrade('preparedMaterials'),true);assert.equal(p.organization.points.toNumber(),3);assert.equal(e.fireStatus().available,true);assert.ok(e.fireStatus().gain>0);assert.equal(e.supply().fireTenders,2);
+ const loaded=game(t,engine.exportPlayer());loaded.engine.advance(12);assert.equal(loaded.p.civ.fireBuyables.fuel,1);assert.ok(loaded.p.civ.fire>1);
+ assert.equal(loaded.e.fireStatus().tenders,2);assert.equal(loaded.e.fireStatus().available,true);
 });
-
 
 test('an imported active Fire project requires its permanent Craft material',t=>{
  const g=game(t),{p,e,engine}=g;funded(g);assert.equal(e.startProject('fire-fuel'),true);
  const encoded=engine.exportPlayer(),raw=JSON.parse(atob(encoded));raw.civ.improvements.crafting=false;
  assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,false);assert.equal(engine.exportPlayer(),encoded);
+});
+
+
+test('saved pending supervisors share Fire and active crews without overbooking after permanent unlocks',t=>{
+ const g=game(t),{p,e,engine,D}=g;funded(g);p.points=new D(7);p.civ.features.hunting=true;
+ assert.equal(e.setFireTenders(2),true);assert.equal(e.dispatch('hunt'),true);assert.equal(e.dispatch('water'),true);
+ p.food.points=new D(10);p.civ.actions.gather.repeat=4;p.civ.hutRepeat=4;
+ const loaded=game(t,engine.exportPlayer());assert.equal(loaded.e.supply().overseerWorkers,0);assert.equal(loaded.e.supply().foremanWorkers,0);
+ for(let i=0;i<30;i++){loaded.engine.advance(1);assert.ok(loaded.e.supply().laborUsed<=loaded.p.points.toNumber());}
+ assert.ok(loaded.p.civ.actions.gather.repeat<4);loaded.engine.exportPlayer();
 });

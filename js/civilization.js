@@ -186,7 +186,7 @@ function createCivilizationRules({ saveState }) {
     const waterFlow = () => personUpkeep() * (8 + player().water.sites) * knowledgeEffect() * (owns("pipes") ? 2 : 1);
     function fireAvailable(data = player()) {
         const improvements = data.civ.improvements;
-        return data.organization.points.gte(4) || improvements.cooking || improvements.jars || improvements.hearth;
+        return data.organization.best.max(data.organization.points).gte(4) || improvements.cooking || improvements.jars || improvements.hearth;
     }
     const fireCapacity = () => 10 + 2 * player().shelter.homes + 10 * player().civ.fireBuyables.fuel;
     function fireStatus() {
@@ -609,7 +609,7 @@ function createCivilizationRules({ saveState }) {
         if (id === "copperPots" && !owns("clayPots")) return false;
         if (id === "pipes" && !fireAvailable()) return false;
         if (id === "sickles" && !owns("farming")) return false;
-        return amount("organization") >= upgradeRequirement(id);
+        return organizationProgress() >= upgradeRequirement(id);
     }
     function upgradeView(id) {
         const item = improvementDefinitions[id];
@@ -871,19 +871,19 @@ function createCivilizationRules({ saveState }) {
             const improvements = old.improvements;
             if (improvements && typeof improvements === "object" && !Array.isArray(improvements)) {
                 if (Object.values(improvements).some(value => typeof value !== "boolean")) throw new Error("Invalid historical improvement");
-                const broadAccess = !Object.hasOwn(old, "features") || old.features?.buyables || Number(data.organization?.points) >= 6;
+                const broadAccess = !Object.hasOwn(old, "features") || old.features?.buyables || Math.max(Number(data.organization?.points), Number(data.organization?.best || 0)) >= 6;
                 const ownsEquipment = ["jars", "hunting", "digging", "butchery"].some(id => improvements[id]) ||
                     Number(data.water?.storage) > 0 || Number(data.water?.sites) > 0 || Number(data.food?.storage) > 0 ||
                     (old.project && old.project !== "shelter-home");
                 if (broadAccess || ownsEquipment) improvements.crafting = true;
                 if (improvements.jars) { improvements.clay = true; improvements.crafting = true; }
                 if (improvements.butchery) improvements.copper = true;
-                if (old.features) old.features.hunting = Number(data.organization?.points) >= 2;
+                if (old.features) old.features.hunting = Math.max(Number(data.organization?.points), Number(data.organization?.best || 0)) >= 2;
             }
             if (old.features && Object.hasOwn(old.features, "buyables")) old.features.buyables = false;
         }
         if (data.civ && !Object.hasOwn(data.civ, "features")) {
-            data.civ.features = {huts: false, hunting: Number(data.organization?.points) >= 2, fishing: true, buyables: false};
+            data.civ.features = {huts: false, hunting: Math.max(Number(data.organization?.points), Number(data.organization?.best || 0)) >= 2, fishing: true, buyables: false};
         }
         if (Number(data.version || 0) >= 0.8) return;
         const civ = data.civ;

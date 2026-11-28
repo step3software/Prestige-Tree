@@ -9,8 +9,8 @@
   "source": {
     "repository": "step3software/Prestige-Tree",
     "branch": "docs/craft-materials-plan",
-    "comparison_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
-    "candidate_parent": "704cd6e2a3f82910c9ed74977e65ad95cb9eba86",
+    "comparison_main": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
+    "candidate_parent": "010bd80319b5b04373af1da898d457796e743611",
     "content_hashes_authoritative_for_uncommitted_review_fixes": true,
     "orcha_main": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
     "research_revision": "b42c39c84cd653fff166dca07b569c0fd0bddbbe"
@@ -43,22 +43,24 @@
     ".orcha/repository.json": "d697ffc8ff826964f1552479386997e023f2eb5b3de9240715f7b50c4bbc8585",
     "README.md": "ce159557d490fd8ddd2fba9f7d2a6aaad272b54d79bab964508ca5ee8140cd62",
     "docs/!general-info.md": "06420ab8ce5eb231928fd93aa17552580840128039f6e6d1fe5a4614ecf1570e",
-    "docs/developer-guide.md": "1d3815bea8b04690919aa2ae5e58b8d37603064b38985098335d5bafd5e41406",
-    "docs/civilization.md": "e84bbc35143de35a3dcf97d38f646abf063e09c6f2948625ff3d757f179bb238",
-    "docs/balance-testing.md": "fde892c4dd008512c4ceedc1a2cfbf6437a3c4f8b514d2affa336b0d32c08f87",
+    "docs/developer-guide.md": "3ae5c8e9027506f5ace72e7c40878d1c0cf8d60b05e571a1b42f8dded6d3e71b",
+    "docs/civilization.md": "4c508a843938de81ac178e6d48394db453de106d2a4f456607088adfdc7a8243",
+    "docs/balance-testing.md": "dd1a51d4cb87f1d9d08d70fdc6e629f0167fb2ab7000c9e3aa4ae266a5e8f063",
     "docs/current-coordination.verification.md": "18513717a2e672989eb85956811dbfad8c6554125bcf7c1e268e91a1a533414a",
-    "tests/rules/current-coordination.test.cjs": "7d87e950e5a1e158e9b7fa06e0ef95654695f4d0bf57c0c4bb913bb84714cfd5"
+    "tests/rules/current-coordination.test.cjs": "293988052551d5598f552393a42c1aaff9e639422a07a819fe47a0a9b6b0d580",
+    "docs/permanent-milestones.verification.md": "61ad0bf55fc37b01886db91e80ee06e47ca2852ea0cf5b5650f8f479b7f9e418"
   },
   "rebase": {
     "initial_main": "177c57962bf89de1fa85e9e72e6dac0d73543f90",
-    "latest_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
+    "latest_main": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
     "original_fire": "2d60aaf8874ae0d59eddbd7a7f8f4f3691fe309a",
-    "rebased_fire": "7c905b4",
+    "rebased_fire": "563cd71",
     "implementation_before_latest_rebase": "7067e021220f2e08e3cdc124d40a64750ae54bb6",
-    "implementation_rebased": "bb12419",
+    "implementation_rebased": "1269147",
     "conflict_resolution": "Individually inspected and merged hunks, preserved current-held Organization and main controls. Bulk side selection was rejected before execution by automatic approval review; not retried.",
-    "final_review_rebased": "704cd6e",
-    "final_runtime_byte_comparison": "No changes across all tracked runtime, package, policy and test bytes through final rebase; pre/post manifest compared."
+    "final_review_rebased": "c3add0c",
+    "final_runtime_byte_comparison": "The previous byte-identical 27d rebase is historical. The final 7031 rebase changes milestone semantics and is independently reverified.",
+    "permanent_milestone_integration": "Preserved latest main peak-held permanent unlocks, current-balance Population requirements, pre-payment peak capture and safe available-supervisor queue handling. Fire tenders included before reserving managers. Earlier held-gate pause behavior is superseded."
   },
   "writer": {
     "owner": "codex:mat01-cycle:01a22028",
@@ -72,7 +74,7 @@
     "standards_and_criteria_mapping": "docs/milestones/MAT01.verification.md",
     "changed_paths": {
       "README.md": {
-        "sha256": "879463634066790f1881cc68d8b671f773e5d982901d573082cabc72d7821951",
+        "sha256": "83f94d902b71fee12ce0ed16cb60c8a61656ca742e101de2058b558c5e3cd4c4",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "civ.css": {
@@ -80,15 +82,15 @@
         "review": "inspected source and consumers; full suite"
       },
       "docs/balance-testing.md": {
-        "sha256": "0c134b708e849b6ebcba0de9166c9f196aaad004a92f735d9c75b81a63610168",
+        "sha256": "384d9eacea0e9a0658b6563263fcbed7634dfb68f6c1797e7226f210f20aa1b1",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/civilization.md": {
-        "sha256": "f6512517e659f987cea8b93a853c6daa2d290e68614652093a54412536597f0e",
+        "sha256": "92008e4da2c8e4ee189dc37573036f9a775377e043b46ec49712cc09da30e02b",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/developer-guide.md": {
-        "sha256": "61b910f35a8c80605001ec0da0588a56cc7de84c4893c5bcc040b9ebe09d5b95",
+        "sha256": "747fdb7ac4cd2a732159a75d811a13685d39c91cee426790c7dd4bbf77816ec8",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/fire.verification.md": {
@@ -97,30 +99,30 @@
       },
       "docs/milestones/MAT01.evidence.json": {
         "sha256": null,
-        "review": "inspected provenance; complete artifact bound by final Git commit"
+        "review": "inspected provenance; bound by final Git commit"
       },
       "docs/milestones/MAT01.md": {
-        "sha256": "0030d26a931945cc841bb83738ed75086842e94ab8224838a6f99351a3fe0bf2",
+        "sha256": "d3fe11479c6ad07ac5d16608e9069897e38153ba0cc4b5d5e8a585d003549ed7",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/milestones/MAT01.plan.json": {
-        "sha256": "0ee4b37892aaa3364350cfb1fe2fdf2810a0e924cf7b508622d26e464f3aeabe",
+        "sha256": "23e95a0817b8e4ce4684b91a34afaf823a0e04d5561b5fe7435d5a14ecd76252",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/milestones/MAT01.preparation.json": {
-        "sha256": "eb0ff51fc9637cfdef7b4278e704ae1d406441f60236bda1fae57448f33f9aa8",
+        "sha256": "0e74b2f550f0a06eeaeaa1182fa656af71a13c9bc8a2f7964ebbc13440788043",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "docs/milestones/MAT01.verification.md": {
-        "sha256": "1e66b2109ebc42267adf79f431d0b7426f1b68e6da1235476c1219d4e5e51df3",
+        "sha256": "ed6632725b95d0610fed82f7d2fc81785decc90edb089e72f745b87c2e9fc977",
         "review": "inspected documentation/provenance; schema/link/hash checks"
       },
       "index.html": {
-        "sha256": "c7ed0c2a6540e4f325df7396d3b785e72c8941c38f39f8b472384cacf96d606d",
+        "sha256": "f153bd1e0180c4c8f9354a78cb53128627370a19a7b7b7a4ec77ae5d9a54b08c",
         "review": "inspected source and consumers; full suite"
       },
       "js/civilization.js": {
-        "sha256": "8eca7ea694ec336da79caaefe490ddb522f3d435bb0898c8fc5deda518d1f017",
+        "sha256": "9e739a8ad4e8dbb7058ce93818f0ceaaf99d92c390a42135778d511a1999e4db",
         "review": "inspected source and consumers; full suite"
       },
       "js/components.js": {
@@ -148,7 +150,7 @@
         "review": "inspected source and consumers; full suite"
       },
       "tests/browser/civilization.spec.cjs": {
-        "sha256": "5af69693b55b02eb08e9c198b8376051b5bdd1a7a68fb05afb03f27e23fd1c2b",
+        "sha256": "3b767b03e0e20aa1728c6be38de3700f1152e635075970ebf92c93bc2c764363",
         "review": "inspected assertions; full suite"
       },
       "tests/browser/fire.spec.cjs": {
@@ -179,6 +181,10 @@
         "sha256": "b73df7cbe50d8ab3c68459c2d769761e64d9e4e758dc3f534d102649ac6e004f",
         "review": "inspected assertions; full suite"
       },
+      "tests/rules/current-coordination.test.cjs": {
+        "sha256": "77b2f0ba81a24a5506e9bc253dc319b12bdb539ac9135ca3b0cc2f65644ed5e2",
+        "review": "inspected assertions; full suite"
+      },
       "tests/rules/early-milestones.test.cjs": {
         "sha256": "a41271e713f334dfe392df726cc0e5138c859fbda1ebb50fddcf2f81316c27d3",
         "review": "inspected assertions; full suite"
@@ -192,7 +198,7 @@
         "review": "inspected assertions; full suite"
       },
       "tests/rules/materials.test.cjs": {
-        "sha256": "5fbf10e2231b5be202c7c2d24c19e3ba4215a8969a08a41bfac96d1531f3f8f7",
+        "sha256": "57c4c5acb246d42dd5b6cbc3297061f06af38d09489fba74894b2afd35d4464a",
         "review": "inspected assertions; full suite"
       },
       "tests/rules/opening-economy.test.cjs": {
@@ -200,7 +206,7 @@
         "review": "inspected assertions; full suite"
       },
       "tests/rules/organization-progression.test.cjs": {
-        "sha256": "5ac466c63ea653dc1787469fcc94587cf5dc52c6c4f63115374bb37e2aee6ba0",
+        "sha256": "8a0efb2fba9f8655da5152f105958f52e5977035d597e64956f284b74699df7f",
         "review": "inspected assertions; full suite"
       },
       "tests/rules/shared-hearths.test.cjs": {
@@ -226,8 +232,8 @@
       "R2 completed calibration terminal censor",
       "R3 restore main overseer slider controls and complete keyboard regression",
       "R4 validate permanent Craft prerequisite for active new Fire projects while preserving paid Water work",
-      "R5 preserve current-held Organization guards, retained paid work, paused queues, prospective retention and truthful labels",
-      "R6 fluid-height material/Fire cards prevent inherited fixed-size clipping; high-contrast states and Copper knives label; new card overflow assertion"
+      "R6 fluid-height material/Fire cards prevent inherited fixed-size clipping; high-contrast states and Copper knives label; new card overflow assertion",
+      "R5 integrate main PR16 permanent milestone/access/retention semantics and held-balance Population costs; preserve all five permanent-unlock scenarios with material fixture adaptations; Fire/pending-supervisor per-step labor test"
     ],
     "unresolved": [
       "Actual-user enjoyment/usability, assistive-technology testing and installed performance not measured; no such acceptance is claimed.",
@@ -235,26 +241,26 @@
     ]
   },
   "checks": {
-    "full_suite": "passed: final unbroken npm test exited 0; 152 rule/save/runtime/balance tests and 32 Chromium journeys, build/package/syntax/static and negative/mutation sensitivity checks",
-    "focused_material_and_current_gate": "18 passed, including reproduced invalid active Fire import after fix",
+    "full_suite": "passed: final unbroken npm test on permanent-milestone main exited 0; 154 rule/save/runtime/balance tests, 32 Chromium journeys, build/package/syntax/static and negative/mutation sensitivity",
+    "focused_material_and_current_gate": "25 permanent-milestone/material/Organization cases passed; 15 material/Fire cases passed including shared manager/Fire/crew reload budget",
     "focused_review_material_and_early_milestone": "24 passed after narrowing new Fire validation and preserving main paid Water case",
     "plan_preparation_schema": "passed; exact plan hash bound in preparation; no native lifecycle transition",
     "whitespace": "git diff --check passed before final commit",
-    "visual_review": "inspected final materials-1280.png and materials-390.png; readable fluid cards and Copper knives label, no clipped card contents; no human/AT study claimed",
-    "publication": "Pre-publication evidence artifact. Final PR URL and verified remote head are recorded in the delivery handoff.",
-    "full_suite_log_sha256": "b99bdb57c6cd2359581f5a3ae9269aaeafac66ecdac5f7dbb6127ddb336667ba",
+    "visual_review": "Inspected final 7031-main material screenshots at 1280px and 390px; fluid, readable cards and Copper knives label; no clipping; no actual-user/AT study claimed",
+    "publication": "Draft PR17 created; rebased head update is bound to exact remote lease and verified in delivery handoff.",
+    "full_suite_log_sha256": "807de7e9da2a2d3b8c67245162c1fe713ba50831cbc0b82acf20ca45d814d1c4",
     "runtime": "Node 24.22.1; npm 11.19.1; locked dependencies"
   },
   "balance": {
     "command": "npm run balance -- --hours 4 --budget 30 --calibrate-minutes 240",
-    "report_sha256": "a91193ba2c7979b2083c4a48893f2a0de8596bc57b5d057c9dce7d831076a0d5",
+    "report_sha256": "31fd2fc8b3df26dbd12b8cd39d47bd2d2b8ab1a8954b9be5fd172f050db152b3",
     "engine_sources_sha256": {
       "js/technical/break_eternity.js": "668d5024e41c64a9557cf7895e948ad14f5638297277a0714599ceee773a3e49",
       "js/technical/layerSupport.js": "698faf660627e427a64326054c888e8ee3bc3f048ffc3e4fbae14cec0e734477",
       "js/tree.js": "c0b1df0c0ce7143db9ec76c523e16ee6c58af2ed0fce24437da2737fb939d6ae",
       "js/sc.js": "0559e2c61e0aa8a2eda2b2b8b37accd61ad625d2526a9ad1e5acb1290bc8bfa5",
       "js/help.js": "9133bfb065e426d214c1eeb78a6ec44fc2525f729aecca85a04ea8896b225c52",
-      "js/civilization.js": "8eca7ea694ec336da79caaefe490ddb522f3d435bb0898c8fc5deda518d1f017",
+      "js/civilization.js": "9e739a8ad4e8dbb7058ce93818f0ceaaf99d92c390a42135778d511a1999e4db",
       "js/layers/resources.js": "59bb77682e72e17c0678dea075026ff08496b050c7373c8fe0ff4829ff08ce30",
       "js/layers/manifest.js": "1a669201b7703b624ecb4d6e8da995fe518b7db0b0d9366f4003151245613aa8",
       "js/mod.js": "4080cf3770de9b164df99babba1f9d9cbd8c95628d2ea6fee7a996bc5f45f57f",
@@ -284,7 +290,7 @@
       {
         "strategy": "active-balanced",
         "status": "endgame",
-        "simulated_seconds": 7805,
+        "simulated_seconds": 7870,
         "cadence_changes": [
           {
             "time": 0,
@@ -292,43 +298,43 @@
           }
         ],
         "actions": {
-          "dispatch": 578,
-          "prestige": 41,
-          "construction": 230,
-          "automation": 461,
+          "dispatch": 542,
+          "prestige": 42,
+          "construction": 232,
+          "automation": 504,
           "upgrade": 25,
-          "expedition-length": 159,
-          "staffing": 1369,
-          "fire-tending": 82
+          "expedition-length": 207,
+          "staffing": 1452,
+          "fire-tending": 85
         },
         "checkpoints": {
           "supported-eight": 40,
           "organization-1": 40,
           "organization-2": 210,
           "organization-3": 345,
-          "organization-4": 1600,
-          "organization-5": 4360,
-          "organization-6": 5105,
-          "organization-7": 5430,
-          "organization-8": 7330,
-          "organization-9": 7655,
-          "organization-10": 7765,
+          "organization-4": 1505,
+          "organization-5": 4265,
+          "organization-6": 5005,
+          "organization-7": 5330,
+          "organization-8": 7275,
+          "organization-9": 7605,
+          "organization-10": 7840,
           "overseer": 345,
-          "water-flow": 4395,
-          "farming": 5465,
+          "water-flow": 4275,
+          "farming": 5365,
           "craft": 125,
           "organization": 40,
-          "material-crafting": 1425,
-          "material-clay": 2295,
-          "material-copper": 3675,
-          "fire-buyables": 5785,
-          "endgame": 7805
+          "material-crafting": 1330,
+          "material-clay": 2200,
+          "material-copper": 3580,
+          "fire-buyables": 5405,
+          "endgame": 7870
         }
       },
       {
         "strategy": "regular",
         "status": "endgame",
-        "simulated_seconds": 8235,
+        "simulated_seconds": 8215,
         "cadence_changes": [
           {
             "time": 0,
@@ -336,37 +342,37 @@
           }
         ],
         "actions": {
-          "dispatch": 373,
+          "dispatch": 349,
           "prestige": 40,
-          "construction": 216,
-          "automation": 430,
+          "construction": 212,
+          "automation": 448,
           "upgrade": 25,
-          "expedition-length": 129,
-          "staffing": 360,
-          "fire-tending": 51
+          "expedition-length": 127,
+          "staffing": 377,
+          "fire-tending": 55
         },
         "checkpoints": {
           "supported-eight": 40,
           "organization-1": 40,
           "organization-2": 240,
           "organization-3": 380,
-          "organization-4": 1700,
-          "organization-5": 4580,
-          "organization-6": 5340,
-          "organization-7": 5680,
-          "organization-8": 7640,
-          "organization-9": 8020,
-          "organization-10": 8180,
+          "organization-4": 1600,
+          "organization-5": 4480,
+          "organization-6": 5240,
+          "organization-7": 5580,
+          "organization-8": 7580,
+          "organization-9": 8000,
+          "organization-10": 8160,
           "overseer": 380,
-          "water-flow": 4600,
-          "farming": 5780,
+          "water-flow": 4500,
+          "farming": 5640,
           "craft": 140,
           "organization": 40,
-          "material-crafting": 1540,
-          "material-clay": 2440,
-          "material-copper": 3880,
-          "fire-buyables": 6135,
-          "endgame": 8235
+          "material-crafting": 1440,
+          "material-clay": 2340,
+          "material-copper": 3780,
+          "fire-buyables": 5715,
+          "endgame": 8215
         }
       }
     ],
@@ -376,8 +382,8 @@
         "horizonSeconds": 14400,
         "roughStatus": "endgame",
         "fixedStatus": "endgame",
-        "roughWallSeconds": 6.5382380000000015,
-        "fixedWallSeconds": 4.7017072,
+        "roughWallSeconds": 6.666479399999999,
+        "fixedWallSeconds": 6.619293099999999,
         "speedup": null,
         "rows": [
           {
@@ -410,50 +416,50 @@
           },
           {
             "id": "organization-4",
-            "roughSeconds": 1600,
-            "fixedSeconds": 1600,
+            "roughSeconds": 1505,
+            "fixedSeconds": 1505,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-5",
-            "roughSeconds": 4360,
-            "fixedSeconds": 4360,
+            "roughSeconds": 4265,
+            "fixedSeconds": 4265,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-6",
-            "roughSeconds": 5105,
-            "fixedSeconds": 5105,
+            "roughSeconds": 5005,
+            "fixedSeconds": 5005,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-7",
-            "roughSeconds": 5430,
-            "fixedSeconds": 5430,
+            "roughSeconds": 5330,
+            "fixedSeconds": 5330,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-8",
-            "roughSeconds": 7330,
-            "fixedSeconds": 7330,
+            "roughSeconds": 7275,
+            "fixedSeconds": 7275,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-9",
-            "roughSeconds": 7655,
-            "fixedSeconds": 7655,
+            "roughSeconds": 7605,
+            "fixedSeconds": 7605,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-10",
-            "roughSeconds": 7765,
-            "fixedSeconds": 7765,
+            "roughSeconds": 7840,
+            "fixedSeconds": 7840,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
@@ -466,15 +472,15 @@
           },
           {
             "id": "water-flow",
-            "roughSeconds": 4395,
-            "fixedSeconds": 4395,
+            "roughSeconds": 4275,
+            "fixedSeconds": 4275,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "farming",
-            "roughSeconds": 5465,
-            "fixedSeconds": 5465,
+            "roughSeconds": 5365,
+            "fixedSeconds": 5365,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
@@ -494,36 +500,36 @@
           },
           {
             "id": "material-crafting",
-            "roughSeconds": 1425,
-            "fixedSeconds": 1425,
+            "roughSeconds": 1330,
+            "fixedSeconds": 1330,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "material-clay",
-            "roughSeconds": 2295,
-            "fixedSeconds": 2295,
+            "roughSeconds": 2200,
+            "fixedSeconds": 2200,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "material-copper",
-            "roughSeconds": 3675,
-            "fixedSeconds": 3675,
+            "roughSeconds": 3580,
+            "fixedSeconds": 3580,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "fire-buyables",
-            "roughSeconds": 5785,
-            "fixedSeconds": 5785,
+            "roughSeconds": 5405,
+            "fixedSeconds": 5405,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "endgame",
-            "roughSeconds": 7805,
-            "fixedSeconds": 7805,
+            "roughSeconds": 7870,
+            "fixedSeconds": 7870,
             "relativeDifference": 0,
             "coverageMismatch": false
           }
@@ -534,8 +540,8 @@
         "horizonSeconds": 14400,
         "roughStatus": "endgame",
         "fixedStatus": "endgame",
-        "roughWallSeconds": 1.8905841,
-        "fixedWallSeconds": 1.8198947000000008,
+        "roughWallSeconds": 2.7723204000000004,
+        "fixedWallSeconds": 2.3998237000000007,
         "speedup": null,
         "rows": [
           {
@@ -568,50 +574,50 @@
           },
           {
             "id": "organization-4",
-            "roughSeconds": 1700,
-            "fixedSeconds": 1700,
+            "roughSeconds": 1600,
+            "fixedSeconds": 1600,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-5",
-            "roughSeconds": 4580,
-            "fixedSeconds": 4580,
+            "roughSeconds": 4480,
+            "fixedSeconds": 4480,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-6",
-            "roughSeconds": 5340,
-            "fixedSeconds": 5340,
+            "roughSeconds": 5240,
+            "fixedSeconds": 5240,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-7",
-            "roughSeconds": 5680,
-            "fixedSeconds": 5680,
+            "roughSeconds": 5580,
+            "fixedSeconds": 5580,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-8",
-            "roughSeconds": 7640,
-            "fixedSeconds": 7640,
+            "roughSeconds": 7580,
+            "fixedSeconds": 7580,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-9",
-            "roughSeconds": 8020,
-            "fixedSeconds": 8020,
+            "roughSeconds": 8000,
+            "fixedSeconds": 8000,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "organization-10",
-            "roughSeconds": 8180,
-            "fixedSeconds": 8180,
+            "roughSeconds": 8160,
+            "fixedSeconds": 8160,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
@@ -624,15 +630,15 @@
           },
           {
             "id": "water-flow",
-            "roughSeconds": 4600,
-            "fixedSeconds": 4600,
+            "roughSeconds": 4500,
+            "fixedSeconds": 4500,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "farming",
-            "roughSeconds": 5780,
-            "fixedSeconds": 5780,
+            "roughSeconds": 5640,
+            "fixedSeconds": 5640,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
@@ -652,37 +658,37 @@
           },
           {
             "id": "material-crafting",
-            "roughSeconds": 1540,
-            "fixedSeconds": 1540,
+            "roughSeconds": 1440,
+            "fixedSeconds": 1440,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "material-clay",
-            "roughSeconds": 2440,
-            "fixedSeconds": 2440,
+            "roughSeconds": 2340,
+            "fixedSeconds": 2340,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "material-copper",
-            "roughSeconds": 3880,
-            "fixedSeconds": 3880,
+            "roughSeconds": 3780,
+            "fixedSeconds": 3780,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "fire-buyables",
-            "roughSeconds": 6135,
-            "fixedSeconds": 6135,
+            "roughSeconds": 5715,
+            "fixedSeconds": 5715,
             "relativeDifference": 0,
             "coverageMismatch": false
           },
           {
             "id": "endgame",
-            "roughSeconds": 8235,
-            "fixedSeconds": 8230,
-            "relativeDifference": 0.0006075334143377885,
+            "roughSeconds": 8215,
+            "fixedSeconds": 8210,
+            "relativeDifference": 0.0006090133982947625,
             "coverageMismatch": false
           }
         ]
@@ -784,8 +790,14 @@
     ]
   },
   "screenshots_sha256": {
-    "test-results/materials-1280.png": "64d493a308b3f2b8ccf3530b5e0c6c999083ce508c75643d392a5eaea677acad",
-    "test-results/materials-390.png": "d95fcf5e467066abe10394f5f9d0b7aa7eae0fb2130bb1f199541443d92530af",
-    "test-results/materials-narrow.png": "9e5f388d439bcb2c865d73d3e1596146c2578efda065b74983dc1f6b163218cd"
+    "test-results/materials-1280.png": "4916e3be9c393831a3a4d8c9c03ec7e1e986446f8ef517ec7381eb685db441cb",
+    "test-results/materials-390.png": "6b3566c9b9f9836a09d6c6033e88d2480fbda946a7aafb7d3b4d264c49b9a376",
+    "test-results/materials-narrow.png": "52ab2fc44ebf8998a27ce48ec5da6265685f1adebc4a5271aba2232cca9bf9bf"
+  },
+  "prior_verification_27d2495": {
+    "published_head": "4eb8c5ac83194c8dbc655d7f818eeba0608e0946",
+    "full_suite": "152 rules and 32 Chromium passed before main advanced to permanent milestone unlocks",
+    "log_sha256": "b99bdb57c6cd2359581f5a3ae9269aaeafac66ecdac5f7dbb6127ddb336667ba",
+    "superseded_for_current_runtime": true
   }
 }

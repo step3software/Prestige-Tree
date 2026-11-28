@@ -1,6 +1,6 @@
 {
   "milestone_id": "step3software/Prestige-Tree#MAT01",
-  "plan_sha256": "0ee4b37892aaa3364350cfb1fe2fdf2810a0e924cf7b508622d26e464f3aeabe",
+  "plan_sha256": "23e95a0817b8e4ce4684b91a34afaf823a0e04d5561b5fe7435d5a14ecd76252",
   "base_revision": "14791fbd6ada032c5bff68267730638716e47fea",
   "implementation_branch": "docs/craft-materials-plan",
   "validation_commands": [
@@ -357,6 +357,15 @@
       "verification": [
         "Plan/preparation schema and path inventory; relevant codec tests; final criteria review"
       ]
+    },
+    {
+      "path": "tests/rules/current-coordination.test.cjs",
+      "operation": "modify",
+      "implementation": "Adapt obsolete Organization-unlocked equipment fixture assumptions to Craft, preserving all five latest-main permanent milestone, lifetime denial, payment, retention and safe queue-resumption assertions; exercise Fire in the shared labor budget.",
+      "verification": [
+        "Focused permanent-milestone/material rule tests",
+        "Full npm test and main behavior review"
+      ]
     }
   ],
   "criteria_coverage": {
@@ -437,7 +446,7 @@
     ]
   },
   "rollback": "Keep matching exported save and source artifact; do not load v0.9 data into an older artifact; ptr untouched.",
-  "source_main": "27d24953e2c7c8c1617f22beba00fd668232713a",
+  "source_main": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
   "rebase": {
     "original_head": "e1b2c244466c01dbf698ff9f7981c2ba8f4c2475",
     "old_parent": "8032e9122b85b2832bb587a4c87153ba328e3fe5",
@@ -454,6 +463,12 @@
       "result_head": "704cd6e2a3f82910c9ed74977e65ad95cb9eba86",
       "conflicts": "Worker ledger: keep renamed staff and add Fire tenders. Developer guide: retain material route and native slider contract. Explicit per-hunk resolution.",
       "runtime_equivalence": "All tracked runtime, policy, package and test bytes match pre-rebase manifest; final visual/name changes were included before this comparison."
+    },
+    "permanent_milestone_rebase": {
+      "new_main": "7031f946f74c1ba5977ce3770f290e44f24b8d2f",
+      "result_head": "010bd80319b5b04373af1da898d457796e743611",
+      "resolution": "Individual conflict hunks retain permanent peak-based milestones, lower held-balance Population requirements, pre-payment peak capture and available supervisor staffing. Adapted obsolete material fixture assumptions; Fire tenders counted before supervisors.",
+      "supersedes": "Earlier held-gate pause behavior in historical rebase evidence is superseded by PR16."
     }
   },
   "authority": "Direct-session artifacts validated locally; no native milestone enrollment or forged stage receipt.",
