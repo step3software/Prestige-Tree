@@ -63,7 +63,7 @@ test('retired upgrades cannot be purchased and Fishing keeps its full two-person
     const {p,e}=game(t);rich(p);p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);
     assert.equal(e.buyUpgrade('fishing'),false);
     assert.equal(e.buyUpgrade('wellLining'),false);
-    assert.equal(e.actionDefinition('fish').workers,2);
+    assert.equal(e.actionDefinition('fish'),null);
     p.civ.improvements.gravity=true;p.education.points=new Decimal(0);
     assert.equal(e.supply().production.water,8*e.supply().upkeep);
 });

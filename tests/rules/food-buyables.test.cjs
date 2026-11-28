@@ -6,7 +6,7 @@ const Decimal = require('../../js/technical/break_eternity.js');
 function game(t) {
     const engine = createBalanceEngine();
     // Established-settlement fixture: retain activities already discovered before this test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);
     t.after(engine.dispose);
     return {engine, p: engine.player, e: engine.session.modRules.civilization};
 }
@@ -27,7 +27,7 @@ test('exploring farther trades longer trips for compounded yields and rising wor
     assert.equal(p.food.routes.gather, 2);
     close(e.actionDefinition('gather').duration, 14.4);
     close(e.actionDefinition('gather').reward, 13.5);
-    assert.equal(e.actionDefinition('fish').reward, 14);
+    assert.equal(e.actionDefinition('hunt').reward, 24);
 });
 
 test('bigger game requires current Organization and rounds each successive crew', t => {

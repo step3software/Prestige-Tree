@@ -4,13 +4,13 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 function game(t) {
     const r = createRuntime({bridge:false});
     r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
-    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7)');
+    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7)');
     t.after(() => { r.run('s.dispose()'); r.dispose(); });
     return r;
 }
 const read=(r,expression)=>JSON.parse(r.run('JSON.stringify('+expression+')'));
 function prepared(r) {
-    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7)');
+    r.run('Object.assign(p.civ.features,{huts:true,hunting:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7)');
     r.run('p.points=new Decimal(8);p.shelter.homes=1;p.shelter.points=new Decimal(12);p.food.points=new Decimal(50);p.water.points=new Decimal(50);p.craft.points=new Decimal(20);p.organization.points=new Decimal(6);p.organization.total=new Decimal(10);p.organization.points=new Decimal(10)');
 }
 
@@ -26,18 +26,17 @@ test('fresh Population grows into housing, without automatic Food or Water produ
 });
 
 test('parallel expeditions reserve distinct crews, reject overbooking and release on completion',t=>{
-    const r=game(t);prepared(r);r.run('e.startProject("water-storage")');
+    const r=game(t);prepared(r);r.run('p.points=new Decimal(6);e.startProject("food-site")');
     assert.equal(r.run('e.dispatch("gather")'),true);
     assert.equal(r.run('e.dispatch("hunt")'),true);
-    assert.equal(r.run('e.dispatch("fish")'),true);
-    assert.equal(r.run('e.supply().workers.food'),6);
+    assert.equal(r.run('e.supply().workers.food'),4);
     assert.equal(r.run('e.dispatch("water")'),false);
     assert.equal(r.run('e.dispatch("gather")'),false);
     r.run('p.food.points=new Decimal(0);s.advance(10)');
     assert.equal(r.run('p.civ.actions.gather.completed'),1);
     assert.equal(r.run('p.civ.actions.hunt.completed'),0);
     assert.ok(r.run('p.food.points.gt(0)'));
-    assert.equal(r.run('e.supply().workers.food'),5);
+    assert.equal(r.run('e.supply().workers.food'),3);
     assert.equal(r.run('e.dispatch("water")'),true);
     assert.ok(r.run('e.supply().laborUsed<=p.points.toNumber()+1e-9'));
 });
@@ -55,11 +54,11 @@ test('recall forfeits unfinished yield, disables repeat and immediately frees wo
 
 test('route equipment improves only its route and active crews keep their dispatch contract',t=>{
     const r=game(t);prepared(r);
-    r.run('e.dispatch("hunt");var oldCrew=p.civ.actions.hunt.workers;var oldYield=p.civ.actions.hunt.reward;var fishing=e.actionDefinition("fish").reward;e.startProject("hunt-tools");s.advance(14)');
+    r.run('e.dispatch("hunt");var oldCrew=p.civ.actions.hunt.workers;var oldYield=p.civ.actions.hunt.reward;var gathering=e.actionDefinition("gather").reward;e.startProject("hunt-tools");s.advance(14)');
     assert.equal(r.run('p.food.routes.hunt'),1);
     assert.equal(r.run('p.civ.actions.hunt.workers'),3);
     assert.equal(r.run('p.civ.actions.hunt.reward'),r.run('oldYield'));
-    assert.equal(r.run('e.actionDefinition("fish").reward'),r.run('fishing'));
+    assert.equal(r.run('e.actionDefinition("gather").reward'),r.run('gathering'));
     assert.equal(r.run('e.buyUpgrade("hunting")'),true);
     assert.equal(r.run('p.civ.actions.hunt.workers'),3);
     r.run('s.advance(11);e.dispatch("hunt")');
@@ -182,8 +181,8 @@ test('milestone ten keeps only named buyables on both prestiges',t=>{
 
 test('prestige returns enough protected crews to fit the five-person workforce',t=>{
     const r=game(t);prepared(r);
-    r.run('p.points=new Decimal(12);p.organization.total=new Decimal(9);p.organization.points=new Decimal(9);p.shelter.comfort=2;e.dispatch("gather");e.dispatch("hunt");e.dispatch("fish");e.dispatch("water")');
-    assert.equal(r.run('e.supply().workers.food+e.supply().workers.water'),8);
+    r.run('p.points=new Decimal(12);p.organization.total=new Decimal(9);p.organization.points=new Decimal(9);p.shelter.comfort=2;e.dispatch("gather");e.dispatch("hunt");e.dispatch("water")');
+    assert.equal(r.run('e.supply().workers.food+e.supply().workers.water'),6);
     assert.deepEqual(read(r,'e.prestigePreview("craft").recalledActions'),['hunt']);
     r.run('e.prestige("craft")');
     assert.equal(r.run('p.civ.actions.hunt.remaining'),0);

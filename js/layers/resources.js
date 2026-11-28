@@ -9,7 +9,7 @@ function createResourceLayer(id, {modRules, saveState}) {
             const data = {first: 0, unlocked: foundation, points: new Decimal(starts[id] || 0),
                 best: new Decimal(starts[id] || 0), total: new Decimal(starts[id] || 0)};
             if (id === "food" || id === "water") { data.sites = 0; data.storage = 0; }
-            if (id === "food") data.routes = {gather: 0, hunt: 0, fish: 0, farm: 0};
+            if (id === "food") data.routes = {gather: 0, hunt: 0, farm: 0};
             if (id === "shelter") { data.homes = 0; data.comfort = 0; }
             return data;
         },

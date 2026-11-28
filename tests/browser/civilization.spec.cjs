@@ -3,7 +3,7 @@ async function open(page,established=true){
     const errors=[];page.on('pageerror',error=>errors.push(error.message));
     await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
     await page.goto('/');await expect(page.getByRole('heading',{name:'Population',exact:false})).toBeVisible();
-    await page.evaluate(established=>{gameUI.session.runtimeServices.gameRuntime.stop();if(established){Object.assign(gameUI.session.saveState.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});gameUI.session.saveState.player.civ.improvements.crafting=true;gameUI.session.saveState.player.organization.points=new Decimal(7);}},established);
+    await page.evaluate(established=>{gameUI.session.runtimeServices.gameRuntime.stop();if(established){Object.assign(gameUI.session.saveState.player.civ.features,{huts:true,hunting:true,buyables:false});gameUI.session.saveState.player.civ.improvements.crafting=true;gameUI.session.saveState.player.organization.points=new Decimal(7);}},established);
     return errors;
 }
 const node=(page,name)=>page.getByRole('button',{name:new RegExp('^'+name+',')});
@@ -372,7 +372,7 @@ test('expedition controls reserve parallel crews, block overbooking and release 
     await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.points=new Decimal(7);});
     await page.getByRole('button',{name:'Send Gather',exact:true}).click();
     await page.getByRole('button',{name:'Send Hunt',exact:true}).click();
-    await page.getByRole('button',{name:'Send Fish',exact:true}).click();
+    
     await expect(page.getByRole('button',{name:'Recall Gather',exact:true})).toBeVisible();
     await node(page,'Water').click();
     await expect(page.getByRole('button',{name:'Send Collect water',exact:true})).toBeDisabled();
@@ -512,7 +512,7 @@ for(const version of ['v06','v07']){
     const errors=await open(page);
     await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.locator('#save-recovery')).toBeHidden();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.92');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.93');
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
     expect(errors).toEqual([]);

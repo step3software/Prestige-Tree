@@ -7,13 +7,13 @@ function stage(p,D,total=3){p.organization.total=new D(total);p.organization.poi
 test('the actual pre-redesign v0.8 codec export keeps discovered activities and paid work',t=>{
  const fixture=require('../fixtures/civ-pre-ms123-v08.json'),raw=JSON.parse(atob(fixture.player));
  const {engine,p,e}=game(t,fixture.player);
- assert.equal(p.version,'0.92');assert.equal(p.points.toString(),raw.points);
+ assert.equal(p.version,'0.93');assert.equal(p.points.toString(),raw.points);
  assert.equal(p.food.points.toString(),raw.food.points);assert.equal(p.craft.points.toString(),raw.craft.points);
  assert.equal(p.civ.project,raw.civ.project);assert.equal(p.civ.projectWork,raw.civ.projectWork);
  assert.equal(p.civ.preparedHut,false);
  assert.equal(p.civ.actions.hunt.reward,raw.civ.actions.hunt.reward);assert.equal(p.civ.actions.hunt.remaining,raw.civ.actions.hunt.remaining);
  assert.equal(p.civ.actions.gather.repeat,raw.civ.actions.gather.repeat);
- assert.equal(e.actionDefinition('fish').unlocked,true);assert.ok(e.projects('food').length>0,'Paid historical equipment migrates to Craft capability');
+ assert.equal(e.actionDefinition('fish'),null);assert.ok(e.projects('food').length>0,'Paid historical equipment migrates to Craft capability');
  assert.deepEqual(p.civ.overseers,{food:1,huts:1});
  const loaded=game(t,engine.exportPlayer());assert.deepEqual(loaded.p.civ.features,p.civ.features);
 });
@@ -94,9 +94,9 @@ test('Work rosters does not carry queues across resets and invalid staffing load
 
 test('irrigation affects Farming only, including with extended expeditions',t=>{
  const {p,e,D}=game(t);stage(p,D,9);p.civ.improvements.farming=true;p.civ.improvements.extendedExpeditions=true;
- const before=Object.fromEntries(['gather','hunt','fish','farm'].map(id=>[id,e.actionDefinition(id).reward]));
+ const before=Object.fromEntries(['gather','hunt','farm'].map(id=>[id,e.actionDefinition(id).reward]));
  assert.equal(e.irrigate(),true);
- for(const id of ['gather','hunt','fish'])assert.equal(e.actionDefinition(id).reward,before[id]);
+ for(const id of ['gather','hunt'])assert.equal(e.actionDefinition(id).reward,before[id]);
  assert.equal(e.actionDefinition('farm').reward,before.farm*1.35);
  e.setExpeditionMultiplier('farm',5);assert.ok(Math.abs(e.actionDefinition('farm').reward-before.farm*1.35*5)<1e-8);
 });

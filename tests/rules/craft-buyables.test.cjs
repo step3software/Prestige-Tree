@@ -112,13 +112,13 @@ test('equipment effects compound, preserve dispatched snapshots and keep chunk/s
 });
 test('retired base and Fire purchases migrate once, refund known Craft and preserve effective Water and housing',t=>{
     const fixture=require('../fixtures/civ-pre-repeatables-v091.json');const g=game(t,fixture.player);
-    assert.equal(g.p.version,'0.92');assert.equal(g.p.craft.points.toNumber(),32);
+    assert.equal(g.p.version,'0.93');assert.equal(g.p.craft.points.toNumber(),29);
     assert.equal(g.p.civ.equipment['water-storage'],2);assert.equal(g.p.civ.equipment.jars,1);
     assert.equal(g.e.supply().storage.water,340);assert.equal(g.p.shelter.points.toNumber(),14);
     assert.equal(g.p.civ.equipment.roofs,0);assert.equal(g.p.civ.equipment.bricks,1);
     assert.equal(g.p.civ.fire,12);assert.equal(g.p.civ.project,'');assert.equal(Object.hasOwn(g.p.civ,'fireBuyables'),false);
     for(const resource of ['water','food']) {assert.equal(g.p[resource].sites,0);assert.equal(g.p[resource].storage,0);}
-    assert.equal(g.p.food.routes.fish,0);assert.equal(g.p.food.routes.farm,0);
+    assert.equal(Object.hasOwn(g.p.food.routes,'fish'),false);assert.equal(g.p.food.routes.farm,0);
     const loaded=game(t,g.engine.exportPlayer());assert.equal(loaded.engine.exportPlayer(),g.engine.exportPlayer());
     assert.deepEqual(g.e.projects('fire'),[]);
     for(const id of ['fire-fuel','fire-hearths','fire-charcoal','water-site','food-storage','fish-tools'])assert.equal(g.e.startProject(id),false);
@@ -131,6 +131,13 @@ test('malformed historical purchases reject before refunds or replacement of liv
         assert.equal(g.engine.session.loadPlayer(raw).ok,false);assert.equal(JSON.stringify(raw),original);
         assert.equal(g.engine.exportPlayer(),before);
     }
+});
+test('the published fishing-free 0.92 model migrates into repeatable equipment without restoring fishing',t=>{
+    const fixture=require('../fixtures/civ-pre-repeatables-v092.json'),g=game(t,fixture.save);
+    assert.equal(g.p.version,'0.93');assert.equal(g.p.civ.equipment['water-storage'],2);
+    assert.equal(g.e.supply().storage.water,130);assert.equal(g.p.craft.points.toNumber(),100);
+    assert.equal(g.e.actionDefinition('fish'),null);assert.equal(Object.hasOwn(g.p.civ.actions,'fish'),false);
+    const loaded=game(t,g.engine.exportPlayer());assert.equal(loaded.engine.exportPlayer(),g.engine.exportPlayer());
 });
 test('repeatable tools, housing, pipes and vessels apply real effects after construction',t=>{
     const g=game(t);fund(g);
