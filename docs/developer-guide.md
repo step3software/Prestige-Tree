@@ -80,6 +80,30 @@ The new game has the distinct mod/storage identity `civ-prestige-tree`; it never
 
 The retained codec hydrates detached Decimals and checks references/types. Version 0.9.1 (save version 0.91) is current; old Civ versions migrate at detached codec ingress. Missing Fire/Cooking fields in older Civ saves acquire zero reserves/tenders, level 1 and zero accrued Cooking bonus through canonical codec defaults. The actual PR12 codec fixture preserves stocks, hearth ownership, paid jars and active Food work; no retroactive fuel charges occur. Malformed present fields reject atomically. The codec calls `civilization.migrateData` on the detached raw candidate before typed hydration, then `validateData` checks current targets, batch counts, manager/building crews and total commitments. v0.6 and v0.7 fixtures from actual historical codecs exercise startup and reload. Retired Fishing nets/Well lining flags are validated and removed; old Water keeper ownership maps to Hut foreman; old Food repeat Booleans map to 0/1. Existing job snapshots and stored values survive; orders pause if their new dedicated Overseer would overbook. New hut orders start off. Earlier 0.6 retirement/default migrations remain. Startup/import failures preserve original bytes and prior live state; storage denial preserves durable data and reports unsaved progress. Tick/Vue faults block writes until reload.
 
+## Interface density
+
+Gameplay is an operating surface. Default to no new text row: omit redundant text,
+reuse an existing label/status/action row, or attach short hover/focus/tap help to
+the relevant control. A necessary separate row needs a task-specific rationale in
+the PR. Keep prices, effects, current blockers, and actual losses before commitment.
+Do not hide essential actions or reduce readability to pack the screen.
+
+At 1280×720/800 and 1920×1080, keep all Population/capacity, growth, unlocked
+Abundance, free workers and shortage status in one row (maximum 40 CSS px). Target
+at most 96 px from page top to gameplay, with Gather/Water or Build fully in view.
+Save success reuses its header slot without moving play. Narrow views may wrap;
+put actions before the tree and preserve usable controls without horizontal overflow.
+Temporary feedback must never displace permanent elements. Worker warnings use
+reserved space below the action button. Compare button/field bounds before,
+during and after feedback in both axes; message presence alone is insufficient.
+
+`index.html`/`civ.css` own composition; `js/components.js` owns contextual help and
+display-only feedback; the rule owner's `effect`/`description` pairs provide short
+decision text and detailed help without changing economy state. Test with
+`npx playwright test tests/browser/interface-density.spec.cjs` and the existing
+`civilization.spec.cjs` journeys. Compare matched fixtures, header height, first-action
+position and complete tasks; DOM visibility alone does not prove viewport placement.
+
 ## Final checks and delivery
 
 `npm test` builds before package/syntax/static/sensitivity/rule/browser checks. Chromium tests use fresh contexts, exact package bytes and no external requests; they never read an existing browser profile. Static sensitivity requires the actual compiler to reject invalid boundary calls; gameplay sensitivity mutates the real prestige code in memory to ensure a missing Population reset is detected.

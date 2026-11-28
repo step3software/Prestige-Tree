@@ -1,6 +1,7 @@
 /** The Civ view observes the session's canonical player; it owns only UI state. */
 function createGameView({derivedState, effects, gameHelpers, gameRules, helpContent, layerRegistry, modRules, saveCommands, saveState, runtimeServices}) {
     let app;
+    let helpSequence = 0;
     const binding = effects.observe({player: undefined, allSaves: undefined, tmp: undefined, ruleStatus: gameRules.status});
     const ui = effects.observe({settings: false, about: false});
     function bind() {
@@ -14,6 +15,12 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
     }
     const computed = {
         version() { return modRules.VERSION; },
+        saveFeedback() { return saveCommands.saveStatus; },
+        eventSummary() {
+            if (binding.player.offTime && binding.player.offTime.remain >= 1) return 'Offline progress: ' + Math.ceil(binding.player.offTime.remain) + 's';
+            const message = binding.player.civ.message;
+            return message.startsWith('Send a Food expedition') ? '' : message.split('. ')[0];
+        },
         player() { return binding.player; }, allSaves() { return binding.allSaves; },
         civ() { return binding.player && modRules.civilization.summary(); },
         selected() { return modRules.civilization.node(binding.player.tab); },
@@ -84,6 +91,41 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
             try { runtimeServices.disposeAll(); }
             finally { runtimeServices.reportRuntimeFault(error); }
         };
+        application.component('help-tip', {
+            props: ['text', 'label'],
+            data: () => ({open: false, left: 12, top: 12, helpId: 'control-help-' + helpSequence++}),
+            mounted() {
+                this.syncControls();
+                effects.window.addEventListener('resize', this.hide);
+            },
+            beforeUnmount() { effects.window.removeEventListener('resize', this.hide); },
+            updated() { this.syncControls(); },
+            methods: {
+                syncControls() {
+                    // Controls already in the tab order need no additional stop.
+                    const controls = this.$el.querySelectorAll('button:not(.touch-help), input, select');
+                    for (const control of controls) control.setAttribute('aria-describedby', this.helpId);
+                    this.$el.tabIndex = this.$el.querySelector('button:not(:disabled):not(.touch-help), input:not(:disabled), select:not(:disabled)') ? -1 : 0;
+                },
+                show(event) {
+                    if (!this.text || event?.pointerType === 'touch' || event?.target?.classList?.contains('touch-help')) return;
+                    this.open = true;
+                    this.$nextTick(() => {
+                        const bounds = this.$el.getBoundingClientRect();
+                        const tip = this.$refs.tip;
+                        this.left = Math.max(12, Math.min(bounds.left, effects.window.innerWidth - tip.offsetWidth - 12));
+                        this.top = bounds.top >= tip.offsetHeight + 12 ? bounds.top - tip.offsetHeight - 4 : Math.min(effects.window.innerHeight - tip.offsetHeight - 8, bounds.bottom + 4);
+                    });
+                },
+                hide(event) {
+                    if (event?.type === 'focusout' && this.$el.contains(event.relatedTarget)) return;
+                    if (event?.type === 'pointerleave' && this.$el.contains(effects.document.activeElement)) return;
+                    this.open = false;
+                },
+                toggle() { if (this.open) this.open = false; else this.show(); },
+            },
+            template: `<span class="help-anchor" :aria-label="label" :aria-describedby="helpId" @pointerenter="show" @pointerleave="hide" @focusin="show" @focusout="hide" @keydown.esc.stop.prevent="open = false"><slot></slot><button v-if="text" type="button" class="touch-help" :aria-label="'Help: '+label" :aria-expanded="open" @pointerdown.prevent @click.stop="toggle">?</button><span v-show="open && text" :id="helpId" ref="tip" class="control-tooltip" role="tooltip" :style="{left:left+'px',top:top+'px'}">{{text}}</span></span>`,
+        });
         application.component('resource-icon', {props: ['path'], template:
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path :d="path"/></svg>'});
         application.component('save-files', {
@@ -94,7 +136,6 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
             }},
             template: `<dialog ref="dialog" aria-labelledby="save-files-title" @close="closeSaves" @cancel="closeSaves">
                 <div class="dialog-heading"><h2 id="save-files-title">Your settlements</h2><button @click="closeSaves">Close</button></div>
-                <p>Each settlement has its own Population and resource tree.</p>
                 <div class="save-row" v-for="name in Object.keys(allSaves).filter(name => name !== 'set')" :key="name">
                     <strong>{{name}} <small v-if="allSaves.set === name">Current</small></strong>
                     <div><button @click="loadSave(name)">Load</button><button @click="renameSave(name)">Rename</button><button @click="deleteSave(name)">Delete</button></div>

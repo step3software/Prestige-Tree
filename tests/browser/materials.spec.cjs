@@ -15,7 +15,7 @@ test('material rows upgrade separate Water, cooking and housing families through
  const crafting=page.getByTestId('material-crafting');
  await expect(crafting.locator('.material-items')).toHaveCount(0);
  await crafting.getByRole('button',{name:/^Crafting/}).press('Enter');
- await expect(crafting.locator('.material-items button')).toHaveCount(4);
+ await expect(crafting.locator('.material-items .project-button')).toHaveCount(4);
  await crafting.getByRole('button',{name:/^Thatched roofs/}).press('Enter');
  await crafting.getByRole('button',{name:/^Woven baskets/}).click();
  await page.evaluate(()=>gameUI.session.advance(12));

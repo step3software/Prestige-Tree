@@ -4,7 +4,7 @@ function createSaveCommands({ derivedState, effects, gameHelpers, gameRules, gam
 // separate boundaries. No command publishes a candidate before persistence.
 const saveStorage = createSaveStorage(() => effects.localStorage, modRules.modInfo.id);
 const saveRecovery = { required: false, original: undefined };
-const saveStatus = { state: "idle", message: "" };
+const saveStatus = effects.observe ? effects.observe({ state: "idle", message: "" }) : { state: "idle", message: "" };
 const saveRegexCode = /[^\w ]|_/g;
 
 function getStartPlayer(now = effects.Date.now()) {
@@ -19,7 +19,7 @@ function reportSaveStatus(state, message) {
 	saveStatus.state = state;
 	saveStatus.message = message;
 	let status = effects.document.getElementById("save-status");
-	if (status) {
+	if (status && !status.dataset?.bound) {
 		status.textContent = message;
 		status.hidden = false;
 	}

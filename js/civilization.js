@@ -48,39 +48,39 @@ function createCivilizationRules({ saveState }) {
         water: {resource: "water", workers: 2, duration: 8, reward: 14},
     };
     const improvementDefinitions = {
-        crafting: {resource: "craft", name: "Crafting", description: "Unlock basic equipment and Food/Water buyables.", costs: {craft: 10}},
-        clay: {resource: "craft", name: "Clay", description: "Unlock ceramic storage, bricks, cooking vessels and pipes.", costs: {craft: 20}},
-        copper: {resource: "craft", name: "Copper working", description: "Unlock axes, knives, upgraded cooking vessels and sickles.", costs: {craft: 30}},
-        roofs: {resource: "shelter", name: "Thatched roofs", description: "+1 housing per existing and future hut. Upgrades to Bricks.", costs: {craft: 1}},
-        bricks: {resource: "shelter", name: "Bricks", description: "Upgrade Thatched roofs: +2 housing per hut replaces +1. Hut counts and work are kept.", costs: {craft: 2}},
-        clayPots: {resource: "fire", name: "Clay cooking pots", description: "Cooking consumes 25% less Fire. These vessels are separate from Water-storage jars.", costs: {craft: 2}},
-        copperPots: {resource: "fire", name: "Copper pots", description: "Upgrade Clay cooking pots: retain fuel savings and add 25% to the fueled Cooking bonus.", costs: {craft: 3}},
-        copperAxes: {resource: "shelter", name: "Copper axes", description: "Double hut construction speed; builders are still required.", costs: {craft: 3}},
-        sickles: {resource: "food", name: "Copper sickles", description: "New Farming trips take 25% less time with the same crew and reward.", costs: {craft: 3}},
-        pipes: {resource: "water", name: "Fired-clay pipes", description: "Double spring flow. Manual hauling remains available. Pay Fire once, without ongoing fuel use.", costs: {craft: 2, fire: 2}},
-        lashings: {resource: "shelter", name: "Cord lashings", description: "Hut construction work scales by 1.25 per hut instead of 1.35.", costs: {craft: 1}},
-        digging: {resource: "food", name: "Digging sticks", description: "Gathering returns 25% more Food with the same crew and duration.", costs: {craft: 1}},
-        butchery: {resource: "food", name: "Copper knives", description: "Hunting returns 50% more Food with the same crew and duration.", costs: {craft: 3}},
-        preparedMaterials: {resource: "shelter", name: "Prepared materials", description: "Overseer-started huts require 25% less construction work.", costs: {organization: 1}},
-        extendedExpeditions: {resource: "food", name: "Extended expeditions", description: "Choose 1-5 times duration and Food yield for each expedition. Crew size and repeats spent stay unchanged.", costs: {organization: 2}},
-        workRosters: {resource: "organization", name: "Work rosters", description: "Assign 1-5 overseers separately to Food and huts. Each assigned worker supports 5 queued repeats, up to 25 per slider.", costs: {organization: 3}},
-        abundance: {resource: "shelter", name: "Abundance", description: "Surplus Food, Water and spare housing independently accelerate population growth, up to 10 times normal. Free after Organization milestone 5.", costs: {}},
-        buckets: {resource: "water", name: "Carrying yokes", description: "Collection needs 1 worker instead of 2.", costs: {food: 12, water: 10, craft: 1}},
-        hutForeman: {resource: "shelter", name: "Hut foreman", description: "Queue up to 5 hut repeats, one at a time. Each successful start uses one repeat. Queued orders reserve one foreman; construction still needs its builder and full scaling work.", costs: {food: 18, craft: 1}},
-        gravity: {resource: "water", name: "Gravity-fed spring", description: "Continuous reservoir refill, without orders or workers. Wells improve the flow.", costs: {food: 30, craft: 2, organization: 1}},
-        sluice: {resource: "water", name: "Automatic sluice", description: "Unlock automatic irrigation from surplus water.", costs: {money: 8, education: 1, craft: 3}},
-        waterReserves: {resource: "water", name: "Emergency cistern", description: "Double Water shortage grace and subsequent loss intervals: 20 seconds before the first loss.", costs: {water: 20, craft: 2}},
-        rationing: {resource: "food", name: "Emergency rations", description: "Double Food shortage grace and subsequent loss intervals: 20 seconds before the first loss.", costs: {food: 20, craft: 2}},
-        relief: {resource: "shelter", name: "Mutual aid", description: "Loss intervals shrink by 10% instead of 20%, with at least 4 seconds between later losses.", costs: {craft: 3, organization: 1}},
-        hunting: {resource: "food", name: "Wooden spears", description: "Unlock hunting with a base crew of 2 before bigger-game scaling.", costs: {craft: 1}},
-        overseer: {resource: "food", name: "Expedition overseer", description: "Queue up to 5 repeats per Food route, one job at a time. Each successful start uses one repeat. Queues reserve one shared Overseer, plus every running job's full crew.", costs: {food: 25, craft: 1, organization: 1}},
-        farming: {resource: "food", name: "Cultivated fields", description: "Unlock long, high-yield farming cycles. Repeat with the overseer; 3 workers remain occupied per cycle.", costs: {food: 45, water: 25, craft: 3, organization: 2}},
-        autonomousFood: {resource: "food", name: "Autonomous food production", description: "All Food crews become worker-free. Repeat orders keep production running.", costs: {money: 120, freeTime: 10, craft: 12, education: 8}},
-        cooking: {resource: "fire", name: "Cooking", description: "Choose 1–5× Food yields while jobs work. Higher settings consume more Fire; unfueled work still delivers its base yield.", costs: {fire: 1}},
-        jars: {resource: "fire", name: "Earthenware jars", description: "Raise base Water capacity to 100 and each storage purchase to +120. New jars also spend scaling Fire when construction starts.", costs: {craft: 2}},
-        hearth: {resource: "fire", name: "Shared hearths", description: "Every 10 current Population adds +25 Food storage and up to +4 Food/min, scaled by Fire fullness. Income is outside Cooking.", costs: {fire: 3}},
-        joinery: {resource: "shelter", name: "Timber frames", description: "Keep 1 built hut per earned Organization milestone on tier 2 resets (Craft and Organization).", costs: {craft: 2}},
-        builderTools: {resource: "shelter", name: "Construction tools", description: "Double construction speed. Projects still reserve a builder.", costs: {craft: 3}},
+        crafting: {effect: "Basic equipment and buyables", resource: "craft", name: "Crafting", description: "Unlock basic equipment and Food/Water buyables.", costs: {craft: 10}},
+        clay: {effect: "Ceramic equipment", resource: "craft", name: "Clay", description: "Unlock ceramic storage, bricks, cooking vessels and pipes.", costs: {craft: 20}},
+        copper: {effect: "Copper equipment", resource: "craft", name: "Copper working", description: "Unlock axes, knives, upgraded cooking vessels and sickles.", costs: {craft: 30}},
+        roofs: {effect: "+1 housing per hut", resource: "shelter", name: "Thatched roofs", description: "+1 housing per existing and future hut. Upgrades to Bricks.", costs: {craft: 1}},
+        bricks: {effect: "+2 housing per hut (replaces roofs)", resource: "shelter", name: "Bricks", description: "Upgrade Thatched roofs: +2 housing per hut replaces +1. Hut counts and work are kept.", costs: {craft: 2}},
+        clayPots: {effect: "Cooking fuel −25%", resource: "fire", name: "Clay cooking pots", description: "Cooking consumes 25% less Fire. These vessels are separate from Water-storage jars.", costs: {craft: 2}},
+        copperPots: {effect: "Cooking bonus +25% · fuel −25%", resource: "fire", name: "Copper pots", description: "Upgrade Clay cooking pots: retain fuel savings and add 25% to the fueled Cooking bonus.", costs: {craft: 3}},
+        copperAxes: {effect: "Hut construction speed 2×", resource: "shelter", name: "Copper axes", description: "Double hut construction speed; builders are still required.", costs: {craft: 3}},
+        sickles: {effect: "Farming time −25%", resource: "food", name: "Copper sickles", description: "New Farming trips take 25% less time with the same crew and reward.", costs: {craft: 3}},
+        pipes: {effect: "Spring flow 2×", resource: "water", name: "Fired-clay pipes", description: "Double spring flow. Manual hauling remains available. Pay Fire once, without ongoing fuel use.", costs: {craft: 2, fire: 2}},
+        lashings: {effect: "Hut work scaling 1.35× → 1.25×", resource: "shelter", name: "Cord lashings", description: "Hut construction work scales by 1.25 per hut instead of 1.35.", costs: {craft: 1}},
+        digging: {effect: "Gather yield +25%", resource: "food", name: "Digging sticks", description: "Gathering returns 25% more Food with the same crew and duration.", costs: {craft: 1}},
+        butchery: {effect: "Hunt yield +50%", resource: "food", name: "Copper knives", description: "Hunting returns 50% more Food with the same crew and duration.", costs: {craft: 3}},
+        preparedMaterials: {effect: "Automatic hut work −25%", resource: "shelter", name: "Prepared materials", description: "Overseer-started huts require 25% less construction work.", costs: {organization: 1}},
+        extendedExpeditions: {effect: "Expedition length 1–5×", resource: "food", name: "Extended expeditions", description: "Choose 1-5 times duration and Food yield for each expedition. Crew size and repeats spent stay unchanged.", costs: {organization: 2}},
+        workRosters: {effect: "Up to 5 staff / 25 repeats", resource: "organization", name: "Work rosters", description: "Assign 1-5 overseers separately to Food and huts. Each assigned worker supports 5 queued repeats, up to 25 per slider.", costs: {organization: 3}},
+        abundance: {effect: "Growth up to 10×", resource: "shelter", name: "Abundance", description: "Surplus Food, Water and spare housing independently accelerate population growth, up to 10 times normal. Free after Organization milestone 5.", costs: {}},
+        buckets: {effect: "Water crew 2 → 1", resource: "water", name: "Carrying yokes", description: "Collection needs 1 worker instead of 2.", costs: {food: 12, water: 10, craft: 1}},
+        hutForeman: {effect: "Hut repeats: 5", resource: "shelter", name: "Hut foreman", description: "Queue up to 5 hut repeats, one at a time. Each successful start uses one repeat. Queued orders reserve one foreman; construction still needs its builder and full scaling work.", costs: {food: 18, craft: 1}},
+        gravity: {effect: "Automatic spring flow", resource: "water", name: "Gravity-fed spring", description: "Continuous reservoir refill, without orders or workers. Wells improve the flow.", costs: {food: 30, craft: 2, organization: 1}},
+        sluice: {effect: "Unlock auto-irrigation", resource: "water", name: "Automatic sluice", description: "Unlock automatic irrigation from surplus water.", costs: {money: 8, education: 1, craft: 3}},
+        waterReserves: {effect: "Water shortage grace 20s", resource: "water", name: "Emergency cistern", description: "Double Water shortage grace and subsequent loss intervals: 20 seconds before the first loss.", costs: {water: 20, craft: 2}},
+        rationing: {effect: "Food shortage grace 20s", resource: "food", name: "Emergency rations", description: "Double Food shortage grace and subsequent loss intervals: 20 seconds before the first loss.", costs: {food: 20, craft: 2}},
+        relief: {effect: "Slower losses · 4s minimum", resource: "shelter", name: "Mutual aid", description: "Loss intervals shrink by 10% instead of 20%, with at least 4 seconds between later losses.", costs: {craft: 3, organization: 1}},
+        hunting: {effect: "Unlock Hunt · base crew 2", resource: "food", name: "Wooden spears", description: "Unlock hunting with a base crew of 2 before bigger-game scaling.", costs: {craft: 1}},
+        overseer: {effect: "Food repeats: 5 per route", resource: "food", name: "Expedition overseer", description: "Queue up to 5 repeats per Food route, one job at a time. Each successful start uses one repeat. Queues reserve one shared Overseer, plus every running job's full crew.", costs: {food: 25, craft: 1, organization: 1}},
+        farming: {effect: "Unlock Farming", resource: "food", name: "Cultivated fields", description: "Unlock long, high-yield farming cycles. Repeat with the overseer; 3 workers remain occupied per cycle.", costs: {food: 45, water: 25, craft: 3, organization: 2}},
+        autonomousFood: {effect: "Food crews: 0 workers", resource: "food", name: "Autonomous food production", description: "All Food crews become worker-free. Repeat orders keep production running.", costs: {money: 120, freeTime: 10, craft: 12, education: 8}},
+        cooking: {effect: "Cooking settings 1–5× · fuel required", resource: "fire", name: "Cooking", description: "Choose 1–5× Food yields while jobs work. Higher settings consume more Fire; unfueled work still delivers its base yield.", costs: {fire: 1}},
+        jars: {effect: "Base Water capacity 100 · +120 per level", resource: "fire", name: "Earthenware jars", description: "Raise base Water capacity to 100 and each storage purchase to +120. New jars also spend scaling Fire when construction starts.", costs: {craft: 2}},
+        hearth: {effect: "+25 Food storage / up to +4 Food per min per 10 people", resource: "fire", name: "Shared hearths", description: "Every 10 current Population adds +25 Food storage and up to +4 Food/min, scaled by Fire fullness. Income is outside Cooking.", costs: {fire: 3}},
+        joinery: {effect: "Keep 1 hut per earned milestone", resource: "shelter", name: "Timber frames", description: "Keep 1 built hut per earned Organization milestone on tier 2 resets (Craft and Organization).", costs: {craft: 2}},
+        builderTools: {effect: "Construction speed 2×", resource: "shelter", name: "Construction tools", description: "Double construction speed. Projects still reserve a builder.", costs: {craft: 3}},
     };
     const owns = id => player().civ.improvements[id];
     const materialDefinitions = [
@@ -91,9 +91,9 @@ function createCivilizationRules({ saveState }) {
     const materialFor = id => materialDefinitions.find(row => row.items.includes(id));
     const materialItem = id => materialFor(id) || materialDefinitions.some(row => row.id === id);
     const fireProjectDefinitions = {
-        fuel: {name: "Fuel stores", craftCost: 1, baseWork: 12, description: "+10 Fire capacity per level; no free fuel."},
-        hearths: {name: "Improved hearths", craftCost: 1, baseWork: 16, description: "+20% base tender production per level; tenders still required."},
-        charcoal: {name: "Charcoal clamps", craftCost: 2, baseWork: 24, description: "Fuel use divided by 1 + 0.15 per level. Fixed technology costs stay unchanged."},
+        fuel: {effect: "+10 Fire capacity", name: "Fuel stores", craftCost: 1, baseWork: 12, description: "+10 Fire capacity per level; no free fuel."},
+        hearths: {effect: "+20% tender production", name: "Improved hearths", craftCost: 1, baseWork: 16, description: "+20% base tender production per level; tenders still required."},
+        charcoal: {effect: "Lower recurring fuel use", name: "Charcoal clamps", craftCost: 2, baseWork: 24, description: "Fuel use divided by 1 + 0.15 per level. Fixed technology costs stay unchanged."},
     };
     const housingPerHut = improvements => 4 + (improvements.bricks ? 2 : improvements.roofs ? 1 : 0);
     function updateHousing() { player().shelter.points = new Decimal(8 + player().shelter.homes * housingPerHut(player().civ.improvements)); }
@@ -516,24 +516,24 @@ function createCivilizationRules({ saveState }) {
             .filter(([kind]) => includeLocked || kind !== "charcoal" || owns("clay"))
             .map(([kind, item]) => ({...item, id: "fire-" + kind, name: item.name + " · Level " + p.civ.fireBuyables[kind], work: work(item.baseWork, p.civ.fireBuyables[kind])})) : [];
         if (id === "food") return [
-            {id: "gather-tools", name: buyableNames["gather-tools"],
+            {id: "gather-tools", effect: "Level " + p.food.routes.gather + " · yield 1.5× / time 1.2×", name: buyableNames["gather-tools"],
                 description: "Exploration level " + p.food.routes.gather + ": reach richer ground. Each level multiplies trip time by 1.2 and yield by 1.5; crew unchanged.", work: work(14, p.food.routes.gather)},
-            {id: "hunt-tools", name: buyableNames["hunt-tools"],
+            {id: "hunt-tools", effect: "Level " + p.food.routes.hunt + " · yield 2× / crew 1.5×", name: buyableNames["hunt-tools"],
                 description: "Bigger-game level " + p.food.routes.hunt + ": each level multiplies the crew by 1.5, rounded up, and yield by 2; trip time unchanged. Craft equipment replaces Organization-level requirements.", work: 14},
-            {id: "fish-tools", name: buyableNames["fish-tools"], craftCost: Math.pow(2, p.food.routes.fish),
+            {id: "fish-tools", effect: "River trap level " + p.food.routes.fish + " · catch 2×", name: buyableNames["fish-tools"], craftCost: Math.pow(2, p.food.routes.fish),
                 description: "River trap level " + p.food.routes.fish + ": each level doubles the catch with the same crew and trip time. Costs " + Math.pow(2, p.food.routes.fish) + " Craft, paid when construction starts.", work: 14},
-            ...(owns("farming") ? [{id: "farm-tools", name: buyableNames["farm-tools"],
+            ...(owns("farming") ? [{id: "farm-tools", effect: "Level " + p.food.routes.farm + " · yield +35% / faster trips", name: buyableNames["farm-tools"],
                 description: "Route level " + p.food.routes.farm + ": +35% base yield and faster trips per level.", work: work(14, p.food.routes.farm)}] : []),
-            {id: "food-site", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
-            {id: "food-storage", name: "Weave food baskets", craftCost: 1, description: "+40 Food storage. Costs 1 Craft per basket, paid when construction starts.", work: work(12, p.food.storage)},
+            {id: "food-site", effect: "Food yield +15%", name: "Improve provisioning", description: "+15% base yield for every Food route.", work: work(18, p.food.sites)},
+            {id: "food-storage", effect: "Food storage +40", name: "Weave food baskets", craftCost: 1, description: "+40 Food storage. Costs 1 Craft per basket, paid when construction starts.", work: work(12, p.food.storage)},
         ];
         if (id === "water") return [
-            {id: "water-site", name: "Improve the well", description: "Improve manual collection; +1 upkeep-equivalent Water/min from the spring.", work: work(16, p.water.sites)},
-            {id: "water-storage", name: owns("jars") ? "Earthenware jars" : "Woven baskets", craftCost: owns("jars") ? 2 : 1, fireCost: owns("jars") ? 0.5 * Math.pow(1.5, p.water.storage) / fuelEfficiency() : 0,
+            {id: "water-site", effect: "Better hauling · spring +1 upkeep-equivalent/min", name: "Improve the well", description: "Improve manual collection; +1 upkeep-equivalent Water/min from the spring.", work: work(16, p.water.sites)},
+            {id: "water-storage", effect: "+" + (owns("jars") ? 120 : 40) + " Water storage", name: owns("jars") ? "Earthenware jars" : "Woven baskets", craftCost: owns("jars") ? 2 : 1, fireCost: owns("jars") ? 0.5 * Math.pow(1.5, p.water.storage) / fuelEfficiency() : 0,
                 description: (owns("jars") ? "Upgrade woven baskets with fired clay. +" : "Tightly woven Water baskets. +") + (owns("jars") ? 120 : 40) + " Water storage. Costs " + (owns("jars") ? 2 : 1) + " Craft" + (owns("jars") ? " and " + (0.5 * Math.pow(1.5, p.water.storage) / fuelEfficiency()).toFixed(3) + " Fire" : "") + ", paid when construction starts.", work: work(12, p.water.storage)},
         ];
         if (id === "shelter" && (includeLocked || featureAvailable("huts"))) return [
-            {id: "shelter-home", name: "Build a new hut", description: "+" + housingPerHut(p.civ.improvements) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
+            {id: "shelter-home", effect: "+" + housingPerHut(p.civ.improvements) + " housing · " + p.shelter.homes + " owned", name: "Build a new hut", description: "+" + housingPerHut(p.civ.improvements) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
         ];
         return [];
     }
@@ -618,7 +618,7 @@ function createCivilizationRules({ saveState }) {
         const prerequisite = id === "jars" ? "Needs a completed Water basket and Fire." : id === "bricks" ? "Needs Thatched roofs." :
             id === "copperPots" ? "Needs Clay cooking pots." : id === "clayPots" ? "Needs Cooking." : id === "sickles" ? "Needs Farming." : "Needs its material capability.";
         const currentItem = id === "roofs" && owns("bricks") ? improvementDefinitions.bricks : id === "clayPots" && owns("copperPots") ? improvementDefinitions.copperPots : item;
-        return {id, ...item, name: currentItem.name, description: currentItem.description, available, organizationRequired: upgradeRequirement(id), owned: owns(id), superseded,
+        return {id, ...item, name: currentItem.name, effect: currentItem.effect, description: currentItem.description, available, organizationRequired: upgradeRequirement(id), owned: owns(id), superseded,
             requirement: available ? "" : prerequisite,
             canBuy: available && !owns(id) && Object.entries(item.costs).every(([key, cost]) => costAmount(key) >= cost),
             costText: Object.entries(item.costs).map(([key, cost]) => cost + " " + (key === "fire" ? "Fire" : names[key])).join(" · ") || "Free"};
