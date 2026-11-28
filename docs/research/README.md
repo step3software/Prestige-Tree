@@ -17,6 +17,7 @@ possible use in the game.
 | Research worktree | `C:\Users\PhillipCurry\projects\codex\games\civ-prestige-research-techniques-20261127` | [Documentation branch](https://github.com/step3software/Prestige-Tree/tree/docs/civ-research-techniques-20261127) |
 | This index | `C:\Users\PhillipCurry\projects\codex\games\civ-prestige-research-techniques-20261127\docs\research\README.md` | [Research index](https://github.com/step3software/Prestige-Tree/blob/docs/civ-research-techniques-20261127/docs/research/README.md) |
 | Game reference guide | `C:\Users\PhillipCurry\projects\codex\games\civ-prestige-research-techniques-20261127\docs\research\reference-guide.md` | [Reference guide](https://github.com/step3software/Prestige-Tree/blob/docs/civ-research-techniques-20261127/docs/research/reference-guide.md) |
+| Water research | `C:\Users\PhillipCurry\projects\codex\games\civ-prestige-research-techniques-20261127\docs\research\water.md` | [Collection, storage and heat](https://github.com/step3software/Prestige-Tree/blob/docs/civ-research-techniques-20261127/docs/research/water.md) |
 | Current rule owner in this worktree | `C:\Users\PhillipCurry\projects\codex\games\civ-prestige-research-techniques-20261127\js\civilization.js` | [Project repository](https://github.com/step3software/Prestige-Tree) |
 | Personal book library | `C:\Users\PhillipCurry\projects\books\books` | [Library repository](https://github.com/step3software/books), source branch `main` |
 
@@ -53,6 +54,7 @@ physical PDF pages and printed labels: printed page 64 is file page 86.
 | How should tools release labor? | [Craft and shared work](reference-guide.md#craft-and-shared-work) | [SMI-03](smil.md#smi-03-surplus-and-specialization), [SMI-06](smil.md#smi-06-prime-movers-have-running-costs) |
 | Why separate water, food and storage? | [Food water and reserves](reference-guide.md#food-water-and-reserves) | [SMI-04](smil.md#smi-04-storage-and-edible-surplus), [SMI-07](smil.md#smi-07-water-and-nutrients), [SCT-05](scott.md#sct-05-grain-and-legibility) |
 | What should early water containers be called? | [Water-storage materials](reference-guide.md#water-storage-materials) | [SMI-14](smil.md#smi-14-early-containers-and-fired-clay), with primary museum references |
+| Which water techniques could cost Craft, Organization or Fire? | [Water technologies and costs](reference-guide.md#water-technologies-and-costs) | [Candidate technologies and eight source notes](water.md#candidate-technologies) |
 | What can Organization represent? | [Organization and exchange](reference-guide.md#organization-and-exchange) | [SMI-10](smil.md#smi-10-controls-and-knowledge), [SCT-06](scott.md#sct-06-administration-and-power) |
 | Where does free time come from? | [Time education and culture](reference-guide.md#time-education-and-culture) | [SMI-05](smil.md#smi-05-processing-and-household-work), [SMI-13](smil.md#smi-13-services-and-welfare) |
 | Does farming always improve life? | [Progression without a universal ladder](reference-guide.md#progression-without-a-universal-ladder) | [SMI-02](smil.md#smi-02-land-output-and-labor-output), [SCT-01](scott.md#sct-01-settlement-is-not-a-fixed-sequence) |
@@ -119,6 +121,12 @@ consensus. Plant is a practical reconstruction source; Kelly compares varied
 ethnographic cases through conditional models. Smil's statistics describe the period covered by the
 2017 edition. Scott flags several early-state explanations as speculative and
 argues a position where evidence or interpretation is contested.
+
+The [water extension](water.md) adds focused Plant/Smil passages and primary
+archaeological, museum, engineering and public-health sources. Each web reference
+has a direct URL and a consultation date; later objects illustrate properties
+without dating the first invention. Its cost combinations are proposed design
+options. Modern engineering examples do not establish early construction recipes.
 
 [Run evidence](evidence.json) records the project and current Orcha revisions,
 document hashes, the historical prototype observation and this extension's current-game source. Future

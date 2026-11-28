@@ -32,7 +32,7 @@ research discussion below supplies future design leads, not present unlocks.
 | --- | --- | --- |
 | Population | Subsistence, work capacity and demographic change: [SMI-03](smil.md#smi-03-surplus-and-specialization), [SCT-04](scott.md#sct-04-population-and-welfare). | More people create both capacity and demand; headcount is not a welfare score. |
 | Food | Harvest, processing, reserves and edible surplus: [SMI-04](smil.md#smi-04-storage-and-edible-surplus), [SCT-05](scott.md#sct-05-grain-and-legibility). | Production rate, storage space and current stock solve different problems. |
-| Water | Water access and crop constraints: [SMI-07](smil.md#smi-07-water-and-nutrients). | Household supply, irrigation and drainage are distinct services. |
+| Water | Water access and crop constraints: [SMI-07](smil.md#smi-07-water-and-nutrients); [collection and storage techniques](water.md). | Access, transport, storage and treatment solve different problems; household supply, irrigation and drainage are distinct services. |
 | Shelter | Material work and settlement: [SMI-01](smil.md#smi-01-useful-energy-and-conversion), [SCT-01](scott.md#sct-01-settlement-is-not-a-fixed-sequence). | A housing cap is a readable game abstraction, not a universal settlement equation. |
 | Craft | Useful tools, processing and conversion chains: [SMI-05](smil.md#smi-05-processing-and-household-work), [SMI-08](smil.md#smi-08-craft-needs-materials-and-fuel). | An improvement should identify the task it changes. |
 | Organization | Coordination, controls, records and power: [SMI-10](smil.md#smi-10-controls-and-knowledge), [SCT-06](scott.md#sct-06-administration-and-power). | Coordination can reduce wasted work; it does not make biological needs disappear. |
@@ -182,12 +182,34 @@ object is 8th–10th century; it is evidence of use, not the date or form of the
 first water jar. Earthenware is not described here as inherently waterproof.
 
 For the game, improved sealing/glazing or a suitable higher-fired clay body are
-possible later investments costing more Craft. They would require their own
-costs, effects and unlocks: no automatic material tiers or universal historical
+possible later investments costing more Craft, with firing work or Fire where
+appropriate. They would require their own costs, effects and unlocks: no
+automatic material tiers or universal historical
 sequence is implemented. Keep the `water-storage` ID and owned count independent
 of the displayed material so a later upgrade can improve existing storage.
 Current purchases cost 1 Craft plus scaling work and add 40 storage; those
 numbers are balancing decisions. See [Water rules](../civilization.md#water-hauling-jars-and-flow).
+
+## Water technologies and costs
+
+The [water research note](water.md#candidate-technologies) compares fourteen
+options, including tightly woven containers, fired jars, cisterns, rain
+catchments, timber-lined wells, bucket lifts and gravity channels. Its
+[source notes](water.md#passage-and-source-notes) connect the material and
+waterworks examples to book passages or primary institutional sources.
+
+For proposed costs, use **Craft for fabrication**, **Organization for shared
+construction and maintenance**, and **Fire for controlled heating**. A jar or clay
+pipe can need heat during manufacture; boiling water needs heat again for each
+batch. A well lift still needs an operator, while a suitable downhill supply can
+release hauling labor. Storage needs filling and does not itself create income.
+These distinctions can support different investments without adding every
+material as a currency.
+
+Fire is not an active resource in the current opening. The note proposes a
+controlled-fire prerequisite with fuel/work included in fabrication as a compact
+starting point; a spendable Fire stock is a separate possible design. Exact costs,
+unlock order and any water-quality mechanics remain design work.
 
 ## Craft and shared work
 
