@@ -5,15 +5,15 @@ function game(t,save){const engine=createBalanceEngine(save);t.after(engine.disp
 function funded(g){const {p,e,D}=g;p.craft.points=new D(500);p.organization.total=new D(10);p.organization.points=new D(10);p.points=new D(8);p.civ.improvements.gravity=true;p.food.points=new D(50);p.water.points=new D(50);for(const id of ['crafting','clay','copper'])assert.equal(e.buyUpgrade(id),true);}
 const near=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actual} != ${expected}`);
 
-test('material unlocks cost 10/20/30 and reveal four choices without buying them',t=>{
+test('material unlocks cost 10/20/30 and reveal equipment in resource tabs without buying it',t=>{
  const g=game(t),{p,e,D}=g;
- assert.deepEqual(e.materialRows().map(row=>row.items.length),[0,0,0]);
+ assert.deepEqual(e.equipmentProjects(),[]);
  assert.equal(e.buyUpgrade('hunting'),false);
  for(const [id,cost] of [['crafting',10],['clay',20],['copper',30]]){
   p.craft.points=new D(cost-1);const before=JSON.stringify(p);assert.equal(e.buyUpgrade(id),false);assert.equal(JSON.stringify(p),before);
   p.craft.points=new D(cost);assert.equal(e.buyUpgrade(id),true);assert.equal(p.craft.points.toNumber(),0);assert.equal(e.buyUpgrade(id),false);
  }
- assert.deepEqual(e.materialRows().map(row=>row.items.length),[4,4,4]);assert.equal(p.civ.equipment.hunting,0);
+ assert.equal(e.equipmentProjects().length,12);assert.deepEqual(e.projects("craft"),[]);assert.equal(p.civ.equipment.hunting,0);
 });
 test('historical malformed discovery flags reject before migration and preserve the live settlement',t=>{
  const g=game(t),{engine}=g;funded(g);const encoded=engine.exportPlayer();

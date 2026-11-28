@@ -20,20 +20,35 @@ function finish(g,id) {
     g.engine.advance(Math.ceil(work));
     assert.equal(g.p.civ.project,'',id+' completed');
 }
+test('Craft sells only material knowledge and every equipment buyable appears once beside its resource',t=>{
+    const g=game(t);fund(g);
+    const expected={food:['hunting','digging','butchery','sickles'],water:['water-storage','jars','pipes'],
+        shelter:['roofs','bricks','copperAxes'],fire:['clayPots','copperPots']};
+    assert.deepEqual(g.e.projects('craft'),[]);assert.deepEqual(g.e.materialRows().map(row=>row.id),['crafting','clay','copper']);
+    const listed=[];
+    for(const [resource,ids] of Object.entries(expected)){
+        const actual=g.e.projects(resource).filter(item=>equipment.includes(item.id));
+        assert.deepEqual(actual.map(item=>item.id).sort(),ids.sort(),resource);
+        assert.ok(actual.every(item=>item.resource===resource));listed.push(...actual.map(item=>item.id));
+    }
+    assert.deepEqual(listed.sort(),[...equipment].sort());assert.equal(new Set(listed).size,12);
+    assert.deepEqual(g.e.summary().cookingVessels.map(item=>item.id),['clayPots','copperPots']);
+});
 test('all twelve equipment cells are repeatable Craft purchases with scaling cost and work',t=>{
     const g=game(t); fund(g);
     for (const id of equipment) {
-        const first=g.e.projects('craft',true).find(item=>item.id===id);
+        const first=g.e.equipmentProjects(true).find(item=>item.id===id);
         assert.ok(first.craftCost>0,id);
         finish(g,id);
-        const second=g.e.projects('craft',true).find(item=>item.id===id);
+        const second=g.e.equipmentProjects(true).find(item=>item.id===id);
         assert.equal(g.p.civ.equipment[id],1,id);
         assert.equal(second.craftCost,first.craftCost*2,id);
         assert.equal(second.work,first.work*1.35,id);
     }
     for (const id of equipment) { g.p.civ.fire=10; finish(g,id); assert.equal(g.p.civ.equipment[id],2,id); }
-    assert.deepEqual(g.e.materialRows().map(row=>row.items.length),[4,4,4]);
-    assert.ok(g.e.materialRows().every(row=>row.items.every(item=>item.kind==='project'&&!item.owned)));
+    assert.deepEqual(g.e.materialRows().map(row=>row.id),['crafting','clay','copper']);
+    assert.ok(g.e.materialRows().every(row=>!Object.hasOwn(row,'items')));
+    assert.deepEqual(g.e.projects('craft'),[]);
     g.engine.exportPlayer();
 });
 test('both prestiges reset every equipment cost even at milestone ten, then survive reload',t=>{
@@ -48,7 +63,7 @@ test('both prestiges reset every equipment cost even at milestone ten, then surv
         assert.equal(g.p.shelter.homes,3);assert.equal(g.p.shelter.points.toNumber(),20);
         assert.ok(equipment.every(id=>g.p.civ.equipment[id]===0));
         const loaded=game(t,g.engine.exportPlayer());
-        assert.deepEqual(loaded.e.projects('craft',true).map(item=>item.craftCost),[1,1,1,1,2,2,2,2,3,3,3,3]);
+        assert.deepEqual(loaded.e.equipmentProjects(true).map(item=>item.craftCost),[1,1,1,1,2,2,2,2,3,3,3,3]);
         assert.ok(['crafting','clay','copper'].every(id=>loaded.p.civ.improvements[id]));
         finish(loaded,'water-storage');assert.equal(loaded.p.civ.equipment['water-storage'],1);
     }
@@ -81,7 +96,7 @@ test('prestige cancels paid equipment work and recalls boosted Food snapshots wi
     assert.equal(g.e.startProject('water-storage'),true);g.engine.advance(1);g.p.points=new g.D(12);
     const plan=g.e.prestigePreview('craft');assert.ok(plan.resetConstruction);assert.ok(plan.recalledActions.includes('gather'));
     assert.equal(g.e.prestige('craft'),true);assert.equal(g.p.civ.project,'');assert.equal(g.p.civ.actions.gather.remaining,0);
-    assert.equal(g.e.projects('craft',true).find(x=>x.id==='water-storage').craftCost,1);
+    assert.equal(g.e.equipmentProjects(true).find(x=>x.id==='water-storage').craftCost,1);
     g.engine.exportPlayer();
 });
 test('current saves reject malformed levels, obsolete ownership and retired projects atomically',t=>{
@@ -120,7 +135,7 @@ test('retired base and Fire purchases migrate once, refund known Craft and prese
     for(const resource of ['water','food']) {assert.equal(g.p[resource].sites,0);assert.equal(g.p[resource].storage,0);}
     assert.equal(Object.hasOwn(g.p.food.routes,'fish'),false);assert.equal(g.p.food.routes.farm,0);
     const loaded=game(t,g.engine.exportPlayer());assert.equal(loaded.engine.exportPlayer(),g.engine.exportPlayer());
-    assert.deepEqual(g.e.projects('fire'),[]);
+    assert.deepEqual(g.e.projects('fire').map(item=>item.id),['clayPots','copperPots']);
     for(const id of ['fire-fuel','fire-hearths','fire-charcoal','water-site','food-storage','fish-tools'])assert.equal(g.e.startProject(id),false);
 });
 test('malformed historical purchases reject before refunds or replacement of live state',t=>{

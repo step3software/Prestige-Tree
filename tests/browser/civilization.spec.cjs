@@ -279,7 +279,7 @@ test('fresh milestones retain huts and overseers while Craft spending reveals hu
  await node(page,'Food').click();await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(2);gameUI.session.saveState.player.organization.points=new Decimal(2);});
  await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toHaveCount(0);
  await node(page,'Craft').click();await page.evaluate(()=>{gameUI.session.saveState.player.craft.points=new Decimal(11);});
- await page.getByTestId('material-crafting').locator('.material-unlock').click();await page.getByRole('button',{name:/^Wooden spears/}).click();await page.evaluate(()=>gameUI.session.advance(12));
+ await page.getByTestId('material-crafting').locator('.material-unlock').click();await node(page,'Food').click();await page.getByRole('button',{name:/^Wooden spears/}).click();await page.evaluate(()=>gameUI.session.advance(12));
  await node(page,'Food').click();await expect(page.getByRole('button',{name:'Send Hunt',exact:true})).toBeVisible();
  await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(3);gameUI.session.saveState.player.organization.points=new Decimal(3);});
  await expect(page.locator('#repeat-gather')).toBeVisible();await expect(page.getByRole('button',{name:/^Extended expeditions/})).toContainText('2 Organization');

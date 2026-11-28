@@ -15,7 +15,7 @@ test('all five people can join crews with no domestic reservation or home improv
     p.shelter.comfort = 20; p.civ.improvements.hearth = true;
     assert.equal(e.supply().availableWorkers, 5, 'Saved improvements do not change labor');
     assert.equal(e.startProject('shelter-comfort'), false);
-    assert.deepEqual(e.projects('shelter').map(item => item.id), ['shelter-home']);
+    assert.deepEqual(e.projects('shelter').map(item => item.id), ['shelter-home','roofs']);
     assert.equal(e.dispatch('hunt'), true);
     assert.equal(e.dispatch('water'), true);
     assert.equal(e.supply().availableWorkers, 0);

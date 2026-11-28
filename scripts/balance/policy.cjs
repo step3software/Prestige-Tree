@@ -69,7 +69,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
       const targetHousing=p.organization.points.lt(10)?Math.max(12,economy.organizationPopulationRequirement(),p.craft.points.lt(nextMaterial)?24:0):24;
       // Save for permanent knowledge before optional physical equipment, which
       // resets on prestige. After milestone ten build one of each family.
-      const equipment=economy.projects('craft').find(item=>item.level<1&&economy.canStartProject(item.id));
+      const equipment=economy.equipmentProjects().find(item=>item.level<1&&economy.canStartProject(item.id));
       const next=p.shelter.points.lt(targetHousing)?'shelter-home':
         p.organization.points.gte(10)&&(p.craft.points.gte(35)||developingEquipment)&&equipment?equipment.id:null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);

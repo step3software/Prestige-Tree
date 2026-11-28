@@ -47,7 +47,7 @@ function createCivilizationRules({ saveState }) {
         water: {resource: "water", workers: 2, duration: 8, reward: 14},
     };
     const improvementDefinitions = {
-        crafting: {resource: "craft", name: "Crafting", description: "Unlock repeatable basic equipment in Craft.", costs: {craft: 10}},
+        crafting: {resource: "craft", name: "Crafting", description: "Unlock repeatable basic equipment.", costs: {craft: 10}},
         clay: {resource: "craft", name: "Clay", description: "Unlock ceramic storage, bricks, cooking vessels and pipes.", costs: {craft: 20}},
         copper: {resource: "craft", name: "Copper working", description: "Unlock axes, knives, upgraded cooking vessels and sickles.", costs: {craft: 30}},
         roofs: {resource: "shelter", name: "Thatched roofs", description: "+1 housing per existing and future hut. Upgrades to Bricks.", costs: {craft: 1}},
@@ -500,7 +500,7 @@ function createCivilizationRules({ saveState }) {
     }
     function equipmentProject(id) {
         const level = equipmentLevel(id);
-        const definition = id === "water-storage" ? {name: "Woven baskets", costs: {craft: 1}} : improvementDefinitions[id];
+        const definition = id === "water-storage" ? {resource: "water", name: "Woven baskets", costs: {craft: 1}} : improvementDefinitions[id];
         const craftCost = definition.costs.craft * Math.pow(2, level);
         const effects = {
             roofs: "+1 housing per hut per level.", bricks: "+2 housing per hut per level.",
@@ -513,26 +513,32 @@ function createCivilizationRules({ saveState }) {
         };
         const fireCost = id === "jars" ? 0.5 * Math.pow(1.5, level) : id === "pipes" ? 2 : 0;
         const available = upgradeRequirementMet(id);
-        return {id, name: definition.name, level, craftCost, fireCost, work: 12 * Math.pow(1.35, level),
+        const resource = ["water-storage", "jars"].includes(id) ? "water" : definition.resource;
+        return {id, resource, name: definition.name, level, craftCost, fireCost, work: 12 * Math.pow(1.35, level),
             description: effects[id], available,
             requirement: available ? "" : "Needs its material and prerequisite equipment."};
     }
+    function equipmentProjects(includeLocked = false) {
+        return equipmentIds.map(equipmentProject).filter(item => includeLocked || owns(materialFor(item.id).id));
+    }
     function projects(id, includeLocked = false) {
+        if (!["food", "water", "shelter", "fire"].includes(id)) return [];
         const p = player(), work = (base, level) => base * Math.pow(1.35, level);
-        if (id === "craft") return equipmentIds.map(equipmentProject).filter(item => includeLocked || item.available);
+        const equipment = equipmentProjects(includeLocked).filter(item => item.resource === id);
         if (id === "food" && (includeLocked || organizationProgress() >= 2)) return [
             {id: "gather-tools", name: buyableNames["gather-tools"], organizationRequired: 2 + p.food.routes.gather,
                 description: "Each level multiplies trip time by 1.2 and yield by 1.5; crew unchanged.", work: work(14, p.food.routes.gather)},
             {id: "hunt-tools", name: buyableNames["hunt-tools"], organizationRequired: 2 + p.food.routes.hunt,
                 description: "Each level multiplies crew by 1.5, rounded up, and yield by 2; trip time unchanged.", work: work(14, p.food.routes.hunt)},
-        ];
+        ].concat(equipment);
         if (id === "shelter" && (includeLocked || featureAvailable("huts"))) return [
             {id: "shelter-home", name: "Build a new hut", description: "+" + housingPerHut(p.civ.equipment) + " housing. Owned: " + p.shelter.homes + ".", work: 16 * Math.pow(owns("lashings") ? 1.25 : 1.35, p.shelter.homes) * (p.civ.preparedHut && p.civ.project === "shelter-home" ? 0.75 : 1)},
-        ];
-        return [];
+        ].concat(equipment);
+        return equipment;
     }
     function projectDefinition(id) {
-        const project = ["food", "water", "shelter", "fire", "craft"].flatMap(resource => projects(resource, true)).find(item => item.id === id);
+        const project = equipmentIds.includes(id) ? equipmentProject(id) :
+            ["food", "shelter"].flatMap(resource => projects(resource, true)).find(item => item.id === id);
         if (project && id === "shelter-home" && player().civ.project === id) {
             let work = 0;
             for (let job = 0; job < player().civ.projectJobs; job++) work += project.work * Math.pow(owns("lashings") ? 1.25 : 1.35, job);
@@ -543,8 +549,9 @@ function createCivilizationRules({ saveState }) {
     function canStartProject(id) {
         const project = projectDefinition(id);
         const prefix = id.split("-")[0];
-        const resource = equipmentIds.includes(id) ? "craft" : Object.hasOwn(actionBase, prefix) ? actionBase[prefix].resource : prefix;
+        const resource = equipmentIds.includes(id) ? project.resource : Object.hasOwn(actionBase, prefix) ? actionBase[prefix].resource : prefix;
         return !!project && projects(resource).some(item => item.id === id) && !player().civ.project && occupiedWorkers().availableWorkers >= 1 &&
+            (!equipmentIds.includes(id) || project.available) &&
             amount("organization") >= (project.organizationRequired || 0) &&
             Number.isFinite(project.work) && Number.isFinite(project.craftCost || 0) && Number.isFinite(project.fireCost || 0) &&
             player().craft.points.gte(project.craftCost || 0) && player().civ.fire >= (project.fireCost || 0);
@@ -620,12 +627,7 @@ function createCivilizationRules({ saveState }) {
             costText: Object.entries(item.costs).map(([key, cost]) => cost + " " + (key === "fire" ? "Fire" : names[key])).join(" · ") || "Free"};
     }
     function materialRows() {
-        return materialDefinitions.map(row => ({...upgradeView(row.id), items: owns(row.id) ? row.items.map(id => {
-            const project = equipmentProject(id);
-            return {...project, kind: "project", canBuy: canStartProject(id), owned: false,
-                costText: project.craftCost + " Craft" + (project.fireCost ? " + " + project.fireCost.toFixed(3) + " Fire" : ""),
-                requirement: project.requirement || "One builder; levels and costs reset on prestige."};
-        }) : []}));
+        return materialDefinitions.map(row => upgradeView(row.id));
     }
     function upgrades(resource) {
         return Object.entries(improvementDefinitions).filter(([id, item]) => item.resource === resource && !materialItem(id) && !["overseer", "hutForeman"].includes(id))
@@ -653,7 +655,7 @@ function createCivilizationRules({ saveState }) {
     }
     function chooseAutomaticProject() {
         // Hut automation belongs exclusively to its finite repeat queue.
-        const next = projects("craft").filter(project => canStartProject(project.id))
+        const next = equipmentProjects().filter(project => canStartProject(project.id))
             .sort((a, b) => a.level - b.level || a.craftCost - b.craftCost)[0];
         if (next) return startProject(next.id);
         return false;
@@ -853,7 +855,7 @@ function createCivilizationRules({ saveState }) {
     function summary() {
         const p = player(), s = supply(), project = projectDefinition(p.civ.project);
         const next = s.bottleneck.startsWith("Water") ? "water" : s.bottleneck.startsWith("Food") || s.bottleneck === "Production" ? "food" : "shelter";
-        return {...s, fireUpgrades: upgrades("fire"), materialRows: materialRows(), shortage: shortageStatus(), irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), hutRepeatAvailable: hutOrdersAvailable(), foodOrdersAvailable: foodOrdersAvailable(), foodOrdersPaused: !s.overseerWorkers && Object.values(p.civ.actions).some(action => action.repeat > 0), hutOrdersPaused: !s.foremanWorkers && p.civ.hutRepeat > 0, rostersAvailable: owns("workRosters"), hutRepeatCap: repeatCap("huts"), foodRepeatCap: repeatCap("food"), irrigationAvailable: organizationProgress() >= 9 && owns("farming"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).filter(resourceAvailable).map(node),
+        return {...s, cookingVessels: projects("fire").map(project => ({...project, canStart: canStartProject(project.id)})), fireUpgrades: upgrades("fire"), materialRows: materialRows(), shortage: shortageStatus(), irrigation: p.civ.irrigation, autoIrrigateAvailable: owns("sluice"), hutRepeatAvailable: hutOrdersAvailable(), foodOrdersAvailable: foodOrdersAvailable(), foodOrdersPaused: !s.overseerWorkers && Object.values(p.civ.actions).some(action => action.repeat > 0), hutOrdersPaused: !s.foremanWorkers && p.civ.hutRepeat > 0, rostersAvailable: owns("workRosters"), hutRepeatCap: repeatCap("huts"), foodRepeatCap: repeatCap("food"), irrigationAvailable: organizationProgress() >= 9 && owns("farming"), housing: housing(), growth: p.civ.growth, nodes: Object.keys(names).filter(resourceAvailable).map(node),
             project: project ? {...project, jobs: p.civ.projectJobs, workers: p.civ.projectWorkers, paused: p.civ.projectWorkers === 0, progress: Math.min(1, p.civ.projectWork / project.work)} : null,
             next, advice: s.growing ? "Your supplies and housing support another person." :
                 s.bottleneck.includes("reserves") ? "Restore supplies before the shortage countdown runs out." :
@@ -1125,7 +1127,7 @@ function createCivilizationRules({ saveState }) {
         }
         if (crews > data.points.toNumber() + 1e-9) throw new Error("Overcommitted workers");
     }
-    return {startingSettlement, growthSettings, defaults, supply, summary, node, projects, canStartProject, startProject, cancelProject, advance, shortageStatus,
+    return {startingSettlement, growthSettings, equipmentProjects, defaults, supply, summary, node, projects, canStartProject, startProject, cancelProject, advance, shortageStatus,
         materialRows, fireStatus, setFireTenders, setCookingLevel, actionDefinition, canDispatch, dispatch, recall, setRepeat, setHutRepeat, setOverseers, setExpeditionMultiplier, upgrades, buyUpgrade, irrigate,
         prestige, prestigeGain, prestigeRequirements, prestigePreview, organizationMilestones, organizationPopulationRequirement, investments, canInvest, invest, migrateData, validateData};
 }

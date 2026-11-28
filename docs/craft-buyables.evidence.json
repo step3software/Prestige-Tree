@@ -125,5 +125,71 @@
       "work": 29.160000000000004
     },
     "cause": "Milestone 6 explicitly retained water-site, which also owns its scaling work price. The obsolete well and its retention rule are removed; no well repair is shipped."
+  },
+  "tab_placement_followup": {
+    "parent_head": "8c4b3edfbc696b76f6179f967010c994380127a7",
+    "source_revision": "e0b37887a06e7c19d83f42ccb8fb3208ae8090f3",
+    "request": "Only materials are bought on Craft; equipment buyables remain on their relevant tabs.",
+    "standards_revision": "cc45f3cb57df44d1e6d46c1d7c562b9ae49f4b78",
+    "verified_documents": [
+      {
+        "path": "docs/pr-development-coordination.md",
+        "sha256": "939b59a53584e981798733a2292b3318f00d15ee01f230cb63a87f2eaf22bf0e"
+      },
+      {
+        "path": "docs/agent-workflows/intent-routing.md",
+        "sha256": "3b79f640a17fcdaa15ace38ee77a8bd7eda611a62ccfc9ac9c336bfd5f9387ed"
+      },
+      {
+        "path": "docs/agent-workflows/fix.md",
+        "sha256": "5ccd0b047ab4f7afc906e3ab6a77c03eeda76b2f771ceb47322b4386e26c61c6"
+      },
+      {
+        "path": "docs/standards/no-legacy-modes.md",
+        "sha256": "913c1f945d15457cfcd3579bcef61fbe8f73757b57bc8e92dd9999181a834156"
+      },
+      {
+        "path": "docs/standards/readable-code.md",
+        "sha256": "fdd9cb4cf7af821d5a3ab5267020b7ce2b8ee93e76cc419ecc436e478655e58e"
+      }
+    ],
+    "mapping": {
+      "food": [
+        "hunting",
+        "digging",
+        "butchery",
+        "sickles"
+      ],
+      "water": [
+        "water-storage",
+        "jars",
+        "pipes"
+      ],
+      "shelter": [
+        "roofs",
+        "bricks",
+        "copperAxes"
+      ],
+      "fire": [
+        "clayPots",
+        "copperPots"
+      ]
+    },
+    "verification": {
+      "unique_rule_cases_passed": 160,
+      "unique_chromium_journeys_passed": 34,
+      "focused_equipment_material_fire_opening_cases": 31,
+      "corrected_shelter_inventory_rerun_cases": 18,
+      "focused_fire_water_journeys": 3,
+      "checks": [
+        "build",
+        "package and Vue template compilation",
+        "syntax",
+        "checked JavaScript/static boundaries",
+        "negative static sensitivity",
+        "real Population-reset mutation"
+      ],
+      "save_schema_changed": false
+    }
   }
 }

@@ -10,7 +10,7 @@ test('Fire unlocks at four with Cooking/hearths while jar access moves to Clay',
  p.organization.total=new D(4);p.organization.points=new D(4);assert.deepEqual(e.upgrades('fire').map(x=>[x.id,x.costs.fire]),[['cooking',1],['hearth',3]]);
  assert.equal(e.buyUpgrade('jars'),false);
  for(const [id,cost] of [['cooking',1],['hearth',3]]){p.civ.fire=cost;assert.equal(e.buyUpgrade(id),true);assert.equal(p.civ.fire,0);assert.equal(e.buyUpgrade(id),false);}
- assert.deepEqual(e.projects('water'),[]);p.craft.points=new D(10);assert.equal(e.buyUpgrade('crafting'),true);assert.ok(e.projects('craft').length>0);
+ assert.deepEqual(e.projects('water'),[]);p.craft.points=new D(10);assert.equal(e.buyUpgrade('crafting'),true);assert.ok(e.projects('water').length>0);
  assert.equal(e.buyUpgrade('abundance'),false);p.organization.total=new D(8);p.organization.points=new D(8);assert.equal(e.buyUpgrade('abundance'),true);
 });
 

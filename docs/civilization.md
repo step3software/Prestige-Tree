@@ -4,7 +4,7 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 ## First minutes
 
-Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; buy Crafting for 10 Craft to reveal repeatable equipment, then build Wooden spears to unlock hunting. The two expedition buyables arrive at Organization 2 and both overseer queues at 3. Equipment is purchased in Craft. Fishing and river traps remain removed. Dispatching a busy route or overbooking workers fails without spending anything.
+Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; buy Crafting for 10 Craft to reveal repeatable equipment, then build Wooden spears to unlock hunting. The two expedition buyables arrive at Organization 2 and both overseer queues at 3. Materials are purchased in Craft; equipment buyables stay on their resource tabs. Fishing and river traps remain removed. Dispatching a busy route or overbooking workers fails without spending anything.
 
 Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. After purchasing Abundance, a free Shelter upgrade unlocked at Organization milestone 8, independent Food, Water and Shelter bonuses can raise the rate to 10 times normal. Before purchase, growth remains at the base rate. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
 
@@ -89,7 +89,7 @@ Spear hunting reduces the base crew from 3 to 2 before bigger-game scaling. Digg
 
 ## Materials and equipment
 
-Crafting (10 Craft), Clay (20 Craft) and Copper working (30 Craft) are one-time permanent knowledge purchases. Each reveals four repeatable equipment buyables in Craft:
+Crafting (10 Craft), Clay (20 Craft) and Copper working (30 Craft) are one-time permanent knowledge purchases. Each unlocks four repeatable equipment buyables on the relevant resource tabs:
 
 | Material | Equipment | Base Craft cost |
 | --- | --- | --- |
@@ -97,7 +97,14 @@ Crafting (10 Craft), Clay (20 Craft) and Copper working (30 Craft) are one-time 
 | Clay | Earthenware jars, Bricks, Clay cooking pots, Fired-clay pipes | 2 each |
 | Copper working | Copper axes, Copper knives, Copper pots, Copper sickles | 3 each |
 
-Every equipment level costs `base Craft * 2^ownedLevels` and requires `12 * 1.35^ownedLevels` construction work with one builder. Payment occurs once at start; busy, locked, unstaffed or unaffordable commands have no effects. Canceling or losing work on prestige does not refund the payment. A level arrives only on completion. The Craft matrix derives level, cost, prerequisites and command availability from the same owner.
+| Location | Equipment buyables |
+| --- | --- |
+| Food | Wooden spears, Digging sticks, Copper knives, Copper sickles |
+| Water | Woven baskets, Earthenware jars, Fired-clay pipes |
+| Shelter | Thatched roofs, Bricks, Copper axes |
+| Fire panel | Clay cooking pots, Copper pots |
+
+Every equipment level costs `base Craft * 2^ownedLevels` and requires `12 * 1.35^ownedLevels` construction work with one builder. Payment occurs once at start; busy, locked, unstaffed or unaffordable commands have no effects. Canceling or losing work on prestige does not refund the payment. A level arrives only on completion. The Craft page sells only these three material unlocks. Resource buyable buttons derive their levels, costs, prerequisites and command availability from the same owner.
 
 Roofs add 1 housing per hut per level; Bricks add 2. The two counts are independent. Wooden spears first unlocks hunting with a two-person base crew; later spear levels add 25% base hunting yield each. Digging sticks multiply gathering yield by 1.25 per level; Copper knives multiply hunting yield by 1.5 per level. Copper axes double hut building speed per level; Copper sickles multiply new Farming duration by 0.75 per level. Existing dispatched trips keep their saved contracts.
 
@@ -193,4 +200,4 @@ Removed Food baskets refund their known Craft recipe, including paid unfinished 
 
 The base dark theme, monospace type, circular nodes and native upg/tabButton treatments are retained. Tests cover parallel crews, overbooking, recall, timed yields, the separate automation stages, irrigation, Shelter, prestige retention, saves and offline chunk parity. Balance profiles use real commands: active decisions every 5 seconds; regular decisions every 20 seconds until overseer, gravity flow and the milestone-10 auto-builder are earned, then every 300 seconds. This cadence change is owner-requested. Synthetic pacing is not human enjoyment evidence.
 
-The two retained expedition route IDs use `player.food.routes.gather/hunt`. The named equipment registry drives prestige previews and reset commands independently of UI visibility. `tests/rules/craft-buyables.test.cjs` exercises all twelve first/second purchases, both prestige kinds at milestone ten, cost resets, denial/cancellation, effects, migration and chunk/save parity. Browser coverage exercises the actual Craft controls, native prestige confirmation, reload and narrow layouts.
+The two retained expedition route IDs use `player.food.routes.gather/hunt`. The named equipment registry drives prestige previews and reset commands independently of UI visibility. `tests/rules/craft-buyables.test.cjs` exercises all twelve first/second purchases, both prestige kinds at milestone ten, cost resets, denial/cancellation, effects, migration and chunk/save parity. Browser coverage exercises the material purchases and resource-tab buyables, native prestige confirmation, reload and narrow layouts.

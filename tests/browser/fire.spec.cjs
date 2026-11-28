@@ -43,9 +43,9 @@ test('Clay jars are repeatable Craft equipment with upfront Fire and a builder',
   const p=gameUI.session.saveState.player;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;
   p.civ.equipment['water-storage']=1;p.civ.fire=10;
  });
- await page.getByRole('button',{name:/^Craft,/}).click();
- const jar=page.getByTestId('material-clay').getByRole('button',{name:/^Earthenware jars/});
- await expect(jar).toContainText('2 Craft');await expect(jar).toContainText('0.500 Fire');await jar.click();
+ await page.getByRole('button',{name:/^Water,/}).click();
+ const jar=page.getByTestId('water-buyables').getByRole('button',{name:/^Earthenware jars/});
+ await expect(jar).toContainText('2 Craft');await expect(jar).toContainText('0.5 Fire');await jar.click();
  expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.fire)).toBe(9.5);
  await page.evaluate(()=>gameUI.session.advance(12));await expect(jar).toContainText('Owned level: 1');await expect(jar).toContainText('4 Craft');
  await page.getByRole('button',{name:/^Water,/}).click();await expect(page.locator('.storage-line')).toContainText('/ 220');expect(errors).toEqual([]);
