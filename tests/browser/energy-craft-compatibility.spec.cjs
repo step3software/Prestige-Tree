@@ -16,15 +16,15 @@ for(const name of ['energy','craft'])test('actual '+name+' save opens with compa
  await expect(page.getByTestId('fire-buyables')).toHaveCount(0);await expect(page.getByRole('button',{name:/^Cooking/})).toHaveCount(0);
  const before=await page.evaluate(()=>{
   const p=gameUI.session.saveState.player;
-  return {version:p.version,craft:p.craft.points.toString(),equipment:{...p.civ.equipment},project:p.civ.project,work:p.civ.projectWork,bonus:p.civ.actions.gather.cookingBonus,cooks:p.civ.cooks};
+  return {version:p.version,craft:p.craft.points.toString(),equipment:{...p.civ.equipment},project:p.civ.project,work:p.civ.projectWork,bonus:p.civ.actions.gather.cookingBonus,water:{...p.civ.actions.water},cooks:p.civ.cooks};
  });
  expect(before.version).toBe('0.94');expect(before.project).toBe(name==='craft'?'roofs':'');
  await page.getByRole('button',{name:/^Water,/}).click();
- await expect(page.getByTestId('water-buyables').getByRole('button',{name:/^Woven baskets/})).toContainText('Owned level: '+before.equipment['water-storage']);
+ await expect(page.getByTestId('water-buyables').getByRole('button',{name:/^Tightly woven baskets/})).toContainText('Owned level: '+before.equipment['water-storage']);
  await page.getByRole('button',{name:'Save',exact:true}).click();await page.reload();await page.evaluate(()=>gameUI.session.runtimeServices.gameRuntime.stop());
  const after=await page.evaluate(()=>{
   const p=gameUI.session.saveState.player;
-  return {version:p.version,craft:p.craft.points.toString(),equipment:{...p.civ.equipment},project:p.civ.project,work:p.civ.projectWork,bonus:p.civ.actions.gather.cookingBonus,cooks:p.civ.cooks};
+  return {version:p.version,craft:p.craft.points.toString(),equipment:{...p.civ.equipment},project:p.civ.project,work:p.civ.projectWork,bonus:p.civ.actions.gather.cookingBonus,water:{...p.civ.actions.water},cooks:p.civ.cooks};
  });
  expect(after).toEqual(before);expect(await page.evaluate(()=>localStorage.getItem('ptr'))).toBe('original-game-preserved');expect(errors).toEqual([]);
 });

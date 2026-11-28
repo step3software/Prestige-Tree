@@ -8,13 +8,13 @@ for(const name of ['energy','craft'])test('actual '+name+' 0.93 save migrates on
  const engine=createBalanceEngine(fixtures[name].encoded);t.after(engine.dispose);const p=engine.player,e=engine.session.modRules.civilization,D=p.points.constructor;
  assert.equal(p.version,'0.94');assert.equal(Object.hasOwn(p.civ,'fireBuyables'),false);assert.equal(Object.hasOwn(p.civ,'cookingLevel'),false);
  assert.equal(Object.hasOwn(p.civ.improvements,'cooking'),false);assert.equal(p.points.toString(),String(raw.points));
- assert.deepEqual(p.civ.actions.gather,raw.civ.actions.gather);assert.equal(p.shelter.points.toString(),String(raw.shelter.points));
+ assert.deepEqual(p.civ.actions.gather,raw.civ.actions.gather);assert.deepEqual(p.civ.actions.water,raw.civ.actions.water);assert.equal(p.shelter.points.toString(),String(raw.shelter.points));
  assert.equal(p.food.points.toString(),String(raw.food.points));assert.equal(p.water.points.toString(),String(raw.water.points));
  if(name==='energy'){
   assert.equal(p.civ.cooks,3);assert.equal(p.tab,'energy');assert.equal(p.civ.project,'');assert.equal(e.supply().builders,0);
   assert.equal(p.civ.equipment.roofs,0);assert.equal(p.civ.equipment.bricks,1);
   assert.equal(p.civ.equipment['water-storage'],raw.water.storage);assert.equal(p.civ.equipment.jars,1);
-  assert.equal(e.supply().storage.water,100+120*raw.water.storage);assert.equal(p.civ.equipment.copperPots,1);
+  assert.equal(e.supply().storage.water,70);assert.equal(e.actionDefinition('water').reward,14+10*raw.water.storage+20);assert.equal(p.civ.equipment.copperPots,1);
   assert.ok(p.craft.points.eq(new D(raw.craft.points).add(6)),'Known Food/Fire recipe refunds occur once; Cooking grants no refund');
   assert.equal(p.civ.fire,10+2*p.shelter.homes);assert.equal(p.food.storage,0);
  }else{
