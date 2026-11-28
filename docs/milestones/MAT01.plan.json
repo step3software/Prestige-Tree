@@ -6,7 +6,9 @@
       "Three initial rows: Crafting 10 Craft, Clay 20 Craft, recommended Copper working 30 Craft; each has one unlock tile and four related purchases",
       "Craft-based buyable access, prerequisite migration and resolved hut bootstrap",
       "Manual plus passive Water, eight-person baseline, communal cistern and fired-clay pipes",
-      "Save/prestige preservation, truthful UI and legal balance coverage"
+      "Save/prestige preservation, truthful UI and legal balance coverage",
+      "Separate in-place Water-storage, cooking-vessel and housing upgrade chains; removed Communal cistern",
+      "Three proposed repeatable Fire projects for capacity, tender production and fuel efficiency"
     ],
     "exclude": [
       "Production implementation in this planning task",
@@ -22,12 +24,15 @@
     "MAT01-AC04: Every listed upgrade and repeatable project has an observable effect, truthful cost and shared simulation/UI eligibility; direct locked commands reject atomically.",
     "MAT01-AC05: Collect water remains visible and dispatchable with a spring, including after reload, with normal worker/full-storage/busy guards and active snapshots.",
     "MAT01-AC06: A spring without Water improvements supports exactly eight current-upkeep equivalents: zero net Water at eight and negative at nine, including Organization balance changes. This is sustainable supply, not a Population cap.",
-    "MAT01-AC07: Communal cistern costs 2 Craft and adds 200 capacity without adding stock/income or changing Emergency cistern. Fired-clay pipes spend 2 Craft plus exactly 2 Fire once and multiply only spring flow by exactly 2.",
-    "MAT01-AC08: Material knowledge, owned row upgrades and cistern/pipes survive both prestiges. Repeatable projects retain/reset by exact IDs; new water baskets use the explicit Organization-4 Water-storage retention extension.",
+    "MAT01-AC07: Communal cistern is absent. Clay cooking pots cost 2 Craft and reduce Cooking Fire use by 25%. Pipes cost 2 Craft plus exactly 2 Fire and double only passive Water.",
+    "MAT01-AC08: Learned material tiers and permanent techniques survive both prestiges. Reuse exact existing Water-storage/hut retention IDs and levels; retain/reset Fire-project levels by the explicitly documented unprotected default.",
     "MAT01-AC09: Supported old Civ exports migrate atomically to the one current schema, preserving currencies, bought effects, active jobs, paid construction and applicable retention. Malformed imports preserve live and durable state; ptr stays untouched.",
     "MAT01-AC10: A legal fresh-game policy reaches the first material and each later row without resource grants or an unlock cycle. Active and regular balance runs report observed cost/time, cadence and completion or stalls; rough/fixed comparisons cover the new sections.",
-    "MAT01-AC11: Desktop/narrow keyboard journeys cover row purchase, revealed upgrades, affordability, manual hauling after spring, cistern filling and pipe purchase/depletion rejection; no stale unlock or double charge after save replacement.",
-    "MAT01-AC12: Focused rules/save/balance/browser checks and full npm test pass on the implementation candidate; canonical design, developer map and progression text match shipped behavior. Planning validation alone cannot satisfy these criteria."
+    "MAT01-AC11: Desktop/narrow keyboard journeys cover row unlocks, same-buyable tier upgrades, manual hauling after spring, pots/fuel effects and Fire-project progress; no stale label, duplicate counter or double charge after save replacement.",
+    "MAT01-AC12: Focused rules/save/balance/browser checks and full npm test pass on the implementation candidate; canonical design, developer map and progression text match shipped behavior. Planning validation alone cannot satisfy these criteria.",
+    "MAT01-AC13: Repeatable Fire projects charge complete Craft costs once, reserve the normal builder, complete after scaled work, expose owned levels/effects, reset on prestige by the unprotected default, and generate no Fire without tenders.",
+    "MAT01-AC14: Water baskets upgrade only to storage jars; Clay cooking pots upgrade only to Copper cooking pots; Thatched roofs upgrade to Bricks. Each transition preserves count/work, enforces prior ownership and charges its material-tier fee once.",
+    "MAT01-AC15: Cooking fuel UI and actual one-second consumption use identical vessel/charcoal discounts; Copper increases only the fueled Cooking bonus. Uncooked Food and Cooking level 1 remain unchanged. Sickles affect only newly dispatched Farming durations."
   ],
   "constraints": [
     "Planning-only authorization; proposed tuning values are not recorded as owner answers",
@@ -47,7 +52,7 @@
     {
       "id": "OWNER-WATER",
       "question": "What Water behavior is required?",
-      "answer": "Keep manual hauling after spring; reduce baseline automatic supply to support 8 Population; add large cistern storage and 2-Fire pipes giving 2x automatic Water.",
+      "answer": "Keep manual hauling after spring; baseline passive supply supports 8 Population; pipes cost 2 Fire and double auto Water. The original Communal cistern request is superseded by the explicit later removal.",
       "requires_owner": true,
       "decided_by": "user",
       "evidence_reference": "Current user request Water paragraph"
@@ -55,7 +60,7 @@
     {
       "id": "MODEL",
       "question": "What do materials represent?",
-      "answer": "Permanent capability row unlocks in Craft without harvested material balances. Four related purchases follow each unlock; basket buyables use actual repeatable construction.",
+      "answer": "Permanent material capability rows; Water-storage, cooking-vessel and housing buyables upgrade in place through separate material-tier chains. No raw-material inventories or duplicate family counters.",
       "requires_owner": false,
       "decided_by": "architect",
       "rationale": "Uses existing Craft currency and improvement/project owners; avoids adding an unrequested collection economy.",
@@ -104,6 +109,47 @@
       "decided_by": "architect",
       "rationale": "Applies the explicit correction while preserving the earlier pipe Fire requirement and existing paid construction. No extra upfront Fire charge is added to the jars technology.",
       "evidence_reference": "Owner correction and original Water paragraph; current Fire-branch jar construction"
+    },
+    {
+      "id": "POTS-NO-CISTERN",
+      "question": "Which Clay item replaces Communal cistern?",
+      "answer": "Use Clay cooking pots; remove Communal cistern.",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "User: Clay cooking pots works. Remove communal cistern."
+    },
+    {
+      "id": "COPPER-REPLACEMENTS",
+      "question": "What replaces chisels and awls?",
+      "answer": "Copper pots for Cooking and Copper sickles for Farming.",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "User rejected chisels/awls, then selected Copper pots and sickles and clarified pots for cooking."
+    },
+    {
+      "id": "SEPARATE-CHAINS",
+      "question": "Which buyables upgrade through materials?",
+      "answer": "Woven baskets -> Earthenware jars for Water storage; Clay cooking pots -> Copper pots for Cooking; Thatched roofs -> Bricks for housing. Upgrade existing buyables with new effects.",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "Latest user correction explicitly separates Water-storage and cooking chains, plus prior Thatched rooves > Bricks instruction."
+    },
+    {
+      "id": "FIRE-BUYABLES",
+      "question": "Does Fire need repeatable projects?",
+      "answer": "Add Fire buyables.",
+      "requires_owner": true,
+      "decided_by": "user",
+      "evidence_reference": "User: Fire needs buyables."
+    },
+    {
+      "id": "FIRE-TUNING",
+      "question": "Which initial Fire projects/effects?",
+      "answer": "Propose Fuel stores (1 Craft, +10 capacity/level), Improved hearths (1 Craft, +20% base tender output/level), Charcoal clamps (2 Craft, fuel requirement divided by 1+0.15*level).",
+      "requires_owner": false,
+      "decided_by": "architect",
+      "rationale": "Gives Fire distinct capacity, production and efficiency investments while preserving assigned workers and existing currencies.",
+      "evidence_reference": "Current Fire capacity/tending/consumption owner; hash-verified Plant part 7 paragraphs 7-11; owner request for Fire buyables"
     }
   ],
   "dependencies": [],
@@ -123,7 +169,7 @@
     }
   ],
   "implementation_authorization": null,
-  "status": "revised_draft_with_hut_bootstrap_open",
+  "status": "revised_draft_with_distinct_upgrade_chains_and_hut_bootstrap_open",
   "material_rows": [
     {
       "id": "crafting",
@@ -133,7 +179,7 @@
       "upgrades": [
         [
           "Thatched roofs",
-          "Improve hut capacity by +1 place per hut, including existing huts. Initial tuning proposal.",
+          "Thatched-roof housing tier: +1 housing per existing or future hut. Bricks replaces this tier later; hut levels remain unchanged.",
           "Plant part 6 paragraphs 91-92; PLT-04"
         ],
         [
@@ -143,7 +189,7 @@
         ],
         [
           "Woven baskets",
-          "Increase Water storage by +40 per completed basket. Reuse a repeatable 1-Craft basket project with scaling work.",
+          "Water-storage buyable: +40 capacity per level, named Woven baskets. Earthenware jars upgrades this same buyable and preserves its level/work.",
           "Plant part 4 paragraphs 22-39; WAT-01"
         ],
         [
@@ -161,23 +207,23 @@
       "upgrades": [
         [
           "Earthenware jars",
-          "Cost 2 Craft for the technology. Retain the jars effect: base Water capacity 100 and +120 per jar level, plus access to jar construction.",
-          "SMI-14; PLT-10; existing jars ID"
+          "Upgrade the Woven baskets Water-storage buyable for 2 Craft: preserve all levels/work, raise base Water capacity 50 to 100 and capacity per level 40 to 120. Replace the old name; do not add a second storage counter.",
+          "Owner Water-storage chain; existing jars effect"
         ],
         [
           "Bricks",
-          "Add +1 housing per hut, including existing huts. Model sun-dried clay bricks so this tile has no invented Fire charge.",
-          "PLT-05; authored coefficient"
+          "Upgrade Thatched roofs for 2 Craft: +2 housing per hut replaces +1. Preserve the same housing/hut counts and construction progress; do not add the two tier bonuses.",
+          "Owner housing chain; proposed coefficient"
         ],
         [
-          "Communal cistern",
-          "Add +200 Water capacity once; no free refill or income. Keep Emergency cistern shortage protection separate.",
-          "WAT-05; original owner request"
+          "Clay cooking pots",
+          "Cooking-vessel buyable: 25% less Fire consumed by Cooking at the same selected level and Food output. Separate identity from Water-storage jars.",
+          "Owner selected cooking pots instead of Communal cistern"
         ],
         [
           "Fired-clay pipes",
-          "Cost 2 Craft plus exactly 2 Fire; double automatic Water flow once. No manual-haul multiplier and no flow without a spring.",
-          "WAT-05; original owner request"
+          "2 Craft plus exactly 2 Fire once: double passive Water flow without changing manual hauling. No income without a spring.",
+          "Original owner Water request"
         ]
       ]
     },
@@ -190,23 +236,23 @@
       "upgrades": [
         [
           "Copper axes",
-          "Increase hut construction speed by 25%; builders still required.",
-          "Early copper axe evidence; game coefficient proposed"
+          "Double hut construction speed; builders remain occupied.",
+          "Proposed useful construction effect"
         ],
         [
           "Copper knives",
-          "Reuse Butchery tools: +50% Hunt yield on the next dispatch. Tool-kit specialization is an abstraction, not universal copper superiority.",
-          "Existing butchery ID; early copper tool research"
+          "+50% Hunt yield, unchanged crew/duration; use the existing butchery effect once.",
+          "Existing butchery ID; proposed tuning"
         ],
         [
-          "Copper chisels",
-          "Increase well-project construction speed by 25%; no free Water income.",
-          "Met copper-alloy chisel; task-specific game interpretation"
+          "Copper pots",
+          "Upgrade Clay cooking pots for 3 Craft. Keep their 25% Cooking fuel saving; add +25% Cooking bonus yield at the same requested fuel cost. Preserve vessel level/work.",
+          "Owner cooking-vessel chain"
         ],
         [
-          "Copper awls",
-          "Reduce basket-project work by 25%; no storage/Water gain until a basket completes.",
-          "Tel Tsaf copper-awl excavation; fabrication abstraction"
+          "Copper sickles",
+          "Farming trips take 25% less time for the same reward and crew (60s base to 45s). Requires existing Farming activity; new dispatches only.",
+          "Owner selected sickles for farming; game coefficient proposed"
         ]
       ]
     }
@@ -255,6 +301,61 @@
     "four_related_purchases_each_row_craft": 24,
     "initial_total_craft": 84,
     "pipe_fire": 2,
-    "note": "One purchase of every tile; repeated basket/jar construction and spring purchase are additional."
-  }
+    "note": "84 Craft buys one action at each of the 15 row positions, including tier-upgrade fees; independent Fire projects, further construction and spring purchase are additional."
+  },
+  "upgrade_chains": [
+    {
+      "family": "water-storage",
+      "stages": [
+        "Woven baskets",
+        "Earthenware jars"
+      ],
+      "canonical_level": "existing Water storage level",
+      "rule": "Upgrade tier in place; preserve count/work; replace capacity coefficient and label, without adding a second physical count."
+    },
+    {
+      "family": "cooking-vessels",
+      "stages": [
+        "Clay cooking pots",
+        "Copper pots"
+      ],
+      "canonical_level": "one cooking-vessel record",
+      "rule": "Upgrade tier in place; preserve count/work; Copper retains Clay fuel saving and adds a Cooking-only yield bonus. Never merge with Water storage."
+    },
+    {
+      "family": "housing-improvements",
+      "stages": [
+        "Thatched roofs",
+        "Bricks"
+      ],
+      "canonical_level": "existing housing/hut counts",
+      "rule": "Upgrade tier in place; preserve count/work; replace +1 housing per hut with +2, rather than stacking the two bonuses."
+    }
+  ],
+  "fire_buyables": [
+    {
+      "id": "fuel-stores",
+      "name": "Fuel stores",
+      "craft_cost": 1,
+      "prerequisite": "Crafting and Fire available",
+      "base_work": 12,
+      "effect": "+10 Fire capacity per completed level; no stock granted"
+    },
+    {
+      "id": "improved-hearths",
+      "name": "Improved hearths",
+      "craft_cost": 1,
+      "prerequisite": "Crafting and Fire available",
+      "base_work": 16,
+      "effect": "+20% of base Fire-tender production per level, additive across levels; still requires tenders"
+    },
+    {
+      "id": "charcoal-clamps",
+      "name": "Charcoal clamps",
+      "craft_cost": 2,
+      "prerequisite": "Clay and Fire available",
+      "base_work": 24,
+      "effect": "Divide Cooking and recurring manufacturing Fire requirements by 1 + 0.15 * level; fixed technology/pipe purchase costs unchanged"
+    }
+  ]
 }

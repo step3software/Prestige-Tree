@@ -47,13 +47,13 @@
     "docs/research/read_sources.py": "d5709f0b286a7fc886e4752ad04e89d9d234c587f38f9c96dc507a66968a85dd"
   },
   "artifacts_sha256": {
-    "docs/milestones/MAT01.md": "cb97b67793ff84fb2fd54d1c5b2e367389414fe415ebffd2f50eb2125666b376",
-    "docs/milestones/MAT01.plan.json": "dc1141a6c0a5dc04d506f87e46c9db15115c0e113f4e1258294b079ec7988d0c"
+    "docs/milestones/MAT01.md": "d332b03b1f20848837b86b83ba0cd9be18b1bc908ec9da83c08ce10081c83c97",
+    "docs/milestones/MAT01.plan.json": "1f85c504c8e53c38b13e699d4c649a10cd131dda14a842e6ade26512b80fd547"
   },
   "source_discrepancy": "Registry and manifest master; local AGENTS main; owner explicitly requested latest work. Selected local committed Fire head without changing canonical source or parent writer.",
   "writer": {
     "branch": "refs/heads/docs/craft-materials-plan",
-    "fence": 2725,
+    "fence": 2726,
     "protection": "installed branch_writers; isolated docs-only scope; private token omitted"
   },
   "research_reading": [
@@ -62,26 +62,32 @@
     "Pinned Plant/water notes and reference guide",
     "AMNH Petra water account; PLOS ONE 2012 well study; Ashmolean pottery classification",
     "Plant part 1 paragraphs 61-64 and part 6 paragraphs 91-92, original EPUB hash-verified",
-    "Ashmolean Bronze Age collection; Historic England archaeometallurgy; Met copper-alloy chisel; Tel Tsaf and Italian copper studies (web evidence)"
+    "Ashmolean Bronze Age collection; Historic England archaeometallurgy; Met copper-alloy chisel; Tel Tsaf and Italian copper studies (web evidence)",
+    "Plant part 7 paragraphs 7-11, original EPUB hash-verified",
+    "London Museum copper-alloy sickle; Met flint sickle context; prior Smithsonian cooking vessel"
   ],
   "checks": {
     "catalog_document_hashes": "passed",
-    "artifact_structure_and_links": "passed: required fields, unique decisions/criteria, 3 rows of 5 total tiles, 10% child prices, 84 Craft total, owner D1 resolution, relative links and UTF-8",
-    "gameplay_tests": "not run: planning only",
+    "artifact_structure_and_links": "passed: three separate exact chains, corrected Clay/Copper candidates, 3 Fire projects, 15 unique criteria, unique decisions, local links and UTF-8",
+    "gameplay_tests": "not run: planning documents only",
     "publication": "not attempted; local branch only",
     "native_lifecycle": "not enrolled or transitioned",
     "water_arithmetic": "passed: eight/nine/sixteen support equations at six Organization balances; arithmetic only, implementation untested",
     "planned_lifecycle_gate": "not eligible: D2 remains unanswered; D1 resolved from owner correction",
-    "diff_whitespace": "passed: git diff --check and staged whitespace check"
+    "diff_whitespace": "passed: git diff --check and staged whitespace check",
+    "fire_and_cooking_arithmetic": "passed: 3x->3.5x and 5x->6x Copper bonus, 60s->45s Farming, zero-tender production, capacity and stacked fuel-discount arithmetic; gameplay not implemented"
   },
   "resolver_execution_sha256": "4c126f6dc47fa7a7284a148c0ad600d4f79488f6b7df8fe51a3a7f35dbd50f66",
-  "plan_revision_parent": "7b315f9b1957d91b416ee61f512c71ced43a9b9e",
-  "revision_reason": "Owner corrected five tiles total: Crafting 10 then four at 1; Clay 20 then four at 2; agent to recommend 30-Craft tier.",
+  "plan_revision_parent": "e8fa0a4c1d66eedd90dc6b34420197252be77040",
+  "revision_reason": "Owner removed Communal cistern; selected Clay/Copper cooking pots and farming sickles; requires separate Water-storage, Cooking-vessel and housing upgrade chains plus Fire buyables.",
   "web_sources": [
     "https://britisharchaeology.ashmus.ox.ac.uk/collections/bronze-age.html",
     "https://www.metmuseum.org/art/collection/search/855343",
     "https://doi.org/10.1371/journal.pone.0092591",
     "https://doi.org/10.1038/s41598-024-54825-z",
-    "https://historicengland.org.uk/images-books/publications/archaeometallurgy-guidelines-best-practice/heag003-archaeometallurgy-guidelines/"
+    "https://historicengland.org.uk/images-books/publications/archaeometallurgy-guidelines-best-practice/heag003-archaeometallurgy-guidelines/",
+    "https://www.si.edu/object/cooking-pot%3Afsg_S2005.198",
+    "https://www.londonmuseum.org.uk/collections/v/object-2493/sickle-socketed-sickle/",
+    "https://www.metmuseum.org/art/collection/search/587605"
   ]
 }
