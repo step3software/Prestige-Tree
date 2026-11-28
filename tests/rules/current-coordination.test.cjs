@@ -1,49 +1,100 @@
-const {test}=require('node:test');
-const assert=require('node:assert/strict');
-const {createBalanceEngine}=require('../../scripts/balance/engine.cjs');
-function game(t){const engine=createBalanceEngine();t.after(engine.dispose);const p=engine.player;return {engine,p,e:engine.session.modRules.civilization,D:p.points.constructor};}
-
-test('spending Organization immediately lowers the population requirement and milestone eligibility',t=>{
- const {p,e,D}=game(t);p.organization.total=new D(50);p.organization.points=new D(3);
- assert.equal(e.organizationPopulationRequirement(),20);
- assert.equal(e.organizationMilestones()[2].earned,true);
- assert.equal(e.buyUpgrade('preparedMaterials'),true);
- assert.equal(p.organization.points.toNumber(),2);assert.equal(p.organization.total.toNumber(),50);
- assert.equal(e.organizationPopulationRequirement(),16);assert.equal(e.organizationMilestones()[2].earned,false);
- assert.equal(e.summary().foodOrdersAvailable,false);assert.equal(e.summary().hutRepeatAvailable,false);
- p.points=new D(15);assert.equal(e.prestigeGain('organization'),0);p.points=new D(16);assert.equal(e.prestigeGain('organization'),1);
- assert.equal(e.prestigePreview('organization').organizationHeld,3);
- assert.equal(e.prestige('organization'),true);assert.equal(p.organization.points.toNumber(),3);assert.equal(p.organization.total.toNumber(),51);assert.equal(e.organizationPopulationRequirement(),20);
+const {test} = require('node:test');
+const assert = require('node:assert/strict');
+const {createBalanceEngine} = require('../../scripts/balance/engine.cjs');
+function game(t) {
+    const engine = createBalanceEngine(); t.after(engine.dispose);
+    const p = engine.player;
+    return {engine, p, e: engine.session.modRules.civilization, D: p.points.constructor};
+}
+test('spending lowers Population requirements while retaining milestones and orders through reload', t => {
+    const {engine,p,e,D} = game(t);
+    p.organization.total = new D(50); p.organization.points = new D(3);
+    p.points = new D(20); p.shelter.homes = 3; p.shelter.points = new D(20);
+    assert.equal(e.organizationPopulationRequirement(),20);
+    assert.equal(e.buyUpgrade('preparedMaterials'),true);
+    assert.equal(p.organization.points.toNumber(),2);
+    assert.equal(p.organization.total.toNumber(),50);
+    assert.equal(e.organizationPopulationRequirement(),16);
+    assert.equal(e.organizationMilestones()[2].earned,true);
+    assert.equal(e.summary().foodOrdersAvailable,true);
+    assert.equal(e.summary().hutRepeatAvailable,true);
+    assert.equal(e.setRepeat('gather',5),true);
+    assert.equal(e.setHutRepeat(5),true);
+    assert.equal(e.buyUpgrade('extendedExpeditions'),true);
+    assert.equal(e.organizationPopulationRequirement(),8);
+    const loaded = createBalanceEngine(engine.exportPlayer()); t.after(loaded.dispose);
+    assert.equal(loaded.session.modRules.civilization.organizationMilestones()[2].earned,true);
+    engine.advance(1); loaded.advance(1);
+    assert.equal(p.civ.actions.gather.repeat,4);
+    assert.equal(p.civ.hutRepeat,4);
+    assert.equal(engine.exportPlayer(),loaded.exportPlayer());
 });
-
-test('historical totals and unlocked flags cannot bypass current feature or purchase gates',t=>{
- const {p,e,D}=game(t);p.organization.total=new D(100);p.organization.points=new D(0);p.craft.points=new D(100);
- Object.assign(p.civ.features,{huts:true,hunting:true,buyables:true});p.civ.improvements.overseer=true;p.civ.improvements.hutForeman=true;
- assert.equal(e.organizationPopulationRequirement(),8);assert.equal(e.organizationMilestones().some(m=>m.earned),false);
- assert.equal(e.startProject('shelter-home'),false);assert.equal(e.dispatch('hunt'),false);assert.equal(e.buyUpgrade('lashings'),false);
- assert.equal(e.setRepeat('gather',1),false);assert.equal(e.setHutRepeat(1),false);assert.equal(e.summary().autoAvailable,false);
+test('lifetime earnings and discovery flags cannot unlock a never-held milestone', t => {
+    const {p,e,D} = game(t);
+    p.organization.total = new D(100); p.organization.points = new D(0); p.craft.points = new D(100);
+    Object.assign(p.civ.features,{huts:true,hunting:true,buyables:true});
+    assert.equal(e.organizationMilestones().some(m=>m.earned),false);
+    assert.equal(e.startProject('shelter-home'),false);
+    assert.equal(e.dispatch('hunt'),false);
+    assert.equal(e.buyUpgrade('lashings'),false);
+    assert.equal(e.setRepeat('gather',1),false);
+    assert.equal(e.summary().autoAvailable,false);
+    p.organization.best = new D(2);
+    assert.deepEqual(e.organizationMilestones().filter(m=>m.earned).map(m=>m.requirement),[1,2]);
+    assert.equal(e.setRepeat('gather',1),false);
 });
-
-test('spending pauses future orders, preserves active paid work and reloads the pending queue',t=>{
- const {engine,p,e,D}=game(t);p.organization.total=new D(30);p.organization.points=new D(3);
- p.points=new D(20);p.shelter.homes=3;p.shelter.points=new D(20);p.food.points=new D(10);p.water.points=new D(50);
- e.setRepeat('gather',5);e.setHutRepeat(5);engine.advance(1);
- assert.equal(p.civ.actions.gather.repeat,4);assert.equal(p.civ.hutRepeat,4);assert.equal(p.civ.project,'shelter-home');
- assert.equal(e.buyUpgrade('preparedMaterials'),true);
- assert.equal(e.supply().overseerWorkers,0);assert.equal(e.supply().foremanWorkers,0);
- const saved=engine.exportPlayer(),loaded=createBalanceEngine(saved);t.after(loaded.dispose);
- engine.advance(50);loaded.advance(50);
- assert.equal(p.civ.actions.gather.completed,1);assert.equal(p.shelter.homes,4);
- assert.equal(p.civ.actions.gather.repeat,4);assert.equal(p.civ.hutRepeat,4);
- assert.equal(p.civ.project,'');assert.equal(engine.exportPlayer(),loaded.exportPlayer());
- p.organization.points=new D(3);p.food.points=new D(10);engine.advance(1);
- assert.equal(p.civ.actions.gather.repeat,3);assert.equal(p.civ.hutRepeat,3);
+test('all ten unlocks survive spending, both prestiges and codec reload without lifetime-based unlocks', t => {
+    for(let threshold=1;threshold<=10;threshold++) {
+        const {engine,p,e,D} = game(t);
+        p.organization.best = new D(threshold); p.organization.points = new D(0); p.organization.total = new D(100);
+        const expected = e.organizationMilestones().map(m=>m.requirement<=threshold);
+        assert.deepEqual(e.organizationMilestones().map(m=>m.earned),expected);
+        p.points = new D(12); assert.equal(e.prestige('craft'),true);
+        assert.deepEqual(e.organizationMilestones().map(m=>m.earned),expected);
+        p.points = new D(8); assert.equal(e.prestige('organization'),true);
+        assert.deepEqual(e.organizationMilestones().map(m=>m.earned),expected);
+        assert.equal(e.organizationPopulationRequirement(),12);
+        const loaded = createBalanceEngine(engine.exportPlayer()); t.after(loaded.dispose);
+        assert.deepEqual(loaded.session.modRules.civilization.organizationMilestones().map(m=>m.earned),expected);
+    }
 });
-
-test('zero held Organization preserves a paid hut through a locked feature and reload',t=>{
- const {engine,p,e,D}=game(t);p.organization.points=new D(3);p.organization.total=new D(3);
- e.startProject('shelter-home');assert.equal(e.buyUpgrade('workRosters'),true);assert.equal(e.organizationPopulationRequirement(),8);
- assert.equal(e.projects('shelter').length,0);assert.equal(e.summary().project.id,'shelter-home');
- const loaded=createBalanceEngine(engine.exportPlayer());t.after(loaded.dispose);loaded.advance(20);
- assert.equal(loaded.player.shelter.homes,1);assert.equal(p.civ.project,'shelter-home');
+test('retention, upgrades, irrigation and auto-building remain unlocked after spending', t => {
+    const {engine,p,e,D} = game(t);
+    p.organization.best = new D(10); p.organization.points = new D(0); p.organization.total = new D(100);
+    p.craft.points = new D(10); p.food.points = new D(50); p.water.points = new D(50);
+    assert.equal(e.buyUpgrade('lashings'),true);
+    assert.equal(e.buyUpgrade('workRosters'),false,'unlocked upgrades still require payment');
+    assert.equal(e.buyUpgrade('abundance'),true);
+    assert.equal(e.startProject('shelter-home'),true);
+    assert.equal(e.dispatch('hunt'),true);
+    assert.equal(e.summary().autoAvailable,true);
+    p.civ.improvements.farming = true;
+    assert.equal(e.irrigate(),true);
+    const plan = e.prestigePreview('craft');
+    for(const id of ['water-storage','food-storage','water-site','gather-tools','hunt-tools','fish-tools','shelter-home']) assert.equal(plan.kept[id],true,id);
+    assert.equal(plan.kept['farm-tools'],false); assert.equal(plan.kept['food-site'],false);
+    const loaded = createBalanceEngine(engine.exportPlayer()); t.after(loaded.dispose);
+    assert.equal(loaded.session.modRules.civilization.summary().autoAvailable,true);
+});
+test('previously paused orders wait for supervisors without discarding paid crews or pending counts', t => {
+    const {engine,p,e,D} = game(t);
+    p.organization.best = new D(3); p.organization.points = new D(2);
+    p.food.points = new D(10); p.water.points = new D(20);
+    assert.equal(e.dispatch('hunt'),true); assert.equal(e.dispatch('water'),true);
+    p.civ.actions.gather.repeat = 4; p.civ.hutRepeat = 4;
+    const saved=engine.exportPlayer();
+    const loaded=createBalanceEngine(saved); t.after(loaded.dispose);
+    assert.equal(loaded.player.civ.actions.hunt.workers,3);
+    assert.equal(loaded.player.civ.actions.water.workers,2);
+    assert.equal(e.supply().overseerWorkers,0);
+    assert.equal(e.summary().foodOrdersPaused,true);
+    engine.advance(1); loaded.advance(1);
+    assert.equal(p.civ.actions.gather.repeat,4); assert.equal(p.civ.hutRepeat,4);
+    assert.equal(engine.exportPlayer(),loaded.exportPlayer());
+    engine.advance(7); loaded.advance(7);
+    assert.equal(p.civ.actions.gather.repeat,4,'reserved managers need a separate free crew');
+    engine.advance(17); loaded.advance(17);
+    assert.ok(p.civ.actions.gather.repeat<4);
+    assert.equal(engine.exportPlayer(),loaded.exportPlayer());
+    engine.exportPlayer();
 });

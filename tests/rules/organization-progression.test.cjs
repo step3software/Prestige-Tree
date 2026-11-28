@@ -33,12 +33,13 @@ test('first three milestones each expose exactly three upgrades in the expected 
     }
 });
 
-test('every later upgrade rejects affordable purchases below its current gate',t=>{
+test('every later upgrade rejects affordable purchases before its milestone is first reached',t=>{
     const {p,e}=game(t);rich(p);
     const milestones=e.organizationMilestones();
     assert.deepEqual(milestones.map(row=>row.requirement),[1,2,3,4,5,6,7,8,9,10]);
     for(const milestone of milestones){
         for(const id of milestone.upgrades){
+            const {p,e}=game(t);rich(p);
             p.organization.total=new Decimal(milestone.requirement-1);p.organization.points=new Decimal(milestone.requirement-1);
             const before=JSON.stringify(p);
             assert.equal(e.buyUpgrade(id),false,id+' below gate');
