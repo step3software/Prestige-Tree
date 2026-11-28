@@ -47,11 +47,11 @@ test('every later upgrade rejects affordable purchases before its milestone is f
 });
 
 test('each retention milestone immediately keeps its exact buyable and protected construction',t=>{
-    const retained=[['water-storage',4],['food-storage',5],['water-site',6],['gather-tools',7],['hunt-tools',8],['fish-tools',9],['shelter-home',10]];
-    const all=['gather-tools','hunt-tools','fish-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
+    const retained=[['water-storage',4],['food-storage',5],['water-site',6],['gather-tools',7],['hunt-tools',8],['shelter-home',10]];
+    const all=['gather-tools','hunt-tools','farm-tools','food-site','food-storage','water-site','water-storage','shelter-home'];
     for(const [id,threshold] of retained){
         const {p,e}=game(t);
-        Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;
+        Object.assign(p.civ.features,{huts:true,hunting:true,buyables:false});p.civ.improvements.crafting=true;
         p.civ.improvements.farming=true;
         p.points=new Decimal(12+4*(threshold-1));
         p.shelter.homes=threshold;p.shelter.points=new Decimal(8+threshold*4);p.shelter.comfort=1;
@@ -89,11 +89,11 @@ test('auto-building remains inactive through milestone nine, including a previou
     assert.notEqual(p.civ.project,'');
 });
 
-test('retired upgrades cannot be purchased and Fishing keeps its full two-person crew',t=>{
+test('retired upgrades and fishing are unavailable while Water flow is preserved',t=>{
     const {p,e}=game(t);rich(p);p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);
     assert.equal(e.buyUpgrade('fishing'),false);
     assert.equal(e.buyUpgrade('wellLining'),false);
-    assert.equal(e.actionDefinition('fish').workers,2);
+    assert.equal(e.actionDefinition('fish'),null);
     p.civ.improvements.gravity=true;p.education.points=new Decimal(0);
     assert.equal(e.supply().production.water,8*e.supply().upkeep);
 });

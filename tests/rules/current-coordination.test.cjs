@@ -72,7 +72,7 @@ test('retention, upgrades, irrigation and auto-building remain unlocked after sp
     p.civ.improvements.farming = true;
     assert.equal(e.irrigate(),true);
     const plan = e.prestigePreview('craft');
-    for(const id of ['water-storage','food-storage','water-site','gather-tools','hunt-tools','fish-tools','shelter-home']) assert.equal(plan.kept[id],true,id);
+    for(const id of ['water-storage','food-storage','water-site','gather-tools','hunt-tools','shelter-home']) assert.equal(plan.kept[id],true,id);
     assert.equal(plan.kept['farm-tools'],false); assert.equal(plan.kept['food-site'],false);
     const loaded = createBalanceEngine(engine.exportPlayer()); t.after(loaded.dispose);
     assert.equal(loaded.session.modRules.civilization.summary().autoAvailable,true);

@@ -12,6 +12,8 @@ The game retains the session-bound Modding Tree engine, Vue 3, Decimal arithmeti
 
 Timber frames is available in Shelter after Organization 1 for 2 Craft. It keeps up to one completed hut per earned Organization milestone on Craft and Organization resets, replacing its former housing bonus. Newly earned milestones count immediately; milestone 10 still keeps all huts and hut work. Version 0.9.1 converts old Timber frames housing while preserving counts, Population and paid work; roofs and bricks keep their bonuses.
 
+Fishing has been removed. Version 0.9.2 cancels old fishing trips/orders and river-trap construction, releases their workers and removes trap levels without compensation. Other saved progress is preserved. See [save migration](docs/civilization.md) and the [developer route](docs/developer-guide.md).
+
 ## Play locally
 
 From a dedicated worktree, use Node 24.22.1 and npm 11.19.1:
