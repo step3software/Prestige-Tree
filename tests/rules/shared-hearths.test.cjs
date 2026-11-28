@@ -19,7 +19,7 @@ test('spending Fire reduces hearth income immediately while its storage stays',t
  const {p,e}=game(t);p.points=new Decimal(20);p.organization.total=new Decimal(4);p.organization.points=new Decimal(4);
  p.civ.improvements.clay=true;p.civ.improvements.hearth=true;p.craft.points=new Decimal(2);p.civ.fire=10;
  assert.equal(e.supply().storage.food,100);near(e.supply().passiveProduction.food,8);
- assert.equal(e.buyUpgrade('pipes'),true);assert.equal(p.civ.fire,8);near(e.supply().passiveProduction.food,6.4);assert.equal(e.supply().storage.food,100);
+ assert.equal(e.startProject('pipes'),true);assert.equal(p.civ.fire,8);near(e.supply().passiveProduction.food,6.4);assert.equal(e.supply().storage.food,100);
  e.setCooks(5);near(e.supply().passiveProduction.food,6.4);
  p.civ.fire=0;near(e.supply().passiveProduction.food,0);assert.equal(e.supply().storage.food,100);
 });
