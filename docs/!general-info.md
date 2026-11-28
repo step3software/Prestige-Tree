@@ -24,8 +24,8 @@ While reading this documentation, the following key will be used when describing
 
 ### General
 
-- [Civilization research index](research/README.md): Source editions, local/repository addresses, chapter and concept lookup, and reproducible EPUB citations.
-- [Civilization game reference guide](research/reference-guide.md): Apply Smil and Scott to resources, progression and prestige while distinguishing research from game rules.
+- [Civilization research index](research/README.md): Source editions, local/repository addresses, chapter/project lookup, and reproducible EPUB/PDF citations.
+- [Civilization game reference guide](research/reference-guide.md): Apply Smil, Scott, Plant and Kelly to materials, techniques, resources and progression while distinguishing research from game rules.
 - [Balance testing with content development](balance-testing.md#add-balance-coverage-with-content): Add pacing scenarios and focused tests in the same change as new or replaced content.
 - [Getting Started](getting-started.md): Getting your own copy of the code set up with Github Desktop.
 - [Main mod info](main-mod-info.md): How to set up general things for your mod in [mod.js](/js/mod.js).
