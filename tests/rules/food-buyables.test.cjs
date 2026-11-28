@@ -6,7 +6,7 @@ const Decimal = require('../../js/technical/break_eternity.js');
 function game(t) {
     const engine = createBalanceEngine();
     // Established-settlement fixture: retain activities already discovered before this test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7);
     t.after(engine.dispose);
     return {engine, p: engine.player, e: engine.session.modRules.civilization};
 }
@@ -27,7 +27,7 @@ test('exploring farther trades longer trips for compounded yields and rising wor
     assert.equal(p.food.routes.gather, 2);
     close(e.actionDefinition('gather').duration, 14.4);
     close(e.actionDefinition('gather').reward, 13.5);
-    assert.equal(e.actionDefinition('fish').reward, 14);
+    assert.equal(e.actionDefinition('hunt').reward, 24);
 });
 
 test('bigger game uses Craft access and rounds each successive crew without Organization gates', t => {
@@ -38,32 +38,6 @@ test('bigger game uses Craft access and rounds each successive crew without Orga
  e.recall('gather');p.civ.improvements.hunting=true;
  for(const [level,workers] of [[0,2],[1,3],[2,5],[3,8]]){p.food.routes.hunt=level;assert.equal(e.actionDefinition('hunt').workers,workers);}
  p.civ.improvements.autonomousFood=true;assert.equal(e.actionDefinition('hunt').workers,0);
-});
-
-test('river traps spend escalating Craft once at start and keep the same trip and crew', t => {
-    const {engine, p, e} = game(t);
-    assert.equal(e.startProject('fish-tools'), false);
-    p.craft.points = new Decimal(1);
-    assert.equal(e.startProject('fish-tools'), true);
-    assert.equal(p.craft.points.toNumber(), 0);
-    assert.equal(e.startProject('fish-tools'), false);
-    engine.advance(14);
-    assert.equal(p.food.routes.fish, 1);
-    assert.equal(e.actionDefinition('fish').reward, 28);
-    assert.equal(e.actionDefinition('fish').duration, 18);
-    assert.equal(e.actionDefinition('fish').workers, 2);
-    const next = e.projects('food').find(item => item.id === 'fish-tools');
-    assert.equal(next.craftCost, 2);
-    assert.equal(next.work, 14);
-    p.craft.points = new Decimal(1);
-    assert.equal(e.startProject('fish-tools'), false);
-    assert.equal(p.craft.points.toNumber(), 1);
-    p.craft.points = new Decimal(2);
-    assert.equal(e.startProject('fish-tools'), true);
-    e.cancelProject();
-    assert.equal(p.craft.points.toNumber(), 0, 'Canceled equipment does not refund spent Craft');
-    assert.equal(p.food.routes.fish, 1);
-    assert.equal(p.civ.project, '');
 });
 
 test('larger hunting crews round-trip, retain active contracts and wait safely on repeat', t => {
@@ -102,14 +76,14 @@ test('larger hunting crews round-trip, retain active contracts and wait safely o
 test('existing saved route levels and unpaid in-flight construction use one current economy', t => {
     const {engine, p} = game(t);
     p.food.routes.gather = 2;
-    p.food.routes.fish = 1;
-    p.civ.project = 'fish-tools'; p.civ.projectWork = 7;
+    p.food.routes.hunt = 1;
+    p.civ.project = 'hunt-tools'; p.civ.projectWork = 7;
     const codec = engine.session.saveCommands.saveCodec();
     const restored = createBalanceEngine(codec.encodePlayer(p).text); t.after(restored.dispose);
     const e = restored.session.modRules.civilization;
     close(e.actionDefinition('gather').duration, 14.4);
     restored.advance(7);
-    assert.equal(restored.player.food.routes.fish, 2);
+    assert.equal(restored.player.food.routes.hunt, 2);
     assert.equal(restored.player.craft.points.toNumber(), 0, 'No retroactive charge on saved construction');
-    assert.equal(e.actionDefinition('fish').reward, 56);
+    assert.equal(e.actionDefinition('hunt').reward, 96);
 });

@@ -55,7 +55,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
       const workers=Math.max(1,Math.min(5,Math.floor(p.points.toNumber()/6)));
       if(economy.setOverseers('food',workers))record('staffing','food',time);
     }
-    for(const id of ['gather','fish','hunt','farm']){
+    for(const id of ['gather','hunt','farm']){
       const action=economy.actionDefinition(id);
       if(action.unlocked && p.civ.improvements.extendedExpeditions){
         const ledger=economy.supply(),baseDuration=action.duration/action.expeditionMultiplier,baseYield=action.reward/action.expeditionMultiplier;
@@ -80,7 +80,7 @@ function createPolicy(engine,settings,onAction=()=>{}){
       if(next && !economy.canStartProject(next))next=p.water.sites<1?'water-site':null;
       if(next && economy.startProject(next))record('construction',next.split('-')[0],time,next);
     }
-    for(const id of ['water','gather','hunt','fish','farm']){
+    for(const id of ['water','gather','hunt','farm']){
       const action=economy.actionDefinition(id);
       if(p[action.resource].points.lt(economy.supply().storage[action.resource]-1) && economy.dispatch(id))record('dispatch',action.resource,time,id);
     }

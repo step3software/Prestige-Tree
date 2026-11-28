@@ -47,7 +47,7 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   const p=engine.player,e=engine.session.modRules.civilization;
   p.civ.autoBuild=false; // The existing user toggle freezes the reached housing target.
   if(p.civ.project)e.cancelProject();
-  for(const id of ['gather','fish','hunt','farm']){
+  for(const id of ['gather','hunt','farm']){
    if(p.civ.actions[id].remaining)e.recall(id);
    e.setRepeat(id,0);
   }
@@ -66,7 +66,7 @@ test('abundance rebuilds legally reached high shelter after actual starvation wi
   while(p.points.lt(2)&&manualRecoverySeconds<60){engine.advance(1);manualRecoverySeconds++;}
   assert.ok(p.points.gte(2),'One manual Gather restores room for an Overseer');
   let orders=0;
-  for(const id of ['gather','fish','hunt','farm']){
+  for(const id of ['gather','hunt','farm']){
    const action=e.actionDefinition(id);
    if(action.unlocked&&action.repeatAvailable&&!action.repeat&&e.setRepeat(id,1))orders++;
   }
@@ -144,7 +144,7 @@ test('legal active and regular play earn hearths and scale their Food benefits t
   // real crews at the same manual cadence to measure the next Food threshold.
   for(;time<enteredAt+1800;time+=cadence){
    if(!p.civ.project && e.supply().support<24)e.startProject('shelter-home');
-   for(const id of ['water','gather','fish','hunt','farm'])e.dispatch(id);
+   for(const id of ['water','gather','hunt','farm'])e.dispatch(id);
    engine.advance(cadence);
    if(p.points.gte(20))break;
   }
@@ -213,7 +213,7 @@ test('legal active and regular settlements can develop gathering, hunting and fa
   assert.ok(p.points.gte(8),'Supplies sustain the settlement through the investment');
   assert.equal(economy.actionDefinition('gather').duration/economy.actionDefinition('gather').expeditionMultiplier,12);
   assert.equal(economy.actionDefinition('hunt').workers,p.civ.improvements.hunting?3:5);
-  assert.equal(economy.actionDefinition('fish').unlocked,false,'Fishing has no assigned new-game milestone yet');
+  assert.equal(economy.actionDefinition('fish'),null,'Fishing has been removed');
   console.log(strategy+' legal Food route scenario: entered '+enteredAt+'s; all three completed by '+(time+cadence)+'s (synthetic, no pacing target).');
  }
 });

@@ -5,14 +5,14 @@ const Decimal = require('../../js/technical/break_eternity.js');
 function game(t,save) {
     const engine=createBalanceEngine(save);
     // Established-settlement fixture: retain activities already discovered before this test.
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true;t.after(engine.dispose);
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,buyables:false}); engine.player.civ.improvements.crafting=true;t.after(engine.dispose);
     return {engine,p:engine.player,e:engine.session.modRules.civilization};
 }
 
 test('holding or spending Craft never changes expedition yields or gravity flow',t=>{
     const {p,e}=game(t);p.organization.points=new Decimal(7);
     p.civ.improvements.gravity=true;
-    const routes=['gather','hunt','fish','farm','water'];
+    const routes=['gather','hunt','farm','water'];
     const yields=routes.map(id=>e.actionDefinition(id).reward);
     const flow=e.supply().production.water;
     for(const craft of [1,10,100,0]){
@@ -36,12 +36,12 @@ test('Food sliders reject invalid targets atomically and share one dedicated Ove
         assert.equal(e.setRepeat(id,target),false);
         assert.equal(JSON.stringify(p),before);
     }
-    for(const id of ['gather','hunt','fish'])assert.equal(e.setRepeat(id,5),true);
+    for(const id of ['gather','hunt'])assert.equal(e.setRepeat(id,5),true);
     assert.equal(e.supply().overseerWorkers,1);
     assert.equal(e.supply().availableWorkers,4);
-    e.setRepeat('gather',0);e.setRepeat('hunt',0);
+    e.setRepeat('gather',0);
     assert.equal(e.supply().overseerWorkers,1);
-    e.setRepeat('fish',0);
+    e.setRepeat('hunt',0);
     assert.equal(e.supply().availableWorkers,5);
 });
 

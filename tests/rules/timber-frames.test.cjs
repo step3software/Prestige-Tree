@@ -128,7 +128,7 @@ test('v0.8 Timber frames housing converts once without changing huts, Population
     assert.equal(result.ok, true, result.error);
     assert.equal(JSON.stringify(raw), original, 'Detached conversion preserves the original');
     const loaded = createBalanceEngine(codec.encodePlayer(result.value).text); t.after(loaded.dispose);
-    assert.equal(loaded.player.version, '0.91');
+    assert.equal(loaded.player.version, '0.92');
     assert.equal(loaded.player.shelter.homes, 4);
     assert.equal(loaded.player.shelter.points.toNumber(), 24);
     assert.equal(loaded.player.points.toNumber(), p.points.toNumber());

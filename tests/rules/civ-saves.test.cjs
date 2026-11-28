@@ -4,7 +4,7 @@ const {createRuntime} = require('../support/game-runtime.cjs');
 const key = 'civ-prestige-tree';
 function open(t, options = {}) {
     const r=createRuntime({bridge:false,...options});r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player,e=s.modRules.civilization;');
-    if(!options.storage || !options.storage[key])r.run('if(p){Object.assign(p.civ.features,{huts:true,hunting:true,fishing:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7);}');
+    if(!options.storage || !options.storage[key])r.run('if(p){Object.assign(p.civ.features,{huts:true,hunting:true,buyables:false});p.civ.improvements.crafting=true;p.organization.points=new Decimal(7);}');
     t.after(()=>{r.run('s.dispose()');r.dispose();});return r;
 }
 test('Civ storage is independent of the untouched original ptr value', t => {
@@ -86,7 +86,7 @@ test('malformed action contracts and overcommitted crews are rejected before act
         'raw.civ.actions.gather.remaining=11;raw.civ.actions.gather.duration=10',
         'raw.civ.actions.gather.repeat=true',
         'raw.civ.actions.gather.remaining=5;raw.civ.actions.gather.duration=10;raw.civ.actions.gather.reward=6',
-        'for(var id of ["hunt","fish","water"]){raw.civ.actions[id].remaining=5;raw.civ.actions[id].duration=10;raw.civ.actions[id].workers=id==="hunt"?3:2;raw.civ.actions[id].reward=10}'
+        'for(var id of ["gather","hunt","water"]){raw.civ.actions[id].remaining=5;raw.civ.actions[id].duration=10;raw.civ.actions[id].jobs=1;raw.civ.actions[id].workers=id==="gather"?1:id==="hunt"?3:2;raw.civ.actions[id].reward=10}'
     ]){
         r.run('var raw=JSON.parse(atob(s.saveCommands.saveCodec().encodePlayer(p).text));'+mutation+';var result=s.saveCommands.saveCodec().decodePlayer(raw)');
         assert.equal(r.run('result.ok'),false,mutation);
@@ -96,10 +96,10 @@ test('malformed action contracts and overcommitted crews are rejected before act
 
 test('spent Organization keeps history but locks milestones across saving and reload',t=>{
     const r=open(t);
-    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.fish=2;gameUI.commands.save()');
+    r.run('p.organization.total=new Decimal(10);p.organization.points=new Decimal(10);p.organization.points=new Decimal(0);p.food.routes.hunt=2;gameUI.commands.save()');
     const restored=open(t,{storage:Object.fromEntries(r.data)});
     assert.equal(restored.run('e.organizationMilestones().filter(m=>m.earned).length'),0);
     assert.equal(restored.run('e.prestigePreview("craft").kept["shelter-home"]'),false);
-    assert.equal(restored.run('p.food.routes.fish'),2);
+    assert.equal(restored.run('p.food.routes.hunt'),2);
     assert.equal(restored.run('e.summary().autoAvailable'),false);
 });

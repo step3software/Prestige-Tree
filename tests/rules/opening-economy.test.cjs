@@ -4,7 +4,7 @@ const {createBalanceEngine} = require('../../scripts/balance/engine.cjs');
 const Decimal = require('../../js/technical/break_eternity.js');
 function game(t, save) {
     const engine = createBalanceEngine(save);
-    Object.assign(engine.player.civ.features,{huts:true,hunting:true,fishing:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7); t.after(engine.dispose);
+    Object.assign(engine.player.civ.features,{huts:true,hunting:true,buyables:false}); engine.player.civ.improvements.crafting=true; engine.player.organization.points=new Decimal(7); t.after(engine.dispose);
     return {engine, p:engine.player, e:engine.session.modRules.civilization};
 }
 
@@ -17,11 +17,11 @@ test('all five people can join crews with no domestic reservation or home improv
     assert.equal(e.startProject('shelter-comfort'), false);
     assert.deepEqual(e.projects('shelter').map(item => item.id), ['shelter-home']);
     assert.equal(e.dispatch('hunt'), true);
-    assert.equal(e.dispatch('fish'), true);
+    assert.equal(e.dispatch('water'), true);
     assert.equal(e.supply().availableWorkers, 0);
     assert.equal(e.startProject('shelter-home'), false);
     assert.equal(e.supply().laborUsed, 5);
-    e.recall('fish');
+    e.recall('water');
     assert.equal(e.supply().availableWorkers, 2);
 });
 
@@ -47,7 +47,7 @@ test('unfunded and unstaffed basket starts have no side effects', t => {
     assert.equal(e.startProject('food-storage'), false);
     assert.equal(JSON.stringify(p), before);
     p.craft.points = new Decimal(1);
-    e.dispatch('hunt'); e.dispatch('fish');
+    e.dispatch('hunt'); e.dispatch('water');
     assert.equal(e.startProject('food-storage'), false);
     assert.equal(p.craft.points.toNumber(), 1);
     assert.equal(p.civ.project, '');
