@@ -21,7 +21,7 @@ test('holding or spending Craft never changes expedition yields or gravity flow'
         assert.equal(e.supply().production.water,flow);
     }
     p.craft.points=new Decimal(1);
-    assert.equal(e.startProject('food-storage'),true);
+    assert.equal(e.startProject('water-storage'),true);
     assert.equal(p.craft.points.toNumber(),0);
     assert.deepEqual(routes.map(id=>e.actionDefinition(id).reward),yields);
     assert.equal(e.supply().production.water,flow);
@@ -93,7 +93,7 @@ test('full stores, missing crews and active manual jobs never consume queued Foo
 test('five queued huts use one builder, decrement on start and stop even with general auto-build enabled',t=>{
     const {engine,p,e}=game(t);
     assert.equal(e.setHutRepeat(1),false);
-    p.points=new Decimal(12);p.food.storage=10;p.water.storage=10;
+    p.points=new Decimal(12);p.civ.improvements.hearth=true;p.civ.equipment["water-storage"]=10;
     p.food.points=new Decimal(450);p.water.points=new Decimal(450);
     p.civ.improvements.hutForeman=true;p.organization.points=p.organization.points.max(3);
     for(const target of [-1,6,1.2])assert.equal(e.setHutRepeat(target),false);
@@ -114,7 +114,7 @@ test('five queued huts use one builder, decrement on start and stop even with ge
 test('busy construction preserves hut repeats and the saved queue resumes without charging twice',t=>{
     const {engine,p,e}=game(t);
     p.civ.improvements.hutForeman=true;p.organization.points=p.organization.points.max(3);
-    p.organization.points=new Decimal(7);assert.equal(e.startProject('food-site'),true);
+    p.organization.points=new Decimal(7);p.craft.points=new Decimal(1);assert.equal(e.startProject('water-storage'),true);
     e.setHutRepeat(5);engine.advance(1);
     assert.equal(p.civ.hutRepeat,5);
     e.cancelProject();engine.advance(1);
@@ -145,7 +145,7 @@ test('shortages preserve hut batch work and never overcommit managers or crews',
 
 test('0.6 purchases, trips and repeat orders migrate once without starting huts or duplicating jobs',t=>{
     const {engine}=game(t);
-    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6';raw.points='5';
+    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6'; delete raw.civ.equipment;raw.points='5';
     raw.civ.improvements.waterOrders=true;raw.civ.improvements.overseer=true;
     for(const action of Object.values(raw.civ.actions)){delete action.jobs;action.repeat=false;}
     raw.civ.actions.water.repeat=true;
@@ -166,7 +166,7 @@ test('0.6 purchases, trips and repeat orders migrate once without starting huts 
 
 test('migration pauses orders if the new Overseer cannot fit, preserving active crews',t=>{
     const {engine}=game(t);
-    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6';raw.points='1';raw.organization.points='3';
+    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6'; delete raw.civ.equipment;raw.points='1';raw.organization.points='3';
     raw.civ.improvements.overseer=true;
     for(const action of Object.values(raw.civ.actions)){delete action.jobs;action.repeat=false;}
     Object.assign(raw.civ.actions.gather,{remaining:5,duration:10,workers:1,reward:6,repeat:true});

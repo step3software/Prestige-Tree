@@ -3,9 +3,9 @@ const assert=require('node:assert/strict');
 const {createRuntime}=require('../support/game-runtime.cjs');
 function open(t){const r=createRuntime({bridge:false});r.run('gameUI.commands.load();var s=gameUI.session,p=s.saveState.player;');t.after(()=>{r.run('s.dispose()');r.dispose();});return r;}
 test('independent sessions own their population, production and mutable layer definitions',t=>{
-    const r=open(t);r.run('var other=createGameSession();other.saveState.player.civ.improvements.crafting=true;other.modRules.civilization.startProject("food-site");other.advance(100);');
-    assert.equal(r.run('p.food.sites'),0);
-    assert.equal(r.run('other.saveState.player.food.sites'),1);
+    const r=open(t);r.run('var other=createGameSession();other.saveState.player.civ.improvements.crafting=true;other.saveState.player.craft.points=new Decimal(1);other.modRules.civilization.startProject("digging");other.advance(100);');
+    assert.equal(r.run('p.civ.equipment.digging'),0);
+    assert.equal(r.run('other.saveState.player.civ.equipment.digging'),1);
     assert.equal(r.run('other.layerRegistry.layers.food===s.layerRegistry.layers.food'),false);
     assert.throws(()=>r.run('advanceGame(other,-1)'),/nonnegative/);
     r.run('other.dispose()');assert.throws(()=>r.run('other.advance(1)'),/Disposed/);

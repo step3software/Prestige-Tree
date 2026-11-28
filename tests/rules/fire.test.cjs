@@ -35,7 +35,7 @@ test('empty, half and full Fire use the proposed gain formula and never exceed c
 });
 
 test('Cooking follows 45 Food/min cost table and consumes nothing without Food work',t=>{
- const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.improvements.digging=true;p.civ.fire=10;
+ const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.equipment.digging=1;p.civ.fire=10;
  assert.equal(e.setCookingLevel(5),true);engine.advance(2);assert.equal(p.civ.fire,10);
  assert.equal(e.dispatch('gather'),true);
  for(let level=1;level<=5;level++){
@@ -54,10 +54,10 @@ test('Cooking spends during work, stores bonus until completion, and keeps base 
 
 test('fivefold expeditions plus fivefold Cooking pay 25x Food over 5x time, with scaling fuel cost',t=>{
  const {engine,p,e,D}=game(t);stage(p,D);p.civ.improvements.cooking=true;p.civ.improvements.extendedExpeditions=true;
- p.civ.fire=10;p.food.storage=10;p.food.points=new D(0);e.setCookingLevel(5);e.setExpeditionMultiplier('gather',5);
+ p.civ.fire=10;p.food.points=new D(0);e.setCookingLevel(5);e.setExpeditionMultiplier('gather',5);
  const base=e.actionDefinition('gather');assert.equal(base.duration,50);assert.equal(base.reward,30);assert.equal(base.workers,1);
  e.dispatch('gather');near(e.fireStatus().consumption,3.84);engine.advance(50);
- near(p.food.total.toNumber(),160);near(p.civ.fire,6.8);
+ near(p.food.total.toNumber(),60);near(p.civ.fire,6.8);
 });
 
 test('changing Cooking mid-job applies only to fueled work and recall forfeits its accumulated bonus',t=>{
@@ -67,27 +67,15 @@ test('changing Cooking mid-job applies only to fueled work and recall forfeits i
  e.setCookingLevel(5);e.dispatch('gather');engine.advance(2);assert.ok(p.civ.actions.gather.cookingBonus>0);e.recall('gather');assert.equal(p.civ.actions.gather.cookingBonus,0);
 });
 
-test('jar purchases keep Craft/work, spend scaling Fire once and reject atomically when either currency is short',t=>{
- const {engine,p,e,D}=game(t);stage(p,D,6);p.civ.improvements.jars=true;p.craft.points=new D(10);p.civ.fire=10;
- for(let owned=0;owned<4;owned++){
-  p.water.storage=owned;const jar=e.projects('water').find(x=>x.id==='water-storage'),cost=.5*1.5**owned;
-  near(jar.fireCost,cost);near(jar.work,12*1.35**owned);assert.equal(jar.craftCost,2);assert.equal(e.supply().storage.water,100+120*owned);
-  p.civ.fire=cost-.001;const before=JSON.stringify(p);assert.equal(e.startProject(jar.id),false);assert.equal(JSON.stringify(p),before);
-  p.civ.fire=cost;const craft=p.craft.points.toNumber();assert.equal(e.startProject(jar.id),true);near(p.civ.fire,0);near(p.craft.points.toNumber(),craft-2);
-  e.cancelProject();near(p.civ.fire,0);near(p.craft.points.toNumber(),craft-2);
- }
- p.civ.fire=10;p.craft.points=new D(0);assert.equal(e.startProject('water-storage'),false);assert.equal(p.civ.fire,10);
-});
-
 test('both prestiges clear Fire and tenders, retaining upgrades and safe accumulated active Food',t=>{
  for(const id of ['craft','organization']){
   const {engine,p,e,D}=game(t);stage(p,D);p.points=new D(28);p.civ.fire=10;
-  for(const key of ['cooking','jars','hearth'])p.civ.improvements[key]=true;
+  for(const key of ['cooking','hearth'])p.civ.improvements[key]=true;
   e.setFireTenders(3);e.setCookingLevel(5);e.dispatch('gather');engine.advance(2);
   assert.match(e.prestigePreview(id).resetText,/stored Fire resets to 0/);assert.equal(e.prestige(id),true);
   assert.equal(p.civ.fire,0);assert.equal(p.civ.fireTenders,0);assert.equal(e.fireStatus().maximum,10);
-  for(const key of ['cooking','jars','hearth'])assert.equal(p.civ.improvements[key],true);
-  assert.equal(e.supply().storage.water,100);engine.exportPlayer();
+  for(const key of ['cooking','hearth'])assert.equal(p.civ.improvements[key],true);
+  assert.equal(e.supply().storage.water,50);engine.exportPlayer();
  }
 });
 
@@ -104,7 +92,7 @@ test('actual PR12 codec export migrates once without retroactive fuel charges or
  assert.equal(p.civ.project,'water-storage');assert.equal(p.civ.projectWork,raw.civ.projectWork);
  assert.equal(p.civ.actions.gather.reward,raw.civ.actions.gather.reward);assert.equal(p.civ.actions.gather.remaining,raw.civ.actions.gather.remaining);assert.equal(p.civ.actions.gather.cookingBonus,0);
  assert.equal(p.civ.improvements.hearth,true);assert.equal(e.supply().storage.food,100);assert.equal(e.supply().passiveProduction.food,0);
- engine.advance(10);assert.equal(p.water.storage,1);assert.equal(p.civ.fire,0);game(t,engine.exportPlayer());
+ engine.advance(10);assert.equal(p.civ.equipment["water-storage"],1);assert.equal(p.civ.fire,0);game(t,engine.exportPlayer());
 });
 
 test('invalid Fire and cooked snapshots reject without changing live state; chunks and reloads stay identical',t=>{

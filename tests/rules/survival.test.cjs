@@ -91,8 +91,8 @@ test('one survivor retains solo recovery actions and can grow again',t=>{
 
 test('population losses pause construction without losing work and resume when labor and supplies recover',t=>{
     const {engine,p,e}=game(t);shortage(p,'food',4);
-    p.food.sites=4;
-    assert.equal(e.startProject('food-site'),true);
+    p.civ.equipment["water-storage"]=4;p.craft.points=new Decimal(16);
+    assert.equal(e.startProject('water-storage'),true);
     assert.equal(e.dispatch('hunt'),true);
     engine.advance(9);const work=p.civ.projectWork;
     engine.advance(1);
@@ -120,7 +120,7 @@ test('Overseer reserves one worker for all enabled Food sliders and cannot overb
     assert.equal(e.supply().overseerWorkers,1);
     assert.equal(e.setRepeat('hunt',0),true);
     assert.equal(e.supply().overseerWorkers,0);
-    e.dispatch('hunt');e.dispatch('gather');e.startProject('food-site');
+    e.dispatch('hunt');e.dispatch('gather');p.craft.points=new Decimal(1);e.startProject('water-storage');
     assert.equal(e.setRepeat('gather',1),false);
 });
 
@@ -180,7 +180,7 @@ test('Organization requires only Population, scales with currently held Coordina
 
 test('shortage countdown and paused construction survive the current codec',t=>{
     const {engine,p,e}=game(t);shortage(p,'food',4);
-    p.food.sites=4;e.startProject('food-site');e.dispatch('hunt');engine.advance(10);
+    p.civ.equipment["water-storage"]=4;p.craft.points=new Decimal(16);e.startProject('water-storage');e.dispatch('hunt');engine.advance(10);
     const restored=createBalanceEngine(engine.exportPlayer());t.after(restored.dispose);
     assert.equal(restored.player.civ.projectWorkers,0);
     assert.equal(restored.player.civ.projectWork,p.civ.projectWork);
@@ -192,7 +192,7 @@ test('shortage countdown and paused construction survive the current codec',t=>{
 
 test('historical Water keeper purchases become Hut foreman without starting new jobs',t=>{
     const {engine}=game(t);
-    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6';raw.points='5';
+    const raw=JSON.parse(atob(engine.exportPlayer()));raw.version='0.6'; delete raw.civ.equipment;raw.points='5';
     raw.civ.improvements.waterOrders=true;raw.civ.actions.water.repeat=true;
     raw.civ.actions.hunt={remaining:15,duration:25,workers:3,reward:24,completed:0,repeat:false};
     raw.civ.actions.gather={remaining:5,duration:10,workers:1,reward:6,completed:0,repeat:false};
@@ -203,7 +203,7 @@ test('historical Water keeper purchases become Hut foreman without starting new 
     assert.equal(engine.player.civ.actions.water.repeat,0);
     assert.equal(engine.player.civ.actions.hunt.remaining,15);
     assert.equal(engine.player.civ.actions.hunt.jobs,1);
-    raw.version='0.7';
+    raw.version='0.7'; delete raw.civ.equipment;
     assert.equal(engine.session.loadPlayer(btoa(JSON.stringify(raw))).ok,false);
     assert.equal(engine.player.civ.actions.hunt.remaining,15);
 });

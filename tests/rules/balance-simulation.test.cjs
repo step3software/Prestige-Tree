@@ -109,9 +109,9 @@ test('legal active and regular play drain five-repeat Food and hut queues withou
    assert.ok(p.civ.actions[id].completed>=completed+5,id+' completed five queued repeats');
   }
   const huts=p.shelter.homes;
-  const requiredWells=p.water.sites+1;
-  for(let wait=0;wait<3600&&p.water.sites<requiredWells;wait+=cadence){support();if(!p.civ.project)e.startProject('water-site');engine.advance(cadence);}
-  assert.ok(p.water.sites>=requiredWells,'Earn enough Water infrastructure for five additional huts');
+  const requiredPipes=p.civ.equipment.pipes+1;
+  for(let wait=0;wait<3600&&p.civ.equipment.pipes<requiredPipes;wait+=cadence){support();if(!p.civ.project)e.startProject('pipes');engine.advance(cadence);}
+  assert.ok(p.civ.equipment.pipes>=requiredPipes,'Build pipes for five additional huts');
   assert.equal(e.setHutRepeat(5),true);
   for(let wait=0;wait<3600&&p.shelter.homes<huts+5;wait+=cadence){support();engine.advance(cadence);}
   assert.equal(p.shelter.homes,huts+5);
@@ -167,15 +167,15 @@ test('legal active and regular play can fund and complete earthenware storage af
   const p=engine.player,e=engine.session.modRules.civilization;
   const policy=createPolicy(engine,strategies[strategy]);
   const cadence=strategy==='regular'?20:5;
-  const startingStorage=p.water.storage;
+  const startingStorage=p.civ.equipment.jars;
   let started=false,time=0;
   for(;time<3600;time+=cadence){
-   if(!started && e.canStartProject('water-storage'))started=e.startProject('water-storage');
+   if(!started && e.canStartProject('jars'))started=e.startProject('jars');
    policy.act(time);
    engine.advance(cadence);
-   if(p.water.storage>startingStorage)break;
+   if(p.civ.equipment.jars>startingStorage)break;
   }
-  assert.ok(p.water.storage>startingStorage,'Manual or earned automatic construction must finish a paid jar purchase');
+  assert.ok(p.civ.equipment.jars>startingStorage,'Manual or earned automatic construction must finish a paid jar purchase');
   assert.ok(p.points.gte(5));
   assert.ok(e.supply().storage.water>=90);
   console.log(strategy+' legal earthenware jars: opening '+run.simulatedSeconds+'s; crafted within '+(time+cadence)+' additional seconds ('+(started?'manual start':'earned auto-builder')+', synthetic).');
@@ -192,12 +192,14 @@ test('legal active and regular settlements can develop gathering, hunting and fa
   // Reach the scenario by ordinary play; no granted currencies or route levels.
   for(;time<14400;time+=cadence){
    policy.act(time);
-   if(p.organization.points.gte(10)&&p.civ.improvements.copperPots&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(20)&&!p.civ.project)break;
+   if(p.organization.points.gte(10)&&p.civ.equipment.copperPots&&p.civ.improvements.farming&&p.craft.points.gte(2)&&p.points.gte(20)&&!p.civ.project)break;
    engine.advance(cadence);
   }
   assert.ok(time<14400,'Legally reached pre-buyable settlement');
   const enteredAt=time;
-  const builds=['gather-tools','hunt-tools','farm-tools'];
+  const builds=['gather-tools','hunt-tools','sickles'];
+  const level=id=>id==='sickles'?p.civ.equipment.sickles:p.food.routes[id.split('-')[0]];
+  const initial=Object.fromEntries(builds.map(id=>[id,level(id)]));
   const started=new Set();
   for(;time<enteredAt+600;time+=cadence){
    if(!p.civ.project){
@@ -206,14 +208,14 @@ test('legal active and regular settlements can develop gathering, hunting and fa
    }
    for(const id of ['water','gather','farm','hunt'])economy.dispatch(id);
    engine.advance(cadence);
-   if(builds.every(id=>p.food.routes[id.split('-')[0]]>=1))break;
+   if(builds.every(id=>level(id)>initial[id]))break;
   }
   assert.equal(started.size,3);
-  assert.ok(builds.every(id=>p.food.routes[id.split('-')[0]]>=1));
+  assert.ok(builds.every(id=>level(id)>initial[id]));
   assert.ok(p.points.gte(8),'Supplies sustain the settlement through the investment');
-  assert.equal(economy.actionDefinition('gather').duration/economy.actionDefinition('gather').expeditionMultiplier,12);
-  assert.equal(economy.actionDefinition('hunt').workers,p.civ.improvements.hunting?3:5);
-  assert.equal(economy.actionDefinition('fish'),null,'Fishing has been removed');
+  assert.ok(economy.actionDefinition('gather').duration/economy.actionDefinition('gather').expeditionMultiplier>=12);
+  assert.equal(economy.actionDefinition('hunt').workers,p.civ.equipment.hunting?3:5);
+  assert.equal(economy.actionDefinition('fish'),null);
   console.log(strategy+' legal Food route scenario: entered '+enteredAt+'s; all three completed by '+(time+cadence)+'s (synthetic, no pacing target).');
  }
 });

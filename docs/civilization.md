@@ -4,7 +4,7 @@ Population is the base resource. Food, Water and Shelter are the opening nodes, 
 
 ## First minutes
 
-Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; buy Crafting for 10 Craft to reveal hunting and equipment. Both overseer queues arrive at 3; Food/Water buyables use Craft capability rather than milestone 6. Dispatching a busy route or overbooking workers fails without spending anything.
+Start with 5 Population, 10 Food, 10 Water and housing for 8. Send Gather and Collect water; their crews return automatically with the yield. Earn the first Organization point at 8 Population to unlock hut construction; buy Crafting for 10 Craft to reveal repeatable equipment, then build Wooden spears to unlock hunting. The two expedition buyables arrive at Organization 2 and both overseer queues at 3. Materials are purchased in Craft; equipment buyables stay on their resource tabs. Fishing and river traps remain removed. Dispatching a busy route or overbooking workers fails without spending anything.
 
 Food and Water are consumed continuously. Normal growth takes 12 supported game seconds per person. After purchasing Abundance, a free Shelter upgrade unlocked at Organization milestone 8, independent Food, Water and Shelter bonuses can raise the rate to 10 times normal. Before purchase, growth remains at the base rate. Growth still needs housing plus a reserve of each supply equal to max(3, a quarter-minute of the next population's upkeep). An empty Food or Water stockpile starts the shortage countdown described below. Shared hearths adds a small continuous Food supplement through the same economy update as upkeep; expeditions remain the main Food source.
 
@@ -83,85 +83,73 @@ Each loss recalculates the shared labor budget. Construction can pause with its 
 
 Each route saves its active job snapshot separately from a remaining-repeat counter capped at five per assigned overseer. Each successful automatic start dispatches one job and decrements the counter by exactly one. Busy routes, full storage and unavailable crews do not consume repeats. At zero, no further job starts; an active final job still finishes normally. Changing or clearing a repeat selection leaves current work unchanged. Recall cancels active work and clears its queue. New equipment/irrigation affects the next dispatch; saved snapshots retain their remaining time, crew and reward. Existing multi-job snapshots still finish without duplicating yield.
 
-Food routes have distinct repeatable projects, each reserving one builder:
-
-- **Explore farther afield** (`gather-tools`): each level multiplies gathering time by 1.2 and yield by 1.5 with the same one-person crew. Work starts at 14 and scales by 1.35 per level.
-- **Hunt bigger game** (`hunt-tools`): each level multiplies the crew by 1.5, rounding up after each level, and doubles yield. Duration stays 25 seconds. Crafting unlocks the equipment; no per-level Organization requirement remains. Work stays 14. Spear hunting applies before scaling: crews grow 2, 3, 5, 8 instead of 3, 5, 8, 12.
-- **Farming tools** retain their +35% base yield and faster-cycle effect; work scales by 1.35 per level.
-
-Provisioning improves all Food routes by 15% of base yield per level. Each Food basket adds 40 storage and costs exactly 1 Craft up front, in addition to its existing scaling work requirement. Provisioning and exploration/farming spend work only. Improvements affect newly dispatched trips. Repeat orders wait for sufficient workers for the new crew size; Autonomous food production still removes the final scaled crew requirement.
+The two expedition buyables unlock at Organization milestone 2 and retain the trip tradeoffs and per-level requirements described below. Removed Provisioning, Food baskets, river traps and Farming tools no longer have purchase paths or ongoing effects. Their migrated active trips retain their saved contracts.
 
 Spear hunting reduces the base crew from 3 to 2 before bigger-game scaling. Digging sticks adds 25% Gather yield; Butchery tools adds 50% Hunt yield. Food crews remain staffed. Cultivated fields becomes available at Organization 7 and retains its existing Food/Water/Craft/Organization costs. Autonomous food production and Automatic sluice still require inaccessible later resources; older purchased effects remain usable. See the early milestone contract below for queue unlocks and staffing.
 
 ## Materials and equipment
 
-The Craft panel has one material purchase and four equipment choices per row. Unlock costs are fixed, not a fraction of the current balance. Material knowledge and permanent techniques survive prestige. Rejected purchases spend nothing. Higher equipment tiers require the prior tier and preserve the same physical counts/work.
+Crafting (10 Craft), Clay (20 Craft) and Copper working (30 Craft) are one-time permanent knowledge purchases. Each unlocks four repeatable equipment buyables on the relevant resource tabs:
 
-| Row unlock | Four purchases and effects |
+| Material | Equipment | Base Craft cost |
+| --- | --- | --- |
+| Crafting | Thatched roofs, Wooden spears, Tightly woven baskets, Digging sticks | 1 each |
+| Clay | Earthenware jars, Bricks, Clay cooking pots, Fired-clay pipes | 2 each |
+| Copper working | Copper axes, Copper knives, Copper pots, Copper sickles | 3 each |
+
+| Location | Equipment buyables |
 | --- | --- |
-| Crafting: 10 Craft | 1 Craft each: Thatched roofs (+1 housing/hut), Wooden spears (unlock Hunt, base crew 2), Woven baskets (+40 Water capacity per completed level), Digging sticks (+25% Gather yield) |
-| Clay: 20 Craft | 2 Craft each: Earthenware jars (upgrade baskets; base capacity 100, +120 per existing/future level), Bricks (upgrade roofs, replace +1 with +2 housing/hut), Clay cooking pots (-25% Cooking fuel), Fired-clay pipes (also 2 Fire once; 2x passive Water) |
-| Copper working: 30 Craft | 3 Craft each: Copper axes (2x hut construction speed), Copper knives (+50% Hunt yield), Copper pots (upgrade Cooking vessels, retain fuel saving and add 25% Cooking bonus yield), Copper sickles (new Farming trips take 25% less time) |
+| Food | Wooden spears, Digging sticks, Copper knives, Copper sickles |
+| Water | Tightly woven baskets, Earthenware jars, Fired-clay pipes |
+| Shelter | Thatched roofs, Bricks, Copper axes |
+| Fire panel | Clay cooking pots, Copper pots |
 
-Water-storage jars and Cooking pots are separate families. A basket-to-jar upgrade does not create a second storage counter; a pot upgrade does not create Water storage. Bricks replaces the Thatched-roof bonus rather than adding both. All existing hut counts/work remain. Timber frames is purchasable separately in Shelter after Organization milestone 1 for 2 Craft. It retains up to one completed hut per earned Organization milestone on Craft and Organization resets, replacing its former housing bonus. Other retired techniques keep their historical effects; no new purchase slot is supplied for them. The owner removed Communal cistern from this change.
+Every equipment level costs `base Craft * 2^ownedLevels` and requires `12 * 1.35^ownedLevels` construction work with one builder. Payment occurs once at start; busy, locked, unstaffed or unaffordable commands have no effects. Canceling or losing work on prestige does not refund the payment. A level arrives only on completion. The Craft page sells only these three material unlocks. Resource buyable buttons derive their levels, costs, prerequisites and command availability from the same owner.
 
-Woven baskets uses the existing `water-storage` construction ID and `player.water.storage`. Starts cost 1 Craft before jars and 2 after, with `12 * 1.35^level` work. Jars additionally use the recurring firing recipe below. Buying the jars technique requires a completed basket and available Fire. Clay pots require Cooking; Copper pots require Clay pots. Bricks requires roofs; sickles require Farming. The four cells do not imply all four prerequisites are already met.
+Roofs add 1 housing per hut per level; Bricks add 2. The two counts are independent. Wooden spears first unlocks hunting with a two-person base crew; later spear levels add 25% base hunting yield each. Digging sticks multiply gathering yield by 1.25 per level; Copper knives multiply hunting yield by 1.5 per level. Copper axes double hut building speed per level; Copper sickles multiply new Farming duration by 0.75 per level. Existing dispatched trips keep their saved contracts.
+
+Tightly woven baskets and Earthenware jars remain separate buyables. Each basket adds 10 manual Water carrying capacity; each jar adds 20 manual carrying capacity and 20 reservoir storage. The raw Collect water load is `14 + 10*baskets + 20*jars`; reservoir capacity is `50 + 20*jars`. One basket and one jar therefore give a 44-Water base trip and 70 storage. Basket count never multiplies the jar storage bonus. Existing Knowledge effects still apply to the base trip yield. Jars require a completed basket and available Fire. Bricks needs roofs; Clay pots needs Cooking; Copper pots needs Clay pots; sickles needs Farming. Material knowledge remains required for every new equipment purchase.
+
+Clay pots multiply Cooking fuel use by 0.75 per level. Copper pots add 25% to the fueled Cooking bonus per level. Pipes double spring flow per level. Jars spend `0.5 * 1.5^jarLevels` Fire at start; pipes spend 2 Fire per level. These payments do not create fuel or Water.
+
+All equipment levels, scaling Craft prices and equipment construction reset on both Craft and Organization prestige, including after milestone 10. Material knowledge remains. No Water-container, well, Food-basket or river-trap retention rule protects this equipment. Timber frames and the existing milestones retain only the huts and expedition exceptions described below.
 
 ## Early Organization milestones
 
-New games expose Gather and Collect water. Huts unlock permanently on first reaching Organization 1, Wooden spears unlock Hunt, and both Food and Hut overseer queues at 3 without a separate purchase. The first Organization point requires 8 Population; subsequent requirements are `8 + 4 * current Organization`. Craft still starts at 12 Population. Earned milestones remain unlocked after spending; purchased upgrades and paid work remain. The population requirement falls immediately with the held balance.
+Huts unlock permanently at Organization milestone 1, allowing the eight-person founding settlement to reach the first Craft threshold at twelve. Explore farther afield and Hunt bigger game unlock at milestone 2, independently of Crafting; each next level requires `2 + current route level` held Organization, without spending it. Their normal work is `14 * 1.35^level`. Explore multiplies duration by 1.2 and yield by 1.5 per level. Bigger game multiplies yield by 2 and rounds the crew upward after each 1.5 multiplier.
 
-Basic huts remain available at Organization 1 so the eight-person founding housing can grow to the first Craft threshold at twelve. Organization 2 no longer unlocks hunting; Wooden spears does. Food and hut orders unlock at 3. Prepared materials (1 Organization) discounts supervised hut work by 25%; Extended expeditions (2) allows separate 1-5x Food duration/reward selections; Work rosters (3) permits 1-5 overseers separately for Food/huts, each supporting five repeats. Each successful automatic start spends one repeat. Current job snapshots keep their crew/duration/reward, and staffing reductions reject before discarding queued work.
+Food and hut orders unlock at 3. Prepared materials (1 Organization), Extended expeditions (2) and Work rosters (3) keep their existing effects. The first Organization point needs 8 Population; later points need `8 + 4 * current Organization`. Earned milestone access survives spending through the saved peak held balance. Payment and current Organization requirements still use the live balance.
 
-Fire remains at 4, spring at 5, well retention at 6, Farming at 7, Abundance at 8, Farming-only irrigation at 9 and hut retention/auto-building at 10. Craft equipment no longer uses these milestones as purchase gates. Exact retention IDs stay unchanged.
+Fire remains at 4, spring at 5, Farming at 7, Abundance at 8, Farming-only irrigation at 9, and hut retention/auto-building at 10. Milestone 6 no longer retains the removed well. Exploration retention stays at 7 and bigger-game retention at 8. Removed base buyables are Provisioning, Food baskets, Improve the well, river traps and Farming tools. Their commands and purchase controls are gone.
 
 ## Fire capacity, tending and Cooking
 
-At Organization 4, assign 0-5 whole Fire tenders from the existing shared pool. Cooking costs 1 Fire; Shared hearths costs 3 Fire. Ceramic storage technology is purchased in Clay for 2 Craft. Zero tenders releases their workers and preserves stored Fire; it always produces zero fuel.
-
-| Repeatable Fire buyable | Material; Craft per level | Effect | Base work |
-| --- | --- | --- | --- |
-| Fuel stores | Crafting; 1 | +10 Fire capacity per level | 12 |
-| Improved hearths | Crafting; 1 | +20% base tender production per level | 16 |
-| Charcoal clamps | Clay; 2 | Divide recurring fuel use by `1 + 0.15*level` | 24 |
-
-Fire construction uses the normal single slot and one builder, `baseWork * 1.35^level`, complete upfront Craft payment and no cancellation refund. Levels increase only at completion. Capacity adds no free fuel. These new physical levels/construction are unprotected on prestige; Fire and tender assignments reset to zero. The earned Fire milestone remains available after spending; tenders, supervisors and active crews share the same worker budget. Permanent techniques and material knowledge remain.
+At Organization 4, assign 0–5 whole Fire tenders from the shared worker pool. Cooking costs 1 Fire; Shared hearths costs 3 Fire. Fuel stores, Improved hearths and Charcoal clamps have been removed, including their effects, construction and controls. Capacity comes from huts, with no repeatable Fire infrastructure purchases.
 
 ```text
-maximum = 10 + 2*huts + 10*fuelStores
+maximum = 10 + 2*huts
 fill = min(1, Fire/maximum)
-gain/min = tenders * (0.5 + 1.5*fill^2) * (1 + 0.2*improvedHearths)
-efficiency = 1 + 0.15*charcoalClamps
-Cooking fuel/min = 0.2*(setting-1)^2*(uncookedFoodPerMinute/30)
-                   * (Cooking pots ? 0.75 : 1) / efficiency
-effective Cooking multiplier = 1 + (setting-1)*fundedFraction*(Copper pots ? 1.25 : 1)
+gain/min = tenders * (0.5 + 1.5*fill^2)
+Cooking fuel/min = 0.2*(setting-1)^2*(uncookedFoodPerMinute/30)*0.75^clayPotLevels
+effective Cooking multiplier = 1 + (setting-1)*fundedFraction*(1 + 0.25*copperPotLevels)
 ```
 
-Cooking settings remain 1-5. Copper changes the bonus: setting 3 yields 3.5x fully funded output, setting 5 yields 6x. Raw Food and setting 1 are unchanged. Fuel and bonus accrue during each actual second of active Food work; only the funded share earns the bonus. Existing accrued bonus survives later setting changes until completion. Recall forfeits unfinished output. Idle routes consume no Cooking fuel. Cooking and expedition length remain independent; Shared hearth income is outside Cooking. Shared hearths retains +25 Food storage per whole ten current people and +4 Food/min per group scaled by Fire fullness.
-
-Post-jars construction spends `0.5 * 1.5^water.storage / efficiency` Fire once at start. Current jars cost 2 Craft, baskets 1, and their work scaling remains. All currencies are checked before any spend. Paid in-flight jobs are never charged again. Charcoal discounts recurring manufacturing recipes and Cooking, not fixed technology costs: pipes always cost exactly 2 Fire. Increasing capacity can lower fullness until the new room fills; the Fire bar shows actual gain, consumption, net and effective Cooking output.
+Cooking settings stay at 1–5. Fuel and bonus accrue during active Food work; only the funded share earns the bonus, and base Food remains available without fuel. Existing accrued bonus survives setting changes. Recall forfeits unfinished output. Idle routes consume no Cooking fuel. Zero tenders releases workers and retains stored Fire. Shared hearths keeps its Food capacity/income effect outside Cooking. Stored Fire and tender assignments reset on prestige.
 
 ## Water: hauling, jars and flow
 
-Collect water remains visible/dispatchable after spring purchase, with its normal crew, active-job and available-worker guards. Saved pre-spring crews finish once. There is no automatic Water repeat queue. Water starts at 50 capacity and basket levels add 40; jars raise the base to 100 and replace that coefficient with 120 for the same levels. Containers add capacity without filling it. Existing Carrying yokes remains usable if previously purchased.
+Collect water remains available after purchasing Gravity-fed spring, with its normal crew and active-job guards. There is no automatic Water repeat queue. Equipment in Craft owns Water capacity; the Water panel has no base infrastructure buyables.
 
-Spring is still a purchase at Organization 5 for 2 Craft, 1 Organization and 30 Food. Let `u` be the same actual per-person upkeep used by consumption:
+Spring remains a milestone-5 permanent upgrade costing 2 Craft, 1 Organization and 30 Food. With actual per-person upkeep `u`, passive Water/min is `u * 8 * knowledgeEffect * 2^pipeLevels`. With no pipes or Knowledge it sustains exactly eight people at any Organization balance. Hauling supplements it above that level. Removed wells no longer alter manual collection or spring flow. Previously bought Carrying yokes still has its existing effect.
 
-```text
-u = 1/(1 + currentOrganization*0.06 + currentCulture*0.04)
-passive Water/min = ownsSpring ? u*(8 + wellLevels)*knowledgeEffect*(pipes ? 2 : 1) : 0
-```
-
-With no wells, Knowledge or pipes, supply sustains exactly eight people at any Organization balance. Nine people draw down reserves; hauling can support more. This is sustainable supply, not a Population cap. Pipes double the complete passive expression once, never manual deliveries, and need no operating Fire after manufacture. No spring means no passive income even with pipes. Well levels retain their manual yield/speed improvements and add one upkeep-equivalent to spring supply per level.
-
-Irrigation retains its Organization-9/Farming gate, 20 surplus Water payment, protected household reserve, +35% new Farming reward and 45-second duration. It changes neither other routes nor existing dispatched rewards. Water jar names and current costs derive from the same material tier as the actual command.
+Irrigation keeps its milestone-9/Farming gate, 20 surplus Water payment, protected household reserve, 35% new Farming yield bonus and 45-second duration. It does not change existing dispatched snapshots.
 
 ## Shelter: expand housing
 
 There are no building slots and no Shelter milestone track.
 
 - **Abundance** is free to purchase after Organization milestone 8. Until purchased, surplus supplies and spare housing do not accelerate growth. Its curves and ownership gate are described above.
-- **Build a new hut** unlocks at Organization 1 and adds 4 housing, plus the current roof tier (+1 thatch or +2 bricks). Timber frames protects completed huts at prestige. Both overseers unlock at 3; queued hut work and staffing follow the early milestone contract. General auto-building excludes huts. Busy construction, shortages and missing builders consume no repeats. Setting zero clears pending repeats; canceling stops current construction.
+- **Build a new hut** unlocks at Organization 1 and adds 4 housing, plus current roof levels (+1 per thatch and +2 per Bricks level). Timber frames protects completed huts at prestige. Both overseers unlock at 3; queued hut work and staffing follow the early milestone contract. General auto-building excludes huts. Busy construction, shortages and missing builders consume no repeats. Setting zero clears pending repeats; canceling stops current construction.
 
 There is no domestic work or household labor reservation. Every person can join a crew or build. The ledger counts active crews, the shared Food Overseer, the hut foreman, Fire tenders and every reserved builder once. Only whole available workers can join a crew.
 
@@ -181,22 +169,22 @@ New games can view the three material unlocks in Craft. Material spending owns e
 
 | Highest held Organization | Feature / upgrades | Specific buyable retained |
 | --- | --- | --- |
-| 1 | Basic huts | None |
-| 2 | Material purchases supply hunting/equipment | None |
-| 3 | Both overseers; Prepared materials, Extended expeditions, Work rosters | None |
-| 4 | Fire; Cooking, Shared hearths | Water-storage containers |
-| 5 | Gravity-fed spring, Emergency cistern | Food baskets |
-| 6 | Well records | Well improvements |
+| 1 | Basic huts, Timber frames | None |
+| 2 | Explore farther afield, Hunt bigger game | None |
+| 3 | Overseer queues and Organization upgrades | None |
+| 4 | Fire, Cooking, Shared hearths | None |
+| 5 | Gravity-fed spring, Emergency cistern | None |
+| 6 | Community records | None |
 | 7 | Cultivated fields | Explore farther afield |
-| 8 | Free Abundance, Emergency rations, Mutual aid | Hunt bigger game |
+| 8 | Abundance, Emergency rations, Mutual aid | Hunt bigger game |
 | 9 | Farming-only irrigation | None |
-| 10 | Existing auto-building | Huts |
+| 10 | Auto-building | Huts |
 
-Retention is evaluated by the exact buyable ID, not its resource layer. Water-storage records do not retain wells; gathering records do not retain bigger-game levels. Provisioning and farming tools continue to reset through milestone 10. Later rewards can extend that progression.
+Equipment never inherits retention from a resource layer. Its canonical levels own both effects and costs and reset together.
 
 Milestones use the highest Organization balance held, never cumulative earnings. Newly earned unlocks and specific retention apply immediately on that Organization prestige. Both Craft and Organization use the same retention rules. The UI preview and native confirmation share the command's prospective reset plan.
 
-With Timber frames, Craft and Organization resets retain up to one completed hut per earned Organization milestone, capped by the huts already built. A milestone earned by the current Organization reset counts immediately; spending Organization does not reduce earned milestones. Lifetime earnings do not raise the cap. Before milestone 10, unbuilt hut work still resets. At milestone 10 all huts and current hut construction remain protected, with or without Timber frames. Each hut provides 4 housing plus the Thatched-roof (+1) or Bricks (+2) bonus, so retained housing is `8 + housing per hut × retained huts`; Population independently returns to 5. Unprotected construction loses progress, while protected construction retains its progress and paused/active state. Trips whose equipment resets return without yield; other trips may return if the smaller founding population cannot staff them. The preview names these outcomes before confirmation. Retained jobs are checked against the post-reset five-person budget, with Food and hut orders off.
+With Timber frames, Craft and Organization resets retain up to one completed hut per earned Organization milestone, capped by the huts already built. A milestone earned by the current Organization reset counts immediately; spending Organization does not reduce earned milestones. Lifetime earnings do not raise the cap. Before milestone 10, unbuilt hut work still resets. At milestone 10 all huts and current hut construction remain protected, with or without Timber frames. Equipment resets before retained housing is calculated, so retained housing is `8 + 4 × retained huts`; Population independently returns to 5. Unprotected construction loses progress, while protected construction retains its progress and paused/active state. Trips whose equipment resets return without yield; other trips may return if the smaller founding population cannot staff them. The preview names these outcomes before confirmation. Retained jobs are checked against the post-reset five-person budget, with Food and hut orders off.
 
 Holding or spending Craft has no automatic expedition-yield or gravity-flow effect. Craft is a currency for explicit upgrades and construction. Knowledge retains its existing yield/flow effect. Organization speeds construction and reduces upkeep. Auto-building is unavailable before milestone 10, including when an earlier save has its toggle enabled. Once earned it starts repeatable projects with one reserved builder and normal construction time.
 
@@ -206,10 +194,10 @@ Money, Time, Education and Culture are locked and hidden for now, with no in-gam
 
 The canonical owner is createCivilizationRules in js/civilization.js. The registered Food update advances the entire economy, once, in one-second internal steps. Population is player.points; the Time resource uses freeTime because player.time is the runtime timestamp.
 
-Version 0.9.2 removes fishing entirely. At detached save ingress, pre-0.92 saves cancel active fishing trips, repeat orders and unfinished river-trap construction; the crew, builder and any fishing-only Overseer reservation are released. River-trap levels, fishing discovery and expedition factors are removed. The owner selected no Food yield, Craft refund or other compensation. Stocks, other trips/construction, upgrades, Population and earned milestones are preserved. Retired fields are validated before deletion; malformed input enters the existing recovery flow without replacing live or durable data. Current saves reject fishing records. Export the original save before migration if you want to resume fishing in its matching older artifact.
+Version 0.9.3 (save version 0.93) uses `player.civ.equipment` for the twelve integer levels. Improvement flags contain only permanent knowledge and upgrades. Older Civ saves migrate on a detached candidate before typed hydration. Old Boolean equipment becomes level 0/1; old roof tiers preserve their effective housing without double-counting. Old Water storage counts become basket levels and old jars become one jar level, preserving the purchased counts; the current carrying/storage formulas apply. In-flight Water storage becomes the appropriate basket/jar project with its existing work and no retroactive payment.
 
-Current version 0.9.2 (save version 0.92) accepts v0.6/v0.7 and earlier Civ saves through the same detached codec. Pre-0.91 Timber frames saves validate and remove its former +2 housing per hut while retaining roofs/Bricks bonuses, built counts, Population and paid work; invalid capacity rejects without replacing the original. Population may temporarily exceed housing. Before hydration, retired Fishing nets and Well lining Boolean fields are validated and removed, and Water keeper ownership becomes Hut foreman ownership for pre-0.7 saves; hut automation starts off. Historical Boolean Food orders become targets of one; active trips become one-job batch snapshots with unchanged crew, remaining time and yield. If the new dedicated Food Overseer cannot fit, orders pause while active crews/progress remain. Invalid historical/current overbooking is rejected. Abundance defaults to unpurchased in migrated saves and is available free if milestone 8 is active. Remaining Gather, Hunt, Farm and Water jobs retain their snapshots; Water output stays unlined. Before hydration, saves predating the feature-discovery record preserve their activity records, stocks and paid work. Permanently earned Organization milestones govern new huts and overseer starts; Craft equipment governs hunting and buyables. New saves retain their explicit discovery record and default to the new milestone gates. Configured overseers default to one per type, expedition multipliers default to one, and existing construction receives no retroactive Prepared materials discount. Current saves store discoveries, configured staffing, expedition factors, prepared construction, integer targets and batch counts; no alternate legacy runtime remains. Earlier home-improvement retirement, hidden later-resource flags and missing 0.1 defaults still migrate at ingress. Stocks, Population, construction, bought upgrades and lifetime Organization remain meaningful; eligibility uses the new Population rule. Malformed records fail before activation, preserving prior live/durable bytes. Original ptr data remains untouched.
+Removed Food baskets refund their known Craft recipe, including paid unfinished purchases. Fishing and river traps retain main’s earlier cancellation without compensation. Removed Fire infrastructure refunds 1 Craft per Fuel store/hearth and 2 per Charcoal clamp, plus an unfinished project's old recipe. Removed unpaid provisioning, wells and Farming tools have no currency payment to refund. Retired work is canceled and its builder released. Old Fire above the remaining hut-based capacity is capped after validating the historical capacity. Existing active trip snapshots, supplies, permanent knowledge, built huts and retained expedition levels remain. Retired counters become zero and cannot be purchased or regain effects. Malformed old flags, counts, capacity or present values reject before activating the new state; original bytes remain recoverable. Re-import/reload uses the single current model and cannot repeat refunds. Earlier Civ migrations remain at this ingress boundary. The distinct original `ptr` data stays untouched.
 
 The base dark theme, monospace type, circular nodes and native upg/tabButton treatments are retained. Tests cover parallel crews, overbooking, recall, timed yields, the separate automation stages, irrigation, Shelter, prestige retention, saves and offline chunk parity. Balance profiles use real commands: active decisions every 5 seconds; regular decisions every 20 seconds until overseer, gravity flow and the milestone-10 auto-builder are earned, then every 300 seconds. This cadence change is owner-requested. Synthetic pacing is not human enjoyment evidence.
 
-Remaining route IDs and levels stay in `player.food.routes` and use the current formulas immediately. Non-fishing trips retain saved contracts. Previously started non-fishing construction (including Food baskets) completes without a retroactive Craft charge or Organization gate; new starts use current requirements. The single runtime remains; 0.9 adds material-technique ownership and three Fire-project levels. Detached ingress grants the minimum necessary material capability to historical discovered/bought equipment and active work, validates present malformed fields, and preserves balances, remaining work/action contracts and capacity. Missing old improvement records receive typed defaults before inference. New records enforce tier predecessors and Fire-project material prerequisites. Water storage stays in its existing counter; Cooking vessels never migrate from Water jars.
+The two retained expedition route IDs use `player.food.routes.gather/hunt`. The named equipment registry drives prestige previews and reset commands independently of UI visibility. `tests/rules/craft-buyables.test.cjs` exercises all twelve first/second purchases, both prestige kinds at milestone ten, cost resets, denial/cancellation, effects, migration and chunk/save parity. Browser coverage exercises the material purchases and resource-tab buyables, native prestige confirmation, reload and narrow layouts.

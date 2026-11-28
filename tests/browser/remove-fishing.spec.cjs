@@ -29,7 +29,7 @@ test('migrated Food has no fishing controls, releases workers and saves the curr
             workers: gameUI.session.modRules.civilization.supply().availableWorkers,
             food: p.food.points.toString(), craft: p.craft.points.toString()};
     });
-    expect(state).toMatchObject({version: '0.92', project: '', workers: 11});
+    expect(state).toMatchObject({version: '0.93', project: '', workers: 11});
     expect(state.actions).not.toContain('fish');
     const original = JSON.parse(atob(fixture.save));
     expect(state.food).toBe(original.food.points);
@@ -50,7 +50,7 @@ test('migrated Food has no fishing controls, releases workers and saves the curr
         const collection = JSON.parse(atob(localStorage.getItem('civ-prestige-tree')));
         return collection[collection.set];
     });
-    expect(saved.version).toBe('0.92');
+    expect(saved.version).toBe('0.93');
     expect(saved.food.routes).not.toHaveProperty('fish');
     expect(saved.civ.actions).not.toHaveProperty('fish');
     await page.reload();

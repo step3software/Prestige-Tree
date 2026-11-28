@@ -38,14 +38,19 @@ test('MS4 reveals a red Fire bar, exact upgrades and separate keyboard tending/C
  expect(errors).toEqual([]);
 });
 
-test('Clay upgrades an existing Water basket to jars and construction charges the current recipe once',async({page})=>{
- const errors=await open(page);await stage(page);await page.evaluate(()=>{const p=gameUI.session.saveState.player;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;p.water.storage=1;p.civ.fire=10;});
- await page.getByRole('button',{name:/^Craft,/}).click();await page.getByTestId('material-clay').getByRole('button',{name:/^Earthenware jars/}).click();
- await page.getByRole('button',{name:/^Water,/}).click();await expect(page.locator('.storage-line')).toContainText('/ 220');
- const jar=page.getByRole('button',{name:/^Earthenware jars/});await expect(jar).toContainText('+120 Water storage');await expect(jar.locator('.project-cost')).toContainText('0.75 Fire');await expect(jar.locator('.project-cost')).toContainText('2 Craft');
- await jar.click();expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.fire)).toBe(9.25);
- await page.evaluate(()=>gameUI.session.advance(17));await expect(page.locator('.storage-line')).toContainText('/ 340');
- await page.evaluate(()=>gameUI.session.saveState.player.civ.fire=1.12);await expect(jar).toBeDisabled();expect(errors).toEqual([]);
+test('Clay jars are repeatable Craft equipment with upfront Fire and a builder',async({page})=>{
+ const errors=await open(page);await stage(page);await page.evaluate(()=>{
+  const p=gameUI.session.saveState.player;p.civ.improvements.crafting=true;p.civ.improvements.clay=true;
+  p.civ.equipment['water-storage']=1;p.civ.fire=10;
+ });
+ await page.getByRole('button',{name:/^Water,/}).click();
+ const jar=page.getByTestId('water-buyables').getByRole('button',{name:/^Earthenware jars/});
+ await expect(jar).toContainText('2 Craft');await expect(jar).toContainText('0.5 Fire');await jar.click();
+ expect(await page.evaluate(()=>gameUI.session.saveState.player.civ.fire)).toBe(9.5);
+ await page.evaluate(()=>gameUI.session.advance(12));await expect(jar).toContainText('Owned level: 1');await expect(jar).toContainText('4 Craft');
+ await expect(page.locator('.storage-line')).toContainText('/ 70');await expect(page.getByText(/44 base Water/)).toBeVisible();
+ await jar.click();await page.evaluate(()=>gameUI.session.advance(17));await expect(jar).toContainText('Owned level: 2');
+ await expect(page.locator('.storage-line')).toContainText('/ 90');await expect(page.getByText(/64 base Water/)).toBeVisible();expect(errors).toEqual([]);
 });
 
 test('empty Fire leaves Food running, rejected staffing restores the checkboxes and prestige explains its reset',async({page})=>{

@@ -22,7 +22,7 @@ test('Abundance is unavailable before milestone eight and free in Shelter after 
 
 test('stock and housing cannot accelerate growth until Abundance is purchased',t=>{
     const {engine,p,e}=game(t);
-    p.food.storage=2;p.water.storage=2;p.food.points=new Decimal(130);p.water.points=new Decimal(130);
+    p.civ.improvements.hearth=true;p.civ.improvements.crafting=true;p.civ.equipment["water-storage"]=2;p.food.points=new Decimal(130);p.water.points=new Decimal(130);
     p.shelter.homes=11;p.shelter.points=new Decimal(52);
     assert.equal(e.supply().abundance.enabled,false);assert.equal(e.supply().abundance.multiplier,1);
     engine.advance(12);assert.equal(p.points.toNumber(),6);
@@ -43,10 +43,10 @@ test('both overseers unlock with milestone three without an extra purchase',t=>{
 test('actual v0.6 save loads into v0.9 without losing stocks, paid construction or active crews',t=>{
     const {engine,p,e}=game(t,fixtures.v06);
     const original=JSON.parse(atob(fixtures.v06));
-    assert.equal(p.version,'0.92');assert.equal(p.points.toString(),original.points);
+    assert.equal(p.version,'0.93');assert.equal(p.points.toString(),original.points);
     assert.equal(p.craft.points.toString(),original.craft.points);
     assert.equal(p.civ.project,'water-storage');assert.equal(p.civ.projectWork,original.civ.projectWork);
-    assert.equal(Object.hasOwn(p.civ.actions,'fish'),false,'Retired trips are cancelled without compensation');
+    assert.equal(Object.hasOwn(p.civ.actions),false,'Retired trips are cancelled without compensation');
     assert.equal('fishing' in p.civ.improvements,false);assert.equal('wellLining' in p.civ.improvements,false);
     assert.equal('waterOrders' in p.civ.improvements,false);
     assert.equal(e.actionDefinition('fish'),null);
@@ -57,7 +57,7 @@ test('actual v0.6 save loads into v0.9 without losing stocks, paid construction 
 test('actual v0.7 save preserves the remaining repeat count and active job through v0.9 reload',t=>{
     const {engine,p}=game(t,fixtures.v07);
     const original=JSON.parse(atob(fixtures.v07));
-    assert.equal(p.version,'0.92');assert.equal(p.civ.actions.gather.repeat,4);
+    assert.equal(p.version,'0.93');assert.equal(p.civ.actions.gather.repeat,4);
     assert.equal(p.civ.actions.gather.remaining,original.civ.actions.gather.remaining);
     assert.equal(p.civ.actions.gather.reward,original.civ.actions.gather.reward);
     assert.equal(p.civ.improvements.overseer,true);

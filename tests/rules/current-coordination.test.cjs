@@ -63,7 +63,7 @@ test('retention, upgrades, irrigation and auto-building remain unlocked after sp
     p.organization.best = new D(10); p.organization.points = new D(0); p.organization.total = new D(100);
     p.craft.points = new D(15); p.food.points = new D(50); p.water.points = new D(50);
     assert.equal(e.buyUpgrade('crafting'),true);
-    assert.equal(e.buyUpgrade('hunting'),true);
+    assert.equal(e.buyUpgrade('hunting'),true);engine.advance(12);
     assert.equal(e.buyUpgrade('workRosters'),false,'unlocked upgrades still require payment');
     assert.equal(e.buyUpgrade('abundance'),true);
     assert.equal(e.startProject('shelter-home'),true);
@@ -72,8 +72,8 @@ test('retention, upgrades, irrigation and auto-building remain unlocked after sp
     p.civ.improvements.farming = true;
     assert.equal(e.irrigate(),true);
     const plan = e.prestigePreview('craft');
-    for(const id of ['water-storage','food-storage','water-site','gather-tools','hunt-tools','shelter-home']) assert.equal(plan.kept[id],true,id);
-    assert.equal(plan.kept['farm-tools'],false); assert.equal(plan.kept['food-site'],false);
+    for(const id of ['gather-tools','hunt-tools','shelter-home']) assert.equal(plan.kept[id],true,id);
+    assert.equal(plan.kept['water-storage'],false); assert.equal(plan.kept['digging'],false);
     const loaded = createBalanceEngine(engine.exportPlayer()); t.after(loaded.dispose);
     assert.equal(loaded.session.modRules.civilization.summary().autoAvailable,true);
 });
