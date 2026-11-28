@@ -85,7 +85,11 @@ function createGameView({derivedState, effects, gameHelpers, gameRules, helpCont
             if (!changed) saveState.player.civ.message = "Fire tending needs available workers. Release a crew or choose fewer tenders.";
             return changed;
         },
-        setCookingLevel(value) { return actionable(() => modRules.civilization.setCookingLevel(value)); },
+        setCooks(value) {
+            const changed = actionable(() => modRules.civilization.setCooks(value));
+            if (!changed) saveState.player.civ.message = "Cooks need available workers. Release a crew or choose fewer cooks.";
+            return changed;
+        },
         setHutRepeat(value) { return actionable(() => modRules.civilization.setHutRepeat(value)); },
         setOverseers(kind, value) { return actionable(() => modRules.civilization.setOverseers(kind, value)); },
         setExpeditionMultiplier(id, event) { return actionable(() => modRules.civilization.setExpeditionMultiplier(id, Number(event.target.value))); },

@@ -165,6 +165,7 @@ test('abundance shows independent supply and Shelter bonuses and still pauses fo
 test('Shared hearths buys with Fire and displays fullness-scaled Food without changing housing',async({page})=>{
     const errors=await open(page);
     await page.evaluate(()=>{gameUI.session.saveState.player.organization.total=new Decimal(4);gameUI.session.saveState.player.organization.points=new Decimal(4);});
+    await node(page,'Energy').click();
     const hearths=page.getByRole('button',{name:/^Shared hearths/});
     await expect(hearths).toBeDisabled();
     await expect(hearths).toContainText('+25 Food storage');
@@ -515,7 +516,7 @@ for(const version of ['v06','v07']){
     const errors=await open(page);
     await expect(page.locator('.chapter')).toContainText('v0.9');
     await expect(page.locator('#save-recovery')).toBeHidden();
-    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.93');
+    expect(await page.evaluate(()=>gameUI.session.saveState.player.version)).toBe('0.94');
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'fishing'))).toBe(false);
     expect(await page.evaluate(()=>Object.hasOwn(gameUI.session.saveState.player.civ.improvements,'wellLining'))).toBe(false);
     expect(errors).toEqual([]);

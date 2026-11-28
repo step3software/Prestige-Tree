@@ -16,10 +16,11 @@ test('hearth storage uses current whole tens and income uses Fire fullness, with
 });
 
 test('spending Fire reduces hearth income immediately while its storage stays',t=>{
- const {p,e}=game(t);p.points=new Decimal(20);p.organization.total=new Decimal(4);p.organization.points=new Decimal(4);p.civ.improvements.hearth=true;p.civ.fire=10;
+ const {p,e}=game(t);p.points=new Decimal(20);p.organization.total=new Decimal(4);p.organization.points=new Decimal(4);
+ p.civ.improvements.clay=true;p.civ.improvements.hearth=true;p.craft.points=new Decimal(2);p.civ.fire=10;
  assert.equal(e.supply().storage.food,100);near(e.supply().passiveProduction.food,8);
- assert.equal(e.buyUpgrade('cooking'),true);near(e.supply().passiveProduction.food,7.2);assert.equal(e.supply().storage.food,100);
- e.setCookingLevel(5);near(e.supply().passiveProduction.food,7.2);
+ assert.equal(e.buyUpgrade('pipes'),true);assert.equal(p.civ.fire,8);near(e.supply().passiveProduction.food,6.4);assert.equal(e.supply().storage.food,100);
+ e.setCooks(5);near(e.supply().passiveProduction.food,6.4);
  p.civ.fire=0;near(e.supply().passiveProduction.food,0);assert.equal(e.supply().storage.food,100);
 });
 
@@ -27,7 +28,7 @@ test('hearths deliver real Food, cap at storage and stay outside Cooking',t=>{
  const {engine,p,e}=game(t);p.points=new Decimal(10);p.civ.improvements.hearth=true;p.civ.fire=10;p.food.points=new Decimal(40);p.water.points=new Decimal(50);
  engine.advance(60);near(p.food.points.toNumber(),34);near(p.food.total.toNumber(),14);
  p.food.points=new Decimal(75);const total=p.food.total.toNumber();engine.advance(1);near(p.food.points.toNumber(),75-10/60);near(p.food.total.toNumber(),total);
- p.food.points=new Decimal(10);p.civ.improvements.cooking=true;e.setCookingLevel(5);e.dispatch('gather');
+ p.food.points=new Decimal(10);e.setCooks(5);e.dispatch('gather');
  near(e.supply().production.food,184);engine.advance(10);
  assert.equal(p.civ.actions.gather.completed,1);near(e.supply().passiveProduction.food,4*(10-.64)/10);
  near(p.food.total.toNumber(),total+30+4*(10-3.84/60*5.5)/10/6);
@@ -47,7 +48,7 @@ test('both prestiges retain hearth ownership and derive zero benefits at five pe
 
 test('hearths and partial Cooking remain deterministic across save and offline chunks',t=>{
  const {engine,p,e}=game(t);p.points=new Decimal(19);p.shelter.homes=5;p.shelter.points=new Decimal(28);p.organization.total=new Decimal(4);p.organization.points=new Decimal(4);p.food.points=new Decimal(55);p.water.points=new Decimal(50);
- p.civ.improvements.hearth=true;p.civ.improvements.cooking=true;p.civ.fire=5;e.setFireTenders(2);e.setCookingLevel(5);e.dispatch('gather');
+ p.civ.improvements.hearth=true;p.civ.fire=5;e.setFireTenders(2);e.setCooks(5);e.dispatch('gather');
  const one=game(t,engine.exportPlayer()),chunks=game(t,engine.exportPlayer());one.engine.advance(180);
  for(const seconds of [.25,11.75,6,12,30,60,60])chunks.engine.advance(seconds);
  assert.equal(one.engine.exportPlayer(),chunks.engine.exportPlayer());

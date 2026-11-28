@@ -12,7 +12,7 @@ function fund(g) {
     p.organization.points = new D(10); p.organization.best = new D(10);
     p.craft.points = new D(10000); p.civ.fire = 10;
     p.civ.improvements.gravity = true; p.civ.improvements.farming = true;
-    for (const id of ['crafting','clay','copper','cooking']) assert.equal(e.buyUpgrade(id),true);
+    for (const id of ['crafting','clay','copper']) assert.equal(e.buyUpgrade(id),true);
 }
 function finish(g,id) {
     assert.equal(g.e.startProject(id),true,id);
@@ -127,7 +127,7 @@ test('equipment effects compound, preserve dispatched snapshots and keep chunk/s
 });
 test('retired base and Fire purchases migrate once, refund known Craft and preserve Water levels, stocks and housing',t=>{
     const fixture=require('../fixtures/civ-pre-repeatables-v091.json');const g=game(t,fixture.player);
-    assert.equal(g.p.version,'0.93');assert.equal(g.p.craft.points.toNumber(),29);
+    assert.equal(g.p.version,'0.94');assert.equal(g.p.craft.points.toNumber(),29);
     assert.equal(g.p.civ.equipment['water-storage'],2);assert.equal(g.p.civ.equipment.jars,1);
     assert.equal(g.e.supply().storage.water,70);assert.equal(g.p.shelter.points.toNumber(),14);
     assert.equal(g.p.civ.equipment.roofs,0);assert.equal(g.p.civ.equipment.bricks,1);
@@ -151,7 +151,7 @@ test('malformed historical purchases reject before refunds or replacement of liv
 });
 test('the published fishing-free 0.92 model migrates into repeatable equipment without restoring fishing',t=>{
     const fixture=require('../fixtures/civ-pre-repeatables-v092.json'),g=game(t,fixture.save);
-    assert.equal(g.p.version,'0.93');assert.equal(g.p.civ.equipment['water-storage'],2);
+    assert.equal(g.p.version,'0.94');assert.equal(g.p.civ.equipment['water-storage'],2);
     assert.equal(g.e.supply().storage.water,50);assert.equal(g.p.craft.points.toNumber(),100);
     assert.equal(g.e.actionDefinition('fish'),null);assert.equal(Object.hasOwn(g.p.civ.actions,'fish'),false);
     const loaded=game(t,g.engine.exportPlayer());assert.equal(loaded.engine.exportPlayer(),g.engine.exportPlayer());
@@ -163,6 +163,6 @@ test('repeatable tools, housing, pipes and vessels apply real effects after cons
     const flow=g.e.supply().passiveProduction.water;finish(g,'pipes');assert.ok(Math.abs(g.e.supply().passiveProduction.water-flow*2)<1e-8);
     const duration=g.e.actionDefinition('farm').duration;finish(g,'sickles');finish(g,'sickles');assert.equal(g.e.actionDefinition('farm').duration,duration*.75**2);
     finish(g,'hunting');const hunt=g.e.actionDefinition('hunt');finish(g,'butchery');assert.equal(g.e.actionDefinition('hunt').workers,hunt.workers);assert.equal(g.e.actionDefinition('hunt').reward,hunt.reward*1.5);
-    finish(g,'clayPots');finish(g,'copperPots');g.e.setCookingLevel(3);g.p.civ.fire=10;g.e.dispatch('gather');assert.equal(g.e.fireStatus().cookingMultiplier,3.5);
+    finish(g,'clayPots');finish(g,'copperPots');g.p.points=new g.D(8);g.p.food.points=new g.D(50);g.p.water.points=new g.D(50);assert.equal(g.e.setCooks(3),true);g.p.civ.fire=10;g.e.dispatch('gather');assert.equal(g.e.fireStatus().cookingMultiplier,3.5);
     const rate=g.e.fireStatus().consumption;g.engine.advance(1);assert.ok(Math.abs(g.p.civ.fire-(10-rate/60))<1e-8);g.engine.exportPlayer();
 });

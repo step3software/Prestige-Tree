@@ -139,8 +139,6 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
     .game-layout { grid-template-columns: 1fr; }
     .resource-panel { border-left: 0; border-top: 3px solid var(--color); padding: 24px 0; }
     .node-row { gap: 20px; }
-    .three-nodes { gap: 10px; }
-    .three-nodes .node-cell { width: calc((100% - 20px) / 3); max-width: 120px; }
     .resource-node.treeNode { width: 80px; height: 80px; font-size: 32px; }
     .node-label { font-size: 12px; }
     .node-value { font-size: 12px; }
@@ -226,3 +224,8 @@ select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--points
     .range-step input, .range-step input:checked, .range-step input:enabled:hover { appearance: auto; background: none; box-shadow: none; }
 }
 .fire-buyables > h3, .fire-buyables > p { grid-column: 1 / -1; }
+
+/* Four foundation nodes stay in one row, including narrow screens. */
+.foundation-nodes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.foundation-nodes .node-cell { width: auto; min-width: 0; }
+.foundation-nodes .resource-node.treeNode { width: 100%; max-width: 100px; height: auto; min-width: 0; aspect-ratio: 1; }
